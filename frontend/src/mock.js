@@ -142,6 +142,12 @@ export const facilityImages = [
   },
   {
     id: 5,
+    url: "https://customer-assets.emergentagent.com/job_peacock-pet-care/artifacts/a395zwon_exam_room_view.png",
+    title: "Exam Room Equipment",
+    description: "Modern exam room with stainless steel table and professional medical equipment"
+  },
+  {
+    id: 5,
     url: "https://petsandvetsanimalhospital.com/images/clinic/surgery.png",
     title: "Surgery Suite",
     description: "Advanced lighting and heated surgical table"
