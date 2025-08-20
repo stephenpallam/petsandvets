@@ -34,7 +34,7 @@ const Home = () => {
       {/* Hero Section */}
       <section className="relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${primaryBg} 0%, #ffffff 50%, #f0fdff 100%)` }}>
         <div className="absolute inset-0 bg-white/40"></div>
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-20">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4" style={{ paddingBottom: '20px' }}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
             {/* Left Content */}
             <div className="space-y-8">
