@@ -44,7 +44,7 @@ const DigitalVeterinaryXRays = () => {
       system: "Heart and Lungs",
       description: "Comprehensive cardiopulmonary system imaging",
       details: ["Heart structure assessment", "Lung condition evaluation", "Respiratory function analysis", "Cardiovascular health monitoring"],
-      icon: Lungs,
+      icon: Heart,
       color: "#ef4444"
     },
     {
