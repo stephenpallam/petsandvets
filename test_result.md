@@ -175,6 +175,7 @@ test_plan:
   current_focus:
     - "Complete Cat Diagnostic Imaging Page"
     - "Create Cat Vaccinations Page"
+    - "Create Dog & Cat Ultrasound Exams Page"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
