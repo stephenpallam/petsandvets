@@ -299,7 +299,7 @@ const Home = () => {
           <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
             Ready to Give Your Pet the Best Care?
           </h2>
-          <p className="text-xl mb-8" style={{ color: primaryLight }}>
+          <p className="mb-8" style={{ color: primaryLight, fontSize: '1rem' }}>
             Contact us today to schedule an appointment or for emergency care
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
