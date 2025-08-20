@@ -69,7 +69,7 @@ const CatDiagnosticImaging = () => {
     {
       symptom: "Suspected tumors, heart disease, or bladder stones",
       urgency: "high",
-      imaging: "Ultrasound, X-rays, CT"
+      imaging: "Ultrasound, X-rays"
     }
   ];
 
