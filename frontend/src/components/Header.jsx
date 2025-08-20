@@ -87,31 +87,25 @@ const Header = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`px-3 py-2 text-sm font-medium transition-colors duration-200 ${
+                className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
                   isActive(item.href)
-                    ? 'border-b-2' 
-                    : 'text-gray-700 hover:border-b-2'
+                    ? 'text-gray-900' 
+                    : 'text-gray-700 hover:text-gray-900'
                 }`}
                 style={{
-                  color: isActive(item.href) ? '#29add3' : undefined,
-                  borderColor: isActive(item.href) ? '#29add3' : undefined,
-                  ...((!isActive(item.href)) && {
-                    '&:hover': {
-                      color: '#29add3',
-                      borderColor: '#29add3'
-                    }
-                  })
+                  backgroundColor: isActive(item.href) ? '#e6f7fb' : 'transparent',
+                  color: isActive(item.href) ? '#29add3' : undefined
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive(item.href)) {
                     e.target.style.color = '#29add3';
-                    e.target.style.borderColor = '#29add3';
+                    e.target.style.backgroundColor = '#f0fdff';
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isActive(item.href)) {
                     e.target.style.color = '#374151';
-                    e.target.style.borderColor = 'transparent';
+                    e.target.style.backgroundColor = 'transparent';
                   }
                 }}
               >
