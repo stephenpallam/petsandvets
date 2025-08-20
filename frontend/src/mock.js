@@ -20,7 +20,7 @@ export const hours = {
     sunday: "Closed"
   },
   urgentCare: {
-    everyday: "11:00 AM - 8:00 PM"
+    everyday: "3:00 PM - 10:00 PM"
   }
 };
 
