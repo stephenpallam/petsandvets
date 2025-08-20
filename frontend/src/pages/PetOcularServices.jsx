@@ -59,13 +59,6 @@ const PetOcularServices = () => {
       color: "#f59e0b"
     },
     {
-      test: "Slit Lamp Biomicroscopy",
-      description: "Detailed examination of eye structures using specialized microscopy",
-      details: ["Anterior chamber analysis", "Lens examination", "Corneal layers", "Iris evaluation"],
-      icon: Microscope,
-      color: "#8b5cf6"
-    },
-    {
       test: "Tonometry",
       description: "Eye pressure measurement for glaucoma detection and monitoring",
       details: ["Pressure measurement", "Glaucoma screening", "Optic nerve protection", "Disease monitoring"],
