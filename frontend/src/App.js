@@ -23,6 +23,7 @@ import VeterinaryDiagnosticServices from "./pages/VeterinaryDiagnosticServices";
 import PetDermatologyAllergyCare from "./pages/PetDermatologyAllergyCare";
 import DigitalVeterinaryXRays from "./pages/DigitalVeterinaryXRays";
 import DentalCleanings from "./pages/DentalCleanings";
+import PetToothExtraction from "./pages/PetToothExtraction";
 import CatDiagnosticImaging from "./pages/CatDiagnosticImaging";
 
 function App() {
