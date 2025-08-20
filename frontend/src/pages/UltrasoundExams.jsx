@@ -126,13 +126,18 @@ const UltrasoundExams = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              Dog & Cat Ultrasound Exams
+              Ultrasound in Dogs & Cats
             </h1>
             <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
-              When your pet isn't feeling well, answers matter. Ultrasound exams (ultrasonography) provide a quick, 
-              non-invasive way for veterinarians to see inside your dog or cat's body—without the risks of radiation 
-              used in X-rays. By recording sound wave echoes, ultrasounds create real-time images that help detect, 
-              diagnose, and guide treatment for a wide range of conditions.
+              When your pet isn't feeling well, answers matter. At Pets and Vets Animal Hospital & Urgent Care, 
+              we proudly provide safe, effective, and compassionate pet ultrasounds in Chantilly, VA, while also 
+              serving pet families across South Riding, Aldie, Ashburn, Centreville, Reston, and Herndon.
+            </p>
+            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto mt-4">
+              Ultrasound exams (ultrasonography) are a quick, non-invasive way for our veterinarians to see inside 
+              your dog or cat's body—without the risks of radiation used in X-rays. By recording sound wave echoes, 
+              ultrasounds produce real-time images that help us detect, diagnose, and guide treatment for a wide range 
+              of conditions, from abdominal issues to heart disease.
             </p>
           </div>
         </div>
