@@ -85,10 +85,10 @@ const Contact = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="text-white py-12" style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)` }}>
+      <section className="text-white" style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, padding: '1rem 0' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-3xl md:text-4xl font-bold">
+            <h1 className="font-bold" style={{ fontSize: '1.25rem' }}>
               Contact Us
             </h1>
           </div>
