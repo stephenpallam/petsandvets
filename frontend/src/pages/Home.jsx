@@ -139,7 +139,7 @@ const Home = () => {
       {/* Special Offers Section */}
       <section className="py-16" style={{ backgroundColor: primaryColor }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <div className="text-center" style={{ marginBottom: '20px' }}>
             <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
               Special Offers & Packages
             </h2>
