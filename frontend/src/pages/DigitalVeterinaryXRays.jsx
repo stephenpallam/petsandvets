@@ -29,8 +29,7 @@ import {
   Monitor,
   Leaf,
   Gauge,
-  Bone,
-  Lungs
+  Bone
 } from 'lucide-react';
 import { hospitalInfo } from '../mock';
 
