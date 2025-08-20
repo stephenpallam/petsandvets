@@ -4,7 +4,7 @@ export const hospitalInfo = {
   name: "Pets and Vets Animal Hospital & Urgent Care",
   address: "43114 Peacock Market Plaza, Suite F110, South Riding, VA 20152",
   phone: "(703) 957-3297",
-  email: "info@petsandvetsanimalhospital.com",
+  email: "vet@petsandvetsanimalhospital.com",
   tagline: "Compassionate Care for Your Beloved Pets",
   description: "We provide comprehensive veterinary care and urgent care services for dogs, cats, and exotic pets. Our modern facility offers quality care at affordable prices with a focus on collaborative pet healthcare."
 };
