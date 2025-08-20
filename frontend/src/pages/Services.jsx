@@ -33,8 +33,8 @@ const Services = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="text-white sticky z-40" style={{ top: '7.2rem', background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '0.5rem', paddingBottom: '0.5rem' }}>
+      {/* Hero Section - Mobile Only */}
+      <section className="text-white sticky z-40 block md:hidden" style={{ top: '5rem', background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '0.5rem', paddingBottom: '0.5rem' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="font-bold" style={{ fontSize: '1.125rem' }}>
