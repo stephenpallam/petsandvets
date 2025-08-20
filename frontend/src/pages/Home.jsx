@@ -227,7 +227,7 @@ const Home = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="pb-16 bg-white" style={{ paddingTop: '30px' }}>
+      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center" style={{ marginBottom: '20px' }}>
             <h2 className="font-bold text-gray-900 mb-4" style={{ fontSize: '1rem' }}>
