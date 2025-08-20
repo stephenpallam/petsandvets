@@ -228,7 +228,7 @@ const Home = () => {
                 <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6" style={{ backgroundColor: primaryBg }}>
                   <Heart className="h-8 w-8" style={{ color: primaryColor }} />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{service.name}</h3>
+                <h3 className="font-bold text-gray-900 mb-3" style={{ fontSize: '1rem' }}>{service.name}</h3>
                 <p className="text-gray-600 mb-4">{service.description}</p>
                 <Link
                   to="/services"
