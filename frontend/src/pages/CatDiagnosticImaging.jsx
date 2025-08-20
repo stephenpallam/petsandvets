@@ -49,7 +49,7 @@ const CatDiagnosticImaging = () => {
     {
       symptom: "Persistent coughing or breathing trouble",
       urgency: "high",
-      imaging: "X-rays, CT scan"
+      imaging: "X-rays, Ultrasound"
     },
     {
       symptom: "Difficulty walking, sudden limping, or suspected fractures",
