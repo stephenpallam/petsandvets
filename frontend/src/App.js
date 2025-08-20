@@ -37,6 +37,7 @@ function App() {
             <Route path="/dog-vaccinations" element={<DogVaccinations />} />
             <Route path="/dog-wellness-exams" element={<DogWellnessExams />} />
             <Route path="/cat-diagnostic-imaging" element={<CatDiagnosticImaging />} />
+            <Route path="/cat-vaccinations" element={<CatVaccinations />} />
           </Routes>
         </main>
         <Footer />
