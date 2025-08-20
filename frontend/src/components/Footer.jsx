@@ -12,9 +12,33 @@ const Footer = () => {
           {/* Hospital Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
-              <div className="rounded-full p-2" style={{ backgroundColor: '#29add3' }}>
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                  <span className="font-bold text-lg" style={{ color: '#29add3' }}>P&V</span>
+              <div className="rounded-lg p-2" style={{ backgroundColor: '#29add3' }}>
+                <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
+                  <div className="relative">
+                    {/* Hospital plus sign */}
+                    <div 
+                      className="absolute" 
+                      style={{
+                        width: '16px',
+                        height: '4px',
+                        backgroundColor: '#29add3',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)'
+                      }}
+                    ></div>
+                    <div 
+                      className="absolute" 
+                      style={{
+                        width: '4px',
+                        height: '16px',
+                        backgroundColor: '#29add3',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)'
+                      }}
+                    ></div>
+                  </div>
                 </div>
               </div>
               <div>
