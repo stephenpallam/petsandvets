@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { X, Camera, MapPin, Clock } from 'lucide-react';
-import { facilityImages } from '../mock';
+import { Link } from 'react-router-dom';
+import { X, Camera, MapPin, Clock, Phone } from 'lucide-react';
+import { facilityImages, hospitalInfo } from '../mock';
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState(null);
