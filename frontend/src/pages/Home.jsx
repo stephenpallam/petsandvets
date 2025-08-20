@@ -55,14 +55,14 @@ const Home = () => {
 
               {/* Quick Info */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex items-center space-x-3 bg-white/60 backdrop-blur-sm p-4 rounded-lg">
+                <div className="flex items-center space-x-3 bg-white/60 backdrop-blur-sm py-4 pr-4 pl-0 rounded-lg">
                   <Clock className="h-5 w-5" style={{ color: primaryColor }} />
                   <div className="text-left">
                     <p className="font-semibold text-gray-900">Urgent Care</p>
                     <p className="text-sm text-gray-600">3 PM - 10 PM Daily</p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-3 bg-white/60 backdrop-blur-sm p-4 rounded-lg">
+                <div className="flex items-center space-x-3 bg-white/60 backdrop-blur-sm py-4 pr-4 pl-0 rounded-lg">
                   <MapPin className="h-5 w-5" style={{ color: primaryColor }} />
                   <div className="text-left">
                     <p className="font-semibold text-gray-900">General Practice</p>
