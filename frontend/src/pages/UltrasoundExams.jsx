@@ -276,6 +276,25 @@ const UltrasoundExams = () => {
         </div>
       </section>
 
+      {/* Service Areas */}
+      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-xl font-bold text-gray-900 mb-6">
+            Serving Your Community
+          </h2>
+          <p className="text-gray-600 mb-6">
+            We proudly provide exceptional veterinary care to pet families across:
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            {serviceAreas.map((area, index) => (
+              <span key={index} className="px-4 py-2 rounded-full text-white font-medium" style={{ backgroundColor: primaryColor }}>
+                {area}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* The Bottom Line */}
       <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
