@@ -153,6 +153,7 @@ metadata:
 test_plan:
   current_focus:
     - "Complete Cat Diagnostic Imaging Page"
+    - "Create Cat Vaccinations Page"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
