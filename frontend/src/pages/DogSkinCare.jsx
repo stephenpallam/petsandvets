@@ -181,7 +181,7 @@ const DogSkinCare = () => {
             Watch for these red flags that indicate potential skin problems:
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {warningSign.map((sign, index) => (
+            {warningSigns.map((sign, index) => (
               <div key={index} className="flex items-start p-4 rounded-lg" style={{ backgroundColor: primaryBg }}>
                 <AlertTriangle className="h-5 w-5 mr-3 flex-shrink-0 mt-0.5" style={{ color: primaryColor }} />
                 <span className="text-gray-700">{sign}</span>
