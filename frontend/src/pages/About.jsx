@@ -169,38 +169,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Hospital Stats */}
-      <section className="py-16" style={{ backgroundColor: primaryColor }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              By the Numbers
-            </h2>
-            <p className="text-xl" style={{ color: primaryLight }}>
-              Our commitment to excellence, measured
-            </p>
-          </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-4xl md:text-6xl font-bold text-white mb-2">1000+</div>
-              <div style={{ color: primaryLight }}>Happy Pets Served</div>
-            </div>
-            <div>
-              <div className="text-4xl md:text-6xl font-bold text-white mb-2">15+</div>
-              <div style={{ color: primaryLight }}>Years Experience</div>
-            </div>
-            <div>
-              <div className="text-4xl md:text-6xl font-bold text-white mb-2">4.9</div>
-              <div style={{ color: primaryLight }}>Average Rating</div>
-            </div>
-            <div>
-              <div className="text-4xl md:text-6xl font-bold text-white mb-2">24/7</div>
-              <div style={{ color: primaryLight }}>Emergency Support</div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Contact CTA */}
       <section style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '30px', paddingBottom: '30px' }}>
