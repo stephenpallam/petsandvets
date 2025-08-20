@@ -159,19 +159,19 @@ export const facilityImages = [
     description: "State-of-the-art anesthesia machine and surgical monitoring equipment for safe procedures"
   },
   {
-    id: 7,
+    id: 8,
     url: "https://petsandvetsanimalhospital.com/images/clinic/dental.png",
     title: "Dental Equipment", 
     description: "Latest iM3 Pro-2000 dental machine"
   },
   {
-    id: 8,
+    id: 9,
     url: "https://petsandvetsanimalhospital.com/images/clinic/blood_analyzers.png",
     title: "Blood Analyzers",
     description: "VETSCAN HM5 hematology analyzer"
   },
   {
-    id: 9,
+    id: 10,
     url: "https://petsandvetsanimalhospital.com/images/clinic/lab.png",
     title: "Diagnostic Lab",
     description: "On-site pharmacy and diagnostic equipment"
