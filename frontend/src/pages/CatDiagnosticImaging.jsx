@@ -54,7 +54,7 @@ const CatDiagnosticImaging = () => {
     {
       symptom: "Difficulty walking, sudden limping, or suspected fractures",
       urgency: "high", 
-      imaging: "X-rays, MRI"
+      imaging: "X-rays, Ultrasound"
     },
     {
       symptom: "Abdominal pain, vomiting, or signs of obstruction",
