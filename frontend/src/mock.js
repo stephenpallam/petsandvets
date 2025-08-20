@@ -147,25 +147,25 @@ export const facilityImages = [
     description: "Modern exam room with stainless steel table and professional medical equipment"
   },
   {
-    id: 5,
+    id: 6,
     url: "https://petsandvetsanimalhospital.com/images/clinic/surgery.png",
     title: "Surgery Suite",
     description: "Advanced lighting and heated surgical table"
   },
   {
-    id: 6,
+    id: 7,
     url: "https://petsandvetsanimalhospital.com/images/clinic/dental.png",
     title: "Dental Equipment", 
     description: "Latest iM3 Pro-2000 dental machine"
   },
   {
-    id: 7,
+    id: 8,
     url: "https://petsandvetsanimalhospital.com/images/clinic/blood_analyzers.png",
     title: "Blood Analyzers",
     description: "VETSCAN HM5 hematology analyzer"
   },
   {
-    id: 8,
+    id: 9,
     url: "https://petsandvetsanimalhospital.com/images/clinic/lab.png",
     title: "Diagnostic Lab",
     description: "On-site pharmacy and diagnostic equipment"
