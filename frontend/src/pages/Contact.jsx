@@ -153,17 +153,17 @@ const Contact = () => {
               </p>
             </div>
 
-            {/* Emergency */}
+            {/* Urgent Care */}
             <div className="bg-red-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center border-2 border-red-200">
               <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mx-auto mb-4">
                 <AlertCircle className="h-8 w-8 text-red-600" />
               </div>
-              <h3 className="text-lg font-bold text-red-900 mb-2">Emergency</h3>
+              <h3 className="text-lg font-bold text-red-900 mb-2">Urgent Care</h3>
               <p className="text-red-700 font-semibold">
                 3 PM - 10 PM Daily
               </p>
               <p className="text-red-600 text-sm mt-2">
-                Walk-ins welcome for urgent care
+                By Appointment Only
               </p>
             </div>
           </div>
