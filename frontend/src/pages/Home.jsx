@@ -182,7 +182,7 @@ const Home = () => {
               Comprehensive Pet Care Services
             </h2>
             <p className="text-gray-600 max-w-3xl mx-auto" style={{ fontSize: '1rem' }}>
-              From routine wellness to emergency care, we provide complete veterinary services for your pet's health and happiness.
+              From routine wellness to urgent care, we provide complete veterinary services for your pet's health and happiness.
             </p>
           </div>
 
