@@ -9,6 +9,7 @@ import Services from "./pages/Services";
 import About from "./pages/About";
 import Gallery from "./pages/Gallery";
 import Contact from "./pages/Contact";
+import DogDentalCare from "./pages/DogDentalCare";
 
 function App() {
   return (
