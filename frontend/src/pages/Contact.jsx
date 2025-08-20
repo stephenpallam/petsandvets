@@ -408,7 +408,7 @@ const Contact = () => {
                       <span className="font-bold" style={{ color: primaryColor }}>{hours.urgentCare.everyday}</span>
                     </div>
                     <p className="text-sm mt-2 font-medium" style={{ color: primaryColor }}>
-                      Walk-ins welcome • No appointment necessary
+                      By Appointment Only
                     </p>
                   </div>
                 </div>
