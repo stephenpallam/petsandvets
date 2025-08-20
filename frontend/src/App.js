@@ -16,6 +16,7 @@ import DogEyeCare from "./pages/DogEyeCare";
 import DogVaccinations from "./pages/DogVaccinations";
 import DogWellnessExams from "./pages/DogWellnessExams";
 import CatVaccinations from "./pages/CatVaccinations";
+import UltrasoundExams from "./pages/UltrasoundExams";
 import CatDiagnosticImaging from "./pages/CatDiagnosticImaging";
 
 function App() {
