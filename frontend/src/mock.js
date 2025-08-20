@@ -66,13 +66,6 @@ export const services = [
     description: "Specialized care for young pets with nurturing support during critical growth stages.",
     icon: "heart-handshake",
     details: "Comprehensive care plans designed specifically for puppies and kittens."
-  },
-  {
-    id: 7,
-    name: "Exotic Pet Care",
-    description: "We see a wide range of exotic pets. Please call to verify if we can see your specific exotic pet.",
-    icon: "bird",
-    details: "Specialized care for various exotic pets with some restrictions and limitations."
   }
 ];
 
