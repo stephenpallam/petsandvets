@@ -10,6 +10,7 @@ import About from "./pages/About";
 import Gallery from "./pages/Gallery";
 import Contact from "./pages/Contact";
 import DogDentalCare from "./pages/DogDentalCare";
+import CatDentalCare from "./pages/CatDentalCare";
 
 function App() {
   return (
