@@ -40,19 +40,12 @@ const Gallery = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="text-white py-20" style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)` }}>
+      <section className="text-white py-12" style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)` }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="flex items-center justify-center mb-6">
-              <Camera className="h-12 w-12 mr-4" style={{ color: primaryLight }} />
-              <h1 className="text-4xl md:text-6xl font-bold">
-                Facility Gallery
-              </h1>
-            </div>
-            <p className="text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed" style={{ color: primaryLight }}>
-              Take a virtual tour of our modern, state-of-the-art veterinary facility 
-              designed for your pet's comfort and care.
-            </p>
+            <h1 className="text-3xl md:text-4xl font-bold">
+              Facility Gallery
+            </h1>
           </div>
         </div>
       </section>
