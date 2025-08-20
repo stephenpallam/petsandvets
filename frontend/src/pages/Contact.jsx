@@ -467,6 +467,47 @@ const Contact = () => {
               </div>
             </div>
           </div>
+
+          {/* Google Maps Section */}
+          <div className="mt-12">
+            <div className="bg-white p-8 rounded-xl shadow-lg">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                <MapPin className="mr-3 h-6 w-6" style={{ color: primaryColor }} />
+                Find Us on Map
+              </h2>
+              
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3105.8947649847485!2d-77.52344768464344!3d38.98234397956376!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89b638b58b3b5c61%3A0x5f5f5f5f5f5f5f5f!2s43114%20Peacock%20Market%20Plaza%2C%20South%20Riding%2C%20VA%2020152%2C%20USA!5e0!3m2!1sen!2sus!4v1620000000000!5m2!1sen!2sus"
+                  width="100%"
+                  height="400"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Pets and Vets Animal Hospital Location"
+                ></iframe>
+              </div>
+              
+              <div className="mt-4 p-4 rounded-lg" style={{ backgroundColor: primaryBg }}>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="font-semibold text-gray-900">{hospitalInfo.address}</p>
+                    <p className="text-sm text-gray-600 mt-1">Located beside Sweet Frog in Peacock Market Plaza</p>
+                  </div>
+                  <button 
+                    className="mt-3 sm:mt-0 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200"
+                    style={{ backgroundColor: primaryColor }}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
+                    onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(hospitalInfo.address)}`, '_blank')}
+                  >
+                    Get Directions
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
