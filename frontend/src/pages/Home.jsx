@@ -59,7 +59,7 @@ const Home = () => {
                   <Clock className="h-5 w-5" style={{ color: primaryColor }} />
                   <div>
                     <p className="font-semibold text-gray-900">Urgent Care</p>
-                    <p className="text-sm text-gray-600">11 AM - 8 PM Daily</p>
+                    <p className="text-sm text-gray-600">3 PM - 10 PM Daily</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3 bg-white/60 backdrop-blur-sm p-4 rounded-lg">
