@@ -80,7 +80,7 @@ const Home = () => {
                   onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
                   onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
                 >
-                  Emergency Care Now
+                  Urgent Care Now
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
