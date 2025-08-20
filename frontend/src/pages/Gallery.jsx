@@ -93,7 +93,7 @@ const Gallery = () => {
 
       {/* Gallery Grid */}
       <section className="py-16">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {filteredImages.length === 0 ? (
             <div className="text-center py-12">
               <Camera className="h-16 w-16 text-gray-400 mx-auto mb-4" />
