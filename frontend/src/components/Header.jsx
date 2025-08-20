@@ -35,7 +35,7 @@ const Header = () => {
             </div>
             <div className="flex items-center space-x-1">
               <Clock className="h-4 w-4" />
-              <span>Urgent Care: 11 AM - 8 PM Daily</span>
+              <span>Urgent Care: 3 PM - 10 PM Daily</span>
             </div>
           </div>
         </div>
