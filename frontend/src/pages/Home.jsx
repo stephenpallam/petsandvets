@@ -47,7 +47,7 @@ const Home = () => {
                   Compassionate Care for Your
                   <span className="block" style={{ color: primaryColor }}>Beloved Pets</span>
                 </h1>
-                <p className="text-xl text-gray-600 leading-relaxed">
+                <p className="text-gray-600 leading-relaxed" style={{ fontSize: '1rem' }}>
                   Quality veterinary care and urgent care services for dogs, cats, and exotic pets. 
                   Modern facilities, experienced veterinarians, and affordable pricing.
                 </p>
