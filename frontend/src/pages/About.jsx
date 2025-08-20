@@ -52,7 +52,7 @@ const About = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-white sticky top-32 z-40" style={{ paddingTop: '0.5rem', paddingBottom: '0.5rem' }}>
+      <section className="bg-white sticky top-24 z-40" style={{ paddingTop: '0.5rem', paddingBottom: '0.5rem' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-left">
             <div className="inline-flex items-center px-6 py-3 rounded-xl font-bold" style={{ backgroundColor: primaryBg, color: primaryColor, fontSize: '1.125rem' }}>
