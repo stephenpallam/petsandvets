@@ -430,41 +430,6 @@ const Contact = () => {
                   </div>
                 </div>
               </div>
-
-              {/* Directions */}
-              <div className="bg-white p-8 rounded-xl shadow-lg">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                  <MapPin className="mr-3 h-6 w-6" style={{ color: primaryColor }} />
-                  Location & Directions
-                </h2>
-                
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-gray-700 leading-relaxed">
-                      {hospitalInfo.address}
-                    </p>
-                    <p className="font-medium mt-1" style={{ color: primaryColor }}>
-                      Located beside Sweet Frog in Peacock Market Plaza
-                    </p>
-                  </div>
-                  
-                  <div className="pt-4 border-t border-gray-200">
-                    <h4 className="font-semibold text-gray-900 mb-2">Parking</h4>
-                    <p className="text-gray-600 text-sm">
-                      Ample free parking available in front of the building and throughout the plaza.
-                    </p>
-                  </div>
-                  
-                  <button 
-                    className="w-full text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
-                    style={{ backgroundColor: primaryColor }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
-                  >
-                    Get Directions
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
 
