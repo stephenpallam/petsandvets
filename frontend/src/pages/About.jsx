@@ -235,7 +235,7 @@ const About = () => {
                 <Clock className="h-6 w-6" style={{ color: primaryColor }} />
                 <div className="text-left">
                   <p className="font-semibold text-gray-900">Urgent Care</p>
-                  <p className="text-sm text-gray-600">11 AM - 8 PM Daily</p>
+                  <p className="text-sm text-gray-600">3 PM - 10 PM Daily</p>
                 </div>
               </div>
             </div>
