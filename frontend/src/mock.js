@@ -28,7 +28,7 @@ export const services = [
   {
     id: 1,
     name: "Urgent Care",
-    description: "Walk-in or by appointment urgent care services available 7 days a week from 11 AM to 8 PM.",
+    description: "Walk-in or by appointment urgent care services available 7 days a week from 3 PM to 10 PM.",
     icon: "stethoscope",
     details: "Non-surgical urgent care for immediate pet health concerns. No appointment necessary."
   },
