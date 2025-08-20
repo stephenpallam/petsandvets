@@ -41,6 +41,7 @@ function App() {
             <Route path="/cat-diagnostic-imaging" element={<CatDiagnosticImaging />} />
             <Route path="/cat-vaccinations" element={<CatVaccinations />} />
             <Route path="/ultrasound-exams" element={<UltrasoundExams />} />
+            <Route path="/pet-vaccinations" element={<PetVaccinations />} />
           </Routes>
         </main>
         <Footer />
