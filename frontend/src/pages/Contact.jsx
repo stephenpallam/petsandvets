@@ -425,7 +425,7 @@ const Contact = () => {
                       please contact your nearest 24-hour emergency animal hospital immediately.
                     </p>
                     <p className="text-red-600 font-semibold">
-                      For urgent care during our hours: Call {hospitalInfo.phone}
+                      VCA SouthPaws Veterinary Specialists & Emergency Center: (703) 752-9100
                     </p>
                   </div>
                 </div>
