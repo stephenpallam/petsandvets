@@ -141,18 +141,6 @@ const CatVaccinations = () => {
               you through the essentials of cat vaccinations and why they are a cornerstone of preventive care.
             </p>
           </div>
-          
-          {/* Hero Image */}
-          <div className="mt-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.unsplash.com/photo-1733783489145-f3d3ee7a9ccf"
-                alt="Professional veterinary care for cat vaccinations"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-20 rounded-xl"></div>
-            </div>
-          </div>
         </div>
       </section>
 
