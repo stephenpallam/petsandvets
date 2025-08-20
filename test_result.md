@@ -184,4 +184,6 @@ agent_communication:
   - agent: "main"
     message: "Successfully completed Cat Diagnostic Imaging page with comprehensive content covering imaging types (X-rays, Ultrasound), color-coded urgency levels, early detection benefits, and professional medical styling. Removed MRI & CT sections per user request."
   - agent: "main"
-    message: "Successfully created comprehensive Cat Vaccinations page with modern professional layout. Includes hero image, benefits section, core/lifestyle vaccines, vaccination schedules for kittens and adults, risks vs rewards comparison, color-coded danger warnings, and compelling CTA. Used vision expert agent to obtain professional veterinary images."
+    message: "Successfully created comprehensive Cat Vaccinations page with modern professional layout. Includes benefits section, core/lifestyle vaccines, vaccination schedules for kittens and adults, risks vs rewards comparison, color-coded danger warnings, and compelling CTA. Removed hero image per user request."
+  - agent: "main"
+    message: "Successfully created comprehensive Dog & Cat Ultrasound Exams page with professional layout. Features detection capabilities cards, benefits section, comfort/care information, procedure steps, and two professional veterinary images. Used vision expert agent to obtain relevant ultrasound procedure images."
