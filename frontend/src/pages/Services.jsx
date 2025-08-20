@@ -92,54 +92,7 @@ const Services = () => {
         </div>
       </section>
 
-      {/* Special Services Highlight */}
-      <section className="py-8 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Why Choose Our Services?
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              We combine modern medical technology with compassionate care to provide the best possible outcomes for your pets.
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="text-center p-6">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: primaryBg }}>
-                <Clock className="h-8 w-8" style={{ color: primaryColor }} />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Walk-In Urgent Care</h3>
-              <p className="text-gray-600">
-                No appointment necessary for urgent care. We're here when your pet needs immediate attention, 
-                7 days a week from 3 PM to 10 PM.
-              </p>
-            </div>
-
-            <div className="text-center p-6">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: primaryBg }}>
-                <Activity className="h-8 w-8" style={{ color: primaryColor }} />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Modern Equipment</h3>
-              <p className="text-gray-600">
-                State-of-the-art diagnostic equipment including VETSCAN HM5 analyzer, iM3 Pro-2000 dental machine, 
-                and advanced surgical facilities.
-              </p>
-            </div>
-
-            <div className="text-center p-6">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: primaryBg }}>
-                <DollarSign className="h-8 w-8" style={{ color: primaryColor }} />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Affordable Pricing</h3>
-              <p className="text-gray-600">
-                Quality care at affordable prices with special discounts for seniors, veterans, 
-                first responders, and service animals.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Pricing & Packages */}
       <section className="py-16" style={{ backgroundColor: primaryBg }}>
