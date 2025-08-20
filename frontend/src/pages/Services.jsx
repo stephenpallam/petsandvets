@@ -76,7 +76,7 @@ const Services = () => {
                     </div>
                   </div>
                   
-                  <div className="bg-gray-50 px-8 py-4">
+                  <div className="bg-gray-50 px-6 py-3">
                     <button 
                       className="font-semibold transition-colors text-sm"
                       style={{ color: primaryColor }}
