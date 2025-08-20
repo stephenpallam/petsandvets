@@ -11,6 +11,7 @@ import Gallery from "./pages/Gallery";
 import Contact from "./pages/Contact";
 import DogDentalCare from "./pages/DogDentalCare";
 import CatDentalCare from "./pages/CatDentalCare";
+import DogSkinCare from "./pages/DogSkinCare";
 
 function App() {
   return (
