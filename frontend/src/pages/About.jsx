@@ -54,7 +54,7 @@ const About = () => {
       {/* Hero Section */}
       <section className="py-8 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
+          <div className="text-left">
             <div className="inline-flex items-center px-6 py-3 rounded-xl text-lg font-bold" style={{ backgroundColor: primaryBg, color: primaryColor }}>
               <Heart className="h-5 w-5 mr-3" />
               About Us
