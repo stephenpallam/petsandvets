@@ -155,9 +155,8 @@ export const facilityImages = [
 ];
 
 export const heroImages = [
-  "https://images.unsplash.com/photo-1733783506192-653df6185a7d",
-  "https://images.unsplash.com/photo-1629990941644-45c40aac3d68", 
-  "https://images.pexels.com/photos/6235228/pexels-photo-6235228.jpeg"
+  "https://customer-assets.emergentagent.com/job_peacock-pet-care/artifacts/ulwulpak_emilee.png",
+  "https://customer-assets.emergentagent.com/job_peacock-pet-care/artifacts/ej59vv47_vanama.png"
 ];
 
 export const testimonials = [
