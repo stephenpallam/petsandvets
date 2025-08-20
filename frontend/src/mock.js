@@ -154,6 +154,12 @@ export const facilityImages = [
   },
   {
     id: 7,
+    url: "https://customer-assets.emergentagent.com/job_peacock-pet-care/artifacts/44h6ktjn_surgery_view.png",
+    title: "Surgery Anesthesia Equipment",
+    description: "State-of-the-art anesthesia machine and surgical monitoring equipment for safe procedures"
+  },
+  {
+    id: 7,
     url: "https://petsandvetsanimalhospital.com/images/clinic/dental.png",
     title: "Dental Equipment", 
     description: "Latest iM3 Pro-2000 dental machine"
