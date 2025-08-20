@@ -133,37 +133,6 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Trust Indicators */}
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
-                <Users className="h-8 w-8" style={{ color: primaryColor }} />
-              </div>
-              <h3 className="font-bold text-gray-900" style={{ fontSize: '1rem' }}>1000+</h3>
-              <p className="text-gray-600">Happy Pets</p>
-            </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
-                <Star className="h-8 w-8" style={{ color: primaryColor }} />
-              </div>
-              <h3 className="font-bold text-gray-900" style={{ fontSize: '1rem' }}>4.9/5</h3>
-              <p className="text-gray-600">Rating</p>
-            </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
-                <Shield className="h-8 w-8" style={{ color: primaryColor }} />
-              </div>
-              <h3 className="font-bold text-gray-900" style={{ fontSize: '1rem' }}>15+</h3>
-              <p className="text-gray-600">Years Experience</p>
-            </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
-                <Award className="h-8 w-8" style={{ color: primaryColor }} />
-              </div>
-              <h3 className="font-bold text-gray-900" style={{ fontSize: '1rem' }}>24/7</h3>
-              <p className="text-gray-600">Emergency Care</p>
-            </div>
-          </div>
         </div>
       </section>
 
