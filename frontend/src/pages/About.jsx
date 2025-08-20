@@ -64,17 +64,19 @@ const About = () => {
 
       {/* Mission Statement */}
       <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-left">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
-            Our Mission
-          </h2>
-          <p className="text-xl text-gray-600 leading-relaxed mb-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="mb-8">
+            <h2 className="text-xl font-bold text-gray-900 mb-2">
+              Our Mission
+            </h2>
+          </div>
+          <p className="text-base text-gray-600 leading-relaxed mb-8">
             At Pets and Vets Animal Hospital, we believe that pet care should be a collaborative effort, 
             ensuring that you and our doctors are on the same page. Our mission is to exceed your goals 
             and expectations for your pet's primary and urgent care needs, while providing quality care at affordable prices.
           </p>
           <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-lg font-medium italic" style={{ color: primaryColor }}>
+            <p className="text-base font-medium italic" style={{ color: primaryColor }}>
               "We strive to give great modern care for the modern pet at affordable prices, 
               because every pet deserves the best possible care."
             </p>
