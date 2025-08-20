@@ -108,6 +108,10 @@ const UltrasoundExams = () => {
     "Discussion of findings and next steps with our veterinary team"
   ];
 
+  const serviceAreas = [
+    "Chantilly", "South Riding", "Aldie", "Ashburn", "Centreville", "Reston", "Herndon"
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section - Mobile Only */}
