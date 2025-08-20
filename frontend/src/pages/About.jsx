@@ -86,7 +86,7 @@ const About = () => {
       {/* Our Values */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <div className="text-left mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Our Core Values
             </h2>
@@ -97,9 +97,9 @@ const About = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
-              <div key={index} className="text-center bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: primaryBg }}>
-                  <value.icon className="h-8 w-8" style={{ color: primaryColor }} />
+              <div key={index} className="text-left bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                <div className="flex items-center justify-start w-16 h-16 rounded-full mb-6" style={{ backgroundColor: primaryBg }}>
+                  <value.icon className="h-8 w-8 ml-4" style={{ color: primaryColor }} />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-4">{value.title}</h3>
                 <p className="text-gray-600">{value.description}</p>
