@@ -219,6 +219,7 @@ test_plan:
     - "Create Cat Vaccinations Page"
     - "Create Dog & Cat Ultrasound Exams Page"
     - "Create Pet Vaccinations Page"
+    - "Create Preventive Pet Care Page"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
