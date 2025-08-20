@@ -164,7 +164,7 @@ const Contact = () => {
               </div>
               <h3 className="text-lg font-bold text-red-900 mb-2">Emergency</h3>
               <p className="text-red-700 font-semibold">
-                11 AM - 8 PM Daily
+                3 PM - 10 PM Daily
               </p>
               <p className="text-red-600 text-sm mt-2">
                 Walk-ins welcome for urgent care
