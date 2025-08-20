@@ -1,0 +1,373 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { 
+  Heart, 
+  Shield, 
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  Activity,
+  Phone,
+  MapPin,
+  Eye,
+  Zap,
+  Stethoscope,
+  Target,
+  TrendingUp,
+  Award,
+  Users,
+  Search,
+  FileText,
+  Microscope,
+  FlaskConical,
+  Droplets,
+  TestTube,
+  Scan,
+  Timer,
+  Brain
+} from 'lucide-react';
+import { hospitalInfo } from '../mock';
+
+const VeterinaryDiagnosticServices = () => {
+  const primaryColor = '#29add3';
+  const primaryLight = '#5bc0db';
+  const primaryBg = '#e6f7fb';
+
+  const diagnosticBenefits = [
+    {
+      benefit: "Early Disease Detection",
+      description: "Detect diseases early, before they become critical and harder to treat",
+      icon: Target,
+      highlight: "Proactive healthcare"
+    },
+    {
+      benefit: "Quick Diagnosis",
+      description: "Confirm causes of illness quickly to begin targeted treatment immediately",
+      icon: Zap,
+      highlight: "Rapid results"
+    },
+    {
+      benefit: "Health Monitoring",
+      description: "Monitor organ function and overall health for ongoing wellness",
+      icon: Activity,
+      highlight: "Continuous care"
+    },
+    {
+      benefit: "Emergency Support",
+      description: "Save valuable time in urgent or emergency cases when every minute counts",
+      icon: Timer,
+      highlight: "Critical care"
+    }
+  ];
+
+  const diagnosticTests = [
+    {
+      category: "Bloodwork",
+      description: "Comprehensive blood analysis for complete health assessment",
+      tests: ["Complete blood counts", "Chemistry panels", "Thyroid panels", "Tick panels"],
+      icon: Droplets,
+      color: "#ef4444"
+    },
+    {
+      category: "Urine & Fecal Tests",
+      description: "Essential screening for internal health and parasite detection",
+      tests: ["Kidney function assessment", "Infection screening", "Parasite detection", "Intestinal health analysis"],
+      icon: TestTube,
+      color: "#f59e0b"
+    },
+    {
+      category: "Cytology & Cultures",
+      description: "Microscopic examination and bacterial/fungal identification",
+      tests: ["Ear cytology", "Skin cytology", "Mass cytology", "Bacterial cultures", "Fungal cultures"],
+      icon: Microscope,
+      color: "#8b5cf6"
+    },
+    {
+      category: "Disease Testing",
+      description: "Specific testing for common and serious pet diseases",
+      tests: ["Heartworm testing", "Pancreatitis detection", "Parvovirus screening", "FeLV testing", "FIV testing"],
+      icon: Shield,
+      color: "#10b981"
+    },
+    {
+      category: "Advanced Panels",
+      description: "Specialized testing for comprehensive health evaluation",
+      tests: ["Vaccine titers", "Histopathology", "Blood gas analysis", "Endocrine testing"],
+      icon: Brain,
+      color: primaryColor
+    }
+  ];
+
+  const serviceAreas = [
+    "Chantilly", "South Riding", "Aldie", "Ashburn", "Centreville", "Reston", "Herndon"
+  ];
+
+  const careFeatures = [
+    {
+      title: "In-House Laboratory",
+      description: "Advanced diagnostic equipment on-site for immediate results and faster treatment decisions",
+      icon: FlaskConical
+    },
+    {
+      title: "Fast Results",
+      description: "Most test results available quickly, so you won't wait long for answers about your pet's health",
+      icon: Clock
+    },
+    {
+      title: "Compassionate Guidance",
+      description: "Clear explanations of findings and next steps delivered with clarity and compassion",
+      icon: Heart
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section - Mobile Only */}
+      <section className="text-white sticky z-40 block md:hidden" style={{ top: '4rem', background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '0.5rem', paddingBottom: '0.5rem' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="font-bold" style={{ fontSize: '1.125rem' }}>
+              Veterinary Diagnostic Services
+            </h1>
+          </div>
+        </div>
+      </section>
+
+      {/* Introduction */}
+      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+              Veterinary Diagnostic Services in Chantilly, VA
+            </h1>
+            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
+              When your pet is sick or showing unusual symptoms, time matters. At Pets and Vets Animal Hospital & Urgent Care, 
+              we provide advanced veterinary diagnostic services in Chantilly, VA, while proudly serving families in South Riding, 
+              Aldie, Ashburn, Centreville, Reston, and Herndon. With our in-house diagnostic laboratory and state-of-the-art 
+              equipment, we can quickly uncover what's wrong and begin treatment right away—because your pet's health can't wait.
+            </p>
+          </div>
+          
+          {/* Professional Image */}
+          <div className="mt-8 flex justify-center">
+            <div className="relative max-w-2xl">
+              <img 
+                src="https://images.unsplash.com/photo-1576669801838-1b1c52121e6a"
+                alt="Professional veterinary diagnostic laboratory with state-of-the-art equipment"
+                className="w-full h-64 object-cover rounded-xl shadow-lg"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Veterinary Diagnostics Are Important */}
+      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
+            Why Veterinary Diagnostics Are Important
+          </h2>
+          <p className="text-center text-gray-600 mb-8">
+            Diagnostics are the foundation of effective veterinary care. By analyzing blood, urine, tissues, or other samples, we can:
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {diagnosticBenefits.map((benefit, index) => (
+              <div key={index} className="bg-white p-6 rounded-xl shadow-md text-center">
+                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
+                  <benefit.icon className="h-8 w-8" style={{ color: primaryColor }} />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">{benefit.benefit}</h3>
+                <p className="text-gray-600 text-sm mb-3">{benefit.description}</p>
+                <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                  {benefit.highlight}
+                </span>
+              </div>
+            ))}
+          </div>
+          
+          <div className="bg-blue-50 p-6 rounded-xl border-l-4 border-blue-500">
+            <div className="flex items-center mb-4">
+              <Search className="h-6 w-6 mr-3 text-blue-600" />
+              <h3 className="text-lg font-semibold text-blue-900">Foundation of Effective Care</h3>
+            </div>
+            <p className="text-blue-800">
+              Advanced diagnostic testing provides the critical information veterinarians need to deliver targeted, 
+              effective treatment that gets your pet feeling better faster.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Common Diagnostic Tests We Perform */}
+      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
+            Common Diagnostic Tests We Perform
+          </h2>
+          <p className="text-center text-gray-600 mb-8">
+            Our in-house veterinary lab allows us to run a wide variety of tests for fast and accurate results:
+          </p>
+          
+          <div className="space-y-6">
+            {diagnosticTests.map((test, index) => (
+              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md">
+                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
+                  <div className="flex items-center mb-4 lg:mb-0">
+                    <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: `${test.color}15` }}>
+                      <test.icon className="h-8 w-8" style={{ color: test.color }} />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900">{test.category}</h3>
+                      <p className="text-gray-600 text-sm mt-1">{test.description}</p>
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {test.tests.map((testItem, testIndex) => (
+                        <div key={testIndex} className="flex items-center p-3 rounded-lg border-l-4" style={{ borderColor: test.color, backgroundColor: `${test.color}05` }}>
+                          <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: test.color }} />
+                          <span className="text-sm text-gray-700">{testItem}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Fast, Accurate, Compassionate Care */}
+      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
+            Fast, Accurate, Compassionate Care
+          </h2>
+          <p className="text-center text-gray-600 mb-8">
+            Our diagnostic services are designed to give you peace of mind and your pet the care they deserve.
+          </p>
+          
+          {/* Professional Image */}
+          <div className="mb-8 flex justify-center">
+            <div className="relative max-w-2xl">
+              <img 
+                src="https://images.unsplash.com/photo-1583912267670-6575ad472688"
+                alt="Professional veterinary scientist performing diagnostic testing with microscope"
+                className="w-full h-64 object-cover rounded-xl shadow-lg"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {careFeatures.map((feature, index) => (
+              <div key={index} className="bg-white p-6 rounded-xl shadow-md text-center">
+                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
+                  <feature.icon className="h-8 w-8" style={{ color: primaryColor }} />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">{feature.title}</h3>
+                <p className="text-gray-600 text-sm">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+          
+          <div className="mt-8 p-6 rounded-xl" style={{ backgroundColor: primaryBg }}>
+            <p className="text-center font-medium" style={{ color: primaryColor }}>
+              With most results available in-house, you won't wait long for answers—and we'll walk you through 
+              the findings and next steps with clarity and compassion.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Service Areas */}
+      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-xl font-bold text-gray-900 mb-6">
+            Serving Your Community
+          </h2>
+          <p className="text-gray-600 mb-6">
+            We proudly provide advanced diagnostic services to pet families across:
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            {serviceAreas.map((area, index) => (
+              <span key={index} className="px-4 py-2 rounded-full text-white font-medium" style={{ backgroundColor: primaryColor }}>
+                {area}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* The Bottom Line */}
+      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-xl font-bold text-gray-900 mb-6">
+            The Bottom Line: Knowledge is Power
+          </h2>
+          <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
+            <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+              When it comes to your pet's health, knowledge is power—and diagnostics provide that knowledge. Whether it's 
+              routine screening, detecting parasites, or identifying a complex illness, our diagnostic laboratory ensures 
+              your pet gets the right care at the right time.
+            </p>
+            <div className="bg-white p-6 rounded-lg">
+              <div className="flex items-center justify-center mb-4">
+                <Microscope className="h-8 w-8 mr-3" style={{ color: primaryColor }} />
+                <h3 className="text-xl font-semibold text-gray-900">Advanced Diagnostic Excellence</h3>
+              </div>
+              <p className="text-gray-800 font-semibold">
+                From routine bloodwork to advanced disease testing—trust our in-house laboratory to provide the accurate, 
+                timely diagnostic information that guides effective treatment for your beloved companion.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact CTA */}
+      <section style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '30px', paddingBottom: '30px' }}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
+            Schedule Veterinary Diagnostic Testing Today
+          </h2>
+          <p className="mb-8" style={{ color: 'white', fontSize: '1rem' }}>
+            Advanced diagnostic services with fast, accurate results for your pet's health needs
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href={`tel:${hospitalInfo.phone}`}
+              className="inline-flex items-center justify-center bg-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              style={{ color: primaryColor }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+            >
+              <Phone className="mr-2 h-5 w-5" />
+              Call Now: {hospitalInfo.phone}
+            </a>
+            <Link
+              to="/contact"
+              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = 'white';
+                e.target.style.color = primaryColor;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'transparent';  
+                e.target.style.color = 'white';
+              }}
+            >
+              Schedule Diagnostic Testing
+              <MapPin className="ml-2 h-5 w-5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default VeterinaryDiagnosticServices;
