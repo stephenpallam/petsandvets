@@ -42,14 +42,6 @@ const CatDiagnosticImaging = () => {
       features: ["Heart evaluation", "Liver assessment", "Kidney function", "Bladder stones", "Intestinal issues"],
       speed: "Non-invasive",
       cost: "Moderate"
-    },
-    {
-      type: "MRI & CT Scans",
-      description: "Provide highly detailed 3D images of internal organs, bones, and nervous system—essential for complex conditions like brain tumors or spinal injuries.",
-      icon: Scan,
-      features: ["Brain imaging", "Spinal conditions", "Complex diagnoses", "3D visualization", "Nervous system"],
-      speed: "Comprehensive",
-      cost: "Advanced"
     }
   ];
 
