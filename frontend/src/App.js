@@ -15,6 +15,7 @@ import DogSkinCare from "./pages/DogSkinCare";
 import DogEyeCare from "./pages/DogEyeCare";
 import DogVaccinations from "./pages/DogVaccinations";
 import DogWellnessExams from "./pages/DogWellnessExams";
+import CatDiagnosticImaging from "./pages/CatDiagnosticImaging";
 
 function App() {
   return (
