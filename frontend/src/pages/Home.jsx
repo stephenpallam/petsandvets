@@ -173,7 +173,7 @@ const Home = () => {
             <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
               Special Offers & Packages
             </h2>
-            <p className="text-xl max-w-3xl mx-auto" style={{ color: primaryLight }}>
+            <p className="max-w-3xl mx-auto" style={{ color: primaryLight, fontSize: '1rem' }}>
               Quality care shouldn't break the bank. Explore our affordable services and special offers.
             </p>
           </div>
