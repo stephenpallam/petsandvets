@@ -55,14 +55,15 @@ const Services = () => {
                   key={service.id}
                   className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden"
                 >
-                  <div className="p-8">
-                    <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6" style={{ backgroundColor: primaryBg }}>
-                      <IconComponent className="h-8 w-8" style={{ color: primaryColor }} />
+                  <div className="p-6">
+                    <div className="flex items-center mb-4">
+                      <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
+                        <IconComponent className="h-6 w-6" style={{ color: primaryColor }} />
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-900">
+                        {service.name}
+                      </h3>
                     </div>
-                    
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                      {service.name}
-                    </h3>
                     
                     <p className="text-gray-600 mb-4 leading-relaxed">
                       {service.description}
