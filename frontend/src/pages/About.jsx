@@ -71,14 +71,14 @@ const About = () => {
             </h2>
           </div>
           <p className="text-base text-gray-600 leading-relaxed mb-8">
-            At Pets and Vets Animal Hospital, we believe that pet care should be a collaborative effort, 
-            ensuring that you and our doctors are on the same page. Our mission is to exceed your goals 
-            and expectations for your pet's primary and urgent care needs, while providing quality care at affordable prices.
+            Pets & Vets Animal Hospital is pleased to deliver the very best veterinary care to your pets residing in South Riding, Chantilly, Aldie, Ashburn, Herndon, Centerville, and Fairfax in Northern Virginia. Our team of licensed veterinarians and support staff provides vaccinations, parasite control, and comprehensive care to ensure your family pets stay healthy.
+          </p>
+          <p className="text-base text-gray-600 leading-relaxed mb-8">
+            We believe quality pet care, food, medicines, and pet supplies should be available to all caring and responsible pet owners. It is our mission to provide high-quality treatment options for your pets in our state-of-the-art facility, which is equipped with the latest veterinary technologies.
           </p>
           <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
             <p className="text-base font-medium italic" style={{ color: primaryColor }}>
-              "We strive to give great modern care for the modern pet at affordable prices, 
-              because every pet deserves the best possible care."
+              "We strive to provide excellent modern care for the modern pet, because every pet deserves the best possible care."
             </p>
           </div>
         </div>
