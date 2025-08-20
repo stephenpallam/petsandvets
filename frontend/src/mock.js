@@ -124,30 +124,42 @@ export const facilityImages = [
   },
   {
     id: 2,
+    url: "https://customer-assets.emergentagent.com/job_peacock-pet-care/artifacts/ue0839v0_coffee.png",
+    title: "Reception Coffee Station",
+    description: "Daily freshly brewed coffee for our guests with modern barn door design"
+  },
+  {
+    id: 3,
+    url: "https://customer-assets.emergentagent.com/job_peacock-pet-care/artifacts/iuvc8byk_seating.png",
+    title: "Reception Seating Area",
+    description: "Comfortable seating area where you can relax while we care for your pet"
+  },
+  {
+    id: 4,
     url: "https://petsandvetsanimalhospital.com/images/clinic/exam_room.png", 
     title: "Exam Room",
     description: "Clean and contemporary exam rooms"
   },
   {
-    id: 3,
+    id: 5,
     url: "https://petsandvetsanimalhospital.com/images/clinic/surgery.png",
     title: "Surgery Suite",
     description: "Advanced lighting and heated surgical table"
   },
   {
-    id: 4,
+    id: 6,
     url: "https://petsandvetsanimalhospital.com/images/clinic/dental.png",
     title: "Dental Equipment", 
     description: "Latest iM3 Pro-2000 dental machine"
   },
   {
-    id: 5,
+    id: 7,
     url: "https://petsandvetsanimalhospital.com/images/clinic/blood_analyzers.png",
     title: "Blood Analyzers",
     description: "VETSCAN HM5 hematology analyzer"
   },
   {
-    id: 6,
+    id: 8,
     url: "https://petsandvetsanimalhospital.com/images/clinic/lab.png",
     title: "Diagnostic Lab",
     description: "On-site pharmacy and diagnostic equipment"
