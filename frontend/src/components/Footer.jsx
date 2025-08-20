@@ -6,14 +6,14 @@ import { hospitalInfo, hours } from '../mock';
 const Footer = () => {
   return (
     <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Hospital Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
-              <div className="bg-emerald-600 rounded-full p-2">
+              <div className="rounded-full p-2" style={{ backgroundColor: '#29add3' }}>
                 <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                  <span className="text-emerald-600 font-bold text-lg">P&V</span>
+                  <span className="font-bold text-lg" style={{ color: '#29add3' }}>P&V</span>
                 </div>
               </div>
               <div>
@@ -25,13 +25,29 @@ const Footer = () => {
               {hospitalInfo.description}
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
+              <a 
+                href="#" 
+                className="text-gray-400 transition-colors"
+                style={{ '&:hover': { color: '#5bc0db' } }}
+                onMouseEnter={(e) => e.target.style.color = '#5bc0db'}
+                onMouseLeave={(e) => e.target.style.color = '#9ca3af'}
+              >
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
+              <a 
+                href="#" 
+                className="text-gray-400 transition-colors"
+                onMouseEnter={(e) => e.target.style.color = '#5bc0db'}
+                onMouseLeave={(e) => e.target.style.color = '#9ca3af'}
+              >
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
+              <a 
+                href="#" 
+                className="text-gray-400 transition-colors"
+                onMouseEnter={(e) => e.target.style.color = '#5bc0db'}
+                onMouseLeave={(e) => e.target.style.color = '#9ca3af'}
+              >
                 <Twitter className="h-5 w-5" />
               </a>
             </div>
@@ -42,27 +58,52 @@ const Footer = () => {
             <h3 className="text-lg font-semibold text-white">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm">
+                <Link 
+                  to="/" 
+                  className="text-gray-300 transition-colors text-sm"
+                  onMouseEnter={(e) => e.target.style.color = '#5bc0db'}
+                  onMouseLeave={(e) => e.target.style.color = '#d1d5db'}
+                >
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/services" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm">
+                <Link 
+                  to="/services" 
+                  className="text-gray-300 transition-colors text-sm"
+                  onMouseEnter={(e) => e.target.style.color = '#5bc0db'}
+                  onMouseLeave={(e) => e.target.style.color = '#d1d5db'}
+                >
                   Our Services
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm">
+                <Link 
+                  to="/about" 
+                  className="text-gray-300 transition-colors text-sm"
+                  onMouseEnter={(e) => e.target.style.color = '#5bc0db'}
+                  onMouseLeave={(e) => e.target.style.color = '#d1d5db'}
+                >
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="/gallery" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm">
+                <Link 
+                  to="/gallery" 
+                  className="text-gray-300 transition-colors text-sm"
+                  onMouseEnter={(e) => e.target.style.color = '#5bc0db'}
+                  onMouseLeave={(e) => e.target.style.color = '#d1d5db'}
+                >
                   Gallery
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm">
+                <Link 
+                  to="/contact" 
+                  className="text-gray-300 transition-colors text-sm"
+                  onMouseEnter={(e) => e.target.style.color = '#5bc0db'}
+                  onMouseLeave={(e) => e.target.style.color = '#d1d5db'}
+                >
                   Contact
                 </Link>
               </li>
@@ -87,18 +128,28 @@ const Footer = () => {
             <h3 className="text-lg font-semibold text-white">Contact Info</h3>
             <div className="space-y-3">
               <div className="flex items-start space-x-3">
-                <MapPin className="h-5 w-5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                <MapPin className="h-5 w-5 mt-0.5 flex-shrink-0" style={{ color: '#5bc0db' }} />
                 <p className="text-gray-300 text-sm">{hospitalInfo.address}</p>
               </div>
               <div className="flex items-center space-x-3">
-                <Phone className="h-5 w-5 text-emerald-400" />
-                <a href={`tel:${hospitalInfo.phone}`} className="text-gray-300 hover:text-emerald-400 transition-colors text-sm">
+                <Phone className="h-5 w-5" style={{ color: '#5bc0db' }} />
+                <a 
+                  href={`tel:${hospitalInfo.phone}`} 
+                  className="text-gray-300 transition-colors text-sm"
+                  onMouseEnter={(e) => e.target.style.color = '#5bc0db'}
+                  onMouseLeave={(e) => e.target.style.color = '#d1d5db'}
+                >
                   {hospitalInfo.phone}
                 </a>
               </div>
               <div className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 text-emerald-400" />
-                <a href={`mailto:${hospitalInfo.email}`} className="text-gray-300 hover:text-emerald-400 transition-colors text-sm">
+                <Mail className="h-5 w-5" style={{ color: '#5bc0db' }} />
+                <a 
+                  href={`mailto:${hospitalInfo.email}`} 
+                  className="text-gray-300 transition-colors text-sm"
+                  onMouseEnter={(e) => e.target.style.color = '#5bc0db'}
+                  onMouseLeave={(e) => e.target.style.color = '#d1d5db'}
+                >
                   {hospitalInfo.email}
                 </a>
               </div>
@@ -111,7 +162,7 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <h4 className="text-lg font-semibold text-white mb-4 flex items-center">
-                <Clock className="h-5 w-5 text-emerald-400 mr-2" />
+                <Clock className="h-5 w-5 mr-2" style={{ color: '#5bc0db' }} />
                 General Practice Hours
               </h4>
               <div className="grid grid-cols-2 gap-2 text-sm">
@@ -133,7 +184,7 @@ const Footer = () => {
             </div>
             <div>
               <h4 className="text-lg font-semibold text-white mb-4 flex items-center">
-                <Clock className="h-5 w-5 text-red-400 mr-2" />
+                <Clock className="h-5 w-5 mr-2 text-red-400" />
                 Urgent Care Hours
               </h4>
               <div className="text-sm">
