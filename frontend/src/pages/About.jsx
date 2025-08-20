@@ -110,34 +110,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Our Story Timeline */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
-              Our Journey
-            </h2>
-            <p className="text-base text-gray-600">
-              Building trust and excellence in veterinary care since 2010
-            </p>
-          </div>
 
-          <div className="space-y-8">
-            {milestones.map((milestone, index) => (
-              <div key={index} className="flex items-start space-x-6">
-                <div className="flex-shrink-0 w-20 text-right">
-                  <span className="text-2xl font-bold" style={{ color: primaryColor }}>{milestone.year}</span>
-                </div>
-                <div className="flex-shrink-0 w-4 h-4 rounded-full mt-2" style={{ backgroundColor: primaryColor }}></div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{milestone.event}</h3>
-                  <p className="text-gray-600">{milestone.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Team Section */}
       <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
