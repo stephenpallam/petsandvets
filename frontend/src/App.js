@@ -12,6 +12,7 @@ import Contact from "./pages/Contact";
 import DogDentalCare from "./pages/DogDentalCare";
 import CatDentalCare from "./pages/CatDentalCare";
 import DogSkinCare from "./pages/DogSkinCare";
+import DogEyeCare from "./pages/DogEyeCare";
 
 function App() {
   return (
