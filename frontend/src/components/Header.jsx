@@ -75,7 +75,7 @@ const Header = () => {
                 </div>
               </div>
             </div>
-            <div className="hidden sm:block">
+            <div>
               <h1 className="text-xl font-bold text-gray-900">Pets & Vets</h1>
               <p className="text-sm text-gray-600">Animal Hospital & Urgent Care</p>
             </div>
