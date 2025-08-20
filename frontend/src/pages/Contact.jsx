@@ -141,7 +141,7 @@ const Contact = () => {
               <h3 className="text-lg font-bold text-gray-900 mb-2">Email Us</h3>
               <a 
                 href={`mailto:${hospitalInfo.email}`}
-                className="font-semibold transition-colors"
+                className="font-semibold transition-colors text-sm"
                 style={{ color: primaryColor }}
                 onMouseEnter={(e) => e.target.style.color = '#2196c7'}
                 onMouseLeave={(e) => e.target.style.color = primaryColor}
