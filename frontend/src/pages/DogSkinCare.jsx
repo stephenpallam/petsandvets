@@ -135,7 +135,7 @@ const DogSkinCare = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              Dog Dermatology: Protecting Your Pet's Skin and Comfort
+              Dog Skin Care
             </h1>
             <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
               When it comes to your dog's health, skin is often overlooked—but it's one of the most common sources of discomfort. 
