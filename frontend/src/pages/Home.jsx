@@ -266,7 +266,7 @@ const Home = () => {
             <h2 className="font-bold text-gray-900 mb-4" style={{ fontSize: '1rem' }}>
               What Pet Parents Say
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-gray-600" style={{ fontSize: '1rem' }}>
               Don't just take our word for it - hear from our satisfied clients
             </p>
           </div>
