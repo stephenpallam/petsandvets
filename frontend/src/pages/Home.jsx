@@ -43,7 +43,7 @@ const Home = () => {
                   <Heart className="h-4 w-4 mr-2" />
                   FREE First Office Visit for New Patients
                 </div>
-                <h1 className="text-4xl md:text-6xl font-bold text-gray-900 leading-tight">
+                <h1 className="font-bold text-gray-900 leading-tight" style={{ fontSize: '2rem' }}>
                   Compassionate Care for Your
                   <span className="block" style={{ color: primaryColor }}>Beloved Pets</span>
                 </h1>
