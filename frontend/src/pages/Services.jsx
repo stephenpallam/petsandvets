@@ -24,16 +24,20 @@ const Services = () => {
     bird: Bird
   };
 
+  const primaryColor = '#29add3';
+  const primaryLight = '#5bc0db';
+  const primaryBg = '#e6f7fb';
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-emerald-600 to-teal-600 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="text-white py-20" style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)` }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Comprehensive Pet Care Services
             </h1>
-            <p className="text-xl md:text-2xl text-emerald-100 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed" style={{ color: primaryLight }}>
               From routine wellness to emergency care, we provide complete veterinary services 
               with modern equipment and compassionate care.
             </p>
@@ -43,7 +47,7 @@ const Services = () => {
 
       {/* Services Grid */}
       <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service) => {
               const IconComponent = iconMap[service.icon] || Heart;
@@ -53,8 +57,8 @@ const Services = () => {
                   className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden"
                 >
                   <div className="p-8">
-                    <div className="flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mb-6">
-                      <IconComponent className="h-8 w-8 text-emerald-600" />
+                    <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6" style={{ backgroundColor: primaryBg }}>
+                      <IconComponent className="h-8 w-8" style={{ color: primaryColor }} />
                     </div>
                     
                     <h3 className="text-2xl font-bold text-gray-900 mb-4">
@@ -73,7 +77,12 @@ const Services = () => {
                   </div>
                   
                   <div className="bg-gray-50 px-8 py-4">
-                    <button className="text-emerald-600 font-semibold hover:text-emerald-700 transition-colors text-sm">
+                    <button 
+                      className="font-semibold transition-colors text-sm"
+                      style={{ color: primaryColor }}
+                      onMouseEnter={(e) => e.target.style.color = '#2196c7'}
+                      onMouseLeave={(e) => e.target.style.color = primaryColor}
+                    >
                       Learn More →
                     </button>
                   </div>
@@ -86,7 +95,7 @@ const Services = () => {
 
       {/* Special Services Highlight */}
       <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Why Choose Our Services?
@@ -98,8 +107,8 @@ const Services = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="text-center p-6">
-              <div className="flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-6">
-                <Clock className="h-8 w-8 text-emerald-600" />
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: primaryBg }}>
+                <Clock className="h-8 w-8" style={{ color: primaryColor }} />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">Walk-In Urgent Care</h3>
               <p className="text-gray-600">
@@ -109,8 +118,8 @@ const Services = () => {
             </div>
 
             <div className="text-center p-6">
-              <div className="flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-6">
-                <Activity className="h-8 w-8 text-emerald-600" />
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: primaryBg }}>
+                <Activity className="h-8 w-8" style={{ color: primaryColor }} />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">Modern Equipment</h3>
               <p className="text-gray-600">
@@ -120,8 +129,8 @@ const Services = () => {
             </div>
 
             <div className="text-center p-6">
-              <div className="flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-6">
-                <DollarSign className="h-8 w-8 text-emerald-600" />
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: primaryBg }}>
+                <DollarSign className="h-8 w-8" style={{ color: primaryColor }} />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">Affordable Pricing</h3>
               <p className="text-gray-600">
@@ -134,8 +143,8 @@ const Services = () => {
       </section>
 
       {/* Pricing & Packages */}
-      <section className="py-16 bg-emerald-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-16" style={{ backgroundColor: primaryBg }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Affordable Care Packages
@@ -151,9 +160,12 @@ const Services = () => {
                 key={offer.id}
                 className={`p-6 rounded-xl transition-all duration-200 hover:scale-105 ${
                   offer.highlight
-                    ? 'bg-emerald-600 text-white shadow-xl'
+                    ? 'text-white shadow-xl'
                     : 'bg-white text-gray-900 shadow-md'
                 }`}
+                style={{
+                  backgroundColor: offer.highlight ? primaryColor : 'white'
+                }}
               >
                 {offer.highlight && (
                   <div className="text-center mb-4">
@@ -164,19 +176,38 @@ const Services = () => {
                 )}
                 
                 <div className="flex items-center mb-4">
-                  <CheckCircle className={`h-6 w-6 mr-3 ${offer.highlight ? 'text-emerald-200' : 'text-emerald-600'}`} />
+                  <CheckCircle className={`h-6 w-6 mr-3`} style={{ color: offer.highlight ? primaryLight : primaryColor }} />
                   <h3 className="text-xl font-bold">{offer.title}</h3>
                 </div>
                 
-                <p className={`mb-6 ${offer.highlight ? 'text-emerald-100' : 'text-gray-600'}`}>
+                <p className={`mb-6 ${offer.highlight ? 'text-blue-100' : 'text-gray-600'}`}>
                   {offer.description}
                 </p>
                 
                 <button className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${
                   offer.highlight
-                    ? 'bg-white text-emerald-600 hover:bg-gray-100'
-                    : 'bg-emerald-600 text-white hover:bg-emerald-700'
-                }`}>
+                    ? 'bg-white hover:bg-gray-100'
+                    : 'text-white'
+                }`}
+                style={{
+                  backgroundColor: offer.highlight ? 'white' : primaryColor,
+                  color: offer.highlight ? primaryColor : 'white'
+                }}
+                onMouseEnter={(e) => {
+                  if (offer.highlight) {
+                    e.target.style.backgroundColor = '#f9fafb';
+                  } else {
+                    e.target.style.backgroundColor = '#2196c7';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (offer.highlight) {
+                    e.target.style.backgroundColor = 'white';
+                  } else {
+                    e.target.style.backgroundColor = primaryColor;
+                  }
+                }}
+                >
                   Learn More
                 </button>
               </div>
@@ -186,19 +217,34 @@ const Services = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-emerald-600 to-teal-600">
+      <section className="py-16" style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)` }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Ready to Schedule Your Pet's Care?
           </h2>
-          <p className="text-xl text-emerald-100 mb-8">
+          <p className="text-xl mb-8" style={{ color: primaryLight }}>
             Contact us today to discuss your pet's needs or for emergency care
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-emerald-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200">
+            <button 
+              className="bg-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              style={{ color: primaryColor }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+            >
               Schedule Appointment
             </button>
-            <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-emerald-600 transition-colors duration-200">
+            <button 
+              className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = 'white';
+                e.target.style.color = primaryColor;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'transparent';
+                e.target.style.color = 'white';
+              }}
+            >
               Emergency Care
             </button>
           </div>

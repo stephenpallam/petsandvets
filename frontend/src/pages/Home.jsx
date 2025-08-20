@@ -25,23 +25,27 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const primaryColor = '#29add3';
+  const primaryLight = '#5bc0db';
+  const primaryBg = '#e6f7fb';
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-emerald-50 via-white to-teal-50 overflow-hidden">
+      <section className="relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${primaryBg} 0%, #ffffff 50%, #f0fdff 100%)` }}>
         <div className="absolute inset-0 bg-white/40"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
             <div className="space-y-8">
               <div className="space-y-4">
-                <div className="inline-flex items-center bg-emerald-100 text-emerald-800 px-4 py-2 rounded-full text-sm font-medium">
+                <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium" style={{ backgroundColor: primaryBg, color: primaryColor }}>
                   <Heart className="h-4 w-4 mr-2" />
                   FREE First Office Visit for New Patients
                 </div>
                 <h1 className="text-4xl md:text-6xl font-bold text-gray-900 leading-tight">
                   Compassionate Care for Your
-                  <span className="text-emerald-600 block">Beloved Pets</span>
+                  <span className="block" style={{ color: primaryColor }}>Beloved Pets</span>
                 </h1>
                 <p className="text-xl text-gray-600 leading-relaxed">
                   Quality veterinary care and urgent care services for dogs, cats, and exotic pets. 
@@ -52,14 +56,14 @@ const Home = () => {
               {/* Quick Info */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex items-center space-x-3 bg-white/60 backdrop-blur-sm p-4 rounded-lg">
-                  <Clock className="h-5 w-5 text-emerald-600" />
+                  <Clock className="h-5 w-5" style={{ color: primaryColor }} />
                   <div>
                     <p className="font-semibold text-gray-900">Urgent Care</p>
                     <p className="text-sm text-gray-600">11 AM - 8 PM Daily</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3 bg-white/60 backdrop-blur-sm p-4 rounded-lg">
-                  <MapPin className="h-5 w-5 text-emerald-600" />
+                  <MapPin className="h-5 w-5" style={{ color: primaryColor }} />
                   <div>
                     <p className="font-semibold text-gray-900">South Riding</p>
                     <p className="text-sm text-gray-600">Walk-ins Welcome</p>
@@ -71,14 +75,29 @@ const Home = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   to="/contact"
-                  className="inline-flex items-center justify-center bg-emerald-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-emerald-700 transition-all duration-200 shadow-lg hover:shadow-xl group"
+                  className="inline-flex items-center justify-center text-white px-8 py-4 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl group"
+                  style={{ backgroundColor: primaryColor }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
                 >
                   Emergency Care Now
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
                   to="/services"
-                  className="inline-flex items-center justify-center border-2 border-emerald-600 text-emerald-600 px-8 py-4 rounded-lg font-semibold hover:bg-emerald-600 hover:text-white transition-all duration-200"
+                  className="inline-flex items-center justify-center border-2 px-8 py-4 rounded-lg font-semibold transition-all duration-200"
+                  style={{ 
+                    borderColor: primaryColor, 
+                    color: primaryColor 
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = primaryColor;
+                    e.target.style.color = 'white';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = 'transparent';
+                    e.target.style.color = primaryColor;
+                  }}
                 >
                   View All Services
                 </Link>
@@ -116,29 +135,29 @@ const Home = () => {
           {/* Trust Indicators */}
           <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-4">
-                <Users className="h-8 w-8 text-emerald-600" />
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
+                <Users className="h-8 w-8" style={{ color: primaryColor }} />
               </div>
               <h3 className="text-2xl font-bold text-gray-900">1000+</h3>
               <p className="text-gray-600">Happy Pets</p>
             </div>
             <div className="text-center">
-              <div className="flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-4">
-                <Star className="h-8 w-8 text-emerald-600" />
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
+                <Star className="h-8 w-8" style={{ color: primaryColor }} />
               </div>
               <h3 className="text-2xl font-bold text-gray-900">4.9/5</h3>
               <p className="text-gray-600">Rating</p>
             </div>
             <div className="text-center">
-              <div className="flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-4">
-                <Shield className="h-8 w-8 text-emerald-600" />
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
+                <Shield className="h-8 w-8" style={{ color: primaryColor }} />
               </div>
               <h3 className="text-2xl font-bold text-gray-900">15+</h3>
               <p className="text-gray-600">Years Experience</p>
             </div>
             <div className="text-center">
-              <div className="flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-4">
-                <Award className="h-8 w-8 text-emerald-600" />
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
+                <Award className="h-8 w-8" style={{ color: primaryColor }} />
               </div>
               <h3 className="text-2xl font-bold text-gray-900">24/7</h3>
               <p className="text-gray-600">Emergency Care</p>
@@ -148,13 +167,13 @@ const Home = () => {
       </section>
 
       {/* Special Offers Section */}
-      <section className="py-16 bg-emerald-600">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-16" style={{ backgroundColor: primaryColor }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Special Offers & Packages
             </h2>
-            <p className="text-xl text-emerald-100 max-w-3xl mx-auto">
+            <p className="text-xl max-w-3xl mx-auto" style={{ color: primaryLight }}>
               Quality care shouldn't break the bank. Explore our affordable services and special offers.
             </p>
           </div>
@@ -166,17 +185,20 @@ const Home = () => {
                 className={`relative p-6 rounded-xl transition-all duration-200 hover:scale-105 ${
                   offer.highlight
                     ? 'bg-white text-gray-900 shadow-xl'
-                    : 'bg-emerald-700 text-white'
+                    : 'text-white'
                 }`}
+                style={{
+                  backgroundColor: offer.highlight ? 'white' : '#2196c7'
+                }}
               >
                 {offer.highlight && (
                   <div className="absolute -top-3 left-6 bg-yellow-400 text-gray-900 px-3 py-1 rounded-full text-xs font-bold">
                     POPULAR
                   </div>
                 )}
-                <CheckCircle className={`h-8 w-8 mb-4 ${offer.highlight ? 'text-emerald-600' : 'text-emerald-200'}`} />
+                <CheckCircle className={`h-8 w-8 mb-4`} style={{ color: offer.highlight ? primaryColor : primaryLight }} />
                 <h3 className="text-xl font-bold mb-2">{offer.title}</h3>
-                <p className={`${offer.highlight ? 'text-gray-600' : 'text-emerald-100'}`}>
+                <p className={offer.highlight ? 'text-gray-600' : 'text-blue-100'}>
                   {offer.description}
                 </p>
               </div>
@@ -187,7 +209,7 @@ const Home = () => {
 
       {/* Services Preview */}
       <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Comprehensive Pet Care Services
@@ -203,14 +225,17 @@ const Home = () => {
                 key={service.id}
                 className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1"
               >
-                <div className="flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mb-6">
-                  <Heart className="h-8 w-8 text-emerald-600" />
+                <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6" style={{ backgroundColor: primaryBg }}>
+                  <Heart className="h-8 w-8" style={{ color: primaryColor }} />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">{service.name}</h3>
                 <p className="text-gray-600 mb-4">{service.description}</p>
                 <Link
                   to="/services"
-                  className="inline-flex items-center text-emerald-600 font-semibold hover:text-emerald-700 transition-colors"
+                  className="inline-flex items-center font-semibold transition-colors"
+                  style={{ color: primaryColor }}
+                  onMouseEnter={(e) => e.target.style.color = '#2196c7'}
+                  onMouseLeave={(e) => e.target.style.color = primaryColor}
                 >
                   Learn More
                   <ArrowRight className="ml-1 h-4 w-4" />
@@ -222,7 +247,10 @@ const Home = () => {
           <div className="text-center mt-12">
             <Link
               to="/services"
-              className="inline-flex items-center bg-emerald-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-emerald-700 transition-colors duration-200"
+              className="inline-flex items-center text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              style={{ backgroundColor: primaryColor }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
             >
               View All Services
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -233,7 +261,7 @@ const Home = () => {
 
       {/* Testimonials */}
       <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               What Pet Parents Say
@@ -266,25 +294,36 @@ const Home = () => {
       </section>
 
       {/* Contact CTA */}
-      <section className="py-16 bg-gradient-to-r from-emerald-600 to-teal-600">
+      <section className="py-16" style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)` }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Ready to Give Your Pet the Best Care?
           </h2>
-          <p className="text-xl text-emerald-100 mb-8">
+          <p className="text-xl mb-8" style={{ color: primaryLight }}>
             Contact us today to schedule an appointment or for emergency care
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href={`tel:${hospitalInfo.phone}`}
-              className="inline-flex items-center justify-center bg-white text-emerald-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200"
+              className="inline-flex items-center justify-center bg-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              style={{ color: primaryColor }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
             >
               <Phone className="mr-2 h-5 w-5" />
               Call Now: {hospitalInfo.phone}
             </a>
             <Link
               to="/contact"
-              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-emerald-600 transition-colors duration-200"
+              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = 'white';
+                e.target.style.color = primaryColor;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'transparent';  
+                e.target.style.color = 'white';
+              }}
             >
               Get Directions
               <MapPin className="ml-2 h-5 w-5" />

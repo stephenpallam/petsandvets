@@ -13,6 +13,10 @@ import {
 import { hospitalInfo, team } from '../mock';
 
 const About = () => {
+  const primaryColor = '#29add3';
+  const primaryLight = '#5bc0db';
+  const primaryBg = '#e6f7fb';
+
   const values = [
     {
       icon: Heart,
@@ -47,13 +51,13 @@ const About = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-emerald-600 to-teal-600 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="text-white py-20" style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)` }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               About Pets & Vets Animal Hospital
             </h1>
-            <p className="text-xl md:text-2xl text-emerald-100 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed" style={{ color: primaryLight }}>
               Dedicated to providing exceptional veterinary care with compassion, 
               modern technology, and affordable pricing for the South Riding community.
             </p>
@@ -72,8 +76,8 @@ const About = () => {
             ensuring that you and our doctors are on the same page. Our mission is to exceed your goals 
             and expectations for your pet's primary and urgent care needs, while providing quality care at affordable prices.
           </p>
-          <div className="bg-emerald-50 p-8 rounded-xl">
-            <p className="text-lg text-emerald-800 font-medium italic">
+          <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
+            <p className="text-lg font-medium italic" style={{ color: primaryColor }}>
               "We strive to give great modern care for the modern pet at affordable prices, 
               because every pet deserves the best possible care."
             </p>
@@ -83,7 +87,7 @@ const About = () => {
 
       {/* Our Values */}
       <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Our Core Values
@@ -96,8 +100,8 @@ const About = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
               <div key={index} className="text-center bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow">
-                <div className="flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-6">
-                  <value.icon className="h-8 w-8 text-emerald-600" />
+                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: primaryBg }}>
+                  <value.icon className="h-8 w-8" style={{ color: primaryColor }} />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-4">{value.title}</h3>
                 <p className="text-gray-600">{value.description}</p>
@@ -123,9 +127,9 @@ const About = () => {
             {milestones.map((milestone, index) => (
               <div key={index} className="flex items-start space-x-6">
                 <div className="flex-shrink-0 w-20 text-right">
-                  <span className="text-2xl font-bold text-emerald-600">{milestone.year}</span>
+                  <span className="text-2xl font-bold" style={{ color: primaryColor }}>{milestone.year}</span>
                 </div>
-                <div className="flex-shrink-0 w-4 h-4 bg-emerald-600 rounded-full mt-2"></div>
+                <div className="flex-shrink-0 w-4 h-4 rounded-full mt-2" style={{ backgroundColor: primaryColor }}></div>
                 <div className="flex-1">
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{milestone.event}</h3>
                   <p className="text-gray-600">{milestone.description}</p>
@@ -138,7 +142,7 @@ const About = () => {
 
       {/* Team Section */}
       <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Meet Our Team
@@ -158,7 +162,7 @@ const About = () => {
                 />
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
-                  <p className="text-emerald-600 font-semibold mb-3">{member.role}</p>
+                  <p className="font-semibold mb-3" style={{ color: primaryColor }}>{member.role}</p>
                   <p className="text-gray-600 mb-4 text-sm leading-relaxed">{member.bio}</p>
                   <p className="text-sm text-gray-500 font-medium">{member.education}</p>
                 </div>
@@ -169,13 +173,13 @@ const About = () => {
       </section>
 
       {/* Hospital Stats */}
-      <section className="py-16 bg-emerald-600">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-16" style={{ backgroundColor: primaryColor }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               By the Numbers
             </h2>
-            <p className="text-xl text-emerald-100">
+            <p className="text-xl" style={{ color: primaryLight }}>
               Our commitment to excellence, measured
             </p>
           </div>
@@ -183,19 +187,19 @@ const About = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
               <div className="text-4xl md:text-6xl font-bold text-white mb-2">1000+</div>
-              <div className="text-emerald-100">Happy Pets Served</div>
+              <div style={{ color: primaryLight }}>Happy Pets Served</div>
             </div>
             <div>
               <div className="text-4xl md:text-6xl font-bold text-white mb-2">15+</div>
-              <div className="text-emerald-100">Years Experience</div>
+              <div style={{ color: primaryLight }}>Years Experience</div>
             </div>
             <div>
               <div className="text-4xl md:text-6xl font-bold text-white mb-2">4.9</div>
-              <div className="text-emerald-100">Average Rating</div>
+              <div style={{ color: primaryLight }}>Average Rating</div>
             </div>
             <div>
               <div className="text-4xl md:text-6xl font-bold text-white mb-2">24/7</div>
-              <div className="text-emerald-100">Emergency Support</div>
+              <div style={{ color: primaryLight }}>Emergency Support</div>
             </div>
           </div>
         </div>
@@ -214,21 +218,21 @@ const About = () => {
           <div className="bg-gray-50 p-8 rounded-xl mb-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="flex items-center justify-center space-x-3">
-                <MapPin className="h-6 w-6 text-emerald-600" />
+                <MapPin className="h-6 w-6" style={{ color: primaryColor }} />
                 <div className="text-left">
                   <p className="font-semibold text-gray-900">Visit Us</p>
                   <p className="text-sm text-gray-600">South Riding, VA</p>
                 </div>
               </div>
               <div className="flex items-center justify-center space-x-3">
-                <Phone className="h-6 w-6 text-emerald-600" />
+                <Phone className="h-6 w-6" style={{ color: primaryColor }} />
                 <div className="text-left">
                   <p className="font-semibold text-gray-900">Call Us</p>
                   <p className="text-sm text-gray-600">{hospitalInfo.phone}</p>
                 </div>
               </div>
               <div className="flex items-center justify-center space-x-3">
-                <Clock className="h-6 w-6 text-emerald-600" />
+                <Clock className="h-6 w-6" style={{ color: primaryColor }} />
                 <div className="text-left">
                   <p className="font-semibold text-gray-900">Urgent Care</p>
                   <p className="text-sm text-gray-600">11 AM - 8 PM Daily</p>
@@ -238,10 +242,26 @@ const About = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-emerald-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-emerald-700 transition-colors duration-200">
+            <button 
+              className="text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              style={{ backgroundColor: primaryColor }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
+            >
               Schedule Appointment
             </button>
-            <button className="border-2 border-emerald-600 text-emerald-600 px-8 py-4 rounded-lg font-semibold hover:bg-emerald-600 hover:text-white transition-colors duration-200">
+            <button 
+              className="border-2 px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              style={{ borderColor: primaryColor, color: primaryColor }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = primaryColor;
+                e.target.style.color = 'white';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'transparent';
+                e.target.style.color = primaryColor;
+              }}
+            >
               Contact Us
             </button>
           </div>
