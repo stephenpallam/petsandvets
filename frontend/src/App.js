@@ -47,6 +47,7 @@ function App() {
             <Route path="/pet-vaccinations" element={<PetVaccinations />} />
             <Route path="/preventive-pet-care" element={<PreventivePetCare />} />
             <Route path="/veterinary-diagnostic-services" element={<VeterinaryDiagnosticServices />} />
+            <Route path="/pet-dermatology-allergy-care" element={<PetDermatologyAllergyCare />} />
           </Routes>
         </main>
         <Footer />
