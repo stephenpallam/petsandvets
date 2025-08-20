@@ -23,6 +23,10 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const primaryColor = '#29add3';
+  const primaryLight = '#5bc0db';
+  const primaryBg = '#e6f7fb';
+
   const serviceTypes = [
     'General Inquiry',
     'Schedule Appointment',
@@ -81,13 +85,13 @@ const Contact = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-emerald-600 to-teal-600 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="text-white py-20" style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)` }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Contact Us
             </h1>
-            <p className="text-xl md:text-2xl text-emerald-100 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed" style={{ color: primaryLight }}>
               We're here to help with all your pet care needs. Contact us for appointments, 
               emergency care, or any questions about our services.
             </p>
@@ -97,31 +101,34 @@ const Contact = () => {
 
       {/* Contact Info Cards */}
       <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
             {/* Address */}
             <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center">
-              <div className="flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-4">
-                <MapPin className="h-8 w-8 text-emerald-600" />
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
+                <MapPin className="h-8 w-8" style={{ color: primaryColor }} />
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Visit Us</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
                 {hospitalInfo.address}
               </p>
-              <p className="text-emerald-600 text-sm mt-2 font-medium">
+              <p className="text-sm mt-2 font-medium" style={{ color: primaryColor }}>
                 (Beside Sweet Frog)
               </p>
             </div>
 
             {/* Phone */}
             <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center">
-              <div className="flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-4">
-                <Phone className="h-8 w-8 text-emerald-600" />
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
+                <Phone className="h-8 w-8" style={{ color: primaryColor }} />
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Call Us</h3>
               <a 
                 href={`tel:${hospitalInfo.phone}`}
-                className="text-emerald-600 font-semibold hover:text-emerald-700 transition-colors text-lg"
+                className="font-semibold transition-colors text-lg"
+                style={{ color: primaryColor }}
+                onMouseEnter={(e) => e.target.style.color = '#2196c7'}
+                onMouseLeave={(e) => e.target.style.color = primaryColor}
               >
                 {hospitalInfo.phone}
               </a>
@@ -132,13 +139,16 @@ const Contact = () => {
 
             {/* Email */}
             <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center">
-              <div className="flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-4">
-                <Mail className="h-8 w-8 text-emerald-600" />
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
+                <Mail className="h-8 w-8" style={{ color: primaryColor }} />
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Email Us</h3>
               <a 
                 href={`mailto:${hospitalInfo.email}`}
-                className="text-emerald-600 font-semibold hover:text-emerald-700 transition-colors"
+                className="font-semibold transition-colors"
+                style={{ color: primaryColor }}
+                onMouseEnter={(e) => e.target.style.color = '#2196c7'}
+                onMouseLeave={(e) => e.target.style.color = primaryColor}
               >
                 {hospitalInfo.email}
               </a>
@@ -183,7 +193,22 @@ const Contact = () => {
                       required
                       value={contactForm.name}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg transition-colors"
+                      style={{
+                        '&:focus': {
+                          outline: 'none',
+                          borderColor: primaryColor,
+                          boxShadow: `0 0 0 2px ${primaryColor}20`
+                        }
+                      }}
+                      onFocus={(e) => {
+                        e.target.style.borderColor = primaryColor;
+                        e.target.style.boxShadow = `0 0 0 2px ${primaryColor}20`;
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = '#d1d5db';
+                        e.target.style.boxShadow = 'none';
+                      }}
                       placeholder="John Doe"
                     />
                   </div>
@@ -199,7 +224,15 @@ const Contact = () => {
                       required
                       value={contactForm.email}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg transition-colors"
+                      onFocus={(e) => {
+                        e.target.style.borderColor = primaryColor;
+                        e.target.style.boxShadow = `0 0 0 2px ${primaryColor}20`;
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = '#d1d5db';
+                        e.target.style.boxShadow = 'none';
+                      }}
                       placeholder="john@example.com"
                     />
                   </div>
@@ -216,7 +249,15 @@ const Contact = () => {
                       name="phone"
                       value={contactForm.phone}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg transition-colors"
+                      onFocus={(e) => {
+                        e.target.style.borderColor = primaryColor;
+                        e.target.style.boxShadow = `0 0 0 2px ${primaryColor}20`;
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = '#d1d5db';
+                        e.target.style.boxShadow = 'none';
+                      }}
                       placeholder="(555) 123-4567"
                     />
                   </div>
@@ -231,7 +272,15 @@ const Contact = () => {
                       name="petName"
                       value={contactForm.petName}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg transition-colors"
+                      onFocus={(e) => {
+                        e.target.style.borderColor = primaryColor;
+                        e.target.style.boxShadow = `0 0 0 2px ${primaryColor}20`;
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = '#d1d5db';
+                        e.target.style.boxShadow = 'none';
+                      }}
                       placeholder="Fluffy"
                     />
                   </div>
@@ -246,7 +295,15 @@ const Contact = () => {
                     name="serviceType"
                     value={contactForm.serviceType}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg transition-colors"
+                    onFocus={(e) => {
+                      e.target.style.borderColor = primaryColor;
+                      e.target.style.boxShadow = `0 0 0 2px ${primaryColor}20`;
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = '#d1d5db';
+                      e.target.style.boxShadow = 'none';
+                    }}
                   >
                     <option value="">Select a service...</option>
                     {serviceTypes.map((service) => (
@@ -268,7 +325,15 @@ const Contact = () => {
                     rows={5}
                     value={contactForm.message}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors resize-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg transition-colors resize-none"
+                    onFocus={(e) => {
+                      e.target.style.borderColor = primaryColor;
+                      e.target.style.boxShadow = `0 0 0 2px ${primaryColor}20`;
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = '#d1d5db';
+                      e.target.style.boxShadow = 'none';
+                    }}
                     placeholder="Tell us about your pet's needs or any questions you have..."
                   />
                 </div>
@@ -276,7 +341,18 @@ const Contact = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-emerald-600 text-white px-6 py-4 rounded-lg font-semibold hover:bg-emerald-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                  className="w-full text-white px-6 py-4 rounded-lg font-semibold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                  style={{ backgroundColor: primaryColor }}
+                  onMouseEnter={(e) => {
+                    if (!isSubmitting) {
+                      e.target.style.backgroundColor = '#2196c7';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isSubmitting) {
+                      e.target.style.backgroundColor = primaryColor;
+                    }
+                  }}
                 >
                   {isSubmitting ? (
                     <>
@@ -298,7 +374,7 @@ const Contact = () => {
               {/* Hours */}
               <div className="bg-white p-8 rounded-xl shadow-lg">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                  <Clock className="mr-3 h-6 w-6 text-emerald-600" />
+                  <Clock className="mr-3 h-6 w-6" style={{ color: primaryColor }} />
                   Hospital Hours
                 </h2>
                 
@@ -330,12 +406,12 @@ const Contact = () => {
                   </div>
 
                   <div className="border-t border-gray-200 pt-6">
-                    <h3 className="text-lg font-semibold text-emerald-600 mb-4">Urgent Care</h3>
+                    <h3 className="text-lg font-semibold mb-4" style={{ color: primaryColor }}>Urgent Care</h3>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Every Day:</span>
-                      <span className="font-bold text-emerald-600">{hours.urgentCare.everyday}</span>
+                      <span className="font-bold" style={{ color: primaryColor }}>{hours.urgentCare.everyday}</span>
                     </div>
-                    <p className="text-sm text-emerald-600 mt-2 font-medium">
+                    <p className="text-sm mt-2 font-medium" style={{ color: primaryColor }}>
                       Walk-ins welcome • No appointment necessary
                     </p>
                   </div>
@@ -362,7 +438,7 @@ const Contact = () => {
               {/* Directions */}
               <div className="bg-white p-8 rounded-xl shadow-lg">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                  <MapPin className="mr-3 h-6 w-6 text-emerald-600" />
+                  <MapPin className="mr-3 h-6 w-6" style={{ color: primaryColor }} />
                   Location & Directions
                 </h2>
                 
@@ -371,7 +447,7 @@ const Contact = () => {
                     <p className="text-gray-700 leading-relaxed">
                       {hospitalInfo.address}
                     </p>
-                    <p className="text-emerald-600 font-medium mt-1">
+                    <p className="font-medium mt-1" style={{ color: primaryColor }}>
                       Located beside Sweet Frog in Peacock Market Plaza
                     </p>
                   </div>
@@ -383,7 +459,12 @@ const Contact = () => {
                     </p>
                   </div>
                   
-                  <button className="w-full bg-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors duration-200">
+                  <button 
+                    className="w-full text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
+                    style={{ backgroundColor: primaryColor }}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
+                  >
                     Get Directions
                   </button>
                 </div>

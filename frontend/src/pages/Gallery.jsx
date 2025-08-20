@@ -6,6 +6,10 @@ const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [filter, setFilter] = useState('all');
 
+  const primaryColor = '#29add3';
+  const primaryLight = '#5bc0db';
+  const primaryBg = '#e6f7fb';
+
   const categories = [
     { id: 'all', name: 'All Facilities' },
     { id: 'reception', name: 'Reception Area' },
@@ -36,16 +40,16 @@ const Gallery = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-emerald-600 to-teal-600 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="text-white py-20" style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)` }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center mb-6">
-              <Camera className="h-12 w-12 text-emerald-200 mr-4" />
+              <Camera className="h-12 w-12 mr-4" style={{ color: primaryLight }} />
               <h1 className="text-4xl md:text-6xl font-bold">
                 Facility Gallery
               </h1>
             </div>
-            <p className="text-xl md:text-2xl text-emerald-100 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed" style={{ color: primaryLight }}>
               Take a virtual tour of our modern, state-of-the-art veterinary facility 
               designed for your pet's comfort and care.
             </p>
@@ -55,7 +59,7 @@ const Gallery = () => {
 
       {/* Filter Tabs */}
       <section className="py-8 bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap justify-center gap-4">
             {categories.map((category) => (
               <button
@@ -63,9 +67,22 @@ const Gallery = () => {
                 onClick={() => setFilter(category.id)}
                 className={`px-6 py-3 rounded-full font-medium transition-all duration-200 ${
                   filter === category.id
-                    ? 'bg-emerald-600 text-white shadow-md'
+                    ? 'text-white shadow-md'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
+                style={{
+                  backgroundColor: filter === category.id ? primaryColor : undefined
+                }}
+                onMouseEnter={(e) => {
+                  if (filter !== category.id) {
+                    e.target.style.backgroundColor = '#f3f4f6';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (filter !== category.id) {
+                    e.target.style.backgroundColor = '#f9fafb';
+                  }
+                }}
               >
                 {category.name}
               </button>
@@ -76,7 +93,7 @@ const Gallery = () => {
 
       {/* Gallery Grid */}
       <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           {filteredImages.length === 0 ? (
             <div className="text-center py-12">
               <Camera className="h-16 w-16 text-gray-400 mx-auto mb-4" />
@@ -120,7 +137,7 @@ const Gallery = () => {
 
       {/* Feature Highlights */}
       <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Modern Facilities & Equipment
@@ -133,8 +150,8 @@ const Gallery = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center p-6 bg-gray-50 rounded-xl">
-              <div className="flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-6">
-                <Camera className="h-8 w-8 text-emerald-600" />
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: primaryBg }}>
+                <Camera className="h-8 w-8" style={{ color: primaryColor }} />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">Modern Design</h3>
               <p className="text-gray-600">
@@ -144,8 +161,8 @@ const Gallery = () => {
             </div>
 
             <div className="text-center p-6 bg-gray-50 rounded-xl">
-              <div className="flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-6">
-                <MapPin className="h-8 w-8 text-emerald-600" />
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: primaryBg }}>
+                <MapPin className="h-8 w-8" style={{ color: primaryColor }} />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">Strategic Location</h3>
               <p className="text-gray-600">
@@ -155,8 +172,8 @@ const Gallery = () => {
             </div>
 
             <div className="text-center p-6 bg-gray-50 rounded-xl">
-              <div className="flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-6">
-                <Clock className="h-8 w-8 text-emerald-600" />
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: primaryBg }}>
+                <Clock className="h-8 w-8" style={{ color: primaryColor }} />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">Efficient Service</h3>
               <p className="text-gray-600">
@@ -169,19 +186,34 @@ const Gallery = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-emerald-600 to-teal-600">
+      <section className="py-16" style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)` }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Ready to Visit Our Facility?
           </h2>
-          <p className="text-xl text-emerald-100 mb-8">
+          <p className="text-xl mb-8" style={{ color: primaryLight }}>
             Experience our modern, comfortable environment designed for exceptional pet care
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-emerald-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200">
+            <button 
+              className="bg-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              style={{ color: primaryColor }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+            >
               Schedule a Tour
             </button>
-            <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-emerald-600 transition-colors duration-200">
+            <button 
+              className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = 'white';
+                e.target.style.color = primaryColor;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'transparent';
+                e.target.style.color = 'white';
+              }}
+            >
               Contact Us
             </button>
           </div>
