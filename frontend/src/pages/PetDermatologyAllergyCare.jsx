@@ -277,18 +277,6 @@ const PetDermatologyAllergyCare = () => {
               </div>
             ))}
           </div>
-          
-          {/* Professional Image */}
-          <div className="mt-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.unsplash.com/photo-1601833746588-2307e503421b"
-                alt="Caring veterinary dermatology examination for pets"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
-          </div>
         </div>
       </section>
 
