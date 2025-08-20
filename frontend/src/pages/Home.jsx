@@ -152,7 +152,7 @@ const Home = () => {
               <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
                 <Shield className="h-8 w-8" style={{ color: primaryColor }} />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900">15+</h3>
+              <h3 className="font-bold text-gray-900" style={{ fontSize: '1rem' }}>15+</h3>
               <p className="text-gray-600">Years Experience</p>
             </div>
             <div className="text-center">
