@@ -13,6 +13,7 @@ import DogDentalCare from "./pages/DogDentalCare";
 import CatDentalCare from "./pages/CatDentalCare";
 import DogSkinCare from "./pages/DogSkinCare";
 import DogEyeCare from "./pages/DogEyeCare";
+import DogVaccinations from "./pages/DogVaccinations";
 
 function App() {
   return (
