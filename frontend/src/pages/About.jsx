@@ -203,64 +203,40 @@ const About = () => {
       </section>
 
       {/* Contact CTA */}
-      <section className="py-16 bg-white">
+      <section style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '30px', paddingBottom: '30px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Experience the Difference
+          <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
+            Ready to Give Your Pet the Best Care?
           </h2>
-          <p className="text-xl text-gray-600 mb-8">
-            Join the hundreds of pet families who trust us with their beloved companions
+          <p className="mb-8" style={{ color: 'white', fontSize: '1rem' }}>
+            Contact us today to schedule an appointment or for urgent care
           </p>
-          
-          <div className="bg-gray-50 p-8 rounded-xl mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="flex items-center justify-center space-x-3">
-                <MapPin className="h-6 w-6" style={{ color: primaryColor }} />
-                <div className="text-left">
-                  <p className="font-semibold text-gray-900">Visit Us</p>
-                  <p className="text-sm text-gray-600">South Riding, VA</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-center space-x-3">
-                <Phone className="h-6 w-6" style={{ color: primaryColor }} />
-                <div className="text-left">
-                  <p className="font-semibold text-gray-900">Call Us</p>
-                  <p className="text-sm text-gray-600">{hospitalInfo.phone}</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-center space-x-3">
-                <Clock className="h-6 w-6" style={{ color: primaryColor }} />
-                <div className="text-left">
-                  <p className="font-semibold text-gray-900">Urgent Care</p>
-                  <p className="text-sm text-gray-600">3 PM - 10 PM Daily</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button 
-              className="text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
-              style={{ backgroundColor: primaryColor }}
-              onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
-              onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
+            <a
+              href={`tel:${hospitalInfo.phone}`}
+              className="inline-flex items-center justify-center bg-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              style={{ color: primaryColor }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
             >
-              Schedule Appointment
-            </button>
-            <button 
-              className="border-2 px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
-              style={{ borderColor: primaryColor, color: primaryColor }}
+              <Phone className="mr-2 h-5 w-5" />
+              Call Now: {hospitalInfo.phone}
+            </a>
+            <Link
+              to="/contact"
+              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
               onMouseEnter={(e) => {
-                e.target.style.backgroundColor = primaryColor;
-                e.target.style.color = 'white';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = 'transparent';
+                e.target.style.backgroundColor = 'white';
                 e.target.style.color = primaryColor;
               }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'transparent';  
+                e.target.style.color = 'white';
+              }}
             >
-              Contact Us
-            </button>
+              Get Directions
+              <MapPin className="ml-2 h-5 w-5" />
+            </Link>
           </div>
         </div>
       </section>
