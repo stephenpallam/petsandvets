@@ -41,7 +41,7 @@ const Gallery = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section className="text-white py-20" style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)` }}>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center mb-6">
               <Camera className="h-12 w-12 mr-4" style={{ color: primaryLight }} />
