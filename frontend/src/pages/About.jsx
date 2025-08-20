@@ -52,13 +52,12 @@ const About = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-white sticky z-40" style={{ top: '7.2rem', paddingTop: '0.5rem', paddingBottom: '0.5rem' }}>
+      <section className="text-white sticky z-40" style={{ top: '7.2rem', background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '0.5rem', paddingBottom: '0.5rem' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-left">
-            <div className="inline-flex items-center px-6 py-3 rounded-xl font-bold" style={{ backgroundColor: primaryBg, color: primaryColor, fontSize: '1.125rem' }}>
-              <Heart className="h-5 w-5 mr-3" />
+          <div className="text-center">
+            <h1 className="font-bold" style={{ fontSize: '1.125rem' }}>
               About Us
-            </div>
+            </h1>
           </div>
         </div>
       </section>
