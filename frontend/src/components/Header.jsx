@@ -188,7 +188,7 @@ const Header = () => {
               onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
               onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
             >
-              Emergency Care
+              Urgent Care
             </Link>
           </div>
         </div>
