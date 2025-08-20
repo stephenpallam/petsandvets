@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { 
   Heart, 
   Stethoscope, 
@@ -9,9 +10,11 @@ import {
   Bird,
   CheckCircle,
   Clock,
-  DollarSign
+  DollarSign,
+  Phone,
+  MapPin
 } from 'lucide-react';
-import { services, specialOffers } from '../mock';
+import { services, specialOffers, hospitalInfo } from '../mock';
 
 const Services = () => {
   const iconMap = {
