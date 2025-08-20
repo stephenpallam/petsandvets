@@ -15,7 +15,6 @@ import {
   Zap,
   Camera,
   Monitor,
-  Scan,
   Target,
   TrendingUp
 } from 'lucide-react';
