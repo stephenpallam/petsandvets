@@ -197,7 +197,7 @@ const Home = () => {
                   </div>
                 )}
                 <CheckCircle className={`h-8 w-8 mb-4`} style={{ color: offer.highlight ? primaryColor : primaryLight }} />
-                <h3 className="text-xl font-bold mb-2">{offer.title}</h3>
+                <h3 className="font-bold mb-2" style={{ fontSize: '1rem' }}>{offer.title}</h3>
                 <p className={offer.highlight ? 'text-gray-600' : 'text-blue-100'}>
                   {offer.description}
                 </p>
