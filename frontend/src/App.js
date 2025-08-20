@@ -21,6 +21,7 @@ import PetVaccinations from "./pages/PetVaccinations";
 import PreventivePetCare from "./pages/PreventivePetCare";
 import VeterinaryDiagnosticServices from "./pages/VeterinaryDiagnosticServices";
 import PetDermatologyAllergyCare from "./pages/PetDermatologyAllergyCare";
+import DigitalVeterinaryXRays from "./pages/DigitalVeterinaryXRays";
 import CatDiagnosticImaging from "./pages/CatDiagnosticImaging";
 
 function App() {
