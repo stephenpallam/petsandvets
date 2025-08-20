@@ -113,7 +113,7 @@ const Services = () => {
               <h3 className="text-xl font-bold text-gray-900 mb-4">Walk-In Urgent Care</h3>
               <p className="text-gray-600">
                 No appointment necessary for urgent care. We're here when your pet needs immediate attention, 
-                7 days a week from 11 AM to 8 PM.
+                7 days a week from 3 PM to 10 PM.
               </p>
             </div>
 
