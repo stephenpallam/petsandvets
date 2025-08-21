@@ -89,7 +89,7 @@ const UrgentCare = () => {
     {
       service: "Upper Respiratory Infections, Coughing & Sneezing",
       description: "Diagnostics and treatment plans tailored to breed and symptoms",
-      icon: Lungs,
+      icon: Wind,
       color: "#6366f1"
     },
     {
@@ -101,7 +101,7 @@ const UrgentCare = () => {
     {
       service: "Ear Infections",
       description: "Comprehensive ear cleaning, testing, and medication to end irritation",
-      icon: Ear,
+      icon: Stethoscope,
       color: "#ec4899"
     }
   ];
