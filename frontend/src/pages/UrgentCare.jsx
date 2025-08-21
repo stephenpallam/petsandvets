@@ -88,7 +88,7 @@ const UrgentCare = () => {
     },
     {
       service: "Skin Allergies, Itching, Rashes, Hot Spots",
-      description: "Soothing remedies to end discomfort",
+      description: "Skin allergies cause discomfort for pets. Our team diagnoses and treats itching, rashes, and hot spots to provide fast relief",
       icon: Bug,
       color: "#10b981"
     },
