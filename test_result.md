@@ -305,6 +305,7 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Create Soft Tissue Surgeries Page"
     - "Create Foreign Body & GI Obstruction Surgery Page"
     - "Create Blocked Cats Emergency Care Page"
     - "Create Pet Bladder Stone Removal Page"
