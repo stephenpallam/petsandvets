@@ -303,7 +303,7 @@ const OnSitePharmacy = () => {
                 e.target.style.color = 'white';
               }}
             >
-              Request Refill
+              Contact Us
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </div>
