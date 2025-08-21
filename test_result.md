@@ -233,6 +233,7 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Create Pet Spay & Neuter Page"
     - "Complete Cat Diagnostic Imaging Page"
     - "Create Cat Vaccinations Page"
     - "Create Dog & Cat Ultrasound Exams Page"
