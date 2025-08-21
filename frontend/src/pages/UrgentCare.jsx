@@ -440,7 +440,7 @@ const UrgentCare = () => {
             </div>
             <div className="border-t border-gray-200 pt-4">
               <p className="text-sm font-medium" style={{ color: primaryColor }}>
-                By Appointment Only • 365 Days a Year
+                By Appointment Only
               </p>
             </div>
           </div>
