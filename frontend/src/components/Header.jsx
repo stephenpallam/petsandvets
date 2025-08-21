@@ -5,11 +5,64 @@ import { hospitalInfo } from '../mock';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
   const location = useLocation();
 
   const navigation = [
     { name: 'Home', href: '/' },
-    { name: 'Services', href: '/services' },
+    { 
+      name: 'Services', 
+      href: '/services',
+      dropdown: [
+        { name: 'Urgent Care', href: '/urgent-care' },
+        {
+          name: 'Dog Services',
+          submenu: [
+            { name: 'Dog Dental Care', href: '/dog-dental-care' },
+            { name: 'Dog Dermatology', href: '/dog-skin-care' },
+            { name: 'Dog Vaccinations', href: '/dog-vaccinations' },
+            { name: 'Dog Wellness', href: '/dog-wellness-exams' },
+            { name: 'Dog Eye Care', href: '/dog-eye-care' }
+          ]
+        },
+        {
+          name: 'Cat Services',
+          submenu: [
+            { name: 'Cat Dental Care', href: '/cat-dental-care' },
+            { name: 'Cat Diagnostic Imaging', href: '/cat-diagnostic-imaging' },
+            { name: 'Cat Vaccinations', href: '/cat-vaccinations' }
+          ]
+        },
+        {
+          name: 'General Services',
+          submenu: [
+            { name: 'Vaccinations', href: '/pet-vaccinations' },
+            { name: 'Wellness Exams', href: '/preventive-pet-care' },
+            { name: 'Ultrasounds', href: '/ultrasound-exams' },
+            { name: 'Diagnostic Laboratory', href: '/veterinary-diagnostic-services' },
+            { name: 'Pet Dermatology & Allergy Care', href: '/pet-dermatology-allergy-care' },
+            { name: 'Digital Radiology', href: '/digital-veterinary-x-rays' }
+          ]
+        },
+        {
+          name: 'Dental Services',
+          submenu: [
+            { name: 'Dental Cleaning', href: '/dental-cleanings' },
+            { name: 'Tooth Extractions', href: '/pet-tooth-extraction' }
+          ]
+        },
+        { name: 'Eye Care', href: '/pet-ocular-services' },
+        {
+          name: 'Surgical Services',
+          submenu: [
+            { name: 'Spay & Neuter', href: '/pet-spay-neuter' },
+            { name: 'Bladder Stone Removal', href: '/pet-bladder-stone-removal' },
+            { name: 'Blocked Cat / PU Surgery', href: '/blocked-cats-urgent-care' },
+            { name: 'Foreign Body / Obstruction Surgery', href: '/foreign-body-surgery' }
+          ]
+        }
+      ]
+    },
     { name: 'About', href: '/about' },
     { name: 'Gallery', href: '/gallery' },
     { name: 'Contact', href: '/contact' }
