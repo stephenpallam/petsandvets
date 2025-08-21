@@ -42,6 +42,12 @@ import OurTeam from "./pages/OurTeam";
 import ReachUs from "./pages/ReachUs";
 import OurHours from "./pages/OurHours";
 import MessageUs from "./pages/MessageUs";
+import NewPatientRegistration from "./pages/forms/NewPatientRegistration";
+import PatientDropOff from "./pages/forms/PatientDropOff";
+import SurgeryAnesthesiaConsent from "./pages/forms/SurgeryAnesthesiaConsent";
+import DentalConsent from "./pages/forms/DentalConsent";
+import RequestPetRecords from "./pages/forms/RequestPetRecords";
+import FormsDownload from "./pages/forms/FormsDownload";
 
 function App() {
   return (
