@@ -186,24 +186,23 @@ const Contact = () => {
               <p className="text-sm mb-6 font-medium text-red-700">
                 By Appointment Only
               </p>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Monday - Friday:</span>
-                      <span className="font-bold text-red-600">3 PM - 10 PM</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Thursday:</span>
-                      <span className="font-medium text-red-600">Closed</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Saturday:</span>
-                      <span className="font-bold text-red-600">10 AM - 8 PM</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Sunday:</span>
-                      <span className="font-bold text-red-600">10 AM - 6 PM</span>
-                    </div>
-                  </div>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Monday - Friday:</span>
+                  <span className="font-bold text-red-600">3 PM - 10 PM</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Thursday:</span>
+                  <span className="font-medium text-red-600">Closed</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Saturday:</span>
+                  <span className="font-bold text-red-600">10 AM - 8 PM</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Sunday:</span>
+                  <span className="font-bold text-red-600">10 AM - 6 PM</span>
                 </div>
               </div>
             </div>
