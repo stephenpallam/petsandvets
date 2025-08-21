@@ -131,39 +131,6 @@ const PetMicrochipping = () => {
                   </div>
                 ))}
               </div>
-
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a
-                  href={`tel:${hospitalInfo.phone}`}
-                  className="inline-flex items-center justify-center text-white px-8 py-4 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl group"
-                  style={{ backgroundColor: primaryColor }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
-                  onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
-                >
-                  <Phone className="mr-2 h-5 w-5" />
-                  Schedule Now: {hospitalInfo.phone}
-                </a>
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center justify-center border-2 px-8 py-4 rounded-lg font-semibold transition-all duration-200"
-                  style={{ 
-                    borderColor: primaryColor, 
-                    color: primaryColor 
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = primaryColor;
-                    e.target.style.color = 'white';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = 'transparent';
-                    e.target.style.color = primaryColor;
-                  }}
-                >
-                  Learn More
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </div>
             </div>
           </div>
         </div>
