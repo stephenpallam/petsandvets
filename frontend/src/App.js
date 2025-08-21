@@ -30,6 +30,7 @@ import PetSpayNeuter from "./pages/PetSpayNeuter";
 import PetBladderStoneRemoval from "./pages/PetBladderStoneRemoval";
 import BlockedCatsUrgentCare from "./pages/BlockedCatsUrgentCare";
 import ForeignBodySurgery from "./pages/ForeignBodySurgery";
+import SoftTissueSurgeries from "./pages/SoftTissueSurgeries";
 
 function App() {
   return (
