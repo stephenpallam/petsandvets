@@ -436,10 +436,46 @@ const Contact = () => {
           {/* Google Maps Section */}
           <div className="mt-12">
             <div className="bg-white p-8 rounded-xl shadow-lg">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                <MapPin className="mr-3 h-6 w-6" style={{ color: primaryColor }} />
-                Find Us on Map
-              </h2>
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 flex items-center mb-4 lg:mb-0">
+                  <MapPin className="mr-3 h-6 w-6" style={{ color: primaryColor }} />
+                  Find Us on Map
+                </h2>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <a 
+                    href={`tel:${hospitalInfo.phone}`}
+                    className="flex items-center justify-center px-4 py-2 rounded-lg transition-colors duration-200 border-2"
+                    style={{ borderColor: primaryColor, color: primaryColor }}
+                    onMouseEnter={(e) => {
+                      e.target.style.backgroundColor = primaryColor;
+                      e.target.style.color = 'white';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.backgroundColor = 'transparent';
+                      e.target.style.color = primaryColor;
+                    }}
+                  >
+                    <Phone className="mr-2 h-4 w-4" />
+                    {hospitalInfo.phone}
+                  </a>
+                  <a 
+                    href={`mailto:${hospitalInfo.email}`}
+                    className="flex items-center justify-center px-4 py-2 rounded-lg transition-colors duration-200 border-2"
+                    style={{ borderColor: primaryColor, color: primaryColor }}
+                    onMouseEnter={(e) => {
+                      e.target.style.backgroundColor = primaryColor;
+                      e.target.style.color = 'white';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.backgroundColor = 'transparent';
+                      e.target.style.color = primaryColor;
+                    }}
+                  >
+                    <Mail className="mr-2 h-4 w-4" />
+                    {hospitalInfo.email}
+                  </a>
+                </div>
+              </div>
               
               <div className="rounded-xl overflow-hidden shadow-md">
                 <iframe
