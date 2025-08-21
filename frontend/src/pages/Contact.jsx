@@ -440,6 +440,25 @@ const Contact = () => {
               </form>
             </div>
           </div>
+
+          {/* Emergency Care - Full Width */}
+          <div className="mb-12">
+            <div className="bg-red-50 border-2 border-red-200 p-8 rounded-xl">
+              <div className="flex items-start">
+                <AlertCircle className="h-6 w-6 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
+                <div>
+                  <h3 className="text-lg font-bold text-red-900 mb-2">Emergency Care</h3>
+                  <p className="text-red-700 mb-3">
+                    If your pet is experiencing a life-threatening emergency outside our urgent care hours, 
+                    please contact your nearest 24-hour emergency animal hospital immediately.
+                  </p>
+                  <p className="text-red-600 font-semibold">
+                    VCA SouthPaws Veterinary Specialists & Emergency Center: (703) 752-9100
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
