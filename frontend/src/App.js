@@ -34,6 +34,7 @@ import ForeignBodySurgery from "./pages/ForeignBodySurgery";
 import SoftTissueSurgeries from "./pages/SoftTissueSurgeries";
 import UrgentCare from "./pages/UrgentCare";
 import EndOfLifeCare from "./pages/EndOfLifeCare";
+import PetMicrochipping from "./pages/PetMicrochipping";
 
 function App() {
   return (
