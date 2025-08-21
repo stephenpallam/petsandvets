@@ -98,8 +98,8 @@ const PetMicrochipping = () => {
       <section className="relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${primaryBg} 0%, #ffffff 50%, #f0fdff 100%)` }}>
         <div className="absolute inset-0 bg-white/40"></div>
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
+          <div className="max-w-4xl mx-auto text-center">
+            {/* Content */}
             <div className="space-y-8">
               <div className="space-y-6">
                 <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium" style={{ backgroundColor: primaryBg, color: primaryColor }}>
@@ -112,7 +112,7 @@ const PetMicrochipping = () => {
                     Permanent Protection for Your Beloved Pet
                   </span>
                 </h1>
-                <p className="text-gray-700 leading-relaxed text-lg">
+                <p className="text-gray-700 leading-relaxed text-lg max-w-4xl mx-auto">
                   Losing a pet can be a heart-wrenching experience—but microchipping offers a powerful tool 
                   to prevent long-term separation. At Pets and Vets Animal Hospital, we make microchipping 
                   quick, safe, and effective, giving you peace of mind that your pet can always find their way home.
@@ -120,20 +120,20 @@ const PetMicrochipping = () => {
               </div>
 
               {/* Quick Stats */}
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
                 {benefitStats.map((stat, index) => (
-                  <div key={index} className="text-center p-4 bg-white/60 backdrop-blur-sm rounded-lg">
-                    <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-2" style={{ backgroundColor: `${stat.color}15` }}>
-                      <stat.icon className="h-6 w-6" style={{ color: stat.color }} />
+                  <div key={index} className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-lg">
+                    <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: `${stat.color}15` }}>
+                      <stat.icon className="h-8 w-8" style={{ color: stat.color }} />
                     </div>
-                    <h3 className="font-bold text-gray-900">{stat.title}</h3>
-                    <p className="text-sm text-gray-600">{stat.description}</p>
+                    <h3 className="font-bold text-gray-900 text-lg">{stat.title}</h3>
+                    <p className="text-gray-600">{stat.description}</p>
                   </div>
                 ))}
               </div>
 
               {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
                   href={`tel:${hospitalInfo.phone}`}
                   className="inline-flex items-center justify-center text-white px-8 py-4 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl group"
@@ -163,33 +163,6 @@ const PetMicrochipping = () => {
                   Learn More
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
-              </div>
-            </div>
-
-            {/* Right Content - Visual */}
-            <div className="relative">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-white p-8">
-                <div className="text-center">
-                  <div className="flex items-center justify-center w-24 h-24 rounded-full mx-auto mb-6" style={{ backgroundColor: primaryBg }}>
-                    <Radio className="h-12 w-12" style={{ color: primaryColor }} />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">Microchip Size Comparison</h3>
-                  <div className="bg-gray-50 p-6 rounded-xl">
-                    <div className="flex items-center justify-center space-x-8">
-                      <div className="text-center">
-                        <div className="w-2 h-6 bg-yellow-600 rounded-full mx-auto mb-2"></div>
-                        <p className="text-sm font-medium text-gray-700">Rice Grain</p>
-                      </div>
-                      <div className="text-center">
-                        <div className="w-2 h-6 rounded-full mx-auto mb-2" style={{ backgroundColor: primaryColor }}></div>
-                        <p className="text-sm font-medium text-gray-700">Microchip</p>
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-600 mt-4">
-                      Same size as a grain of rice - tiny but powerful protection!
-                    </p>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
