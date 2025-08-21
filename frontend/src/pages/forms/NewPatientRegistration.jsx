@@ -21,8 +21,7 @@ const NewPatientRegistration = () => {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-xl shadow-lg overflow-hidden">
             <div className="p-6 border-b border-gray-200">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-                <h2 className="text-xl font-bold text-gray-900 mb-4 sm:mb-0">Complete Online Form</h2>
+              <div className="flex flex-col sm:flex-row justify-end items-start sm:items-center">
                 <div className="flex flex-col sm:flex-row gap-3">
                   <a
                     href="https://petsandvetsanimalhospital.com/forms/New_Patient_Registration_Form.pdf"
