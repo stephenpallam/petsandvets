@@ -29,6 +29,7 @@ import CatDiagnosticImaging from "./pages/CatDiagnosticImaging";
 import PetSpayNeuter from "./pages/PetSpayNeuter";
 import PetBladderStoneRemoval from "./pages/PetBladderStoneRemoval";
 import BlockedCatsUrgentCare from "./pages/BlockedCatsUrgentCare";
+import ForeignBodySurgery from "./pages/ForeignBodySurgery";
 
 function App() {
   return (
