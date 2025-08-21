@@ -59,20 +59,20 @@ const NewPatientRegistration = () => {
             
             {/* Embedded Form */}
             <div className="relative overflow-hidden">
-              {/* Overlay to hide top section */}
+              {/* Smaller overlay to minimize white space */}
               <div 
                 className="absolute top-0 left-0 right-0 z-10 bg-white"
-                style={{ height: '180px' }}
+                style={{ height: '120px' }}
               ></div>
               
               <iframe 
                 src="https://docs.google.com/forms/d/e/1FAIpQLSfh6JJmTAH6A4QObm_WvmM7k86bMwjUWShcVw4lKsa9pHNBsw/viewform?embedded=true" 
                 width="100%" 
-                height="2400"
+                height="2000"
                 frameBorder="0" 
                 marginHeight="0" 
                 marginWidth="0" 
-                style={{ marginTop: '-180px' }}
+                style={{ marginTop: '-120px' }}
                 onLoad={() => {
                   try {
                     window.parent.parent.scroll(0,0);
