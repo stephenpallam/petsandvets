@@ -66,8 +66,16 @@ const Header = () => {
         }
       ]
     },
-    { name: 'About', href: '/about' },
-    { name: 'Gallery', href: '/gallery' },
+    { 
+      name: 'About Us', 
+      href: '/about',
+      dropdown: [
+        { name: 'Our Mission', href: '/our-mission' },
+        { name: 'Our Core Values', href: '/our-core-values' },
+        { name: 'Our Team', href: '/our-team' },
+        { name: 'Our Facility', href: '/gallery' }
+      ]
+    },
     { name: 'Contact', href: '/contact' }
   ];
 
