@@ -269,6 +269,7 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Create Blocked Cats Emergency Care Page"
     - "Create Pet Bladder Stone Removal Page"
     - "Create Pet Spay & Neuter Page"
     - "Complete Cat Diagnostic Imaging Page"
