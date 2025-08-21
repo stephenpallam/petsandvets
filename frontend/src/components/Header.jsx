@@ -117,7 +117,7 @@ const Header = () => {
           {/* CTA Button */}
           <div className="hidden md:flex items-center space-x-4">
             <Link
-              to="/contact"
+              to="/urgent-care"
               className="text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 shadow-md hover:shadow-lg"
               style={{ 
                 backgroundColor: '#29add3',
