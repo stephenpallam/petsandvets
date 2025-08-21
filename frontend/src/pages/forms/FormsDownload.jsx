@@ -115,7 +115,7 @@ const FormsDownload = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Forms Categories */}
-      <section style={{ backgroundColor: primaryBg, paddingTop: '40px', paddingBottom: '40px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-12">
             {formCategories.map((category, categoryIndex) => (
