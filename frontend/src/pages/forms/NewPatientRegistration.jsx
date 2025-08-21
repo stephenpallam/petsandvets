@@ -62,7 +62,7 @@ const NewPatientRegistration = () => {
               <iframe 
                 src="https://docs.google.com/forms/d/e/1FAIpQLSfh6JJmTAH6A4QObm_WvmM7k86bMwjUWShcVw4lKsa9pHNBsw/viewform?embedded=true" 
                 width="100%" 
-                height="1677"
+                height="2400"
                 frameBorder="0" 
                 marginHeight="0" 
                 marginWidth="0" 
