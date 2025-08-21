@@ -210,8 +210,8 @@ const UrgentCare = () => {
       icon: Eye
     },
     {
-      feature: "365 Days a Year",
-      description: "Open every day to serve your urgent pet care needs",
+      feature: "Available When Your Vet Isn't",
+      description: "We're here during holidays, weekends, and busy times when your primary vet has no available appointments",
       icon: Calendar
     }
   ];
