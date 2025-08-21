@@ -33,6 +33,7 @@ import BlockedCatsUrgentCare from "./pages/BlockedCatsUrgentCare";
 import ForeignBodySurgery from "./pages/ForeignBodySurgery";
 import SoftTissueSurgeries from "./pages/SoftTissueSurgeries";
 import UrgentCare from "./pages/UrgentCare";
+import EndOfLifeCare from "./pages/EndOfLifeCare";
 
 function App() {
   return (
