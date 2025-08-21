@@ -26,6 +26,7 @@ import DentalCleanings from "./pages/DentalCleanings";
 import PetToothExtraction from "./pages/PetToothExtraction";
 import PetOcularServices from "./pages/PetOcularServices";
 import CatDiagnosticImaging from "./pages/CatDiagnosticImaging";
+import PetSpayNeuter from "./pages/PetSpayNeuter";
 
 function App() {
   return (
