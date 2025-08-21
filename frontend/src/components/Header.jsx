@@ -76,7 +76,15 @@ const Header = () => {
         { name: 'Our Facility', href: '/gallery' }
       ]
     },
-    { name: 'Contact', href: '/contact' }
+    { 
+      name: 'Contact Us', 
+      href: '/contact',
+      dropdown: [
+        { name: 'Reach Us', href: '/reach-us' },
+        { name: 'Our Hours', href: '/our-hours' },
+        { name: 'Message Us', href: '/message-us' }
+      ]
+    }
   ];
 
   const isActive = (href) => location.pathname === href;
