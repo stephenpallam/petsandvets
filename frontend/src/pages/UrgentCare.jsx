@@ -70,7 +70,7 @@ const UrgentCare = () => {
     },
     {
       service: "Loss of Appetite or Hydration Issues",
-      description: "Diagnosis and supportive therapies like IV fluids",
+      description: "If your pet won't eat or drink, it may signal a serious issue. Our team provides diagnosis and supportive therapies like IV fluids to get them back on track",
       icon: Utensils,
       color: "#f59e0b"
     },
