@@ -94,7 +94,7 @@ const UrgentCare = () => {
     },
     {
       service: "Upper Respiratory Infections",
-      description: "Upper respiratory infections are scary. We're here to help diagnose and recommend treatments that position your pet for the best chance at a full recovery. Our experienced team will provide you with their diagnosis and recommended next steps to getting your pet to breathe easier",
+      description: "Our team will diagnose the issue and recommend the best treatment to help your pet breathe easier and recover quickly",
       icon: Wind,
       color: "#6366f1"
     },
