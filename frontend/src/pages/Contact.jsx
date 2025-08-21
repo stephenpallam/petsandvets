@@ -407,33 +407,51 @@ const Contact = () => {
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
 
-                  <div className="border-t border-gray-200 pt-6">
-                    <h3 className="text-lg font-semibold mb-4" style={{ color: primaryColor }}>Urgent Care</h3>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Every Day:</span>
-                      <span className="font-bold" style={{ color: primaryColor }}>{hours.urgentCare.everyday}</span>
+              {/* Urgent Care Hours */}
+              <div className="bg-white p-8 rounded-xl shadow-lg">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                  <Clock className="mr-3 h-6 w-6" style={{ color: primaryColor }} />
+                  Urgent Care Hours
+                </h2>
+                
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4" style={{ color: primaryColor }}>Walk-In Urgent Care</h3>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Monday - Friday:</span>
+                        <span className="font-bold" style={{ color: primaryColor }}>3 PM - 10 PM</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Saturday - Sunday:</span>
+                        <span className="font-bold" style={{ color: primaryColor }}>10 AM - 8 PM</span>
+                      </div>
                     </div>
                     <p className="text-sm mt-2 font-medium" style={{ color: primaryColor }}>
                       By Appointment Only
                     </p>
                   </div>
-                </div>
-              </div>
 
-              {/* Emergency Notice */}
-              <div className="bg-red-50 border-2 border-red-200 p-6 rounded-xl">
-                <div className="flex items-start">
-                  <AlertCircle className="h-6 w-6 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
-                  <div>
-                    <h3 className="text-lg font-bold text-red-900 mb-2">Emergency Care</h3>
-                    <p className="text-red-700 mb-3">
-                      If your pet is experiencing a life-threatening emergency outside our urgent care hours, 
-                      please contact your nearest 24-hour emergency animal hospital immediately.
-                    </p>
-                    <p className="text-red-600 font-semibold">
-                      VCA SouthPaws Veterinary Specialists & Emergency Center: (703) 752-9100
-                    </p>
+                  {/* Emergency Notice */}
+                  <div className="border-t border-gray-200 pt-6">
+                    <div className="bg-red-50 border-2 border-red-200 p-6 rounded-xl">
+                      <div className="flex items-start">
+                        <AlertCircle className="h-6 w-6 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
+                        <div>
+                          <h3 className="text-lg font-bold text-red-900 mb-2">Emergency Care</h3>
+                          <p className="text-red-700 mb-3">
+                            If your pet is experiencing a life-threatening emergency outside our urgent care hours, 
+                            please contact your nearest 24-hour emergency animal hospital immediately.
+                          </p>
+                          <p className="text-red-600 font-semibold">
+                            VCA SouthPaws Veterinary Specialists & Emergency Center: (703) 752-9100
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
