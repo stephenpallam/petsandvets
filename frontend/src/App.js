@@ -61,6 +61,7 @@ function App() {
             <Route path="/pet-ocular-services" element={<PetOcularServices />} />
             <Route path="/pet-spay-neuter" element={<PetSpayNeuter />} />
             <Route path="/pet-bladder-stone-removal" element={<PetBladderStoneRemoval />} />
+            <Route path="/blocked-cats-urgent-care" element={<BlockedCatsUrgentCare />} />
           </Routes>
         </main>
         <Footer />
