@@ -439,7 +439,7 @@ const Contact = () => {
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
                 <h2 className="text-2xl font-bold text-gray-900 flex items-center mb-4 lg:mb-0">
                   <MapPin className="mr-3 h-6 w-6" style={{ color: primaryColor }} />
-                  Find Us on Map
+                  Reach Us
                 </h2>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <a 
