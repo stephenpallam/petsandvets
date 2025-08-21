@@ -174,8 +174,8 @@ const UrgentCare = () => {
 
   const processSteps = [
     {
-      step: "Walk-In or Save Your Spot Online",
-      description: "Flexible scheduling—no appointment needed; just walk in or use our online spot-saving tool",
+      step: "Call or Save Your Spot Online",
+      description: "By Appointment Only. Please call us before you walk in so that we can tell you the wait times and help you to come when it is free",
       icon: Calendar,
       number: "01"
     },
