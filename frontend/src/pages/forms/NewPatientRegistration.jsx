@@ -17,7 +17,7 @@ const NewPatientRegistration = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Form Section */}
-      <section style={{ backgroundColor: primaryBg, paddingTop: '40px', paddingBottom: '40px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-xl shadow-lg overflow-hidden">
             <div className="p-6 border-b border-gray-200">
