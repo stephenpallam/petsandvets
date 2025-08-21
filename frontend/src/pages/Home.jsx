@@ -74,7 +74,7 @@ const Home = () => {
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
-                  to="/contact"
+                  to="/urgent-care"
                   className="inline-flex items-center justify-center text-white px-8 py-4 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl group"
                   style={{ backgroundColor: primaryColor }}
                   onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
