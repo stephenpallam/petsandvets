@@ -98,45 +98,8 @@ const Contact = () => {
       {/* Reach Us Section */}
       <section className="py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Urgent Care - Top Full Width */}
+          {/* Reach Us Map - Full Width */}
           <div className="mb-12">
-            <div className="bg-red-50 p-8 rounded-xl shadow-lg border-2 border-red-200">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                <div className="flex items-center mb-6 md:mb-0">
-                  <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mr-6">
-                    <AlertCircle className="h-8 w-8 text-red-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-red-900 mb-2">Urgent Care</h3>
-                    <p className="text-red-700 font-semibold text-lg">
-                      3 PM - 10 PM Daily
-                    </p>
-                    <p className="text-red-600 text-sm">
-                      By Appointment Only
-                    </p>
-                  </div>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <a
-                    href={`tel:${hospitalInfo.phone}`}
-                    className="inline-flex items-center justify-center bg-red-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 hover:bg-red-700"
-                  >
-                    <Phone className="mr-2 h-5 w-5" />
-                    Call for Urgent Care
-                  </a>
-                  <div className="bg-red-100 p-4 rounded-lg max-w-md">
-                    <p className="text-red-800 text-sm">
-                      <strong>Emergency Notice:</strong> For life-threatening emergencies outside our urgent care hours, 
-                      contact your nearest 24-hour emergency animal hospital.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Reach Us Map - Bottom Full Width */}
-          <div>
             <div className="bg-white p-8 rounded-xl shadow-lg">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
                 <h2 className="text-2xl font-bold text-gray-900 flex items-center mb-4 lg:mb-0">
@@ -213,7 +176,7 @@ const Contact = () => {
           </div>
 
           {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
             {/* Contact Form */}
             <div className="bg-white p-6 rounded-xl shadow-lg">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
