@@ -279,92 +279,99 @@ const Header = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-200 shadow-lg">
           <div className="px-4 py-3 space-y-3 max-h-96 overflow-y-auto">
-            {navigation.map((item) => (
-              <div key={item.name}>
-                {item.dropdown ? (
-                  <div>
+            {navigation.map((item) => {
+              // Hide Home link when on home page
+              if (item.name === 'Home' && location.pathname === '/') {
+                return null;
+              }
+              
+              return (
+                <div key={item.name}>
+                  {item.dropdown ? (
+                    <div>
+                      <Link
+                        to={item.href}
+                        onClick={() => setIsMenuOpen(false)}
+                        className={`flex items-center justify-between px-3 py-2 text-base font-medium rounded-lg transition-all duration-200 ${
+                          isActive(item.href) || location.pathname.includes('/services') || location.pathname.includes('/urgent-care') || location.pathname.includes('/dog-') || location.pathname.includes('/cat-') || location.pathname.includes('/pet-') || location.pathname.includes('/dental-') || location.pathname.includes('/ultrasound-') || location.pathname.includes('/veterinary-') || location.pathname.includes('/digital-') || location.pathname.includes('/preventive-') || location.pathname.includes('/blocked-') || location.pathname.includes('/foreign-') || location.pathname.includes('/our-') || location.pathname.includes('/about') || location.pathname.includes('/gallery')
+                            ? 'text-gray-900'
+                            : 'text-gray-700 hover:text-gray-900'
+                        }`}
+                        style={{
+                          backgroundColor: (isActive(item.href) || location.pathname.includes('/services') || location.pathname.includes('/urgent-care') || location.pathname.includes('/dog-') || location.pathname.includes('/cat-') || location.pathname.includes('/pet-') || location.pathname.includes('/dental-') || location.pathname.includes('/ultrasound-') || location.pathname.includes('/veterinary-') || location.pathname.includes('/digital-') || location.pathname.includes('/preventive-') || location.pathname.includes('/blocked-') || location.pathname.includes('/foreign-') || location.pathname.includes('/our-') || location.pathname.includes('/about') || location.pathname.includes('/gallery')) ? '#e6f7fb' : undefined,
+                          color: (isActive(item.href) || location.pathname.includes('/services') || location.pathname.includes('/urgent-care') || location.pathname.includes('/dog-') || location.pathname.includes('/cat-') || location.pathname.includes('/pet-') || location.pathname.includes('/dental-') || location.pathname.includes('/ultrasound-') || location.pathname.includes('/veterinary-') || location.pathname.includes('/digital-') || location.pathname.includes('/preventive-') || location.pathname.includes('/blocked-') || location.pathname.includes('/foreign-') || location.pathname.includes('/our-') || location.pathname.includes('/about') || location.pathname.includes('/gallery')) ? '#29add3' : undefined
+                        }}
+                      >
+                        {item.name}
+                      </Link>
+                      
+                      {/* Mobile Dropdown Items */}
+                      <div className="ml-4 mt-2 space-y-2">
+                        {item.dropdown.map((dropdownItem, index) => (
+                          <div key={index}>
+                            {dropdownItem.submenu ? (
+                              <div>
+                                <div className="px-3 py-1 text-sm font-medium text-gray-600 bg-gray-50 rounded">
+                                  {dropdownItem.name}
+                                </div>
+                                <div className="ml-4 mt-1 space-y-1">
+                                  {dropdownItem.submenu.map((subItem, subIndex) => (
+                                    <Link
+                                      key={subIndex}
+                                      to={subItem.href}
+                                      onClick={() => setIsMenuOpen(false)}
+                                      className="block px-3 py-1 text-sm text-gray-700 hover:text-blue-600 rounded transition-colors duration-200"
+                                    >
+                                      {subItem.name}
+                                    </Link>
+                                  ))}
+                                </div>
+                              </div>
+                            ) : (
+                              <Link
+                                to={dropdownItem.href}
+                                onClick={() => setIsMenuOpen(false)}
+                                className="block px-3 py-2 text-sm text-gray-700 hover:text-blue-600 rounded transition-colors duration-200"
+                              >
+                                {dropdownItem.name}
+                              </Link>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
                     <Link
                       to={item.href}
                       onClick={() => setIsMenuOpen(false)}
-                      className={`flex items-center justify-between px-3 py-2 text-base font-medium rounded-lg transition-all duration-200 ${
-                        isActive(item.href) || location.pathname.includes('/services') || location.pathname.includes('/urgent-care') || location.pathname.includes('/dog-') || location.pathname.includes('/cat-') || location.pathname.includes('/pet-') || location.pathname.includes('/dental-') || location.pathname.includes('/ultrasound-') || location.pathname.includes('/veterinary-') || location.pathname.includes('/digital-') || location.pathname.includes('/preventive-') || location.pathname.includes('/blocked-') || location.pathname.includes('/foreign-')
+                      className={`block px-3 py-2 text-base font-medium rounded-lg transition-all duration-200 ${
+                        isActive(item.href)
                           ? 'text-gray-900'
                           : 'text-gray-700 hover:text-gray-900'
                       }`}
                       style={{
-                        backgroundColor: (isActive(item.href) || location.pathname.includes('/services') || location.pathname.includes('/urgent-care') || location.pathname.includes('/dog-') || location.pathname.includes('/cat-') || location.pathname.includes('/pet-') || location.pathname.includes('/dental-') || location.pathname.includes('/ultrasound-') || location.pathname.includes('/veterinary-') || location.pathname.includes('/digital-') || location.pathname.includes('/preventive-') || location.pathname.includes('/blocked-') || location.pathname.includes('/foreign-')) ? '#e6f7fb' : undefined,
-                        color: (isActive(item.href) || location.pathname.includes('/services') || location.pathname.includes('/urgent-care') || location.pathname.includes('/dog-') || location.pathname.includes('/cat-') || location.pathname.includes('/pet-') || location.pathname.includes('/dental-') || location.pathname.includes('/ultrasound-') || location.pathname.includes('/veterinary-') || location.pathname.includes('/digital-') || location.pathname.includes('/preventive-') || location.pathname.includes('/blocked-') || location.pathname.includes('/foreign-')) ? '#29add3' : undefined
+                        backgroundColor: isActive(item.href) ? '#e6f7fb' : undefined,
+                        color: isActive(item.href) ? '#29add3' : undefined
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isActive(item.href)) {
+                          e.target.style.color = '#29add3';
+                          e.target.style.backgroundColor = '#f9fafb';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isActive(item.href)) {
+                          e.target.style.color = '#374151';
+                          e.target.style.backgroundColor = 'transparent';
+                        }
                       }}
                     >
                       {item.name}
                     </Link>
-                    
-                    {/* Mobile Dropdown Items */}
-                    <div className="ml-4 mt-2 space-y-2">
-                      {item.dropdown.map((dropdownItem, index) => (
-                        <div key={index}>
-                          {dropdownItem.submenu ? (
-                            <div>
-                              <div className="px-3 py-1 text-sm font-medium text-gray-600 bg-gray-50 rounded">
-                                {dropdownItem.name}
-                              </div>
-                              <div className="ml-4 mt-1 space-y-1">
-                                {dropdownItem.submenu.map((subItem, subIndex) => (
-                                  <Link
-                                    key={subIndex}
-                                    to={subItem.href}
-                                    onClick={() => setIsMenuOpen(false)}
-                                    className="block px-3 py-1 text-sm text-gray-700 hover:text-blue-600 rounded transition-colors duration-200"
-                                  >
-                                    {subItem.name}
-                                  </Link>
-                                ))}
-                              </div>
-                            </div>
-                          ) : (
-                            <Link
-                              to={dropdownItem.href}
-                              onClick={() => setIsMenuOpen(false)}
-                              className="block px-3 py-2 text-sm text-gray-700 hover:text-blue-600 rounded transition-colors duration-200"
-                            >
-                              {dropdownItem.name}
-                            </Link>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <Link
-                    to={item.href}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={`block px-3 py-2 text-base font-medium rounded-lg transition-all duration-200 ${
-                      isActive(item.href)
-                        ? 'text-gray-900'
-                        : 'text-gray-700 hover:text-gray-900'
-                    }`}
-                    style={{
-                      backgroundColor: isActive(item.href) ? '#e6f7fb' : undefined,
-                      color: isActive(item.href) ? '#29add3' : undefined
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isActive(item.href)) {
-                        e.target.style.color = '#29add3';
-                        e.target.style.backgroundColor = '#f9fafb';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isActive(item.href)) {
-                        e.target.style.color = '#374151';
-                        e.target.style.backgroundColor = 'transparent';
-                      }
-                    }}
-                  >
-                    {item.name}
-                  </Link>
-                )}
-              </div>
-            ))}
+                  )}
+                </div>
+              );
+            })}
             <Link
               to="/urgent-care"
               onClick={() => setIsMenuOpen(false)}
