@@ -179,14 +179,13 @@ const Contact = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
             {/* Urgent Care Hours - Left Side */}
             <div className="bg-white p-8 rounded-xl shadow-lg border-2 border-red-200">
-              <h2 className="text-2xl font-bold text-red-900 mb-6 flex items-center">
+              <h2 className="text-2xl font-bold text-red-900 mb-4 flex items-center">
                 <Clock className="mr-3 h-6 w-6 text-red-600" />
                 Urgent Care Hours
               </h2>
-              
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-semibold mb-4 text-red-700">By Appointment Only</h3>
+              <p className="text-sm mb-6 font-medium text-red-700">
+                By Appointment Only
+              </p>
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Monday - Friday:</span>
