@@ -112,7 +112,7 @@ const OnSitePharmacy = () => {
               <div className="space-y-6">
                 <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium" style={{ backgroundColor: primaryBg, color: primaryColor }}>
                   <Pill className="h-4 w-4 mr-2" />
-                  Convenient • Fast • Trusted
+                  Convenient • Expert Guidance • Trusted
                 </div>
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
                   On-Site Pharmacy
