@@ -137,10 +137,10 @@ const OnSitePharmacy = () => {
                 </div>
                 <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-lg">
                   <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: `${accentBlue}15` }}>
-                    <Truck className="h-8 w-8" style={{ color: accentBlue }} />
+                    <Users className="h-8 w-8" style={{ color: accentBlue }} />
                   </div>
-                  <h3 className="font-bold text-gray-900 text-lg">Delivery</h3>
-                  <p className="text-gray-600">Refills mailed to your door</p>
+                  <h3 className="font-bold text-gray-900 text-lg">Expert Care</h3>
+                  <p className="text-gray-600">Professional guidance available</p>
                 </div>
                 <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-lg">
                   <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: `${accentPurple}15` }}>
