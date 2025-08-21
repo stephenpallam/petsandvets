@@ -62,11 +62,10 @@ const NewPatientRegistration = () => {
               <iframe 
                 src="https://docs.google.com/forms/d/e/1FAIpQLSfh6JJmTAH6A4QObm_WvmM7k86bMwjUWShcVw4lKsa9pHNBsw/viewform?embedded=true" 
                 width="100%" 
-                height="2000"
+                height="1800"
                 frameBorder="0" 
                 marginHeight="0" 
                 marginWidth="0" 
-                style={{ marginTop: '-40px' }}
                 onLoad={() => {
                   try {
                     window.parent.parent.scroll(0,0);
