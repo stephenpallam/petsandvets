@@ -71,6 +71,7 @@ function App() {
             <Route path="/foreign-body-surgery" element={<ForeignBodySurgery />} />
             <Route path="/soft-tissue-surgeries" element={<SoftTissueSurgeries />} />
             <Route path="/urgent-care" element={<UrgentCare />} />
+            <Route path="/end-of-life-care" element={<EndOfLifeCare />} />
           </Routes>
         </main>
         <Footer />
