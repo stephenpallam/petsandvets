@@ -210,7 +210,7 @@ const UrgentCare = () => {
       icon: Eye
     },
     {
-      feature: "Available When Your Vet Isn't",
+      feature: "Care Beyond Hours",
       description: "We're here during holidays, weekends, and busy times when your primary vet has no available appointments",
       icon: Calendar
     }
