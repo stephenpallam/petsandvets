@@ -137,33 +137,97 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
             {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                  isActive(item.href)
-                    ? 'text-gray-900' 
-                    : 'text-gray-700 hover:text-gray-900'
-                }`}
-                style={{
-                  backgroundColor: isActive(item.href) ? '#e6f7fb' : 'transparent',
-                  color: isActive(item.href) ? '#29add3' : undefined
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive(item.href)) {
-                    e.target.style.color = '#29add3';
-                    e.target.style.backgroundColor = '#f0fdff';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive(item.href)) {
-                    e.target.style.color = '#374151';
-                    e.target.style.backgroundColor = 'transparent';
-                  }
-                }}
-              >
-                {item.name}
-              </Link>
+              <div key={item.name} className="relative">
+                {item.dropdown ? (
+                  <div 
+                    className="relative"
+                    onMouseEnter={() => setActiveDropdown(item.name)}
+                    onMouseLeave={() => setActiveDropdown(null)}
+                  >
+                    <Link
+                      to={item.href}
+                      className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                        isActive(item.href) || location.pathname.includes('/services') || location.pathname.includes('/urgent-care') || location.pathname.includes('/dog-') || location.pathname.includes('/cat-') || location.pathname.includes('/pet-') || location.pathname.includes('/dental-') || location.pathname.includes('/ultrasound-') || location.pathname.includes('/veterinary-') || location.pathname.includes('/digital-') || location.pathname.includes('/preventive-') || location.pathname.includes('/blocked-') || location.pathname.includes('/foreign-')
+                          ? 'text-gray-900' 
+                          : 'text-gray-700 hover:text-gray-900'
+                      }`}
+                      style={{
+                        backgroundColor: (isActive(item.href) || location.pathname.includes('/services') || location.pathname.includes('/urgent-care') || location.pathname.includes('/dog-') || location.pathname.includes('/cat-') || location.pathname.includes('/pet-') || location.pathname.includes('/dental-') || location.pathname.includes('/ultrasound-') || location.pathname.includes('/veterinary-') || location.pathname.includes('/digital-') || location.pathname.includes('/preventive-') || location.pathname.includes('/blocked-') || location.pathname.includes('/foreign-')) ? '#e6f7fb' : 'transparent',
+                        color: (isActive(item.href) || location.pathname.includes('/services') || location.pathname.includes('/urgent-care') || location.pathname.includes('/dog-') || location.pathname.includes('/cat-') || location.pathname.includes('/pet-') || location.pathname.includes('/dental-') || location.pathname.includes('/ultrasound-') || location.pathname.includes('/veterinary-') || location.pathname.includes('/digital-') || location.pathname.includes('/preventive-') || location.pathname.includes('/blocked-') || location.pathname.includes('/foreign-')) ? '#29add3' : undefined
+                      }}
+                    >
+                      {item.name}
+                      <ChevronDown className="ml-1 h-4 w-4" />
+                    </Link>
+                    
+                    {/* Dropdown Menu */}
+                    {activeDropdown === item.name && (
+                      <div className="absolute top-full left-0 mt-1 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
+                        {item.dropdown.map((dropdownItem, index) => (
+                          <div key={index}>
+                            {dropdownItem.submenu ? (
+                              <div className="relative group">
+                                <div className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">
+                                  <span className="font-medium">{dropdownItem.name}</span>
+                                  <ChevronDown className="h-4 w-4 transform -rotate-90" />
+                                </div>
+                                {/* Submenu */}
+                                <div className="absolute left-full top-0 ml-1 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                  {dropdownItem.submenu.map((subItem, subIndex) => (
+                                    <Link
+                                      key={subIndex}
+                                      to={subItem.href}
+                                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200"
+                                      onClick={() => setActiveDropdown(null)}
+                                    >
+                                      {subItem.name}
+                                    </Link>
+                                  ))}
+                                </div>
+                              </div>
+                            ) : (
+                              <Link
+                                to={dropdownItem.href}
+                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200"
+                                onClick={() => setActiveDropdown(null)}
+                              >
+                                {dropdownItem.name}
+                              </Link>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link
+                    to={item.href}
+                    className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                      isActive(item.href)
+                        ? 'text-gray-900' 
+                        : 'text-gray-700 hover:text-gray-900'
+                    }`}
+                    style={{
+                      backgroundColor: isActive(item.href) ? '#e6f7fb' : 'transparent',
+                      color: isActive(item.href) ? '#29add3' : undefined
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isActive(item.href)) {
+                        e.target.style.color = '#29add3';
+                        e.target.style.backgroundColor = '#f0fdff';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isActive(item.href)) {
+                        e.target.style.color = '#374151';
+                        e.target.style.backgroundColor = 'transparent';
+                      }
+                    }}
+                  >
+                    {item.name}
+                  </Link>
+                )}
+              </div>
             ))}
           </nav>
 
