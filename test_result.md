@@ -105,6 +105,18 @@
 user_problem_statement: "Create Urgent Care webpage - write a compact and impactful webpage with modern professional layout and styling for urgent veterinary care services"
 
 frontend:
+  - task: "Create On-Site Pharmacy Page"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/OnSitePharmacy.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Successfully created comprehensive On-Site Pharmacy page with modern professional layout. Features clean hero section with 'Convenient • Fast • Trusted' badge, 3 key benefit stats (Immediate, Delivery, Trusted), 'Why Choose Our In-House Pharmacy' section with 3 detailed benefit cards (Immediate Access to Meds, Easy Refill Delivery, Trusted and Tailored for Pets), 4-step 'Smoother Experience' process (See Your Vet, Head to In-House Pharmacy, Get Back to Care Fast, Request Refills Online), 'Why It Matters' section with 3 value propositions (Time-Saving Convenience, No Waiting in Lines, Consistent Accurate Medication), service areas badges for all 7 communities, special features highlight section, compelling final CTA with dual contact options, and informative bottom bar. Added route to App.js for /on-site-pharmacy path."
+
   - task: "Create Pet Microchipping Page"
     implemented: true
     working: true
