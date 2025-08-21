@@ -98,113 +98,115 @@ const Contact = () => {
       {/* Reach Us Section */}
       <section className="py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-            {/* Reach Us Map - Left Side (2/3 width) */}
-            <div className="lg:col-span-2">
-              <div className="bg-white p-8 rounded-xl shadow-lg">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900 flex items-center mb-4 lg:mb-0">
-                    <MapPin className="mr-3 h-6 w-6" style={{ color: primaryColor }} />
-                    Reach Us
-                  </h2>
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <a 
-                      href={`tel:${hospitalInfo.phone}`}
-                      className="flex items-center justify-center px-4 py-2 rounded-lg transition-colors duration-200 border-2"
-                      style={{ borderColor: primaryColor, color: primaryColor }}
-                      onMouseEnter={(e) => {
-                        e.target.style.backgroundColor = primaryColor;
-                        e.target.style.color = 'white';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.backgroundColor = 'transparent';
-                        e.target.style.color = primaryColor;
-                      }}
-                    >
-                      <Phone className="mr-2 h-4 w-4" />
-                      {hospitalInfo.phone}
-                    </a>
-                    <a 
-                      href={`mailto:${hospitalInfo.email}`}
-                      className="flex items-center justify-center px-4 py-2 rounded-lg transition-colors duration-200 border-2"
-                      style={{ borderColor: primaryColor, color: primaryColor }}
-                      onMouseEnter={(e) => {
-                        e.target.style.backgroundColor = primaryColor;
-                        e.target.style.color = 'white';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.backgroundColor = 'transparent';
-                        e.target.style.color = primaryColor;
-                      }}
-                    >
-                      <Mail className="mr-2 h-4 w-4" />
-                      {hospitalInfo.email}
-                    </a>
+          {/* Urgent Care - Top Full Width */}
+          <div className="mb-12">
+            <div className="bg-red-50 p-8 rounded-xl shadow-lg border-2 border-red-200">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div className="flex items-center mb-6 md:mb-0">
+                  <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mr-6">
+                    <AlertCircle className="h-8 w-8 text-red-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-red-900 mb-2">Urgent Care</h3>
+                    <p className="text-red-700 font-semibold text-lg">
+                      3 PM - 10 PM Daily
+                    </p>
+                    <p className="text-red-600 text-sm">
+                      By Appointment Only
+                    </p>
                   </div>
                 </div>
-                
-                <div className="rounded-xl overflow-hidden shadow-md">
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3105.8947649847485!2d-77.52344768464344!3d38.98234397956376!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89b638b58b3b5c61%3A0x5f5f5f5f5f5f5f5f!2s43114%20Peacock%20Market%20Plaza%2C%20South%20Riding%2C%20VA%2020152%2C%20USA!5e0!3m2!1sen!2sus!4v1620000000000!5m2!1sen!2sus"
-                    width="100%"
-                    height="400"
-                    style={{ border: 0 }}
-                    allowFullScreen=""
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title="Pets and Vets Animal Hospital Location"
-                  ></iframe>
-                </div>
-                
-                <div className="mt-4 p-4 rounded-lg" style={{ backgroundColor: primaryBg }}>
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                      <p className="font-semibold text-gray-900">{hospitalInfo.address}</p>
-                      <p className="text-sm text-gray-600 mt-1">Located beside Sweet Frog in Peacock Market Plaza</p>
-                    </div>
-                    <button 
-                      className="mt-3 sm:mt-0 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200"
-                      style={{ backgroundColor: primaryColor }}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
-                      onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(hospitalInfo.address)}`, '_blank')}
-                    >
-                      Get Directions
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Urgent Care - Right Side (1/3 width) */}
-            <div className="lg:col-span-1">
-              <div className="bg-red-50 p-8 rounded-xl shadow-lg border-2 border-red-200 h-full">
-                <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mx-auto mb-6">
-                  <AlertCircle className="h-8 w-8 text-red-600" />
-                </div>
-                <h3 className="text-2xl font-bold text-red-900 mb-4 text-center">Urgent Care</h3>
-                <div className="text-center mb-4">
-                  <p className="text-red-700 font-semibold text-lg">
-                    3 PM - 10 PM Daily
-                  </p>
-                  <p className="text-red-600 text-sm mt-2">
-                    By Appointment Only
-                  </p>
-                </div>
-                <div className="mt-6">
+                <div className="flex flex-col sm:flex-row gap-4">
                   <a
                     href={`tel:${hospitalInfo.phone}`}
-                    className="w-full inline-flex items-center justify-center bg-red-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 hover:bg-red-700"
+                    className="inline-flex items-center justify-center bg-red-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 hover:bg-red-700"
                   >
                     <Phone className="mr-2 h-5 w-5" />
                     Call for Urgent Care
                   </a>
+                  <div className="bg-red-100 p-4 rounded-lg max-w-md">
+                    <p className="text-red-800 text-sm">
+                      <strong>Emergency Notice:</strong> For life-threatening emergencies outside our urgent care hours, 
+                      contact your nearest 24-hour emergency animal hospital.
+                    </p>
+                  </div>
                 </div>
-                <div className="mt-4 p-4 bg-red-100 rounded-lg">
-                  <p className="text-red-800 text-sm">
-                    <strong>Emergency Notice:</strong> For life-threatening emergencies outside our urgent care hours, 
-                    contact your nearest 24-hour emergency animal hospital.
-                  </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Reach Us Map - Bottom Full Width */}
+          <div>
+            <div className="bg-white p-8 rounded-xl shadow-lg">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 flex items-center mb-4 lg:mb-0">
+                  <MapPin className="mr-3 h-6 w-6" style={{ color: primaryColor }} />
+                  Reach Us
+                </h2>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <a 
+                    href={`tel:${hospitalInfo.phone}`}
+                    className="flex items-center justify-center px-4 py-2 rounded-lg transition-colors duration-200 border-2"
+                    style={{ borderColor: primaryColor, color: primaryColor }}
+                    onMouseEnter={(e) => {
+                      e.target.style.backgroundColor = primaryColor;
+                      e.target.style.color = 'white';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.backgroundColor = 'transparent';
+                      e.target.style.color = primaryColor;
+                    }}
+                  >
+                    <Phone className="mr-2 h-4 w-4" />
+                    {hospitalInfo.phone}
+                  </a>
+                  <a 
+                    href={`mailto:${hospitalInfo.email}`}
+                    className="flex items-center justify-center px-4 py-2 rounded-lg transition-colors duration-200 border-2"
+                    style={{ borderColor: primaryColor, color: primaryColor }}
+                    onMouseEnter={(e) => {
+                      e.target.style.backgroundColor = primaryColor;
+                      e.target.style.color = 'white';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.backgroundColor = 'transparent';
+                      e.target.style.color = primaryColor;
+                    }}
+                  >
+                    <Mail className="mr-2 h-4 w-4" />
+                    {hospitalInfo.email}
+                  </a>
+                </div>
+              </div>
+              
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3105.8947649847485!2d-77.52344768464344!3d38.98234397956376!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89b638b58b3b5c61%3A0x5f5f5f5f5f5f5f5f!2s43114%20Peacock%20Market%20Plaza%2C%20South%20Riding%2C%20VA%2020152%2C%20USA!5e0!3m2!1sen!2sus!4v1620000000000!5m2!1sen!2sus"
+                  width="100%"
+                  height="400"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Pets and Vets Animal Hospital Location"
+                ></iframe>
+              </div>
+              
+              <div className="mt-4 p-4 rounded-lg" style={{ backgroundColor: primaryBg }}>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="font-semibold text-gray-900">{hospitalInfo.address}</p>
+                    <p className="text-sm text-gray-600 mt-1">Located beside Sweet Frog in Peacock Market Plaza</p>
+                  </div>
+                  <button 
+                    className="mt-3 sm:mt-0 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200"
+                    style={{ backgroundColor: primaryColor }}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
+                    onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(hospitalInfo.address)}`, '_blank')}
+                  >
+                    Get Directions
+                  </button>
                 </div>
               </div>
             </div>
