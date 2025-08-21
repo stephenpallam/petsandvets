@@ -206,34 +206,18 @@ const Contact = () => {
                     </div>
                   </div>
                 </div>
-
-                {/* Emergency Notice */}
-                <div className="border-t border-red-200 pt-6">
-                  <div className="bg-red-50 border-2 border-red-200 p-6 rounded-xl">
-                    <div className="flex items-start">
-                      <AlertCircle className="h-6 w-6 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
-                      <div>
-                        <h3 className="text-lg font-bold text-red-900 mb-2">Emergency Care</h3>
-                        <p className="text-red-700 mb-3">
-                          If your pet is experiencing a life-threatening emergency outside our urgent care hours, 
-                          please contact your nearest 24-hour emergency animal hospital immediately.
-                        </p>
-                        <p className="text-red-600 font-semibold">
-                          VCA SouthPaws Veterinary Specialists & Emergency Center: (703) 752-9100
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
 
             {/* General Practice Hours - Right Side */}
             <div className="bg-white p-8 rounded-xl shadow-lg">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                 <Clock className="mr-3 h-6 w-6" style={{ color: primaryColor }} />
                 General Practice Hours
               </h2>
+              <p className="text-sm mb-6 font-medium" style={{ color: primaryColor }}>
+                By Appointment Only
+              </p>
               
               <div className="space-y-2">
                 <div className="flex justify-between">
