@@ -247,13 +247,10 @@ const UrgentCare = () => {
             <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
               Urgent Care at Pets and Vets Animal Hospital
             </h1>
-            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto mb-4">
+            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
               When your pet needs care—not just quickly, but right away—our Urgent Veterinary Services deliver 
               fast, compassionate relief when your regular vet is closed or unavailable. At Pets and Vets Animal 
               Hospital, we treat your family pets with the expertise and empathy they deserve.
-            </p>
-            <p className="text-base font-medium" style={{ color: primaryColor }}>
-              Serving South Riding, Aldie, Ashburn, Chantilly, Centreville, Reston, and Herndon
             </p>
           </div>
         </div>
