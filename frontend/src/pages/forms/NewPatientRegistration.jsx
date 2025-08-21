@@ -20,43 +20,6 @@ const NewPatientRegistration = () => {
       <section style={{ backgroundColor: '#f8f9fa', paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex flex-col sm:flex-row justify-end items-start sm:items-center">
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <a
-                    href="https://petsandvetsanimalhospital.com/forms/New_Patient_Registration_Form.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-4 py-2 rounded-lg border-2 text-sm font-medium transition-colors duration-200"
-                    style={{ borderColor: primaryColor, color: primaryColor }}
-                    onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = primaryColor;
-                      e.target.style.color = 'white';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.backgroundColor = 'transparent';
-                      e.target.style.color = primaryColor;
-                    }}
-                  >
-                    <Download className="mr-2 h-4 w-4" />
-                    Download PDF
-                  </a>
-                  <a
-                    href="https://petsandvetsanimalhospital.com/patient-registration-form"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-white text-sm font-medium transition-colors duration-200"
-                    style={{ backgroundColor: primaryColor }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
-                  >
-                    <ExternalLink className="mr-2 h-4 w-4" />
-                    Full Screen Form
-                  </a>
-                </div>
-              </div>
-            </div>
-            
             {/* Embedded Form */}
             <div className="relative overflow-hidden">              
               <iframe 
