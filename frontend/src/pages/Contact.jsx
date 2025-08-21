@@ -96,7 +96,7 @@ const Contact = () => {
       </section>
 
       {/* Reach Us Section */}
-      <section className="py-16">
+      <section className="pt-5 pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Reach Us Map - Full Width */}
           <div className="mb-12">
