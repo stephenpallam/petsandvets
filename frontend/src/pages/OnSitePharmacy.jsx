@@ -39,9 +39,9 @@ const OnSitePharmacy = () => {
       color: "#10b981"
     },
     {
-      title: "Easy Refill Delivery",
-      description: "Need a refill later? We can conveniently mail medications and supplements directly to your door",
-      icon: Truck,
+      title: "Expert Consultation Available",
+      description: "Our veterinary team provides guidance on proper medication administration and answers your questions",
+      icon: Users,
       color: "#3b82f6"
     },
     {
