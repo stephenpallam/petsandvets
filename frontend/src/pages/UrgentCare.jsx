@@ -195,8 +195,8 @@ const UrgentCare = () => {
 
   const whyChooseUs = [
     {
-      feature: "No-Appointment Needed",
-      description: "Convenient help when you need it most",
+      feature: "Quick Access Care",
+      description: "Fast appointment scheduling when your pet needs urgent attention",
       icon: Clock
     },
     {
