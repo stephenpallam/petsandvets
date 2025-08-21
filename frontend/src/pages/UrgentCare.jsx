@@ -64,7 +64,7 @@ const UrgentCare = () => {
   const petIllnesses = [
     {
       service: "Diarrhea & Vomiting",
-      description: "Immediate evaluation and relief for GI distress",
+      description: "We quickly diagnose and treat pet GI issues like vomiting and diarrhea—bringing relief to your pet and peace of mind to you",
       icon: Droplets,
       color: "#ef4444"
     },
