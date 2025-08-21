@@ -244,18 +244,6 @@ const UrgentCare = () => {
               Serving South Riding, Aldie, Ashburn, Chantilly, Centreville, Reston, and Herndon
             </p>
           </div>
-          
-          {/* Professional Image */}
-          <div className="mt-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.pexels.com/photos/6809635/pexels-photo-6809635.jpeg"
-                alt="Professional veterinary urgent care medical icons and equipment"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
-          </div>
         </div>
       </section>
 
