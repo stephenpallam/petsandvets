@@ -39,6 +39,9 @@ import OnSitePharmacy from "./pages/OnSitePharmacy";
 import OurMission from "./pages/OurMission";
 import OurCoreValues from "./pages/OurCoreValues";
 import OurTeam from "./pages/OurTeam";
+import ReachUs from "./pages/ReachUs";
+import OurHours from "./pages/OurHours";
+import MessageUs from "./pages/MessageUs";
 
 function App() {
   return (
