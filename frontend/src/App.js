@@ -94,6 +94,12 @@ function App() {
             <Route path="/reach-us" element={<ReachUs />} />
             <Route path="/our-hours" element={<OurHours />} />
             <Route path="/message-us" element={<MessageUs />} />
+            <Route path="/forms/new-patient-registration" element={<NewPatientRegistration />} />
+            <Route path="/forms/patient-drop-off" element={<PatientDropOff />} />
+            <Route path="/forms/surgery-anesthesia-consent" element={<SurgeryAnesthesiaConsent />} />
+            <Route path="/forms/dental-consent" element={<DentalConsent />} />
+            <Route path="/forms/request-pet-records" element={<RequestPetRecords />} />
+            <Route path="/forms-download" element={<FormsDownload />} />
           </Routes>
         </main>
         <Footer />
