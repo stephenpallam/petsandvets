@@ -36,6 +36,9 @@ import UrgentCare from "./pages/UrgentCare";
 import EndOfLifeCare from "./pages/EndOfLifeCare";
 import PetMicrochipping from "./pages/PetMicrochipping";
 import OnSitePharmacy from "./pages/OnSitePharmacy";
+import OurMission from "./pages/OurMission";
+import OurCoreValues from "./pages/OurCoreValues";
+import OurTeam from "./pages/OurTeam";
 
 function App() {
   return (
