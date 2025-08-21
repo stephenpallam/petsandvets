@@ -105,6 +105,18 @@
 user_problem_statement: "Create Urgent Care webpage - write a compact and impactful webpage with modern professional layout and styling for urgent veterinary care services"
 
 frontend:
+  - task: "Auto-scroll to top on page navigation"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/ScrollToTop.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Successfully implemented ScrollToTop component using React Router's useLocation hook. Component automatically scrolls to top (0,0) whenever pathname changes. Added to App.js and tested across all navigation scenarios - works perfectly for header navigation, home page buttons, and logo clicks."
+
   - task: "Create Urgent Care Page"
     implemented: true
     working: true
