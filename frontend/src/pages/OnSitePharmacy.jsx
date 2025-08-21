@@ -323,10 +323,10 @@ const OnSitePharmacy = () => {
             </div>
             <div className="mb-4 md:mb-0">
               <div className="flex items-center justify-center md:justify-start mb-2">
-                <Truck className="h-4 w-4 mr-2" style={{ color: primaryColor }} />
-                <span className="font-semibold">Delivery Available</span>
+                <Users className="h-4 w-4 mr-2" style={{ color: primaryColor }} />
+                <span className="font-semibold">Expert Guidance</span>
               </div>
-              <p className="text-gray-300 text-sm">Refills mailed to your door</p>
+              <p className="text-gray-300 text-sm">Professional consultation available</p>
             </div>
             <div>
               <div className="flex items-center justify-center md:justify-start mb-2">
