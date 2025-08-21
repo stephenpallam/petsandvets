@@ -16,43 +16,6 @@ const NewPatientRegistration = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${primaryBg} 0%, #ffffff 50%, #f0fdff 100%)` }}>
-        <div className="absolute inset-0 bg-white/40"></div>
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
-          <div className="flex items-center justify-center mb-6">
-            <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
-              <FileText className="h-8 w-8" style={{ color: primaryColor }} />
-            </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-              New Patient Registration Form
-            </h1>
-          </div>
-          <p className="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto">
-            Welcome to Pets and Vets Animal Hospital! Please complete this form before your first visit to help us provide the best care for your pet.
-          </p>
-        </div>
-      </section>
-
-      {/* Important Information */}
-      <section className="bg-white" style={{ paddingTop: '20px', paddingBottom: '20px' }}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-blue-50 border-2 border-blue-200 p-6 rounded-xl">
-            <div className="flex items-start">
-              <Info className="h-6 w-6 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
-              <div>
-                <h3 className="text-lg font-bold text-blue-900 mb-2">Before You Begin</h3>
-                <div className="text-blue-700 space-y-1">
-                  <p>• Please have your pet's medical history and vaccination records ready</p>
-                  <p>• This form takes approximately 5-10 minutes to complete</p>
-                  <p>• You can also download and print this form to bring with you</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Form Section */}
       <section style={{ backgroundColor: primaryBg, paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
