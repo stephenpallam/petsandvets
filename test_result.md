@@ -323,6 +323,7 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Create Urgent Care Page"
     - "Create Soft Tissue Surgeries Page"
     - "Create Foreign Body & GI Obstruction Surgery Page"
     - "Create Blocked Cats Emergency Care Page"
