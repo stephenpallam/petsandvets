@@ -75,6 +75,12 @@ const UrgentCare = () => {
       color: "#f59e0b"
     },
     {
+      service: "Dehydration/Excessive Drinking",
+      description: "From administering IV fluids for dehydration in dogs and cats to assessing potential reasons for excessive drinking, our clinic offers the necessary treatment to balance your pet's fluid intake and output",
+      icon: Droplets,
+      color: "#0ea5e9"
+    },
+    {
       service: "Poison or Toxin Exposure",
       description: "Rapid treatment including safe induced vomiting and detox protocols",
       icon: AlertTriangle,
@@ -87,16 +93,22 @@ const UrgentCare = () => {
       color: "#10b981"
     },
     {
-      service: "Upper Respiratory Infections, Coughing & Sneezing",
-      description: "Diagnostics and treatment plans tailored to breed and symptoms",
+      service: "Upper Respiratory Infections",
+      description: "Upper respiratory infections are scary. We're here to help diagnose and recommend treatments that position your pet for the best chance at a full recovery. Our experienced team will provide you with their diagnosis and recommended next steps to getting your pet to breathe easier",
       icon: Wind,
       color: "#6366f1"
+    },
+    {
+      service: "Coughing & Sneezing",
+      description: "Diagnostics and treatment plans tailored to breed and symptoms for persistent coughing and sneezing episodes",
+      icon: Activity,
+      color: "#8b5cf6"
     },
     {
       service: "Urinary Concerns",
       description: "Evaluation and care for straining, blood, or frequent attempts",
       icon: CircleDot,
-      color: "#8b5cf6"
+      color: "#a855f7"
     },
     {
       service: "Ear Infections",
