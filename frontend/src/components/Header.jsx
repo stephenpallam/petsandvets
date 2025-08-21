@@ -84,6 +84,23 @@ const Header = () => {
         { name: 'Our Hours', href: '/our-hours' },
         { name: 'Message Us', href: '/message-us' }
       ]
+    },
+    { 
+      name: 'Forms', 
+      href: '/forms-download',
+      dropdown: [
+        { 
+          name: 'Online', 
+          submenu: [
+            { name: 'New Patient Registration', href: '/forms/new-patient-registration' },
+            { name: 'Patient Drop-Off', href: '/forms/patient-drop-off' },
+            { name: 'Surgery & Anesthesia Consent', href: '/forms/surgery-anesthesia-consent' },
+            { name: 'Dental Consent', href: '/forms/dental-consent' },
+            { name: 'Request Pet Records', href: '/forms/request-pet-records' }
+          ]
+        },
+        { name: 'Download', href: '/forms-download' }
+      ]
     }
   ];
 
