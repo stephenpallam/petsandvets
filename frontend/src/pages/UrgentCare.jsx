@@ -46,8 +46,6 @@ import {
   Truck,
   Leaf,
   Bug,
-  Ear,
-  Lungs,
   Gauge,
   Smile,
   Frown,
