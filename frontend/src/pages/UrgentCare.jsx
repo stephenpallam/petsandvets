@@ -76,7 +76,7 @@ const UrgentCare = () => {
     },
     {
       service: "Dehydration/Excessive Drinking",
-      description: "From administering IV fluids for dehydration in dogs and cats to assessing potential reasons for excessive drinking, our clinic offers the necessary treatment to balance your pet's fluid intake and output",
+      description: "From IV fluids for dehydration to diagnosing excessive drinking, we provide treatments to restore your pet's fluid balance",
       icon: Droplets,
       color: "#0ea5e9"
     },
