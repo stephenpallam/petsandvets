@@ -66,15 +66,15 @@ const OnSitePharmacy = () => {
       number: "02"
     },
     {
-      step: "Get Back to Care Fast",
-      description: "Leave efficiently with everything your pet needs",
-      icon: Home,
+      step: "Get Medication & Guidance",
+      description: "Receive your pet's medication with expert administration guidance",
+      icon: Users,
       number: "03"
     },
     {
-      step: "Request Refills Online",
-      description: "Skip trips—order refills online and rely on delivery service",
-      icon: Mail,
+      step: "Easy Refill Process",
+      description: "Return for refills or call ahead to have them ready for pickup",
+      icon: Phone,
       number: "04"
     }
   ];
