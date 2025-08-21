@@ -175,7 +175,7 @@ const Header = () => {
               </Link>
             ))}
             <Link
-              to="/contact"
+              to="/urgent-care"
               onClick={() => setIsMenuOpen(false)}
               className="block w-full text-center text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
               style={{ backgroundColor: '#29add3' }}
