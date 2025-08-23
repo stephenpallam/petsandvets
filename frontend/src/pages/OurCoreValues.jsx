@@ -67,9 +67,9 @@ const OurCoreValues = () => {
       {/* Core Values Grid */}
       <section className="bg-white" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <div className="text-center mb-8">
             <h2 className="text-xl font-bold text-gray-900 mb-4">
-              The Foundation of Our Practice
+              Our Values
             </h2>
             <p className="text-gray-600 max-w-3xl mx-auto">
               These four core values shape every interaction, decision, and treatment plan at Pets & Vets Animal Hospital
