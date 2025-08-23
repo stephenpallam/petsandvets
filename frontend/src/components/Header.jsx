@@ -184,12 +184,15 @@ const Header = () => {
                     <div 
                       className="relative"
                       onMouseEnter={() => setActiveDropdown(item.name)}
-                      onMouseLeave={() => setActiveDropdown(null)}
+                      onMouseLeave={() => {
+                        // Add a small delay before hiding to allow mouse movement
+                        setTimeout(() => setActiveDropdown(null), 100);
+                      }}
                     >
                       <Link
                         to={item.href}
                         className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                          isActive(item.href) || location.pathname.includes('/services') || location.pathname.includes('/urgent-care') || location.pathname.includes('/dog-') || location.pathname.includes('/cat-') || location.pathname.includes('/pet-') || location.pathname.includes('/dental-') || location.pathname.includes('/ultrasound-') || location.pathname.includes('/veterinary-') || location.pathname.includes('/digital-') || location.pathname.includes('/preventive-') || location.pathname.includes('/blocked-') || location.pathname.includes('/foreign-') || location.pathname.includes('/our-') || location.pathname.includes('/about') || location.pathname.includes('/gallery')
+                          isActive(item.href) || location.pathname.includes('/services') || location.pathname.includes('/urgent-care') || location.pathname.includes('/dog-') || location.pathname.includes('/cat-') || location.pathname.includes('/pet-') || location.pathname.includes('/dental-') || location.pathname.includes('/ultrasound-') || location.pathname.includes('/veterinary-') || location.pathname.includes('/digital-') || location.pathname.includes('/preventive-') || location.pathname.includes('/blocked-') || location.pathname.includes('/foreign-') || location.pathname.includes('/our-') || location.pathname.includes('/about') || location.pathway.includes('/gallery')
                             ? 'text-gray-900' 
                             : 'text-gray-700 hover:text-gray-900'
                         }`}
@@ -204,22 +207,28 @@ const Header = () => {
                       
                       {/* Dropdown Menu */}
                       {activeDropdown === item.name && (
-                        <div className="absolute top-full left-0 mt-1 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
+                        <div 
+                          className="absolute top-full left-0 mt-0 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50"
+                          onMouseEnter={() => setActiveDropdown(item.name)}
+                          onMouseLeave={() => {
+                            setTimeout(() => setActiveDropdown(null), 100);
+                          }}
+                        >
                           {item.dropdown.map((dropdownItem, index) => (
                             <div key={index}>
                               {dropdownItem.submenu ? (
                                 <div className="relative group">
-                                  <div className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">
+                                  <div className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0">
                                     <span className="font-medium">{dropdownItem.name}</span>
                                     <ChevronDown className="h-4 w-4 transform -rotate-90" />
                                   </div>
                                   {/* Submenu */}
-                                  <div className="absolute left-full top-0 ml-1 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                  <div className="absolute left-full top-0 ml-0 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                                     {dropdownItem.submenu.map((subItem, subIndex) => (
                                       <Link
                                         key={subIndex}
                                         to={subItem.href}
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200 border-b border-gray-100 last:border-b-0"
                                         onClick={() => setActiveDropdown(null)}
                                       >
                                         {subItem.name}
@@ -230,7 +239,7 @@ const Header = () => {
                               ) : (
                                 <Link
                                   to={dropdownItem.href}
-                                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200"
+                                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200 border-b border-gray-100 last:border-b-0"
                                   onClick={() => setActiveDropdown(null)}
                                 >
                                   {dropdownItem.name}
