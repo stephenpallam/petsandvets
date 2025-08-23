@@ -95,6 +95,7 @@ function App() {
             <Route path="/on-site-pharmacy" element={<OnSitePharmacy />} />
             <Route path="/pet-travel-certificates" element={<PetTravelCertificates />} />
             <Route path="/pet-insurance-payments" element={<PetInsurancePayments />} />
+            <Route path="/your-first-visit" element={<YourFirstVisit />} />
             <Route path="/our-mission" element={<OurMission />} />
             <Route path="/our-core-values" element={<OurCoreValues />} />
             <Route path="/our-team" element={<OurTeam />} />
