@@ -224,6 +224,32 @@ const OurHours = () => {
         </div>
       </section>
 
+      {/* Hours Features - Moved to Bottom */}
+      <section className="bg-white" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              Designed Around Your Schedule
+            </h2>
+            <p className="text-gray-600 max-w-3xl mx-auto">
+              We offer comprehensive hours to accommodate both routine care and urgent medical needs
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {hoursFeatures.map((feature, index) => (
+              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center">
+                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: `${feature.color}15` }}>
+                  <feature.icon className="h-8 w-8" style={{ color: feature.color }} />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">{feature.title}</h3>
+                <p className="text-gray-700 leading-relaxed">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Contact CTA */}
       <section style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
