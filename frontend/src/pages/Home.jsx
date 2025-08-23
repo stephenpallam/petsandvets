@@ -136,40 +136,63 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Special Offers Section */}
+      {/* Urgent Care Section */}
       <section style={{ backgroundColor: primaryColor, paddingTop: '30px', paddingBottom: '30px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center" style={{ marginBottom: '20px' }}>
             <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
-              Special Offers & Packages
+              Urgent Care
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {specialOffers.map((offer) => (
-              <div
-                key={offer.id}
-                className={`relative p-6 rounded-xl transition-all duration-200 hover:scale-105 ${
-                  offer.highlight
-                    ? 'bg-white text-gray-900 shadow-xl'
-                    : 'text-white'
-                }`}
-                style={{
-                  backgroundColor: offer.highlight ? 'white' : '#2196c7'
-                }}
-              >
-                {offer.highlight && (
-                  <div className="absolute -top-3 left-6 bg-yellow-400 text-gray-900 px-3 py-1 rounded-full text-xs font-bold">
-                    POPULAR
-                  </div>
-                )}
-                <CheckCircle className={`h-8 w-8 mb-4`} style={{ color: offer.highlight ? primaryColor : primaryLight }} />
-                <h3 className="font-bold mb-2" style={{ fontSize: '1rem' }}>{offer.title}</h3>
-                <p className={offer.highlight ? 'text-gray-600' : 'text-blue-100'}>
-                  {offer.description}
-                </p>
-              </div>
-            ))}
+            <div className="relative p-6 rounded-xl transition-all duration-200 hover:scale-105 bg-white text-gray-900 shadow-xl">
+              <CheckCircle className="h-8 w-8 mb-4" style={{ color: primaryColor }} />
+              <h3 className="font-bold mb-2" style={{ fontSize: '1rem' }}>Poison or Toxin Exposure</h3>
+              <p className="text-gray-600">
+                Rapid treatment including safe induced vomiting and detox protocols
+              </p>
+            </div>
+
+            <div className="relative p-6 rounded-xl transition-all duration-200 hover:scale-105 text-white" style={{ backgroundColor: '#2196c7' }}>
+              <CheckCircle className="h-8 w-8 mb-4" style={{ color: primaryLight }} />
+              <h3 className="font-bold mb-2" style={{ fontSize: '1rem' }}>Upper Respiratory Infections</h3>
+              <p className="text-blue-100">
+                Our team will diagnose the issue and recommend the best treatment to help your pet breathe easier and recover quickly
+              </p>
+            </div>
+
+            <div className="relative p-6 rounded-xl transition-all duration-200 hover:scale-105 text-white" style={{ backgroundColor: '#2196c7' }}>
+              <CheckCircle className="h-8 w-8 mb-4" style={{ color: primaryLight }} />
+              <h3 className="font-bold mb-2" style={{ fontSize: '1rem' }}>Urinary Concerns</h3>
+              <p className="text-blue-100">
+                Evaluation and care for straining, blood, or frequent attempts
+              </p>
+            </div>
+
+            <div className="relative p-6 rounded-xl transition-all duration-200 hover:scale-105 text-white" style={{ backgroundColor: '#2196c7' }}>
+              <CheckCircle className="h-8 w-8 mb-4" style={{ color: primaryLight }} />
+              <h3 className="font-bold mb-2" style={{ fontSize: '1rem' }}>Diarrhea & Vomiting</h3>
+              <p className="text-blue-100">
+                We quickly diagnose and treat pet GI issues like vomiting and diarrhea—bringing relief to your pet and peace of mind to you
+              </p>
+            </div>
+
+            <div className="relative p-6 rounded-xl transition-all duration-200 hover:scale-105 text-white" style={{ backgroundColor: '#2196c7' }}>
+              <CheckCircle className="h-8 w-8 mb-4" style={{ color: primaryLight }} />
+              <h3 className="font-bold mb-2" style={{ fontSize: '1rem' }}>Coughing & Sneezing</h3>
+              <p className="text-blue-100">
+                Diagnostics and treatment plans tailored to breed and symptoms for persistent coughing and sneezing episodes
+              </p>
+            </div>
+
+            <div className="relative p-6 rounded-xl transition-all duration-200 hover:scale-105 text-white" style={{ backgroundColor: '#2196c7' }}>
+              <CheckCircle className="h-8 w-8 mb-4" style={{ color: primaryLight }} />
+              <h3 className="font-bold mb-2" style={{ fontSize: '1rem' }}>Allergic Reactions</h3>
+              <p className="text-blue-100">
+                Treatment for hives, facial swelling, and itching
+              </p>
+            </div>
           </div>
         </div>
       </section>
