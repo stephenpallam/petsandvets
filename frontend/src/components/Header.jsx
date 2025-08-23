@@ -52,7 +52,9 @@ const Header = () => {
             { name: 'Digital Radiology', href: '/digital-veterinary-x-rays' },
             { name: 'Pet Microchipping', href: '/pet-microchipping' },
             { name: 'End of Life Care', href: '/end-of-life-care' },
-            { name: 'On Site Pharmacy', href: '/on-site-pharmacy' }
+            { name: 'On Site Pharmacy', href: '/on-site-pharmacy' },
+            { name: 'Pet Travel Certificates', href: '/pet-travel-certificates' },
+            { name: 'Diet & Nutrition', href: '/dog-diet-nutrition' }
           ]
         },
         {
