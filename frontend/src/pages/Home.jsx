@@ -162,10 +162,10 @@ const Home = () => {
               </p>
             </div>
 
-            <div className="relative p-6 rounded-xl transition-all duration-200 hover:scale-105 text-white" style={{ backgroundColor: '#2196c7' }}>
-              <CheckCircle className="h-8 w-8 mb-4" style={{ color: primaryLight }} />
+            <div className="relative p-6 rounded-xl transition-all duration-200 hover:scale-105 bg-white text-gray-900 shadow-xl">
+              <CheckCircle className="h-8 w-8 mb-4" style={{ color: primaryColor }} />
               <h3 className="font-bold mb-2" style={{ fontSize: '1rem' }}>Urinary Concerns</h3>
-              <p className="text-blue-100">
+              <p className="text-gray-600">
                 Evaluation and care for straining, blood, or frequent attempts
               </p>
             </div>
