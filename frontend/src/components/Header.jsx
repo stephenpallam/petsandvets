@@ -223,10 +223,10 @@ const Header = () => {
                           }}
                         >
                           {item.dropdown.map((dropdownItem, index) => (
-                            <div key={index}>
+                            <div key={index} className={index < item.dropdown.length - 1 ? "border-b border-gray-100" : ""}>
                               {dropdownItem.submenu ? (
                                 <div className="relative group">
-                                  <div className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                                  <div className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">
                                     <span className="font-medium">{dropdownItem.name}</span>
                                     <ChevronDown className="h-4 w-4 transform -rotate-90" />
                                   </div>
@@ -236,7 +236,7 @@ const Header = () => {
                                       <Link
                                         key={subIndex}
                                         to={subItem.href}
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200 border-b border-gray-100 last:border-b-0"
+                                        className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200 ${subIndex < dropdownItem.submenu.length - 1 ? 'border-b border-gray-100' : ''}`}
                                         onClick={() => setActiveDropdown(null)}
                                       >
                                         {subItem.name}
@@ -247,7 +247,7 @@ const Header = () => {
                               ) : (
                                 <Link
                                   to={dropdownItem.href}
-                                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200 border-b border-gray-100 last:border-b-0"
+                                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200"
                                   onClick={() => setActiveDropdown(null)}
                                 >
                                   {dropdownItem.name}
