@@ -215,7 +215,7 @@ const Services = () => {
               <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6" style={{ backgroundColor: '#ef444415' }}>
                 <Bug className="h-8 w-8" style={{ color: '#ef4444' }} />
               </div>
-              <h3 className="font-bold text-gray-900 mb-3">Pet Dermatology & Allergy Care</h3>
+              <h3 className="font-bold text-gray-900 mb-3">Dermatology & Allergy Care</h3>
               <p className="text-gray-600 mb-4">Specialized treatment for skin conditions, allergies, and dermatological issues affecting dogs and cats.</p>
               <Link to="/pet-dermatology-allergy-care" className="inline-flex items-center font-semibold transition-colors" style={{ color: '#ef4444' }}>
                 Learn More <ArrowRight className="ml-1 h-4 w-4" />
