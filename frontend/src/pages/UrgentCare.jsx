@@ -288,8 +288,8 @@ const UrgentCare = () => {
           </div>
 
           {/* Pet Injuries & Acute Issues */}
-          <div className="mb-16">
-            <h3 className="text-lg font-bold text-gray-900 mb-8 text-center">Pet Injuries & Acute Issues</h3>
+          <div className="mb-12">
+            <h3 className="text-lg font-bold text-gray-900 mb-6 text-center">Pet Injuries & Acute Issues</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {petInjuries.map((injury, index) => (
                 <div key={index} className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
