@@ -114,7 +114,7 @@ const Header = () => {
                location.pathname.includes('/urgent-care') || 
                location.pathname.includes('/dog-') || 
                location.pathname.includes('/cat-') || 
-               location.pathname.includes('/pet-') || 
+               (location.pathname.includes('/pet-') && !location.pathname.includes('/pet-insurance-payments')) || 
                location.pathname.includes('/dental-') || 
                location.pathname.includes('/ultrasound-') || 
                location.pathname.includes('/veterinary-') || 
