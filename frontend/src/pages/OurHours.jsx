@@ -190,7 +190,7 @@ const OurHours = () => {
       </section>
 
       {/* Weekly Schedule Overview */}
-      <section style={{ backgroundColor: primaryBg, paddingTop: '40px', paddingBottom: '40px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white p-8 rounded-xl shadow-lg">
             <h3 className="text-xl font-bold text-gray-900 mb-6 text-center">Weekly Schedule Overview</h3>
