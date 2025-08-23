@@ -42,8 +42,8 @@ const OurMission = () => {
       {/* Mission Statement */}
       <section className="bg-white" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
+          <div className="text-center mb-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
               Our Mission
             </h2>
           </div>
