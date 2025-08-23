@@ -79,19 +79,9 @@ const PetTravelCertificates = () => {
       <section className="relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${primaryBg} 0%, #ffffff 50%, #f0fdff 100%)` }}>
         <div className="absolute inset-0 bg-white/40"></div>
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-          <div className="flex items-center justify-center mb-6">
-            <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
-              <Plane className="h-8 w-8" style={{ color: primaryColor }} />
-            </div>
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900">
-              Pet Travel Certificates
-            </h1>
-          </div>
-          <div className="mb-6">
-            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
-              Safe Journeys Start Here
-            </span>
-          </div>
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
+            Pet Travel Certificates
+          </h1>
           <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
             Planning a trip with your pet? Whether you're flying, driving, or sailing to another state, most pets need a Domestic Health Certificate before they can travel.
           </p>
