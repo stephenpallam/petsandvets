@@ -49,12 +49,12 @@ const Header = () => {
             { name: 'Wellness Exams', href: '/preventive-pet-care' },
             { name: 'Ultrasounds', href: '/ultrasound-exams' },
             { name: 'Diagnostic Laboratory', href: '/veterinary-diagnostic-services' },
-            { name: 'Pet Dermatology & Allergy Care', href: '/pet-dermatology-allergy-care' },
+            { name: 'Dermatology & Allergy Care', href: '/pet-dermatology-allergy-care' },
             { name: 'Digital Radiology', href: '/digital-veterinary-x-rays' },
-            { name: 'Pet Microchipping', href: '/pet-microchipping' },
+            { name: 'Microchipping', href: '/pet-microchipping' },
             { name: 'End of Life Care', href: '/end-of-life-care' },
             { name: 'On Site Pharmacy', href: '/on-site-pharmacy' },
-            { name: 'Pet Travel Certificates', href: '/pet-travel-certificates' },
+            { name: 'Travel Certificates', href: '/pet-travel-certificates' },
             { name: 'Diet & Nutrition', href: '/dog-diet-nutrition' }
           ]
         },
