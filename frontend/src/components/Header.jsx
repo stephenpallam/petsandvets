@@ -132,8 +132,9 @@ const Header = () => {
                location.pathname.includes('/contact') ||
                location.pathname.includes('/our-hours');
       
-      case 'Forms':
-        return location.pathname.includes('/forms');
+      case 'Patient Resources':
+        return location.pathname.includes('/forms') || 
+               location.pathname.includes('/your-first-visit');
       
       default:
         return false;
