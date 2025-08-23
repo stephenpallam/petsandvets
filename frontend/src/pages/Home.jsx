@@ -371,7 +371,7 @@ const Home = () => {
               onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
               onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
             >
-              View All
+              View All Services
               <ChevronRight className="ml-2 h-5 w-5" />
             </Link>
           </div>
