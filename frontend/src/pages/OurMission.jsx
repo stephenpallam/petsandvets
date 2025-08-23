@@ -44,25 +44,25 @@ const OurMission = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-xl font-bold text-gray-900 mb-6">
-              Our Commitment to Your Pet's Health
+              Our Mission
             </h2>
           </div>
           
           <div className="space-y-8">
-            <p className="text-lg text-gray-700 leading-relaxed">
+            <p className="text-base text-gray-600 leading-relaxed">
               Pets & Vets Animal Hospital is pleased to deliver the very best veterinary care to your pets residing in 
               South Riding, Chantilly, Aldie, Ashburn, Herndon, Centreville, and Fairfax in Northern Virginia. Our team 
               of licensed veterinarians and support staff provides vaccinations, parasite control, and comprehensive care 
               to ensure your family pets stay healthy.
             </p>
             
-            <p className="text-lg text-gray-700 leading-relaxed">
+            <p className="text-base text-gray-600 leading-relaxed">
               We believe quality pet care, food, medicines, and pet supplies should be available to all caring and 
               responsible pet owners. It is our mission to provide high-quality treatment options for your pets in our 
               state-of-the-art facility, which is equipped with the latest veterinary technologies.
             </p>
             
-            <div className="p-8 rounded-xl border-l-4" style={{ backgroundColor: primaryBg, borderColor: primaryColor }}>
+            <div className="p-8 rounded-xl border-l-4" style={{ backgroundColor: '#f8f9fa', borderColor: primaryColor }}>
               <div className="flex items-center mb-4">
                 <Heart className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
                 <h3 className="text-xl font-semibold text-gray-900">Our Promise</h3>
