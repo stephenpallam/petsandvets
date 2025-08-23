@@ -75,7 +75,7 @@ const ReachUs = () => {
       </section>
 
       {/* Main Location Section */}
-      <section style={{ backgroundColor: primaryBg, paddingTop: '40px', paddingBottom: '40px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white p-8 rounded-xl shadow-lg">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
