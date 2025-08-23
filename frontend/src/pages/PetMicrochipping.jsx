@@ -107,7 +107,7 @@ const PetMicrochipping = () => {
                   Quick • Safe • Affordable
                 </div>
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
-                  Pet Microchipping
+                  Microchipping
                   <span className="block text-lg font-medium mt-2" style={{ color: primaryColor }}>
                     Permanent Protection for Your Beloved Pet
                   </span>
