@@ -16,7 +16,8 @@ import {
   Radio,
   Sparkles,
   Scissors,
-  Stethoscope
+  Stethoscope,
+  Plane
 } from 'lucide-react';
 import { hospitalInfo, services, specialOffers, testimonials, heroImages } from '../mock';
 
