@@ -122,7 +122,7 @@ const Home = () => {
                   src={heroImages[currentHeroImage]}
                   alt="Veterinary Care"
                   className="w-full object-cover transition-opacity duration-1000"
-                  style={{ height: '20rem' }}
+                  style={{ height: '25rem' }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
               </div>
