@@ -41,24 +41,6 @@ const ReachUs = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${primaryBg} 0%, #ffffff 50%, #f0fdff 100%)` }}>
-        <div className="absolute inset-0 bg-white/40"></div>
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
-          <div className="flex items-center justify-center mb-6">
-            <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
-              <MapPin className="h-8 w-8" style={{ color: primaryColor }} />
-            </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-              Reach Us
-            </h1>
-          </div>
-          <p className="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto">
-            Find us easily in South Riding, VA with convenient location and multiple ways to get in touch
-          </p>
-        </div>
-      </section>
-
       {/* Quick Contact Info */}
       <section className="bg-white" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
