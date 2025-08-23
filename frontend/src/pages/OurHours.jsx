@@ -39,21 +39,105 @@ const OurHours = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${primaryBg} 0%, #ffffff 50%, #f0fdff 100%)` }}>
-        <div className="absolute inset-0 bg-white/40"></div>
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
-          <div className="flex items-center justify-center mb-6">
-            <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
-              <Clock className="h-8 w-8" style={{ color: primaryColor }} />
-            </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-              Our Hours
-            </h1>
+      {/* Operating Hours - Moved to Top */}
+      <section style={{ backgroundColor: primaryBg, paddingTop: '40px', paddingBottom: '40px' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              Operating Hours
+            </h2>
+            <p className="text-gray-700 mb-2">
+              All services are provided by appointment only - please call ahead to schedule
+            </p>
+            <p className="text-gray-700">
+              Convenient hours to serve your pet's healthcare needs with both general practice and urgent care services
+            </p>
           </div>
-          <p className="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto">
-            Convenient hours to serve your pet's healthcare needs with both general practice and urgent care services
-          </p>
+
+          {/* Hours Grid - Side by Side */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Urgent Care Hours - Left Side */}
+            <div className="bg-white p-8 rounded-xl shadow-lg border-2 border-red-200">
+              <h3 className="text-2xl font-bold text-red-900 mb-4 flex items-center">
+                <Clock className="mr-3 h-6 w-6 text-red-600" />
+                Urgent Care Hours
+              </h3>
+              <div className="bg-red-50 p-4 rounded-lg mb-6">
+                <p className="text-sm font-medium text-red-700 flex items-center">
+                  <Info className="w-4 h-4 mr-2" />
+                  By Appointment Only
+                </p>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600 font-medium">Monday - Friday:</span>
+                  <span className="font-bold text-red-600">3:00 PM - 10:00 PM</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600 font-medium">Thursday:</span>
+                  <span className="font-medium text-red-600">Closed</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600 font-medium">Saturday:</span>
+                  <span className="font-bold text-red-600">10:00 AM - 8:00 PM</span>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-gray-600 font-medium">Sunday:</span>
+                  <span className="font-bold text-red-600">10:00 AM - 6:00 PM</span>
+                </div>
+              </div>
+
+              <div className="mt-6 p-4 bg-red-50 rounded-lg">
+                <p className="text-sm text-red-700">
+                  <strong>Urgent Care:</strong> For non-life-threatening conditions that need prompt attention
+                </p>
+              </div>
+            </div>
+
+            {/* General Practice Hours - Right Side */}
+            <div className="bg-white p-8 rounded-xl shadow-lg border-2" style={{ borderColor: primaryColor }}>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                <Clock className="mr-3 h-6 w-6" style={{ color: primaryColor }} />
+                General Practice Hours
+              </h3>
+              <div className="p-4 rounded-lg mb-6" style={{ backgroundColor: primaryBg }}>
+                <p className="text-sm font-medium flex items-center" style={{ color: primaryColor }}>
+                  <Info className="w-4 h-4 mr-2" />
+                  By Appointment Only
+                </p>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600 font-medium">Monday - Wednesday, Friday:</span>
+                  <span className="font-medium text-gray-900">{hours.generalPractice.monday}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600 font-medium">Tuesday:</span>
+                  <span className="font-medium text-gray-900">{hours.generalPractice.tuesday}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600 font-medium">Thursday:</span>
+                  <span className="font-medium text-red-600">{hours.generalPractice.thursday}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600 font-medium">Saturday:</span>
+                  <span className="font-medium text-gray-900">{hours.generalPractice.saturday}</span>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-gray-600 font-medium">Sunday:</span>
+                  <span className="font-medium text-red-600">{hours.generalPractice.sunday}</span>
+                </div>
+              </div>
+
+              <div className="mt-6 p-4 rounded-lg" style={{ backgroundColor: primaryBg }}>
+                <p className="text-sm text-gray-700">
+                  <strong>General Practice:</strong> Routine checkups, vaccinations, wellness exams, and preventive care
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
