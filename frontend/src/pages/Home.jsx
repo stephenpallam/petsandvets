@@ -304,19 +304,19 @@ const Home = () => {
               </Link>
             </div>
 
-            {/* Eye Care */}
+            {/* Travel Certificates */}
             <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6" style={{ backgroundColor: '#ef444415' }}>
-                <Eye className="h-8 w-8" style={{ color: '#ef4444' }} />
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6" style={{ backgroundColor: '#8b5cf615' }}>
+                <Plane className="h-8 w-8" style={{ color: '#8b5cf6' }} />
               </div>
-              <h3 className="font-bold text-gray-900 mb-3" style={{ fontSize: '1rem' }}>Eye Care</h3>
-              <p className="text-gray-600 mb-4">Specialized eye examinations including tear production tests, corneal staining, and glaucoma screening for complete ocular health.</p>
+              <h3 className="font-bold text-gray-900 mb-3" style={{ fontSize: '1rem' }}>Travel Certificates</h3>
+              <p className="text-gray-600 mb-4">Domestic Health Certificates for safe pet travel by air, road, or sea. Federally accredited veterinarian certification within 10 days of departure.</p>
               <Link
-                to="/pet-ocular-services"
+                to="/pet-travel-certificates"
                 className="inline-flex items-center font-semibold transition-colors"
-                style={{ color: '#ef4444' }}
-                onMouseEnter={(e) => e.target.style.color = '#dc2626'}
-                onMouseLeave={(e) => e.target.style.color = '#ef4444'}
+                style={{ color: '#8b5cf6' }}
+                onMouseEnter={(e) => e.target.style.color = '#7c3aed'}
+                onMouseLeave={(e) => e.target.style.color = '#8b5cf6'}
               >
                 Learn More
                 <ArrowRight className="ml-1 h-4 w-4" />
