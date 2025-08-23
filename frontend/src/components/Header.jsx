@@ -80,6 +80,7 @@ const Header = () => {
       name: 'Patient Resources',
       dropdown: [
         { name: 'Your First Visit', href: '/your-first-visit' },
+        { name: 'Insurance & Payments', href: '/pet-insurance-payments' },
         { 
           name: 'Online Forms', 
           submenu: [
