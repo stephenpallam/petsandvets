@@ -235,7 +235,7 @@ const Services = () => {
               <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6" style={{ backgroundColor: '#3b82f615' }}>
                 <Radio className="h-8 w-8" style={{ color: '#3b82f6' }} />
               </div>
-              <h3 className="font-bold text-gray-900 mb-3">Pet Microchipping</h3>
+              <h3 className="font-bold text-gray-900 mb-3">Microchipping</h3>
               <p className="text-gray-600 mb-4">Permanent pet identification with microchip implantation for quick reunification if your pet becomes lost.</p>
               <Link to="/pet-microchipping" className="inline-flex items-center font-semibold transition-colors" style={{ color: '#3b82f6' }}>
                 Learn More <ArrowRight className="ml-1 h-4 w-4" />
