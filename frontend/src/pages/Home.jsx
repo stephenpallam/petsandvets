@@ -229,9 +229,15 @@ const Home = () => {
       <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center" style={{ marginBottom: '20px' }}>
-            <h2 className="font-bold text-gray-900 mb-4" style={{ fontSize: '1rem' }}>
-              General Practice Pet Care
-            </h2>
+            <div className="inline-flex items-center justify-center mb-4">
+              <div className="h-px bg-gray-300 flex-grow max-w-24"></div>
+              <div className="mx-4 px-6 py-2 bg-white backdrop-blur-sm rounded-full border border-gray-200 shadow-sm">
+                <h2 className="font-bold text-gray-900 text-lg tracking-wide">
+                  General Practice Pet Care
+                </h2>
+              </div>
+              <div className="h-px bg-gray-300 flex-grow max-w-24"></div>
+            </div>
             <p className="text-gray-600 max-w-3xl mx-auto" style={{ fontSize: '1rem' }}>
               Comprehensive preventive and routine veterinary services to keep your pet healthy throughout their life.
             </p>
