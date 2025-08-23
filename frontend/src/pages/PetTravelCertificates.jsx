@@ -83,7 +83,7 @@ const PetTravelCertificates = () => {
         <div className="absolute inset-0 bg-white/40"></div>
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
           <h1 className="text-xl font-bold text-gray-900 mb-6">
-            Pet Travel Certificates
+            Travel Certificates
           </h1>
           <div className="mb-6">
             <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
