@@ -75,10 +75,11 @@ const Header = () => {
       ]
     },
     { 
-      name: 'Forms',
+      name: 'Patient Resources',
       dropdown: [
+        { name: 'Your First Visit', href: '/your-first-visit' },
         { 
-          name: 'Online', 
+          name: 'Online Forms', 
           submenu: [
             { name: 'New Patient Registration', href: '/forms/new-patient-registration' },
             { name: 'Patient Drop-Off', href: '/forms/patient-drop-off' },
@@ -87,7 +88,7 @@ const Header = () => {
             { name: 'Request Pet Records', href: '/forms/request-pet-records' }
           ]
         },
-        { name: 'Download', href: '/forms-download' }
+        { name: 'Download Forms', href: '/forms-download' }
       ]
     },
     { 
