@@ -5,30 +5,10 @@ import { facilityImages, hospitalInfo } from '../mock';
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState(null);
-  const [filter, setFilter] = useState('all');
 
   const primaryColor = '#29add3';
   const primaryLight = '#5bc0db';
   const primaryBg = '#e6f7fb';
-
-  const categories = [
-    { id: 'all', name: 'All Facilities' },
-    { id: 'reception', name: 'Reception Area' },
-    { id: 'exam', name: 'Exam Rooms' },
-    { id: 'surgery', name: 'Surgery Suite' },
-    { id: 'equipment', name: 'Medical Equipment' }
-  ];
-
-  const getImageCategory = (title) => {
-    if (title.toLowerCase().includes('reception') || title.toLowerCase().includes('seating')) return 'reception';
-    if (title.toLowerCase().includes('exam')) return 'exam';
-    if (title.toLowerCase().includes('surgery')) return 'surgery';
-    return 'equipment';
-  };
-
-  const filteredImages = filter === 'all' 
-    ? facilityImages 
-    : facilityImages.filter(img => getImageCategory(img.title) === filter);
 
   const openLightbox = (image) => {
     setSelectedImage(image);
