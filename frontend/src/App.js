@@ -91,6 +91,7 @@ function App() {
             <Route path="/end-of-life-care" element={<EndOfLifeCare />} />
             <Route path="/pet-microchipping" element={<PetMicrochipping />} />
             <Route path="/on-site-pharmacy" element={<OnSitePharmacy />} />
+            <Route path="/pet-travel-certificates" element={<PetTravelCertificates />} />
             <Route path="/our-mission" element={<OurMission />} />
             <Route path="/our-core-values" element={<OurCoreValues />} />
             <Route path="/our-team" element={<OurTeam />} />
