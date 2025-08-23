@@ -40,7 +40,7 @@ const OurHours = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Operating Hours - Moved to Top */}
-      <section style={{ backgroundColor: primaryBg, paddingTop: '40px', paddingBottom: '40px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-xl font-bold text-gray-900 mb-4">
