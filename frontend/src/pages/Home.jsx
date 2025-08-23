@@ -69,7 +69,7 @@ const Home = () => {
                     <p className="text-sm text-gray-600">3 PM - 10 PM Daily</p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-3 bg-white/60 backdrop-blur-sm py-4 pr-4 pl-4 rounded-lg">
+                <div className="flex items-center space-x-3 bg-white/60 backdrop-blur-sm py-4 pr-4 pl-8 rounded-lg">
                   <MapPin className="h-5 w-5" style={{ color: primaryColor }} />
                   <div className="text-left">
                     <p className="font-semibold text-gray-900">General Practice</p>
