@@ -209,41 +209,132 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Services Preview */}
+      {/* General Practice Pet Care */}
       <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center" style={{ marginBottom: '20px' }}>
             <h2 className="font-bold text-gray-900 mb-4" style={{ fontSize: '1rem' }}>
-              Comprehensive Pet Care Services
+              General Practice Pet Care
             </h2>
             <p className="text-gray-600 max-w-3xl mx-auto" style={{ fontSize: '1rem' }}>
-              From routine wellness to urgent care, we provide complete veterinary services for your pet's health and happiness.
+              Comprehensive preventive and routine veterinary services to keep your pet healthy throughout their life.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.slice(0, 6).map((service) => (
-              <div
-                key={service.id}
-                className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1"
-              >
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6" style={{ backgroundColor: primaryBg }}>
-                  <Heart className="h-8 w-8" style={{ color: primaryColor }} />
-                </div>
-                <h3 className="font-bold text-gray-900 mb-3" style={{ fontSize: '1rem' }}>{service.name}</h3>
-                <p className="text-gray-600 mb-4">{service.description}</p>
-                <Link
-                  to="/services"
-                  className="inline-flex items-center font-semibold transition-colors"
-                  style={{ color: primaryColor }}
-                  onMouseEnter={(e) => e.target.style.color = '#2196c7'}
-                  onMouseLeave={(e) => e.target.style.color = primaryColor}
-                >
-                  Learn More
-                  <ArrowRight className="ml-1 h-4 w-4" />
-                </Link>
+            {/* Vaccinations */}
+            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6" style={{ backgroundColor: '#10b98115' }}>
+                <Shield className="h-8 w-8" style={{ color: '#10b981' }} />
               </div>
-            ))}
+              <h3 className="font-bold text-gray-900 mb-3" style={{ fontSize: '1rem' }}>Vaccinations</h3>
+              <p className="text-gray-600 mb-4">Essential immunizations to protect your pet from serious diseases like parvovirus, distemper, and rabies with tailored vaccination schedules.</p>
+              <Link
+                to="/pet-vaccinations"
+                className="inline-flex items-center font-semibold transition-colors"
+                style={{ color: '#10b981' }}
+                onMouseEnter={(e) => e.target.style.color = '#059669'}
+                onMouseLeave={(e) => e.target.style.color = '#10b981'}
+              >
+                Learn More
+                <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </div>
+
+            {/* Wellness Exams */}
+            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6" style={{ backgroundColor: primaryBg }}>
+                <Stethoscope className="h-8 w-8" style={{ color: primaryColor }} />
+              </div>
+              <h3 className="font-bold text-gray-900 mb-3" style={{ fontSize: '1rem' }}>Wellness Exams</h3>
+              <p className="text-gray-600 mb-4">Comprehensive physical assessments including eye exams, heart screening, and full body evaluations to detect health issues early.</p>
+              <Link
+                to="/preventive-pet-care"
+                className="inline-flex items-center font-semibold transition-colors"
+                style={{ color: primaryColor }}
+                onMouseEnter={(e) => e.target.style.color = '#2196c7'}
+                onMouseLeave={(e) => e.target.style.color = primaryColor}
+              >
+                Learn More
+                <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </div>
+
+            {/* Microchipping */}
+            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6" style={{ backgroundColor: '#3b82f615' }}>
+                <Radio className="h-8 w-8" style={{ color: '#3b82f6' }} />
+              </div>
+              <h3 className="font-bold text-gray-900 mb-3" style={{ fontSize: '1rem' }}>Microchipping</h3>
+              <p className="text-gray-600 mb-4">Permanent identification system using a tiny electronic chip to help reunite you with your lost pet quickly and safely.</p>
+              <Link
+                to="/pet-microchipping"
+                className="inline-flex items-center font-semibold transition-colors"
+                style={{ color: '#3b82f6' }}
+                onMouseEnter={(e) => e.target.style.color = '#2563eb'}
+                onMouseLeave={(e) => e.target.style.color = '#3b82f6'}
+              >
+                Learn More
+                <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </div>
+
+            {/* Dental Cleaning */}
+            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6" style={{ backgroundColor: '#f59e0b15' }}>
+                <Sparkles className="h-8 w-8" style={{ color: '#f59e0b' }} />
+              </div>
+              <h3 className="font-bold text-gray-900 mb-3" style={{ fontSize: '1rem' }}>Dental Cleaning</h3>
+              <p className="text-gray-600 mb-4">Professional dental care including plaque removal, dental X-rays, and comprehensive oral examinations for optimal dental health.</p>
+              <Link
+                to="/dental-cleanings"
+                className="inline-flex items-center font-semibold transition-colors"
+                style={{ color: '#f59e0b' }}
+                onMouseEnter={(e) => e.target.style.color = '#d97706'}
+                onMouseLeave={(e) => e.target.style.color = '#f59e0b'}
+              >
+                Learn More
+                <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </div>
+
+            {/* Eye Care */}
+            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6" style={{ backgroundColor: '#ef444415' }}>
+                <Eye className="h-8 w-8" style={{ color: '#ef4444' }} />
+              </div>
+              <h3 className="font-bold text-gray-900 mb-3" style={{ fontSize: '1rem' }}>Eye Care</h3>
+              <p className="text-gray-600 mb-4">Specialized eye examinations including tear production tests, corneal staining, and glaucoma screening for complete ocular health.</p>
+              <Link
+                to="/pet-ocular-services"
+                className="inline-flex items-center font-semibold transition-colors"
+                style={{ color: '#ef4444' }}
+                onMouseEnter={(e) => e.target.style.color = '#dc2626'}
+                onMouseLeave={(e) => e.target.style.color = '#ef4444'}
+              >
+                Learn More
+                <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </div>
+
+            {/* Spay & Neuter */}
+            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6" style={{ backgroundColor: '#8b5cf615' }}>
+                <Scissors className="h-8 w-8" style={{ color: '#8b5cf6' }} />
+              </div>
+              <h3 className="font-bold text-gray-900 mb-3" style={{ fontSize: '1rem' }}>Spay & Neuter</h3>
+              <p className="text-gray-600 mb-4">Safe surgical procedures to prevent diseases, reduce behavioral issues, and support responsible pet ownership with health and community benefits.</p>
+              <Link
+                to="/pet-spay-neuter"
+                className="inline-flex items-center font-semibold transition-colors"
+                style={{ color: '#8b5cf6' }}
+                onMouseEnter={(e) => e.target.style.color = '#7c3aed'}
+                onMouseLeave={(e) => e.target.style.color = '#8b5cf6'}
+              >
+                Learn More
+                <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </div>
           </div>
 
           <div className="text-center mt-12">
