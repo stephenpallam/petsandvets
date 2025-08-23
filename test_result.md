@@ -105,6 +105,18 @@
 user_problem_statement: "Create Urgent Care webpage - write a compact and impactful webpage with modern professional layout and styling for urgent veterinary care services"
 
 frontend:
+  - task: "Create Pet Travel Certificates Page for General Services"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/PetTravelCertificates.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Successfully created comprehensive Pet Travel Certificates page with modern professional layout. Features engaging hero section with Plane icon and 'Safe Journeys Start Here' badge, travel methods section (Air Travel, Road Trips, Sea Travel), 'Why It Matters' explanation with federally recognized document requirements, 'What to Expect' with 3-step examination process (Full Physical Examination, Disease Screening, Vaccination Verification), important note about Rabies certificates, 'Plan Ahead' section with USDA APHIS resource link, and compelling CTA. Added import and route to App.js (/pet-travel-certificates) and integrated service block into Services.jsx under General Services section with purple Sparkles icon and descriptive content about Domestic Health Certificates."
+
   - task: "Create Diet & Nutrition Page for Dog Services"
     implemented: true
     working: true
