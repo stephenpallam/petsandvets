@@ -324,8 +324,8 @@ const UrgentCare = () => {
           </div>
 
           {/* End-of-Life Support */}
-          <div className="mb-16">
-            <h3 className="text-lg font-bold text-gray-900 mb-8 text-center">End-of-Life Support</h3>
+          <div className="mb-12">
+            <h3 className="text-lg font-bold text-gray-900 mb-6 text-center">End-of-Life Support</h3>
             <div className="max-w-4xl mx-auto">
               <div className="bg-white p-8 rounded-xl shadow-md">
                 <div className="flex items-center mb-4">
