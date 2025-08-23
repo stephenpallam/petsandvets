@@ -122,7 +122,8 @@ const Header = () => {
                location.pathname.includes('/blocked-') || 
                location.pathname.includes('/foreign-') ||
                location.pathname.includes('/end-of-life-care') ||
-               location.pathname.includes('/on-site-pharmacy');
+               location.pathname.includes('/on-site-pharmacy') ||
+               location.pathname.includes('/pet-travel-certificates');
       
       case 'About Us':
         return location.pathname.includes('/our-') || 
