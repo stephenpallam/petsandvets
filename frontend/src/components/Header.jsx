@@ -11,6 +11,15 @@ const Header = () => {
   const navigation = [
     { name: 'Home', href: '/' },
     { 
+      name: 'About Us',
+      dropdown: [
+        { name: 'Our Mission', href: '/our-mission' },
+        { name: 'Our Values', href: '/our-core-values' },
+        { name: 'Our Team', href: '/our-team' },
+        { name: 'Our Facility', href: '/gallery' }
+      ]
+    },
+    { 
       name: 'Services',
       dropdown: [
         { name: 'Urgent Care', href: '/urgent-care' },
@@ -66,23 +75,6 @@ const Header = () => {
       ]
     },
     { 
-      name: 'About Us',
-      dropdown: [
-        { name: 'Our Mission', href: '/our-mission' },
-        { name: 'Our Values', href: '/our-core-values' },
-        { name: 'Our Team', href: '/our-team' },
-        { name: 'Our Facility', href: '/gallery' }
-      ]
-    },
-    { 
-      name: 'Contact Us',
-      dropdown: [
-        { name: 'Reach Us', href: '/reach-us' },
-        { name: 'Our Hours', href: '/our-hours' },
-        { name: 'Message Us', href: '/message-us' }
-      ]
-    },
-    { 
       name: 'Forms',
       dropdown: [
         { 
@@ -96,6 +88,14 @@ const Header = () => {
           ]
         },
         { name: 'Download', href: '/forms-download' }
+      ]
+    },
+    { 
+      name: 'Contact Us',
+      dropdown: [
+        { name: 'Reach Us', href: '/reach-us' },
+        { name: 'Our Hours', href: '/our-hours' },
+        { name: 'Message Us', href: '/message-us' }
       ]
     }
   ];
