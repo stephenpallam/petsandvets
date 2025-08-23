@@ -31,51 +31,17 @@ const Gallery = () => {
         </div>
       </section>
 
-      {/* Filter Tabs */}
-      <section className="py-8 bg-white shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap justify-center gap-4">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setFilter(category.id)}
-                className={`px-6 py-2 rounded-lg font-medium transition-all duration-200 ${
-                  filter === category.id
-                    ? 'text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-                style={{
-                  backgroundColor: filter === category.id ? primaryColor : undefined
-                }}
-                onMouseEnter={(e) => {
-                  if (filter !== category.id) {
-                    e.target.style.backgroundColor = '#f3f4f6';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (filter !== category.id) {
-                    e.target.style.backgroundColor = '#f9fafb';
-                  }
-                }}
-              >
-                {category.name}
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Gallery Grid */}
       <section className="py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {filteredImages.length === 0 ? (
+          {facilityImages.length === 0 ? (
             <div className="text-center py-12">
               <Camera className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-              <p className="text-xl text-gray-600">No images found for this category.</p>
+              <p className="text-xl text-gray-600">No images found.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredImages.map((image) => (
+              {facilityImages.map((image) => (
                 <div
                   key={image.id}
                   className="group relative bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer"
