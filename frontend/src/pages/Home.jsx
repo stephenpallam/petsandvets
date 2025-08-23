@@ -151,9 +151,15 @@ const Home = () => {
       <section style={{ backgroundColor: primaryColor, paddingTop: '30px', paddingBottom: '30px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center" style={{ marginBottom: '20px' }}>
-            <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
-              Urgent Care
-            </h2>
+            <div className="inline-flex items-center justify-center mb-4">
+              <div className="h-px bg-white/30 flex-grow max-w-24"></div>
+              <div className="mx-4 px-6 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+                <h2 className="font-bold text-white text-lg tracking-wide">
+                  Urgent Care
+                </h2>
+              </div>
+              <div className="h-px bg-white/30 flex-grow max-w-24"></div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
