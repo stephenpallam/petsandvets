@@ -55,12 +55,9 @@ const OurTeam = () => {
               <Users className="h-8 w-8" style={{ color: primaryColor }} />
             </div>
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-              Our Team
+              Meet Our Veterinary Professionals
             </h1>
           </div>
-          <p className="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto">
-            Meet the experienced professionals dedicated to your pet's health and wellbeing
-          </p>
         </div>
       </section>
 
