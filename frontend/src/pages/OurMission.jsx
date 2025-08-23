@@ -48,7 +48,7 @@ const OurMission = () => {
             </h2>
           </div>
           
-          <div className="space-y-8">
+          <div className="space-y-6">
             <p className="text-base text-gray-600 leading-relaxed">
               Pets & Vets Animal Hospital is pleased to deliver the very best veterinary care to your pets residing in 
               South Riding, Chantilly, Aldie, Ashburn, Herndon, Centreville, and Fairfax in Northern Virginia. Our team 
