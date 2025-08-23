@@ -132,7 +132,7 @@ const ReachUs = () => {
               ></iframe>
             </div>
             
-            <div className="mt-4 p-4 rounded-lg" style={{ backgroundColor: primaryBg }}>
+            <div className="mt-4 p-4 rounded-lg" style={{ backgroundColor: '#f8f9fa' }}>
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="font-semibold text-gray-900">{hospitalInfo.address}</p>
