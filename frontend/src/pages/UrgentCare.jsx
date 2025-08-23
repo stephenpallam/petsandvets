@@ -245,7 +245,7 @@ const UrgentCare = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
-              Urgent Care at Pets and Vets Animal Hospital
+              Urgent Care
             </h1>
             <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
               When your pet needs care—not just quickly, but right away—our Urgent Veterinary Services deliver 
