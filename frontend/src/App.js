@@ -17,6 +17,7 @@ import DogEyeCare from "./pages/DogEyeCare";
 import DogVaccinations from "./pages/DogVaccinations";
 import DogWellnessExams from "./pages/DogWellnessExams";
 import DogDietNutrition from "./pages/DogDietNutrition";
+import DogSurgeries from "./pages/DogSurgeries";
 import CatVaccinations from "./pages/CatVaccinations";
 import UltrasoundExams from "./pages/UltrasoundExams";
 import PetVaccinations from "./pages/PetVaccinations";
