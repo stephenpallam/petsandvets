@@ -271,6 +271,16 @@ const Services = () => {
                 Learn More <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
             </div>
+            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1 border">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6" style={{ backgroundColor: '#10b98115' }}>
+                <Users className="h-8 w-8" style={{ color: '#10b981' }} />
+              </div>
+              <h3 className="font-bold text-gray-900 mb-3">Insurance & Payments</h3>
+              <p className="text-gray-600 mb-4">Flexible payment options including credit cards, CareCredit, pet insurance, and wellness plans to make quality care accessible for every pet family.</p>
+              <Link to="/pet-insurance-payments" className="inline-flex items-center font-semibold transition-colors" style={{ color: '#10b981' }}>
+                Learn More <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
