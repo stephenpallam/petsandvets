@@ -107,6 +107,16 @@ const Services = () => {
                 Learn More <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
             </div>
+            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1 border">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6" style={{ backgroundColor: '#8b5cf615' }}>
+                <Utensils className="h-8 w-8" style={{ color: '#8b5cf6' }} />
+              </div>
+              <h3 className="font-bold text-gray-900 mb-3">Diet & Nutrition</h3>
+              <p className="text-gray-600 mb-4">Customized nutrition plans and dietary guidance to maintain healthy weight, boost energy, and improve your dog's overall quality of life.</p>
+              <Link to="/dog-diet-nutrition" className="inline-flex items-center font-semibold transition-colors" style={{ color: '#8b5cf6' }}>
+                Learn More <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
