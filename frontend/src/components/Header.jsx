@@ -30,7 +30,8 @@ const Header = () => {
             { name: 'Dog Dermatology', href: '/dog-skin-care' },
             { name: 'Dog Vaccinations', href: '/dog-vaccinations' },
             { name: 'Dog Wellness', href: '/dog-wellness-exams' },
-            { name: 'Dog Eye Care', href: '/dog-eye-care' }
+            { name: 'Dog Eye Care', href: '/dog-eye-care' },
+            { name: 'Dog Surgeries', href: '/dog-surgeries' }
           ]
         },
         {
