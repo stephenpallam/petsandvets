@@ -11,7 +11,12 @@ import {
   Heart,
   Shield,
   Award,
-  Users
+  Users,
+  Eye,
+  Radio,
+  Sparkles,
+  Scissors,
+  Stethoscope
 } from 'lucide-react';
 import { hospitalInfo, services, specialOffers, testimonials, heroImages } from '../mock';
 
