@@ -471,23 +471,23 @@ const UrgentCare = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="flex items-center justify-center mb-4">
             <Siren className="h-8 w-8 mr-3 text-white" />
-            <h2 className="font-bold text-white text-xl">
+            <h2 className="font-bold text-white" style={{ fontSize: '1rem' }}>
               Ready to Help Your Pet Feel Better — Right Now
             </h2>
           </div>
-          <p className="mb-8 text-white text-lg">
+          <p className="mb-8 text-white" style={{ fontSize: '1rem' }}>
             If your pet is sick, injured, or just not acting like themselves, we're here to help
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href={`tel:${hospitalInfo.phone}`}
-              className="inline-flex items-center justify-center bg-white px-8 py-4 rounded-lg font-bold text-lg transition-colors duration-200"
+              className="inline-flex items-center justify-center bg-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
               style={{ color: urgentColor }}
               onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
             >
-              <Phone className="mr-2 h-6 w-6" />
-              CALL NOW: {hospitalInfo.phone}
+              <Phone className="mr-2 h-5 w-5" />
+              Call Now: {hospitalInfo.phone}
             </a>
             <Link
               to="/contact"
