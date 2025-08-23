@@ -69,6 +69,7 @@ function App() {
             <Route path="/dog-eye-care" element={<DogEyeCare />} />
             <Route path="/dog-vaccinations" element={<DogVaccinations />} />
             <Route path="/dog-wellness-exams" element={<DogWellnessExams />} />
+            <Route path="/dog-diet-nutrition" element={<DogDietNutrition />} />
             <Route path="/cat-diagnostic-imaging" element={<CatDiagnosticImaging />} />
             <Route path="/cat-vaccinations" element={<CatVaccinations />} />
             <Route path="/ultrasound-exams" element={<UltrasoundExams />} />
