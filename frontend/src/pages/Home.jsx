@@ -346,19 +346,6 @@ const Home = () => {
               </Link>
             </div>
           </div>
-
-          <div className="text-center mt-12">
-            <Link
-              to="/services"
-              className="inline-flex items-center text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
-              style={{ backgroundColor: primaryColor }}
-              onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
-              onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
-            >
-              View All Services
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
-          </div>
         </div>
       </section>
 
