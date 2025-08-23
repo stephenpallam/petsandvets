@@ -7,6 +7,7 @@ import {
   Star, 
   CheckCircle, 
   ArrowRight,
+  ChevronRight,
   Heart,
   Shield,
   Award,
