@@ -138,7 +138,8 @@ const Header = () => {
       
       case 'Patient Resources':
         return location.pathname.includes('/forms') || 
-               location.pathname.includes('/your-first-visit');
+               location.pathname.includes('/your-first-visit') ||
+               location.pathname.includes('/pet-insurance-payments');
       
       default:
         return false;
