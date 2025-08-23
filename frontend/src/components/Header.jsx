@@ -192,7 +192,7 @@ const Header = () => {
                       <Link
                         to={item.href}
                         className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                          isActive(item.href) || location.pathname.includes('/services') || location.pathname.includes('/urgent-care') || location.pathname.includes('/dog-') || location.pathname.includes('/cat-') || location.pathname.includes('/pet-') || location.pathname.includes('/dental-') || location.pathname.includes('/ultrasound-') || location.pathname.includes('/veterinary-') || location.pathname.includes('/digital-') || location.pathname.includes('/preventive-') || location.pathname.includes('/blocked-') || location.pathname.includes('/foreign-') || location.pathname.includes('/our-') || location.pathname.includes('/about') || location.pathway.includes('/gallery')
+                          isActive(item.href) || location.pathname.includes('/services') || location.pathname.includes('/urgent-care') || location.pathname.includes('/dog-') || location.pathname.includes('/cat-') || location.pathname.includes('/pet-') || location.pathname.includes('/dental-') || location.pathname.includes('/ultrasound-') || location.pathname.includes('/veterinary-') || location.pathname.includes('/digital-') || location.pathname.includes('/preventive-') || location.pathname.includes('/blocked-') || location.pathname.includes('/foreign-') || location.pathname.includes('/our-') || location.pathname.includes('/about') || location.pathname.includes('/gallery')
                             ? 'text-gray-900' 
                             : 'text-gray-700 hover:text-gray-900'
                         }`}
