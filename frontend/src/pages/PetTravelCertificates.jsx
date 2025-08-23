@@ -13,7 +13,9 @@ import {
   AlertCircle,
   ExternalLink,
   Car,
-  Ship
+  Ship,
+  Globe,
+  Flag
 } from 'lucide-react';
 import { hospitalInfo } from '../mock';
 
@@ -22,54 +24,55 @@ const PetTravelCertificates = () => {
   const primaryLight = '#5bc0db';
   const primaryBg = '#e6f7fb';
 
+  const requirements = [
+    "Required by most airlines, states, and ferries",
+    "Valid for domestic and international travel",
+    "Must be issued by a USDA-accredited veterinarian",
+    "Typically valid for 10–30 days depending on destination",
+    "Pets must be 8 weeks or older, fully weaned, and current on Rabies vaccination"
+  ];
+
   const examSteps = [
     {
-      step: "Full Physical Examination",
-      description: "Complete health assessment to ensure your pet is fit for travel",
+      step: "Full Physical Exam",
+      description: "Comprehensive health assessment to ensure travel fitness",
       icon: Stethoscope,
       color: "#10b981"
     },
     {
       step: "Disease Screening",
-      description: "Confirm your pet is free of communicable diseases",
+      description: "Screen for communicable diseases that could affect travel",
       icon: Shield,
       color: "#3b82f6"
     },
     {
       step: "Vaccination Verification",
-      description: "Check and verify current Rabies vaccination status",
+      description: "Verify current Rabies vaccination status and records",
       icon: CheckCircle,
       color: "#8b5cf6"
+    },
+    {
+      step: "Certificate Issuance",
+      description: "Provide signed health certificate for your journey",
+      icon: FileText,
+      color: "#f59e0b"
     }
   ];
 
-  const requirements = [
-    "Certificate must be issued within 10 days of departure",
-    "Pet must be at least 8 weeks old and fully weaned",
-    "Current Rabies vaccination required",
-    "Issued by federally accredited veterinarian",
-    "Valid for domestic travel within the United States",
-    "Required by most airlines and many states"
-  ];
-
-  const travelMethods = [
+  const travelTypes = [
     {
-      method: "Air Travel",
-      icon: Plane,
-      description: "Most airlines require health certificates for pet travel",
-      color: "#3b82f6"
-    },
-    {
-      method: "Road Trips",
-      icon: Car,
-      description: "Many states require certificates for pets crossing borders",
+      type: "Domestic Travel",
+      icon: Flag,
+      description: "Health certificates required for most out-of-state trips, whether flying or driving",
+      details: "Even on road trips, authorities may request proof of Rabies vaccination. For Hawaii, a Rabies Titer Test must be completed 120 days before travel.",
       color: "#10b981"
     },
     {
-      method: "Sea Travel",
-      icon: Ship,
-      description: "Ferry and cruise travel often requires health documentation",
-      color: "#8b5cf6"
+      type: "International Travel", 
+      icon: Globe,
+      description: "Every country has unique rules—often requiring vaccines, bloodwork, flea treatments, or microchipping",
+      details: "Certificates must be endorsed by the USDA before departure. Plan at least 4 months in advance, as some tests and approvals take weeks.",
+      color: "#ef4444"
     }
   ];
 
@@ -82,48 +85,53 @@ const PetTravelCertificates = () => {
           <h1 className="text-xl font-bold text-gray-900 mb-6">
             Pet Travel Certificates
           </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+              Keeping Journeys Safe & Stress-Free
+            </span>
+          </div>
           <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
-            Planning a trip with your pet? Whether you're flying, driving, or sailing to another state, most pets need a Domestic Health Certificate before they can travel.
+            Planning a trip with your pet? Whether by air, land, or sea, most pets need a health certificate before traveling. This federally recognized document confirms your pet is healthy, properly vaccinated, and poses no risk to other animals or people.
           </p>
         </div>
       </section>
 
-      {/* Travel Methods */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {travelMethods.map((method, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mb-4 mx-auto" style={{ backgroundColor: `${method.color}15` }}>
-                  <method.icon className="h-8 w-8" style={{ color: method.color }} />
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-2">{method.method}</h3>
-                <p className="text-sm text-gray-600">{method.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Why It Matters */}
-      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Why It Matters</h2>
           </div>
-          <div className="bg-white p-6 rounded-xl shadow-md">
-            <p className="text-base text-gray-600 leading-relaxed mb-6">
-              A health certificate is a federally recognized document that confirms your pet is healthy and poses no risk to other animals or people. It ensures your pet is fit for travel and meets state and airline requirements.
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <div className="bg-gray-50 p-6 rounded-xl">
+            <div className="space-y-4">
               {requirements.map((requirement, index) => (
                 <div key={index} className="flex items-start">
                   <CheckCircle className="h-5 w-5 mr-3 flex-shrink-0 mt-0.5" style={{ color: '#10b981' }} />
-                  <span className="text-gray-700 text-sm">{requirement}</span>
+                  <span className="text-gray-700">{requirement}</span>
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Travel Types */}
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '30px' }}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {travelTypes.map((travel, index) => (
+              <div key={index} className="bg-white p-6 rounded-xl shadow-md">
+                <div className="flex items-center mb-4">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: `${travel.color}15` }}>
+                    <travel.icon className="h-6 w-6" style={{ color: travel.color }} />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">{travel.type}</h3>
+                </div>
+                <p className="text-gray-600 mb-4">{travel.description}</p>
+                <p className="text-sm text-gray-500">{travel.details}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -134,18 +142,18 @@ const PetTravelCertificates = () => {
           <div className="text-center mb-8">
             <h2 className="text-xl font-bold text-gray-900 mb-4">What to Expect</h2>
             <p className="text-gray-600 max-w-3xl mx-auto">
-              During your appointment, our federally accredited veterinarian will:
+              During your pet's travel exam, our accredited veterinarian will:
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {examSteps.map((step, index) => (
               <div key={index} className="text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6 mx-auto" style={{ backgroundColor: `${step.color}15` }}>
+                <div className="flex items-center justify-center w-16 h-16 rounded-full mb-4 mx-auto" style={{ backgroundColor: `${step.color}15` }}>
                   <step.icon className="h-8 w-8" style={{ color: step.color }} />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{step.step}</h3>
-                <p className="text-gray-600 text-sm">{step.description}</p>
+                <h3 className="font-semibold text-gray-900 mb-2">{step.step}</h3>
+                <p className="text-sm text-gray-600">{step.description}</p>
               </div>
             ))}
           </div>
@@ -156,7 +164,7 @@ const PetTravelCertificates = () => {
               <h3 className="text-lg font-semibold text-gray-900">Important Note</h3>
             </div>
             <p className="text-gray-700">
-              If your pet's Rabies vaccine wasn't given at our hospital, please bring their Rabies Certificate or vaccine record to the visit.
+              If your pet's Rabies vaccine was done elsewhere, please bring the official certificate to your appointment.
             </p>
           </div>
         </div>
@@ -169,33 +177,96 @@ const PetTravelCertificates = () => {
             <h2 className="text-xl font-bold text-gray-900 mb-4">Plan Ahead</h2>
           </div>
           
-          <div className="bg-white p-6 rounded-xl shadow-md">
-            <div className="flex items-center mb-4">
-              <Calendar className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
-              <h3 className="text-lg font-semibold text-gray-900">Check Requirements Early</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white p-6 rounded-xl text-center">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mb-4 mx-auto" style={{ backgroundColor: `${primaryColor}15` }}>
+                <Calendar className="h-8 w-8" style={{ color: primaryColor }} />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-3">Schedule Early</h3>
+              <p className="text-sm text-gray-600">Schedule your appointment within 10 days of departure</p>
             </div>
-            <p className="text-gray-600 mb-6">
-              Every state and airline may have different requirements, so check early. Certificates must be issued within 10 days of your departure.
-            </p>
             
-            <div className="flex flex-col sm:flex-row items-center justify-between p-4 rounded-lg" style={{ backgroundColor: primaryBg }}>
-              <div className="flex items-center mb-4 sm:mb-0">
-                <FileText className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
-                <div>
-                  <h4 className="font-semibold text-gray-900">Helpful Resource</h4>
-                  <p className="text-sm text-gray-600">USDA APHIS Pet Travel Guidelines</p>
+            <div className="bg-white p-6 rounded-xl text-center">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mb-4 mx-auto" style={{ backgroundColor: '#10b98115' }}>
+                <Phone className="h-8 w-8" style={{ color: '#10b981' }} />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-3">Confirm Requirements</h3>
+              <p className="text-sm text-gray-600">Contact your airline, cruise line, or destination country early to confirm requirements</p>
+            </div>
+            
+            <div className="bg-white p-6 rounded-xl text-center">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mb-4 mx-auto" style={{ backgroundColor: '#8b5cf615' }}>
+                <MapPin className="h-8 w-8" style={{ color: '#8b5cf6' }} />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-3">Final Destination</h3>
+              <p className="text-sm text-gray-600">If making multiple stops, your final destination must be listed on the certificate</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Helpful Resources */}
+      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Helpful Resources</h2>
+            <p className="text-gray-600">
+              Get the latest travel requirements and guidelines from official sources:
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-gray-50 p-6 rounded-xl">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-gray-900">USDA Pet Travel Guidelines</h3>
+                <div className="flex items-center justify-center w-8 h-8 rounded-full" style={{ backgroundColor: `${primaryColor}15` }}>
+                  <Plane className="h-4 w-4" style={{ color: primaryColor }} />
                 </div>
               </div>
+              <p className="text-sm text-gray-600 mb-4">Official guidelines for domestic and international pet travel requirements</p>
               <a
                 href="https://www.aphis.usda.gov/aphis/pet-travel"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-6 py-2 font-semibold rounded-lg transition-colors text-white hover:opacity-90"
-                style={{ backgroundColor: primaryColor }}
+                className="inline-flex items-center text-sm font-semibold transition-colors hover:opacity-80"
+                style={{ color: primaryColor }}
               >
-                Visit USDA Site <ExternalLink className="ml-2 h-4 w-4" />
+                Visit USDA Guidelines <ExternalLink className="ml-1 h-4 w-4" />
               </a>
             </div>
+            
+            <div className="bg-gray-50 p-6 rounded-xl">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-gray-900">CDC Dog Import Requirements</h3>
+                <div className="flex items-center justify-center w-8 h-8 rounded-full" style={{ backgroundColor: '#10b98115' }}>
+                  <Globe className="h-4 w-4" style={{ color: '#10b981' }} />
+                </div>
+              </div>
+              <p className="text-sm text-gray-600 mb-4">CDC requirements for bringing dogs into the United States</p>
+              <a
+                href="https://www.cdc.gov/importation/bringing-an-animal-into-the-united-states/dogs.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-sm font-semibold transition-colors hover:opacity-80"
+                style={{ color: '#10b981' }}
+              >
+                Visit CDC Requirements <ExternalLink className="ml-1 h-4 w-4" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Closing Message */}
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '30px' }}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="p-6 rounded-xl border-l-4" style={{ backgroundColor: 'white', borderColor: primaryColor }}>
+            <p className="text-lg font-medium text-gray-800 mb-4">
+              With proper planning, your pet can travel safely by your side—whether across the state or across the globe.
+            </p>
+            <p className="text-gray-600">
+              Our experienced team is here to help ensure your pet meets all travel requirements for a smooth and safe journey.
+            </p>
           </div>
         </div>
       </section>
@@ -204,10 +275,10 @@ const PetTravelCertificates = () => {
       <section style={{ backgroundColor: primaryColor, paddingTop: '30px', paddingBottom: '30px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-white mb-4">
-            Book Your Travel Certificate Appointment
+            Ready to Get Your Pet's Travel Certificate?
           </h2>
           <p className="text-blue-100 mb-8">
-            Call us to schedule your Domestic Health Certificate exam within 10 days of travel so your pet is cleared for a safe and stress-free journey.
+            Schedule your appointment today and ensure your pet is ready for their next adventure.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a
