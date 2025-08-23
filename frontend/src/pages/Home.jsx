@@ -48,7 +48,7 @@ const Home = () => {
               <div className="space-y-4">
                 <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium" style={{ backgroundColor: primaryBg, color: primaryColor }}>
                   <Heart className="h-4 w-4 mr-2" />
-                  Where Every Paw Finds Care and Every Heart Finds Peace
+                  Where Every Paw Finds Care
                 </div>
                 <h1 className="font-bold text-gray-900 leading-tight" style={{ fontSize: '2rem' }}>
                   Compassionate Care for Your
