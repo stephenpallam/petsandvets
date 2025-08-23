@@ -261,6 +261,16 @@ const Services = () => {
                 Learn More <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
             </div>
+            <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1 border">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6" style={{ backgroundColor: '#8b5cf615' }}>
+                <Sparkles className="h-8 w-8" style={{ color: '#8b5cf6' }} />
+              </div>
+              <h3 className="font-bold text-gray-900 mb-3">Pet Travel Certificates</h3>
+              <p className="text-gray-600 mb-4">Domestic Health Certificates for safe pet travel by air, road, or sea. Federally accredited veterinarian certification within 10 days of departure.</p>
+              <Link to="/pet-travel-certificates" className="inline-flex items-center font-semibold transition-colors" style={{ color: '#8b5cf6' }}>
+                Learn More <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
