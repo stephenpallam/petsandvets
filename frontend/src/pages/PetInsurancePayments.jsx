@@ -78,15 +78,6 @@ const PetInsurancePayments = () => {
     }
   ];
 
-  const wellnessBenefits = [
-    "Predictable monthly payments for routine care",
-    "Tailored to your pet's specific life stage",
-    "Works alongside most pet insurance plans",
-    "Covers preventive care and wellness visits",
-    "No waiting periods or claim forms",
-    "Immediate access to covered services"
-  ];
-
   const careCreditBenefits = [
     {
       benefit: "Low Monthly Payments",
