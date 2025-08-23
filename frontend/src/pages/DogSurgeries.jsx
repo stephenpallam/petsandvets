@@ -233,11 +233,11 @@ const DogSurgeries = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="flex items-center justify-center mb-6">
             <Scissors className="h-8 w-8 text-white mr-3" />
-            <h2 className="text-xl font-bold text-white">
+            <h2 className="font-bold text-white" style={{ fontSize: '1rem' }}>
               Request an Appointment
             </h2>
           </div>
-          <p className="text-blue-100 mb-8">
+          <p className="text-blue-100 mb-8" style={{ fontSize: '1rem' }}>
             If your dog needs surgery or you'd like to discuss preventive options, contact us today. Our veterinary team is here to guide you every step of the way so your dog can live a healthier, happier life.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
