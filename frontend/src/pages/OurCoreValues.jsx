@@ -93,20 +93,20 @@ const OurCoreValues = () => {
       </section>
 
       {/* Values in Action */}
-      <section style={{ backgroundColor: primaryBg, paddingTop: '40px', paddingBottom: '40px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '30px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-12 text-center">
+          <h2 className="text-xl font-bold text-gray-900 mb-8 text-center">
             Our Values in Action
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {valueDetails.map((detail, index) => (
               <div key={index} className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: primaryBg }}>
+                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: '#f8f9fa' }}>
                   <detail.icon className="h-8 w-8" style={{ color: primaryColor }} />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">{detail.title}</h3>
-                <p className="text-gray-700 leading-relaxed">{detail.description}</p>
+                <p className="text-gray-600 text-sm leading-relaxed">{detail.description}</p>
               </div>
             ))}
           </div>
