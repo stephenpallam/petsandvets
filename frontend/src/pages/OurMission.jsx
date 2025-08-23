@@ -76,7 +76,7 @@ const OurMission = () => {
       </section>
 
       {/* Mission Points */}
-      <section style={{ backgroundColor: primaryBg, paddingTop: '40px', paddingBottom: '40px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-12 text-center">
             How We Fulfill Our Mission
@@ -85,11 +85,11 @@ const OurMission = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {missionPoints.map((point, index) => (
               <div key={index} className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: primaryBg }}>
+                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: '#f8f9fa' }}>
                   <point.icon className="h-8 w-8" style={{ color: primaryColor }} />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">{point.title}</h3>
-                <p className="text-gray-700 leading-relaxed">{point.description}</p>
+                <p className="text-gray-600 text-sm leading-relaxed">{point.description}</p>
               </div>
             ))}
           </div>
