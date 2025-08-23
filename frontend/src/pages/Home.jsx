@@ -44,7 +44,7 @@ const Home = () => {
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4" style={{ paddingBottom: '20px' }}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
             {/* Left Content */}
-            <div className="space-y-8">
+            <div className="space-y-4">
               <div className="space-y-4">
                 <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium" style={{ backgroundColor: primaryBg, color: primaryColor }}>
                   <Heart className="h-4 w-4 mr-2" />
