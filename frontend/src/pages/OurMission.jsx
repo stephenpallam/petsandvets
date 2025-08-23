@@ -76,7 +76,7 @@ const OurMission = () => {
       </section>
 
       {/* Mission Points */}
-      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '40px', paddingBottom: '40px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '30px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-8 text-center">
             How We Fulfill Our Mission
