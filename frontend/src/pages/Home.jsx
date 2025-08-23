@@ -358,6 +358,23 @@ const Home = () => {
               </Link>
             </div>
           </div>
+
+          {/* View All Button */}
+          <div className="text-center mt-8">
+            <Link
+              to="/services"
+              className="inline-flex items-center justify-center px-8 py-3 font-semibold rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
+              style={{ 
+                backgroundColor: primaryColor,
+                color: 'white'
+              }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
+            >
+              View All
+              <ChevronRight className="ml-2 h-5 w-5" />
+            </Link>
+          </div>
         </div>
       </section>
 
