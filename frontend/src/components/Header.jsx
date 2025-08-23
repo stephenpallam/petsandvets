@@ -186,6 +186,7 @@ const Header = () => {
                       }}
                     >
                       <button
+                        onClick={() => setActiveDropdown(activeDropdown === item.name ? null : item.name)}
                         className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
                           location.pathname.includes('/services') || location.pathname.includes('/urgent-care') || location.pathname.includes('/dog-') || location.pathname.includes('/cat-') || location.pathname.includes('/pet-') || location.pathname.includes('/dental-') || location.pathname.includes('/ultrasound-') || location.pathname.includes('/veterinary-') || location.pathname.includes('/digital-') || location.pathname.includes('/preventive-') || location.pathname.includes('/blocked-') || location.pathname.includes('/foreign-') || location.pathname.includes('/our-') || location.pathname.includes('/about') || location.pathname.includes('/gallery') || location.pathname.includes('/reach-us') || location.pathname.includes('/message-us') || location.pathname.includes('/contact') || location.pathname.includes('/forms')
                             ? 'text-gray-900' 
