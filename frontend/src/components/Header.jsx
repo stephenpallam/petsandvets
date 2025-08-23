@@ -102,6 +102,43 @@ const Header = () => {
 
   const isActive = (href) => location.pathname === href;
 
+  const isNavItemActive = (itemName) => {
+    switch (itemName) {
+      case 'Services':
+        return location.pathname.includes('/services') || 
+               location.pathname.includes('/urgent-care') || 
+               location.pathname.includes('/dog-') || 
+               location.pathname.includes('/cat-') || 
+               location.pathname.includes('/pet-') || 
+               location.pathname.includes('/dental-') || 
+               location.pathname.includes('/ultrasound-') || 
+               location.pathname.includes('/veterinary-') || 
+               location.pathname.includes('/digital-') || 
+               location.pathname.includes('/preventive-') || 
+               location.pathname.includes('/blocked-') || 
+               location.pathname.includes('/foreign-') ||
+               location.pathname.includes('/end-of-life-care') ||
+               location.pathname.includes('/on-site-pharmacy');
+      
+      case 'About Us':
+        return location.pathname.includes('/our-') || 
+               location.pathname.includes('/about') || 
+               location.pathname.includes('/gallery');
+      
+      case 'Contact Us':
+        return location.pathname.includes('/reach-us') || 
+               location.pathname.includes('/message-us') || 
+               location.pathname.includes('/contact') ||
+               location.pathname.includes('/our-hours');
+      
+      case 'Forms':
+        return location.pathname.includes('/forms');
+      
+      default:
+        return false;
+    }
+  };
+
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
       {/* Top Bar */}
