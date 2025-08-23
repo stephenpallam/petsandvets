@@ -11,8 +11,7 @@ const Header = () => {
   const navigation = [
     { name: 'Home', href: '/' },
     { 
-      name: 'Services', 
-      href: '/services',
+      name: 'Services',
       dropdown: [
         { name: 'Urgent Care', href: '/urgent-care' },
         {
@@ -67,8 +66,7 @@ const Header = () => {
       ]
     },
     { 
-      name: 'About Us', 
-      href: '/about',
+      name: 'About Us',
       dropdown: [
         { name: 'Our Mission', href: '/our-mission' },
         { name: 'Our Values', href: '/our-core-values' },
@@ -77,8 +75,7 @@ const Header = () => {
       ]
     },
     { 
-      name: 'Contact Us', 
-      href: '/contact',
+      name: 'Contact Us',
       dropdown: [
         { name: 'Reach Us', href: '/reach-us' },
         { name: 'Our Hours', href: '/our-hours' },
@@ -86,8 +83,7 @@ const Header = () => {
       ]
     },
     { 
-      name: 'Forms', 
-      href: '/forms-download',
+      name: 'Forms',
       dropdown: [
         { 
           name: 'Online', 
