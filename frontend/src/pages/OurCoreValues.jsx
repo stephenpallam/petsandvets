@@ -114,11 +114,11 @@ const OurCoreValues = () => {
       </section>
 
       {/* Values Promise */}
-      <section className="bg-white" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
+      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-r from-blue-50 to-green-50 p-8 rounded-xl border-l-4" style={{ borderColor: primaryColor }}>
+          <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-8 rounded-xl border-l-4" style={{ borderColor: primaryColor }}>
             <div className="flex items-center mb-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
+              <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: '#f8f9fa' }}>
                 <CheckCircle className="h-6 w-6" style={{ color: primaryColor }} />
               </div>
               <h3 className="text-xl font-bold text-gray-900">Our Promise to You</h3>
