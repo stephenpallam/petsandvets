@@ -14,7 +14,6 @@ import {
   ExternalLink,
   Banknote,
   Wallet,
-  PiggyBank,
   Users
 } from 'lucide-react';
 import { hospitalInfo } from '../mock';
