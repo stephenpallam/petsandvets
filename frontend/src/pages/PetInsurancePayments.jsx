@@ -148,38 +148,8 @@ const PetInsurancePayments = () => {
         </div>
       </section>
 
-      {/* Wellness Plans */}
-      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '30px' }}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Wellness Plans</h2>
-            <p className="text-gray-600 max-w-3xl mx-auto">
-              Our Wellness Plans make routine care more affordable with predictable payments tailored to your pet's life stage. They also work well alongside most pet insurance plans.
-            </p>
-          </div>
-
-          <div className="bg-white p-6 rounded-xl shadow-md">
-            <div className="flex items-center mb-6">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
-                <PiggyBank className="h-8 w-8" style={{ color: primaryColor }} />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900">Wellness Plan Benefits</h3>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {wellnessBenefits.map((benefit, index) => (
-                <div key={index} className="flex items-start">
-                  <CheckCircle className="h-5 w-5 mr-3 flex-shrink-0 mt-0.5" style={{ color: '#10b981' }} />
-                  <span className="text-gray-700 text-sm">{benefit}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Pet Insurance */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '30px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Pet Insurance</h2>
