@@ -195,6 +195,17 @@ const Home = () => {
               </p>
             </div>
           </div>
+
+          {/* All Urgent Care Services Button */}
+          <div className="text-center mt-8">
+            <Link
+              to="/urgent-care"
+              className="inline-flex items-center justify-center px-8 py-3 bg-white text-gray-900 font-semibold rounded-lg hover:bg-gray-100 transition-colors duration-200 shadow-lg"
+            >
+              All Urgent Care Services
+              <ChevronRight className="ml-2 h-5 w-5" />
+            </Link>
+          </div>
         </div>
       </section>
 
