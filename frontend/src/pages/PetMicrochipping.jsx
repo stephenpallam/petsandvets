@@ -269,29 +269,29 @@ const PetMicrochipping = () => {
       </section>
 
       {/* Bottom Info Bar */}
-      <section className="bg-gray-800 text-white" style={{ paddingTop: '20px', paddingBottom: '20px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-            <div className="mb-4 md:mb-0">
-              <div className="flex items-center justify-center md:justify-start mb-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+            <div className="p-4 bg-white rounded-lg">
+              <div className="flex items-center justify-center mb-2">
                 <Clock className="h-4 w-4 mr-2" style={{ color: primaryColor }} />
-                <span className="font-semibold">Quick Procedure</span>
+                <span className="font-semibold text-sm">Quick Procedure</span>
               </div>
-              <p className="text-gray-300 text-sm">Takes only seconds to complete</p>
+              <p className="text-gray-600 text-xs">Takes only seconds to complete</p>
             </div>
-            <div className="mb-4 md:mb-0">
-              <div className="flex items-center justify-center md:justify-start mb-2">
+            <div className="p-4 bg-white rounded-lg">
+              <div className="flex items-center justify-center mb-2">
                 <MapPin className="h-4 w-4 mr-2" style={{ color: primaryColor }} />
-                <span className="font-semibold">Convenient Location</span>
+                <span className="font-semibold text-sm">Convenient Location</span>
               </div>
-              <p className="text-gray-300 text-sm">South Riding, VA</p>
+              <p className="text-gray-600 text-xs">South Riding, VA</p>
             </div>
-            <div>
-              <div className="flex items-center justify-center md:justify-start mb-2">
+            <div className="p-4 bg-white rounded-lg">
+              <div className="flex items-center justify-center mb-2">
                 <Star className="h-4 w-4 mr-2" style={{ color: primaryColor }} />
-                <span className="font-semibold">Professional Care</span>
+                <span className="font-semibold text-sm">Professional Care</span>
               </div>
-              <p className="text-gray-300 text-sm">Skilled veterinary team</p>
+              <p className="text-gray-600 text-xs">Skilled veterinary team</p>
             </div>
           </div>
         </div>
