@@ -351,18 +351,6 @@ const PetVaccinations = () => {
             At Pets and Vets Animal Hospital & Urgent Care, your pet's comfort and safety come first.
           </p>
           
-          {/* Professional Image */}
-          <div className="mb-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.pexels.com/photos/7474856/pexels-photo-7474856.jpeg"
-                alt="Professional veterinary care team providing gentle treatment"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
-          </div>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {careFeatures.map((feature, index) => (
               <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md text-center">
