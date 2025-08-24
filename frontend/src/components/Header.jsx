@@ -160,7 +160,7 @@ const Header = () => {
       {/* Top Bar */}
       <div className="text-white py-2" style={{ backgroundColor: '#29add3' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row justify-between items-center text-sm space-y-2 sm:space-y-0">
+          <div className="flex justify-between items-center text-sm">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-1">
                 <Phone className="h-4 w-4" />
@@ -171,9 +171,30 @@ const Header = () => {
                 <span className="truncate">South Riding, VA</span>
               </div>
             </div>
-            <div className="flex items-center space-x-1">
-              <Clock className="h-4 w-4" />
-              <span>Urgent Care: 3 PM - 10 PM Daily</span>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-1">
+                <Clock className="h-4 w-4" />
+                <span>Urgent Care: 3 PM - 10 PM Daily</span>
+              </div>
+              
+              {/* Auth Button in Top Bar */}
+              {user ? (
+                <button
+                  onClick={logout}
+                  className="flex items-center text-white hover:text-gray-200 transition-colors"
+                  title={`Logout ${user.full_name}`}
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
+              ) : (
+                <button
+                  onClick={() => setShowLogin(true)}
+                  className="flex items-center text-white hover:text-gray-200 transition-colors"
+                  title="Login"
+                >
+                  <LogIn className="h-4 w-4" />
+                </button>
+              )}
             </div>
           </div>
         </div>
