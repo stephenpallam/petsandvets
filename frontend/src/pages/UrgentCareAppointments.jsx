@@ -361,12 +361,9 @@ const UrgentCareAppointments = () => {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <Heart className="h-5 w-5 text-red-400 mr-2" />
-                          <div>
-                            <div className="text-sm font-medium text-gray-900">{appointment.pet_name}</div>
-                            <div className="text-sm text-gray-500 capitalize">{appointment.pet_type}</div>
-                          </div>
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">{appointment.pet_name}</div>
+                          <div className="text-sm text-gray-500 capitalize">{appointment.pet_type}</div>
                         </div>
                       </td>
                       <td className="px-6 py-4">
