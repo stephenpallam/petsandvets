@@ -317,25 +317,21 @@ const ForeignBodySurgery = () => {
             <strong>Contact us immediately if your pet shows signs such as:</strong>
           </p>
           
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {symptomsData.map((symptom, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md border-l-4" style={{ borderColor: symptom.color }}>
-                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
-                  <div className="flex items-center mb-4 lg:mb-0">
-                    <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: `${symptom.color}15` }}>
-                      <symptom.icon className="h-8 w-8" style={{ color: symptom.color }} />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900">{symptom.symptom}</h3>
-                      <span className="px-3 py-1 rounded-full text-xs font-medium text-white" style={{ backgroundColor: symptom.color }}>
-                        {symptom.severity}
-                      </span>
-                    </div>
+              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md">
+                <div className="flex items-center mb-4">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: `${symptom.color}15` }}>
+                    <symptom.icon className="h-6 w-6" style={{ color: symptom.color }} />
                   </div>
-                  <div className="flex-1">
-                    <p className="text-gray-700 leading-relaxed">{symptom.description}</p>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">{symptom.symptom}</h3>
+                    <span className="px-2 py-1 rounded-full text-xs font-medium text-white" style={{ backgroundColor: symptom.color }}>
+                      {symptom.severity}
+                    </span>
                   </div>
                 </div>
+                <p className="text-gray-600 text-sm">{symptom.description}</p>
               </div>
             ))}
           </div>
