@@ -351,33 +351,33 @@ const CatVaccinations = () => {
       </section>
 
       {/* The Danger of Skipping Vaccines */}
-      <section className="bg-white" style={{ paddingTop: '15px', paddingBottom: '15px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             The Danger of Skipping Vaccines
           </h2>
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {riskFactors.map((risk, index) => (
-              <div key={index} className={`p-6 rounded-xl border-l-4 ${
+              <div key={index} className={`p-4 rounded-xl border-l-4 ${
                 risk.severity === 'critical' ? 'border-red-500 bg-red-50' :
                 risk.severity === 'high' ? 'border-orange-500 bg-orange-50' :
                 'border-yellow-500 bg-yellow-50'
               }`}>
                 <div className="flex items-start">
-                  <AlertTriangle className={`h-5 w-5 mr-3 flex-shrink-0 mt-0.5 ${
+                  <AlertTriangle className={`h-4 w-4 mr-3 flex-shrink-0 mt-0.5 ${
                     risk.severity === 'critical' ? 'text-red-500' :
                     risk.severity === 'high' ? 'text-orange-500' :
                     'text-yellow-500'
                   }`} />
                   <div>
-                    <p className={`font-medium mb-2 ${
+                    <p className={`font-medium mb-2 text-sm ${
                       risk.severity === 'critical' ? 'text-red-900' :
                       risk.severity === 'high' ? 'text-orange-900' :
                       'text-yellow-900'
                     }`}>
                       {risk.risk}
                     </p>
-                    <p className={`text-sm ${
+                    <p className={`text-xs ${
                       risk.severity === 'critical' ? 'text-red-700' :
                       risk.severity === 'high' ? 'text-orange-700' :
                       'text-yellow-700'
