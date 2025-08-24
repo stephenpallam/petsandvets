@@ -303,34 +303,6 @@ const OnSitePharmacy = () => {
         </div>
       </section>
 
-      {/* Bottom Info Bar */}
-      <section className="bg-gray-800 text-white" style={{ paddingTop: '20px', paddingBottom: '20px' }}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-            <div className="mb-4 md:mb-0">
-              <div className="flex items-center justify-center md:justify-start mb-2">
-                <Zap className="h-4 w-4 mr-2" style={{ color: primaryColor }} />
-                <span className="font-semibold">Immediate Access</span>
-              </div>
-              <p className="text-gray-300 text-sm">Right after your appointment</p>
-            </div>
-            <div className="mb-4 md:mb-0">
-              <div className="flex items-center justify-center md:justify-start mb-2">
-                <Users className="h-4 w-4 mr-2" style={{ color: primaryColor }} />
-                <span className="font-semibold">Expert Guidance</span>
-              </div>
-              <p className="text-gray-300 text-sm">Professional consultation available</p>
-            </div>
-            <div>
-              <div className="flex items-center justify-center md:justify-start mb-2">
-                <MapPin className="h-4 w-4 mr-2" style={{ color: primaryColor }} />
-                <span className="font-semibold">South Riding, VA</span>
-              </div>
-              <p className="text-gray-300 text-sm">Serving 7 communities</p>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
