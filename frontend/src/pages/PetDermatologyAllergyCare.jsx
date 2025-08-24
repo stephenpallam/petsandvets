@@ -286,30 +286,30 @@ const PetDermatologyAllergyCare = () => {
       </section>
 
       {/* Diagnosis & Treatment */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Diagnosis & Treatment Options
           </h2>
           
-          <div className="mb-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">Diagnostic Methods</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="mb-6">
+            <h3 className="text-base font-semibold text-gray-900 mb-4 text-center">Diagnostic Methods</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {diagnosticMethods.map((method, index) => (
-                <div key={index} className="bg-white p-6 rounded-xl shadow-md">
-                  <div className="flex items-center mb-4">
-                    <method.icon className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
-                    <h4 className="font-semibold text-gray-900">{method.method}</h4>
+                <div key={index} className="bg-white p-4 rounded-lg shadow-sm">
+                  <div className="flex items-center mb-3">
+                    <method.icon className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
+                    <h4 className="font-semibold text-gray-900 text-sm">{method.method}</h4>
                   </div>
                   <p className="text-gray-600 text-sm mb-3">{method.description}</p>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-xs text-gray-500">Accuracy:</span>
-                      <span className="text-xs font-medium text-green-600">{method.accuracy}</span>
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-gray-500">Accuracy:</span>
+                      <span className="font-medium text-green-600">{method.accuracy}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-xs text-gray-500">Best for:</span>
-                      <span className="text-xs font-medium" style={{ color: primaryColor }}>{method.suitability}</span>
+                    <div className="flex justify-between text-xs">
+                      <span className="text-gray-500">Best for:</span>
+                      <span className="font-medium" style={{ color: primaryColor }}>{method.suitability}</span>
                     </div>
                   </div>
                 </div>
@@ -318,17 +318,17 @@ const PetDermatologyAllergyCare = () => {
           </div>
           
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">Treatment Options</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <h3 className="text-base font-semibold text-gray-900 mb-4 text-center">Treatment Options</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {treatmentOptions.map((treatment, index) => (
-                <div key={index} className="bg-white p-6 rounded-xl shadow-md border-l-4" style={{ borderColor: primaryColor }}>
-                  <h4 className="font-semibold text-gray-900 mb-2">{treatment.treatment}</h4>
+                <div key={index} className="bg-white p-4 rounded-lg shadow-sm border-l-4" style={{ borderColor: primaryColor }}>
+                  <h4 className="font-semibold text-gray-900 mb-2 text-sm">{treatment.treatment}</h4>
                   <p className="text-gray-600 text-sm mb-3">{treatment.description}</p>
                   <div className="flex justify-between items-center">
-                    <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                    <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
                       {treatment.type}
                     </span>
-                    <span className="text-sm font-medium text-green-600">{treatment.effectiveness}</span>
+                    <span className="text-xs font-medium text-green-600">{treatment.effectiveness}</span>
                   </div>
                 </div>
               ))}
