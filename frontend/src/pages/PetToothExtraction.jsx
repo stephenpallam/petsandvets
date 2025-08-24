@@ -249,28 +249,26 @@ const PetToothExtraction = () => {
             your pet's safety and comfort.
           </p>
           
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {extractionReasons.map((reason, index) => (
-              <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm">
-                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-4">
-                  <div className="flex items-center mb-3 lg:mb-0">
-                    <div className="flex items-center justify-center w-12 h-12 rounded-full mr-3" style={{ backgroundColor: `${reason.color}15` }}>
-                      <reason.icon className="h-6 w-6" style={{ color: reason.color }} />
-                    </div>
-                    <div>
-                      <h3 className="text-base font-semibold text-gray-900">{reason.reason}</h3>
-                      <p className="text-gray-600 text-sm mt-1">{reason.description}</p>
-                      <span className="px-2 py-1 text-xs font-medium rounded-full mt-2 inline-block" style={{ backgroundColor: `${reason.color}20`, color: reason.color }}>
+              <div key={index} className="bg-gray-50 p-3 rounded-lg shadow-sm">
+                <div className="flex items-start space-x-3">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0" style={{ backgroundColor: `${reason.color}15` }}>
+                    <reason.icon className="h-5 w-5" style={{ color: reason.color }} />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-sm font-semibold text-gray-900">{reason.reason}</h3>
+                      <span className="px-2 py-0.5 text-xs font-medium rounded-full" style={{ backgroundColor: `${reason.color}20`, color: reason.color }}>
                         {reason.severity}
                       </span>
                     </div>
-                  </div>
-                  <div className="flex-1">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <p className="text-gray-600 text-xs mb-2">{reason.description}</p>
+                    <div className="grid grid-cols-1 gap-1">
                       {reason.details.map((detail, detailIndex) => (
-                        <div key={detailIndex} className="flex items-center p-2 rounded border-l-4" style={{ borderColor: reason.color, backgroundColor: `${reason.color}05` }}>
-                          <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: reason.color }} />
-                          <span className="text-xs text-gray-700">{detail}</span>
+                        <div key={detailIndex} className="flex items-center text-xs">
+                          <CheckCircle className="h-2 w-2 mr-1 flex-shrink-0" style={{ color: reason.color }} />
+                          <span className="text-gray-600">{detail}</span>
                         </div>
                       ))}
                     </div>
