@@ -739,30 +739,92 @@ const UrgentCareBooking = () => {
 
             {/* Tab 6: Success */}
             {currentTab === 6 && (
-              <div className="text-center py-8">
-                <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-6" />
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                  Appointment Booked Successfully!
-                </h2>
-                <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
-                  <h3 className="font-semibold text-green-800 mb-4">Appointment Details:</h3>
-                  <div className="space-y-2 text-left text-green-700">
-                    <p><strong>Date:</strong> Today</p>
-                    <p><strong>Time:</strong> {formatTime(formData.appointment_time.split('T')[1])}</p>
-                    <p><strong>Pet:</strong> {formData.pet_name} ({formData.pet_type})</p>
-                    <p><strong>Reason:</strong> {formData.reason_for_visit}</p>
+              <div className="text-center py-12">
+                {/* Success Icon with Gradient Background */}
+                <div className="relative mb-8">
+                  <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-r from-green-400 to-green-600 flex items-center justify-center shadow-lg">
+                    <CheckCircle className="h-12 w-12 text-white" />
+                  </div>
+                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-8 bg-gradient-to-b from-green-400/20 to-transparent rounded-full blur-sm"></div>
+                </div>
+
+                {/* Success Message */}
+                <div className="mb-8">
+                  <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                    Appointment Confirmed!
+                  </h2>
+                  <p className="text-lg text-gray-600 max-w-md mx-auto">
+                    Your urgent care appointment has been successfully booked. We look forward to caring for {formData.pet_name}.
+                  </p>
+                </div>
+
+                {/* Appointment Summary Card */}
+                <div className="max-w-md mx-auto mb-8">
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-6 shadow-sm">
+                    <div className="text-center mb-4">
+                      <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-blue-800 bg-blue-100">
+                        <Clock className="h-4 w-4 mr-1" />
+                        Appointment Summary
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-600">Date:</span>
+                        <span className="text-sm font-semibold text-gray-900">{formatDateAndDay()}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-600">Time:</span>
+                        <span className="text-sm font-semibold text-gray-900">{formatTime(formData.appointment_time.split('T')[1])}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-600">Pet:</span>
+                        <span className="text-sm font-semibold text-gray-900">{formData.pet_name}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-600">Type:</span>
+                        <span className="text-sm font-semibold text-gray-900 capitalize">{formData.pet_type}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <p className="text-gray-600 mb-6">
-                  We'll see you and {formData.pet_name} at your scheduled time. Please arrive 10 minutes early.
-                </p>
+
+                {/* Important Reminders */}
+                <div className="max-w-lg mx-auto mb-8">
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                    <div className="flex items-start">
+                      <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
+                      <div className="text-left">
+                        <h3 className="text-sm font-semibold text-yellow-800 mb-2">Important Reminders</h3>
+                        <ul className="text-xs text-yellow-700 space-y-1">
+                          <li>• Please arrive 10 minutes before your scheduled time</li>
+                          <li>• Bring any previous medical records if available</li>
+                          <li>• Have your pet secured on a leash or in a carrier</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Button */}
                 <Link 
-                  to="/" 
-                  className="inline-block text-white px-8 py-3 rounded-lg font-medium transition-colors"
-                  style={{ backgroundColor: primaryColor }}
+                  to="/urgent-care" 
+                  className="inline-flex items-center px-8 py-4 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                  style={{ 
+                    background: `linear-gradient(135deg, ${primaryColor} 0%, #1e88e5 100%)` 
+                  }}
                 >
-                  Return to Home
+                  <Stethoscope className="h-5 w-5 mr-2" />
+                  Urgent Care Services
                 </Link>
+
+                {/* Additional Help */}
+                <div className="mt-8 pt-6 border-t border-gray-200">
+                  <p className="text-sm text-gray-500 mb-2">Need to make changes to your appointment?</p>
+                  <p className="text-sm text-gray-600">
+                    Please call us at <span className="font-medium text-gray-900">(555) 123-4567</span>
+                  </p>
+                </div>
               </div>
             )}
 
