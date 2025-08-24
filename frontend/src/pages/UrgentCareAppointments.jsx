@@ -478,115 +478,117 @@ const UrgentCareAppointments = () => {
       {/* Appointment Details Modal */}
       {showModal && selectedAppointment && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">Appointment Details</h3>
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+            {/* Sticky Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 rounded-t-xl" style={{ backgroundColor: primaryColor }}>
+              <h3 className="text-lg font-semibold text-white">Appointment Details</h3>
               <button
                 onClick={() => setShowModal(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-white hover:text-gray-200 transition-colors"
               >
                 <X className="h-6 w-6" />
               </button>
             </div>
             
-            <div className="p-6 space-y-6">
-              {/* Appointment Time */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <div className="flex items-center mb-2">
-                  <Clock className="h-5 w-5 text-blue-600 mr-2" />
-                  <h4 className="font-semibold text-blue-900">Appointment Time</h4>
+            {/* Scrollable Content */}
+            <div className="flex-1 overflow-y-auto">
+              {/* Appointment Time - White Background */}
+              <div className="bg-white p-6">
+                <div className="flex items-center mb-3">
+                  <Clock className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
+                  <h4 className="font-semibold text-gray-900">Appointment Time</h4>
                 </div>
-                <p className="text-blue-800">
+                <p className="text-gray-800">
                   {formatDate(selectedAppointment.appointment_time)} at {formatTime(selectedAppointment.appointment_time)}
                 </p>
               </div>
 
-              {/* Pet Owner Information */}
-              <div>
-                <div className="flex items-center mb-3">
-                  <User className="h-5 w-5 text-gray-600 mr-2" />
+              {/* Pet Owner Information - Light Grey Background */}
+              <div className="bg-gray-50 p-6">
+                <div className="flex items-center mb-4">
+                  <User className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
                   <h4 className="font-semibold text-gray-900">Pet Owner Information</h4>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-500">Name</label>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">Name</label>
                     <p className="text-gray-900">{selectedAppointment.owner_first_name} {selectedAppointment.owner_last_name}</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-500">Email</label>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">Email</label>
                     <div className="flex items-center">
-                      <Mail className="h-4 w-4 text-gray-400 mr-1" />
+                      <Mail className="h-4 w-4 text-gray-400 mr-2" />
                       <p className="text-gray-900">{selectedAppointment.email}</p>
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-500">Phone</label>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">Phone</label>
                     <div className="flex items-center">
-                      <Phone className="h-4 w-4 text-gray-400 mr-1" />
+                      <Phone className="h-4 w-4 text-gray-400 mr-2" />
                       <p className="text-gray-900">{selectedAppointment.phone}</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Pet Information */}
-              <div>
-                <div className="flex items-center mb-3">
+              {/* Pet Information - White Background */}
+              <div className="bg-white p-6">
+                <div className="flex items-center mb-4">
                   <Heart className="h-5 w-5 text-red-500 mr-2" />
                   <h4 className="font-semibold text-gray-900">Pet Information</h4>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-500">Pet Name</label>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">Pet Name</label>
                     <p className="text-gray-900">{selectedAppointment.pet_name}</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-500">Pet Type</label>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">Pet Type</label>
                     <p className="text-gray-900 capitalize">{selectedAppointment.pet_type}</p>
                   </div>
                 </div>
               </div>
 
-              {/* Medical Information */}
-              <div>
-                <div className="flex items-center mb-3">
-                  <Stethoscope className="h-5 w-5 text-green-600 mr-2" />
+              {/* Medical Information - Light Grey Background */}
+              <div className="bg-gray-50 p-6">
+                <div className="flex items-center mb-4">
+                  <Stethoscope className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
                   <h4 className="font-semibold text-gray-900">Medical Information</h4>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-500">Reason for Visit</label>
+                  <label className="block text-sm font-medium text-gray-500 mb-1">Reason for Visit</label>
                   <p className="text-gray-900">{selectedAppointment.reason_for_visit}</p>
                 </div>
                 {selectedAppointment.primary_vet_hospital && (
                   <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-500">Primary Veterinary Hospital</label>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">Primary Veterinary Hospital</label>
                     <p className="text-gray-900">{selectedAppointment.primary_vet_hospital}</p>
                   </div>
                 )}
               </div>
 
-              {/* Additional Information */}
+              {/* Additional Information - White Background */}
               {selectedAppointment.how_heard_about_us && (
-                <div>
-                  <div className="flex items-center mb-3">
+                <div className="bg-white p-6">
+                  <div className="flex items-center mb-4">
                     <CheckCircle className="h-5 w-5 text-purple-600 mr-2" />
                     <h4 className="font-semibold text-gray-900">Additional Information</h4>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-500">How They Heard About Us</label>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">How They Heard About Us</label>
                     <p className="text-gray-900">{selectedAppointment.how_heard_about_us}</p>
                   </div>
                 </div>
               )}
 
-              {/* Booking Information */}
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <div className="flex items-center mb-2">
-                  <Calendar className="h-5 w-5 text-gray-600 mr-2" />
+              {/* Booking Information - Light Grey Background */}
+              <div className="bg-gray-50 p-6">
+                <div className="flex items-center mb-4">
+                  <Calendar className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
                   <h4 className="font-semibold text-gray-900">Booking Information</h4>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-500">Booked On</label>
+                  <label className="block text-sm font-medium text-gray-500 mb-1">Booked On</label>
                   <p className="text-gray-900">
                     {new Date(selectedAppointment.created_at).toLocaleDateString('en-US', {
                       year: 'numeric',
@@ -600,11 +602,11 @@ const UrgentCareAppointments = () => {
               </div>
             </div>
             
-            {/* Modal Footer with Delete Button */}
-            <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-between">
+            {/* Sticky Footer */}
+            <div className="px-6 py-4 bg-gray-100 border-t border-gray-200 flex justify-between rounded-b-xl">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
               >
                 Close
               </button>
@@ -613,7 +615,7 @@ const UrgentCareAppointments = () => {
                   setShowModal(false);
                   confirmDelete(selectedAppointment);
                 }}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 flex items-center"
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 flex items-center transition-colors"
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Delete Appointment
