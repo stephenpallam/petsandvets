@@ -253,7 +253,7 @@ const PetDermatologyAllergyCare = () => {
       </section>
 
       {/* Food Allergies in Pets */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Food Allergies in Pets
@@ -262,20 +262,20 @@ const PetDermatologyAllergyCare = () => {
             Food allergies happen when your pet's immune system overreacts to an ingredient in their diet. Symptoms can include:
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {foodAllergySymptoms.map((category, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md">
-                <div className="flex items-center mb-4">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: `${category.color}15` }}>
-                    <category.icon className="h-6 w-6" style={{ color: category.color }} />
+              <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm">
+                <div className="flex items-center mb-3">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full mr-3" style={{ backgroundColor: `${category.color}15` }}>
+                    <category.icon className="h-5 w-5" style={{ color: category.color }} />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900">{category.category}</h3>
+                  <h3 className="text-base font-semibold text-gray-900">{category.category}</h3>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {category.symptoms.map((symptom, symptomIndex) => (
-                    <div key={symptomIndex} className="flex items-start">
-                      <CheckCircle className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: category.color }} />
-                      <span className="text-gray-700 text-sm">{symptom}</span>
+                    <div key={symptomIndex} className="flex items-start text-sm">
+                      <CheckCircle className="h-3 w-3 mr-2 mt-0.5 flex-shrink-0" style={{ color: category.color }} />
+                      <span className="text-gray-700">{symptom}</span>
                     </div>
                   ))}
                 </div>
