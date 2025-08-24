@@ -207,8 +207,8 @@ const UrgentCareBooking = () => {
         {/* Progress Bar */}
         <div className="mb-8">
           <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
-            <span>Step {step} of 5</span>
-            <span>{Math.round((step / 5) * 100)}% Complete</span>
+            <span>Step {currentTab + 1} of 6</span>
+            <span>{Math.round(((currentTab + 1) / 6) * 100)}% Complete</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div 
