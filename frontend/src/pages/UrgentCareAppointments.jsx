@@ -14,7 +14,12 @@ import {
   Stethoscope,
   Trash2,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  UserCheck,
+  UserX,
+  XCircle,
+  Ban,
+  MoreVertical
 } from 'lucide-react';
 
 const UrgentCareAppointments = () => {
