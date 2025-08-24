@@ -344,8 +344,40 @@ const Header = () => {
             })}
           </nav>
 
-          {/* CTA Button */}
+          {/* CTA Button and Auth */}
           <div className="hidden md:flex items-center space-x-4">
+            {user ? (
+              <div className="flex items-center space-x-4">
+                <span className="text-sm text-gray-600">
+                  Hello, {user.full_name}
+                  {user.role === 'admin' && <span className="ml-1 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Admin</span>}
+                </span>
+                <button
+                  onClick={logout}
+                  className="flex items-center text-gray-600 hover:text-gray-800 px-3 py-2 rounded-lg transition-colors"
+                >
+                  <LogOut className="h-4 w-4 mr-1" />
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => setShowLogin(true)}
+                  className="flex items-center text-gray-600 hover:text-gray-800 px-3 py-2 rounded-lg transition-colors"
+                >
+                  <LogIn className="h-4 w-4 mr-1" />
+                  Login
+                </button>
+                <button
+                  onClick={() => setShowRegister(true)}
+                  className="flex items-center bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Register
+                </button>
+              </div>
+            )}
+            
             <Link
               to="/urgent-care"
               className="text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 shadow-md hover:shadow-lg"
