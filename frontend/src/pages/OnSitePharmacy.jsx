@@ -104,53 +104,21 @@ const OnSitePharmacy = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${primaryBg} 0%, #ffffff 50%, #f0fdff 100%)` }}>
-        <div className="absolute inset-0 bg-white/40"></div>
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="space-y-8">
-              <div className="space-y-6">
-                <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium" style={{ backgroundColor: primaryBg, color: primaryColor }}>
-                  <Pill className="h-4 w-4 mr-2" />
-                  Convenient • Expert Guidance • Trusted
-                </div>
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
-                  On-Site Pharmacy
-                  <span className="block text-lg font-medium mt-2" style={{ color: primaryColor }}>
-                    Convenient Care Right at Our Hospital
-                  </span>
-                </h1>
-                <p className="text-gray-700 leading-relaxed text-lg max-w-4xl mx-auto">
-                  At Pets and Vets Animal Hospital, we make keeping your pet healthy easier and faster with our 
-                  on-site pharmacy. Skip the extra stop and get the medications your pet needs—immediately following your appointment.
-                </p>
-              </div>
-
-              {/* Key Stats */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-                <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-lg">
-                  <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: `${accentGreen}15` }}>
-                    <Zap className="h-8 w-8" style={{ color: accentGreen }} />
-                  </div>
-                  <h3 className="font-bold text-gray-900 text-lg">Immediate</h3>
-                  <p className="text-gray-600">No waiting or delays</p>
-                </div>
-                <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-lg">
-                  <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: `${accentBlue}15` }}>
-                    <Users className="h-8 w-8" style={{ color: accentBlue }} />
-                  </div>
-                  <h3 className="font-bold text-gray-900 text-lg">Expert Care</h3>
-                  <p className="text-gray-600">Professional guidance available</p>
-                </div>
-                <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-lg">
-                  <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: `${accentPurple}15` }}>
-                    <Shield className="h-8 w-8" style={{ color: accentPurple }} />
-                  </div>
-                  <h3 className="font-bold text-gray-900 text-lg">Trusted</h3>
-                  <p className="text-gray-600">Veterinary-approved only</p>
-                </div>
-              </div>
+      <section className="bg-white pt-6" style={{ paddingBottom: '8px' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h1 className="text-xl font-bold text-gray-900 mb-4">
+              On-Site Pharmacy
+            </h1>
+            <div className="mb-6">
+              <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+                Convenient Care Right Here
+              </span>
             </div>
+            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
+              At Pets and Vets Animal Hospital, we make keeping your pet healthy easier and faster with our 
+              on-site pharmacy. Skip the extra stop and get the medications your pet needs—immediately following your appointment.
+            </p>
           </div>
         </div>
       </section>
