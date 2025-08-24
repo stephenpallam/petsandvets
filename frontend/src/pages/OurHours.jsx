@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Clock, 
@@ -9,12 +9,102 @@ import {
   MapPin,
   Info
 } from 'lucide-react';
-import { hospitalInfo, hours } from '../mock';
+import { hospitalInfo } from '../mock';
 
 const OurHours = () => {
+  const [hospitalHours, setHospitalHours] = useState(null);
+  const [urgentCareHours, setUrgentCareHours] = useState(null);
+  const [specialHours, setSpecialHours] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+
   const primaryColor = '#29add3';
   const primaryLight = '#5bc0db';
   const primaryBg = '#e6f7fb';
+
+  // Helper function to format time from 24-hour to 12-hour
+  const formatTime = (time) => {
+    if (!time) return '';
+    const [hours, minutes] = time.split(':');
+    const hour12 = parseInt(hours) % 12 || 12;
+    const ampm = parseInt(hours) >= 12 ? 'PM' : 'AM';
+    return `${hour12}:${minutes} ${ampm}`;
+  };
+
+  // Helper function to format day hours
+  const formatDayHours = (dayData) => {
+    if (!dayData || !dayData.is_open) {
+      return 'Closed';
+    }
+    return `${formatTime(dayData.open_time)} - ${formatTime(dayData.close_time)}`;
+  };
+
+  // Helper function to get short format for weekly overview
+  const getShortTimeFormat = (dayData) => {
+    if (!dayData || !dayData.is_open) {
+      return 'Closed';
+    }
+    const openTime = formatTime(dayData.open_time);
+    const closeTime = formatTime(dayData.close_time);
+    // Convert to shorter format like "8AM-6PM"
+    return `${openTime.replace(':00', '').replace(' ', '')}-${closeTime.replace(':00', '').replace(' ', '')}`;
+  };
+
+  useEffect(() => {
+    const fetchHours = async () => {
+      try {
+        // Fetch hospital hours
+        const hospitalResponse = await fetch(`${API_BASE_URL}/api/hospital-hours`);
+        if (hospitalResponse.ok) {
+          const hospitalData = await hospitalResponse.json();
+          setHospitalHours(hospitalData);
+        }
+
+        // Fetch urgent care hours
+        const urgentResponse = await fetch(`${API_BASE_URL}/api/urgent-care-hours`);
+        if (urgentResponse.ok) {
+          const urgentData = await urgentResponse.json();
+          setUrgentCareHours(urgentData);
+        }
+
+        // Fetch special hours
+        const specialResponse = await fetch(`${API_BASE_URL}/api/special-hours`);
+        if (specialResponse.ok) {
+          const specialData = await specialResponse.json();
+          setSpecialHours(specialData);
+        }
+      } catch (error) {
+        console.error('Error fetching hours:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHours();
+  }, []);
+
+  // Default fallback data
+  const defaultHours = {
+    hospital: {
+      monday: { is_open: true, open_time: '09:00', close_time: '18:00' },
+      tuesday: { is_open: true, open_time: '09:00', close_time: '19:00' },
+      wednesday: { is_open: true, open_time: '09:00', close_time: '18:00' },
+      thursday: { is_open: false },
+      friday: { is_open: true, open_time: '09:00', close_time: '18:00' },
+      saturday: { is_open: true, open_time: '08:00', close_time: '16:00' },
+      sunday: { is_open: false }
+    },
+    urgent: {
+      monday: { is_open: true, open_time: '15:00', close_time: '22:00' },
+      tuesday: { is_open: true, open_time: '15:00', close_time: '22:00' },
+      wednesday: { is_open: true, open_time: '15:00', close_time: '22:00' },
+      thursday: { is_open: false },
+      friday: { is_open: true, open_time: '15:00', close_time: '22:00' },
+      saturday: { is_open: true, open_time: '10:00', close_time: '20:00' },
+      sunday: { is_open: true, open_time: '10:00', close_time: '18:00' }
+    }
+  };
 
   const hoursFeatures = [
     {
