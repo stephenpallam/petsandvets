@@ -468,7 +468,7 @@ const UrgentCareBooking = () => {
           )}
 
           {/* Step 4: Reason for Visit */}
-          {step === 4 && (
+          {currentTab === 3 && (
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
                 <Stethoscope className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
