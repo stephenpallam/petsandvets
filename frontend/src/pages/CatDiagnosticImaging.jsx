@@ -172,7 +172,7 @@ const CatDiagnosticImaging = () => {
       </section>
 
       {/* When Is Imaging Needed */}
-      <section className="bg-white" style={{ paddingTop: '15px', paddingBottom: '15px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             When Is Imaging Needed?
@@ -180,45 +180,43 @@ const CatDiagnosticImaging = () => {
           <p className="text-center text-gray-600 mb-8">
             Your veterinarian may recommend diagnostic imaging if your cat shows symptoms such as:
           </p>
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {imagingSymptoms.map((item, index) => (
-              <div key={index} className={`p-6 rounded-xl border-l-4 ${
+              <div key={index} className={`p-4 rounded-xl border-l-4 ${
                 item.urgency === 'critical' ? 'border-red-500 bg-red-50' :
                 item.urgency === 'high' ? 'border-orange-500 bg-orange-50' :
                 'border-yellow-500 bg-yellow-50'
               }`}>
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                  <div className="flex items-start mb-4 md:mb-0">
-                    <AlertTriangle className={`h-5 w-5 mr-3 flex-shrink-0 mt-0.5 ${
-                      item.urgency === 'critical' ? 'text-red-500' :
-                      item.urgency === 'high' ? 'text-orange-500' :
-                      'text-yellow-500'
-                    }`} />
-                    <div>
-                      <p className={`font-medium ${
-                        item.urgency === 'critical' ? 'text-red-900' :
-                        item.urgency === 'high' ? 'text-orange-900' :
-                        'text-yellow-900'
-                      }`}>
-                        {item.symptom}
-                      </p>
-                      <p className={`text-sm mt-1 ${
-                        item.urgency === 'critical' ? 'text-red-700' :
-                        item.urgency === 'high' ? 'text-orange-700' :
-                        'text-yellow-700'
-                      }`}>
-                        Recommended imaging: {item.imaging}
-                      </p>
-                    </div>
+                <div className="flex items-start mb-2">
+                  <AlertTriangle className={`h-4 w-4 mr-2 flex-shrink-0 mt-0.5 ${
+                    item.urgency === 'critical' ? 'text-red-500' :
+                    item.urgency === 'high' ? 'text-orange-500' :
+                    'text-yellow-500'
+                  }`} />
+                  <div className="flex-1">
+                    <p className={`font-medium text-sm ${
+                      item.urgency === 'critical' ? 'text-red-900' :
+                      item.urgency === 'high' ? 'text-orange-900' :
+                      'text-yellow-900'
+                    }`}>
+                      {item.symptom}
+                    </p>
                   </div>
-                  <span className={`px-3 py-1 text-xs font-medium rounded-full ${
-                    item.urgency === 'critical' ? 'bg-red-200 text-red-800' :
-                    item.urgency === 'high' ? 'bg-orange-200 text-orange-800' :
-                    'bg-yellow-200 text-yellow-800'
-                  }`}>
-                    {item.urgency.toUpperCase()} PRIORITY
-                  </span>
                 </div>
+                <p className={`text-xs mb-2 ${
+                  item.urgency === 'critical' ? 'text-red-700' :
+                  item.urgency === 'high' ? 'text-orange-700' :
+                  'text-yellow-700'
+                }`}>
+                  Recommended: {item.imaging}
+                </p>
+                <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                  item.urgency === 'critical' ? 'bg-red-200 text-red-800' :
+                  item.urgency === 'high' ? 'bg-orange-200 text-orange-800' :
+                  'bg-yellow-200 text-yellow-800'
+                }`}>
+                  {item.urgency.toUpperCase()}
+                </span>
               </div>
             ))}
           </div>
