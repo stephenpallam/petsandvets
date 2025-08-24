@@ -690,16 +690,20 @@ const UrgentCareAppointments = () => {
       {showDeleteConfirm && appointmentToDelete && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-md">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">Confirm Delete</h3>
-              <button
-                onClick={() => setShowDeleteConfirm(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <X className="h-6 w-6" />
-              </button>
+            {/* Header */}
+            <div className="p-6 border-b border-gray-200 rounded-t-xl" style={{ backgroundColor: primaryColor }}>
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-white">Confirm Delete</h3>
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  className="text-white hover:text-gray-200 transition-colors"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
             </div>
             
+            {/* Content */}
             <div className="p-6">
               <div className="flex items-center mb-4">
                 <AlertCircle className="h-8 w-8 text-red-500 mr-3" />
@@ -717,21 +721,22 @@ const UrgentCareAppointments = () => {
                   <strong>Time:</strong> {formatDate(appointmentToDelete.appointment_time)} at {formatTime(appointmentToDelete.appointment_time)}
                 </p>
               </div>
+            </div>
               
-              <div className="flex justify-end gap-3">
-                <button
-                  onClick={() => setShowDeleteConfirm(false)}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => deleteAppointment(appointmentToDelete.id)}
-                  className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700"
-                >
-                  Delete Appointment
-                </button>
-              </div>
+            {/* Footer */}
+            <div className="px-6 py-4 bg-gray-100 border-t border-gray-200 flex justify-end gap-3 rounded-b-xl">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => deleteAppointment(appointmentToDelete.id)}
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 transition-colors"
+              >
+                Delete Appointment
+              </button>
             </div>
           </div>
         </div>
