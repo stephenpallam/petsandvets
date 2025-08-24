@@ -233,7 +233,7 @@ const Home = () => {
                     </div>
                   </div>
                   <Link
-                    to="/services"
+                    to="/urgent-care-booking"
                     className="inline-flex items-center justify-center border-2 px-8 py-4 rounded-lg font-semibold transition-all duration-200 w-full"
                     style={{ 
                       borderColor: primaryColor, 
@@ -248,7 +248,7 @@ const Home = () => {
                       e.target.style.color = primaryColor;
                     }}
                   >
-                    View All Services
+                    Check In Online
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </div>
