@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Phone, 
@@ -23,6 +23,11 @@ import { hospitalInfo, services, specialOffers, testimonials, heroImages } from 
 
 const Home = () => {
   const [currentHeroImage, setCurrentHeroImage] = useState(0);
+  const [hospitalHours, setHospitalHours] = useState(null);
+  const [urgentCareHours, setUrgentCareHours] = useState(null);
+  const [hoursLoading, setHoursLoading] = useState(true);
+
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
 
   // Auto-rotate hero images
   React.useEffect(() => {
@@ -31,6 +36,129 @@ const Home = () => {
     }, 5000);
     return () => clearInterval(interval);
   }, []);
+
+  // Fetch hours from database
+  useEffect(() => {
+    const fetchHours = async () => {
+      try {
+        // Fetch hospital hours
+        const hospitalResponse = await fetch(`${API_BASE_URL}/api/hospital-hours`);
+        if (hospitalResponse.ok) {
+          const hospitalData = await hospitalResponse.json();
+          setHospitalHours(hospitalData);
+        }
+
+        // Fetch urgent care hours
+        const urgentResponse = await fetch(`${API_BASE_URL}/api/urgent-care-hours`);
+        if (urgentResponse.ok) {
+          const urgentData = await urgentResponse.json();
+          setUrgentCareHours(urgentData);
+        }
+      } catch (error) {
+        console.error('Error fetching hours:', error);
+      } finally {
+        setHoursLoading(false);
+      }
+    };
+
+    fetchHours();
+  }, []);
+
+  // Helper function to get current day of week
+  const getCurrentDay = () => {
+    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    return days[new Date().getDay()];
+  };
+
+  // Helper function to get next open day
+  const getNextOpenDay = (hoursData, startFromDay = null) => {
+    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    
+    const startIndex = startFromDay ? days.indexOf(startFromDay) : new Date().getDay();
+    
+    for (let i = 1; i <= 7; i++) {
+      const dayIndex = (startIndex + i) % 7;
+      const dayKey = days[dayIndex];
+      if (hoursData[dayKey]?.is_open) {
+        const dayName = dayNames[dayIndex];
+        const openTime = formatTime(hoursData[dayKey].open_time);
+        return { day: dayName, time: openTime, isToday: i === 0, isTomorrow: i === 1 };
+      }
+    }
+    return null;
+  };
+
+  // Helper function to format time from 24-hour to 12-hour
+  const formatTime = (time) => {
+    if (!time) return '';
+    const [hours, minutes] = time.split(':');
+    const hour12 = parseInt(hours) % 12 || 12;
+    const ampm = parseInt(hours) >= 12 ? 'PM' : 'AM';
+    return `${hour12}:${minutes} ${ampm}`;
+  };
+
+  // Helper function to check if currently open
+  const isCurrentlyOpen = (dayData) => {
+    if (!dayData?.is_open || !dayData.open_time || !dayData.close_time) return false;
+    
+    const now = new Date();
+    const currentTime = now.getHours() * 60 + now.getMinutes(); // minutes since midnight
+    
+    const [openHour, openMin] = dayData.open_time.split(':').map(Number);
+    const [closeHour, closeMin] = dayData.close_time.split(':').map(Number);
+    
+    const openTime = openHour * 60 + openMin;
+    const closeTime = closeHour * 60 + closeMin;
+    
+    return currentTime >= openTime && currentTime < closeTime;
+  };
+
+  // Helper function to check if opening soon (within 1 hour)
+  const isOpeningSoon = (dayData) => {
+    if (!dayData?.is_open || !dayData.open_time) return false;
+    
+    const now = new Date();
+    const currentTime = now.getHours() * 60 + now.getMinutes();
+    
+    const [openHour, openMin] = dayData.open_time.split(':').map(Number);
+    const openTime = openHour * 60 + openMin;
+    
+    const timeDiff = openTime - currentTime;
+    return timeDiff > 0 && timeDiff <= 60; // opening within 1 hour
+  };
+
+  // Generate status message for hours display
+  const getHoursStatus = (hoursData, type) => {
+    if (!hoursData || hoursLoading) {
+      return type === 'urgent' ? '3 PM - 10 PM Daily' : '9:00 AM - 6:00 PM Today';
+    }
+
+    const currentDay = getCurrentDay();
+    const todayHours = hoursData[currentDay];
+
+    if (!todayHours?.is_open) {
+      const nextOpen = getNextOpenDay(hoursData);
+      if (nextOpen) {
+        if (nextOpen.isTomorrow) {
+          return `Closed today • Opens tomorrow at ${nextOpen.time}`;
+        } else {
+          return `Closed today • Opens ${nextOpen.day} at ${nextOpen.time}`;
+        }
+      }
+      return 'Closed today';
+    }
+
+    if (isCurrentlyOpen(todayHours)) {
+      return `Open now • Closes at ${formatTime(todayHours.close_time)}`;
+    }
+
+    if (isOpeningSoon(todayHours)) {
+      return `Opening soon at ${formatTime(todayHours.open_time)}`;
+    }
+
+    return `${formatTime(todayHours.open_time)} - ${formatTime(todayHours.close_time)} Today`;
+  };
 
   const primaryColor = '#29add3';
   const primaryLight = '#5bc0db';
