@@ -496,7 +496,7 @@ const BlockedCatsUrgentCare = () => {
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             Serving Your Community
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-600 mb-6 text-sm">
             We proudly provide emergency care for blocked cats throughout:
           </p>
           <div className="flex flex-wrap justify-center gap-3">
