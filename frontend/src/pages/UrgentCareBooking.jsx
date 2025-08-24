@@ -760,16 +760,16 @@ const UrgentCareBooking = () => {
 
             {/* Tab 6: Success */}
             {currentTab === 6 && (
-              <div className="text-center py-12 max-w-4xl mx-auto">
+              <div className="text-center py-8">
                 {/* Success Message */}
-                <div className="mb-10">
-                  <h2 className="text-4xl font-bold text-gray-900 mb-6">
+                <div className="mb-8">
+                  <h2 className="text-xl font-bold text-gray-900 mb-4">
                     Appointment Booked Successfully!
                   </h2>
                   
                   {/* Personalized Message Section */}
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 mb-8 border border-blue-100">
-                    <p className="text-xl text-gray-700 leading-relaxed">
+                  <div className="bg-gray-50 rounded-lg p-6 mb-6">
+                    <p className="text-base text-gray-600 leading-relaxed">
                       <span className="font-semibold text-gray-900">
                         {capitalizeWords(formData.owner_first_name)} {capitalizeWords(formData.owner_last_name)}
                       </span>, your urgent care appointment has been successfully booked. 
@@ -778,43 +778,43 @@ const UrgentCareBooking = () => {
                   </div>
                 </div>
 
-                {/* Appointment Summary Card - Wider */}
-                <div className="max-w-2xl mx-auto mb-10">
-                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-8 shadow-lg">
-                    <div className="text-center mb-6">
-                      <div className="inline-flex items-center px-4 py-2 rounded-full text-lg font-semibold text-blue-800 bg-blue-100">
-                        <Clock className="h-5 w-5 mr-2" />
+                {/* Appointment Summary Card */}
+                <div className="max-w-3xl mx-auto mb-8">
+                  <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                    <div className="text-center mb-4">
+                      <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+                        <Clock className="h-4 w-4 mr-1" />
                         Appointment Summary
                       </div>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-lg">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                       <div className="flex items-center justify-between md:justify-start">
-                        <span className="font-medium text-gray-600 mr-4">Client:</span>
+                        <span className="font-medium text-gray-600 mr-3">Client:</span>
                         <span className="font-semibold text-gray-900">
                           {capitalizeWords(formData.owner_first_name)} {capitalizeWords(formData.owner_last_name)}
                         </span>
                       </div>
                       <div className="flex items-center justify-between md:justify-start">
-                        <span className="font-medium text-gray-600 mr-4">Date:</span>
+                        <span className="font-medium text-gray-600 mr-3">Date:</span>
                         <span className="font-semibold text-gray-900">{formatDateAndDay()}</span>
                       </div>
                       <div className="flex items-center justify-between md:justify-start">
-                        <span className="font-medium text-gray-600 mr-4">Time:</span>
+                        <span className="font-medium text-gray-600 mr-3">Time:</span>
                         <span className="font-semibold text-gray-900">{formatTime(formData.appointment_time.split('T')[1])}</span>
                       </div>
                       <div className="flex items-center justify-between md:justify-start">
-                        <span className="font-medium text-gray-600 mr-4">Pet:</span>
+                        <span className="font-medium text-gray-600 mr-3">Pet:</span>
                         <span className="font-semibold text-gray-900">
                           {capitalizeWords(formData.pet_name)} ({capitalizeWords(formData.pet_type)})
                         </span>
                       </div>
                       <div className="flex items-center justify-between md:justify-start">
-                        <span className="font-medium text-gray-600 mr-4">Phone:</span>
+                        <span className="font-medium text-gray-600 mr-3">Phone:</span>
                         <span className="font-semibold text-gray-900">{formatPhoneNumber(formData.phone)}</span>
                       </div>
                       <div className="flex items-center justify-between md:justify-start">
-                        <span className="font-medium text-gray-600 mr-4">Email:</span>
+                        <span className="font-medium text-gray-600 mr-3">Email:</span>
                         <span className="font-semibold text-gray-900">{formData.email}</span>
                       </div>
                     </div>
@@ -822,13 +822,13 @@ const UrgentCareBooking = () => {
                 </div>
 
                 {/* Important Reminders */}
-                <div className="max-w-2xl mx-auto mb-10">
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
+                <div className="max-w-3xl mx-auto mb-8">
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                     <div className="flex items-start">
-                      <AlertCircle className="h-6 w-6 text-yellow-600 mt-1 mr-4 flex-shrink-0" />
+                      <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
                       <div className="text-left">
-                        <h3 className="text-lg font-semibold text-yellow-800 mb-3">Important Reminders</h3>
-                        <ul className="text-base text-yellow-700 space-y-2">
+                        <h3 className="text-sm font-semibold text-yellow-800 mb-2">Important Reminders</h3>
+                        <ul className="text-xs text-yellow-700 space-y-1">
                           <li>• Please arrive 10 minutes before your scheduled time</li>
                           <li>• Bring any previous medical records if available</li>
                           <li>• Have your pet secured on a leash or in a carrier</li>
@@ -842,23 +842,43 @@ const UrgentCareBooking = () => {
                 <div className="mb-8">
                   <Link 
                     to="/urgent-care" 
-                    className="inline-flex items-center px-10 py-4 text-lg text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
-                    style={{ 
-                      background: `linear-gradient(135deg, ${primaryColor} 0%, #1e88e5 100%)` 
-                    }}
+                    className="inline-flex items-center px-6 py-3 text-white font-semibold rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
+                    style={{ backgroundColor: primaryColor }}
                   >
-                    <Stethoscope className="h-6 w-6 mr-3" />
+                    <Stethoscope className="h-4 w-4 mr-2" />
                     Urgent Care Services
                   </Link>
                 </div>
 
-                {/* Additional Help */}
-                <div className="pt-8 border-t border-gray-200">
-                  <p className="text-lg text-gray-600 mb-3">Need to make changes to your appointment?</p>
-                  <p className="text-lg text-gray-700">
-                    Please call us at <a href={`tel:${hospitalInfo.phone}`} className="font-semibold text-blue-600 hover:text-blue-800">{hospitalInfo.phone}</a>
-                  </p>
-                </div>
+                {/* Contact CTA Section - Styled like Dog Dental Care */}
+                <section style={{ 
+                  background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, 
+                  paddingTop: '30px', 
+                  paddingBottom: '30px',
+                  borderRadius: '12px',
+                  marginTop: '2rem'
+                }}>
+                  <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h2 className="font-bold text-white mb-6" style={{ fontSize: '1rem' }}>
+                      Need to Make Changes to Your Appointment?
+                    </h2>
+                    <p className="mb-8" style={{ color: 'white', fontSize: '1rem' }}>
+                      Please call us if you need to reschedule or have any questions about your upcoming visit
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                      <a
+                        href={`tel:${hospitalInfo.phone}`}
+                        className="inline-flex items-center justify-center bg-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
+                        style={{ color: primaryColor }}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                        onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                      >
+                        <Phone className="h-4 w-4 mr-2" />
+                        Call {hospitalInfo.phone}
+                      </a>
+                    </div>
+                  </div>
+                </section>
               </div>
             )}
 
