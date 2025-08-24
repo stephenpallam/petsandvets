@@ -95,22 +95,25 @@ const DogDentalCare = () => {
         </div>
       </section>
 
-      {/* Introduction */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              Dog Dental Care
-            </h1>
-            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
-              Oral health is as vital to your dog's overall well-being as their physical health. Neglected dental care can lead to serious complications—such as periodontal disease, tooth loss, and systemic damage—and adversely affect your dog's comfort and quality of life. At Pets & Vets Animal Hospital, we're committed to providing exceptional dental care tailored to your pet's needs.
-            </p>
+      {/* Hero Section */}
+      <section className="bg-white">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
+            Dog Dental Care
+          </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+              Healthy Smiles for Happy Dogs
+            </span>
           </div>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
+            Oral health is as vital to your dog's overall well-being as their physical health. Neglected dental care can lead to serious complications—such as periodontal disease, tooth loss, and systemic damage—and adversely affect your dog's comfort and quality of life. At Pets & Vets Animal Hospital, we're committed to providing exceptional dental care tailored to your pet's needs.
+          </p>
         </div>
       </section>
 
       {/* How Dental Health Affects Overall Wellness */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '15px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             How Dental Health Affects Overall Wellness
@@ -148,7 +151,7 @@ const DogDentalCare = () => {
       </section>
 
       {/* Signs & Symptoms */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white" style={{ paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Signs & Symptoms of Dental Disease
@@ -171,7 +174,7 @@ const DogDentalCare = () => {
       </section>
 
       {/* Home Care */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             How to Care for Your Dog's Teeth at Home
@@ -195,7 +198,7 @@ const DogDentalCare = () => {
       </section>
 
       {/* Professional Dental Cleaning */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white" style={{ paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             What a Professional Dental Cleaning Entails
@@ -217,7 +220,7 @@ const DogDentalCare = () => {
       </section>
 
       {/* Summary Table */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Summary Overview
@@ -246,7 +249,7 @@ const DogDentalCare = () => {
       </section>
 
       {/* Final Thoughts & CTA */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white" style={{ paddingTop: '15px', paddingBottom: '30px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             Quality Dental Care for Your Dog's Long-term Health
@@ -289,7 +292,7 @@ const DogDentalCare = () => {
       {/* Contact CTA */}
       <section style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '30px', paddingBottom: '30px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
+          <h2 className="font-bold text-white mb-6" style={{ fontSize: '1rem' }}>
             Schedule Your Dog's Dental Care Consultation
           </h2>
           <p className="mb-8" style={{ color: 'white', fontSize: '1rem' }}>
@@ -298,7 +301,7 @@ const DogDentalCare = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href={`tel:${hospitalInfo.phone}`}
-              className="inline-flex items-center justify-center bg-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              className="inline-flex items-center justify-center bg-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               style={{ color: primaryColor }}
               onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
@@ -308,7 +311,7 @@ const DogDentalCare = () => {
             </a>
             <Link
               to="/contact"
-              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = 'white';
                 e.target.style.color = primaryColor;

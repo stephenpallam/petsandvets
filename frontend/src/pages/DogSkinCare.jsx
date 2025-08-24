@@ -130,24 +130,27 @@ const DogSkinCare = () => {
         </div>
       </section>
 
-      {/* Introduction */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              Dog Skin Care
-            </h1>
-            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
-              When it comes to your dog's health, skin is often overlooked—but it's one of the most common sources of discomfort. 
-              From itchy allergies to serious autoimmune diseases, skin problems can cause pain, stress, and even affect overall health 
-              if left untreated. At Pets & Vets Animal Hospital, we help pet owners recognize issues early and provide accurate, effective treatment.
-            </p>
+      {/* Hero Section */}
+      <section className="bg-white">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
+            Dog Skin Care
+          </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+              Comfort and Relief for Your Dog
+            </span>
           </div>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
+            When it comes to your dog's health, skin is often overlooked—but it's one of the most common sources of discomfort. 
+            From itchy allergies to serious autoimmune diseases, skin problems can cause pain, stress, and even affect overall health 
+            if left untreated. At Pets & Vets Animal Hospital, we help pet owners recognize issues early and provide accurate, effective treatment.
+          </p>
         </div>
       </section>
 
       {/* Common Causes */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '15px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Common Causes of Skin Problems
@@ -172,7 +175,7 @@ const DogSkinCare = () => {
       </section>
 
       {/* Signs & Symptoms */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white" style={{ paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Signs Your Dog May Have a Skin Condition
@@ -198,7 +201,7 @@ const DogSkinCare = () => {
       </section>
 
       {/* Diagnostic Approach */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Diagnostic Approach
@@ -223,7 +226,7 @@ const DogSkinCare = () => {
       </section>
 
       {/* Common Skin Conditions */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white" style={{ paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Common Skin Conditions in Dogs
@@ -254,7 +257,7 @@ const DogSkinCare = () => {
       </section>
 
       {/* What Happens If Untreated */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             What Happens If Left Untreated?
@@ -283,7 +286,7 @@ const DogSkinCare = () => {
       </section>
 
       {/* Curable vs Lifelong */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white" style={{ paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Curable vs. Lifelong Conditions
@@ -322,7 +325,7 @@ const DogSkinCare = () => {
       </section>
 
       {/* Bottom Line */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '15px', paddingBottom: '30px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             The Bottom Line: Your Dog's Skin Reflects Their Health
@@ -345,7 +348,7 @@ const DogSkinCare = () => {
       {/* Contact CTA */}
       <section style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '30px', paddingBottom: '30px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
+          <h2 className="font-bold text-white mb-6" style={{ fontSize: '1rem' }}>
             Schedule Your Dog's Skin & Dermatology Consultation
           </h2>
           <p className="mb-8" style={{ color: 'white', fontSize: '1rem' }}>
@@ -354,7 +357,7 @@ const DogSkinCare = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href={`tel:${hospitalInfo.phone}`}
-              className="inline-flex items-center justify-center bg-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              className="inline-flex items-center justify-center bg-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               style={{ color: primaryColor }}
               onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
@@ -364,7 +367,7 @@ const DogSkinCare = () => {
             </a>
             <Link
               to="/contact"
-              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = 'white';
                 e.target.style.color = primaryColor;
