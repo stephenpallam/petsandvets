@@ -274,28 +274,6 @@ const BlockedCatsUrgentCare = () => {
         </div>
       </section>
 
-      {/* Emergency Alert */}
-      <section className="bg-red-600 py-6">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="flex items-center justify-center mb-4">
-              <AlertTriangle className="h-8 w-8 mr-3 text-white" />
-              <h2 className="text-xl font-bold text-white">FELINE EMERGENCY</h2>
-            </div>
-            <p className="text-white text-base mb-4 max-w-4xl mx-auto">
-              If your male cat is straining to urinate, crying in the litter box, or hasn't urinated 
-              in several hours, this is a life-threatening emergency. <strong>Call us immediately</strong> 
-              or come directly to our hospital.
-            </p>
-            <div className="bg-white p-4 rounded-lg inline-block">
-              <p className="text-red-600 font-bold text-lg">
-                Time is critical - untreated blockages can be fatal within 24-48 hours
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Emergency Symptoms */}
       <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
