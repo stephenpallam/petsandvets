@@ -283,46 +283,34 @@ const PetToothExtraction = () => {
       </section>
 
       {/* What to Expect During an Extraction */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             What to Expect During an Extraction
           </h2>
-          <p className="text-center text-gray-600 mb-8">
+          <p className="text-center text-gray-600 mb-6 text-sm">
             Tooth extractions are performed under anesthesia for a pain-free experience. Our veterinarians use 
             advanced techniques to ensure your pet's safety and comfort.
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
             {procedureSteps.map((step, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
-                  <step.icon className="h-8 w-8" style={{ color: primaryColor }} />
+              <div key={index} className="bg-white p-4 rounded-lg shadow-sm text-center">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3" style={{ backgroundColor: primaryBg }}>
+                  <step.icon className="h-6 w-6" style={{ color: primaryColor }} />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{step.step}</h3>
+                <h3 className="text-base font-semibold text-gray-900 mb-2">{step.step}</h3>
                 <p className="text-gray-600 text-sm">{step.description}</p>
               </div>
             ))}
           </div>
           
-          {/* Professional Image */}
-          <div className="mt-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.pexels.com/photos/2238/animal-dog-pet-dangerous.jpg"
-                alt="Pet dental care showing healthy teeth after professional treatment"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
+          <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+            <div className="flex items-center mb-3">
+              <Scissors className="h-5 w-5 mr-2 text-blue-600" />
+              <h3 className="text-base font-semibold text-blue-900">Surgical Extraction Process</h3>
             </div>
-          </div>
-          
-          <div className="mt-8 bg-blue-50 p-6 rounded-xl border-l-4 border-blue-500">
-            <div className="flex items-center mb-4">
-              <Scissors className="h-6 w-6 mr-3 text-blue-600" />
-              <h3 className="text-lg font-semibold text-blue-900">Surgical Extraction Process</h3>
-            </div>
-            <p className="text-blue-800">
+            <p className="text-blue-800 text-sm">
               In surgical cases, gum tissue may be lifted, bone around the tooth carefully removed, and the socket 
               flushed before closing with dissolvable sutures. Our experienced team uses advanced techniques to 
               minimize trauma and promote healing.
