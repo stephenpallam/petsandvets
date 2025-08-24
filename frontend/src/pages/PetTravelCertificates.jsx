@@ -79,20 +79,21 @@ const PetTravelCertificates = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${primaryBg} 0%, #ffffff 50%, #f0fdff 100%)` }}>
-        <div className="absolute inset-0 bg-white/40"></div>
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-          <h1 className="text-xl font-bold text-gray-900 mb-6">
-            Travel Certificates
-          </h1>
-          <div className="mb-6">
-            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
-              Keeping Journeys Safe & Stress-Free
-            </span>
+      <section className="bg-white pt-6" style={{ paddingBottom: '8px' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h1 className="text-xl font-bold text-gray-900 mb-4">
+              Travel Certificates
+            </h1>
+            <div className="mb-6">
+              <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+                Safe & Stress-Free Travel
+              </span>
+            </div>
+            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
+              Planning a trip with your pet? Whether by air, land, or sea, most pets need a health certificate before traveling. This federally recognized document confirms your pet is healthy, properly vaccinated, and poses no risk to other animals or people.
+            </p>
           </div>
-          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
-            Planning a trip with your pet? Whether by air, land, or sea, most pets need a health certificate before traveling. This federally recognized document confirms your pet is healthy, properly vaccinated, and poses no risk to other animals or people.
-          </p>
         </div>
       </section>
 
