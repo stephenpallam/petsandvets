@@ -272,29 +272,29 @@ const PetOcularServices = () => {
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Advanced Diagnostic Services
           </h2>
-          <p className="text-center text-gray-600 mb-8">
+          <p className="text-center text-gray-600 mb-6 text-sm">
             Precise diagnosis is the foundation of effective eye care:
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {diagnosticServices.map((service, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md">
-                <div className="flex items-center mb-4">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: `${service.color}15` }}>
-                    <service.icon className="h-6 w-6" style={{ color: service.color }} />
+              <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm">
+                <div className="flex items-center mb-3">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full mr-3" style={{ backgroundColor: `${service.color}15` }}>
+                    <service.icon className="h-5 w-5" style={{ color: service.color }} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">{service.service}</h3>
+                    <h3 className="text-base font-semibold text-gray-900">{service.service}</h3>
                   </div>
                 </div>
-                <p className="text-gray-600 text-sm mb-4">{service.description}</p>
-                <div className="space-y-2">
+                <p className="text-gray-600 text-sm mb-3">{service.description}</p>
+                <div className="space-y-1">
                   <h4 className="font-semibold text-gray-900 text-sm">Features:</h4>
                   <div className="space-y-1">
                     {service.features.map((feature, featIndex) => (
-                      <div key={featIndex} className="flex items-center p-2 rounded-lg" style={{ backgroundColor: `${service.color}05` }}>
-                        <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: service.color }} />
-                        <span className="text-sm text-gray-700">{feature}</span>
+                      <div key={featIndex} className="flex items-center text-xs">
+                        <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: service.color }} />
+                        <span className="text-gray-700">{feature}</span>
                       </div>
                     ))}
                   </div>
