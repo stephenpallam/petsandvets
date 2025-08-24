@@ -139,12 +139,12 @@ const OurTeam = () => {
       </section>
 
       {/* Join Our Team */}
-      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-4">
             Interested in Joining Our Team?
           </h2>
-          <p className="text-gray-700 mb-6">
+          <p className="text-gray-600 mb-6">
             We're always looking for passionate veterinary professionals who share our commitment to exceptional pet care
           </p>
           <Link
