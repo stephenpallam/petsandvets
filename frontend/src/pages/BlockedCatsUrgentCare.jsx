@@ -330,7 +330,7 @@ const BlockedCatsUrgentCare = () => {
       </section>
 
       {/* Risk Factors */}
-      <section className="bg-[#f8f9fa] py-6">
+      <section className="bg-white py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Risk Factors for Urinary Blockages
@@ -339,25 +339,21 @@ const BlockedCatsUrgentCare = () => {
             Understanding risk factors helps with prevention and early recognition:
           </p>
           
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {riskFactors.map((factor, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md border-l-4" style={{ borderColor: factor.color }}>
-                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
-                  <div className="flex items-center mb-4 lg:mb-0">
-                    <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: `${factor.color}15` }}>
-                      <factor.icon className="h-8 w-8" style={{ color: factor.color }} />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900">{factor.factor}</h3>
-                      <span className="px-3 py-1 rounded-full text-xs font-medium text-white" style={{ backgroundColor: factor.color }}>
-                        {factor.risk}
-                      </span>
-                    </div>
+              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md">
+                <div className="flex items-center mb-4">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: `${factor.color}15` }}>
+                    <factor.icon className="h-6 w-6" style={{ color: factor.color }} />
                   </div>
-                  <div className="flex-1">
-                    <p className="text-gray-700 leading-relaxed">{factor.description}</p>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">{factor.factor}</h3>
+                    <span className="px-2 py-1 rounded-full text-xs font-medium text-white" style={{ backgroundColor: factor.color }}>
+                      {factor.risk}
+                    </span>
                   </div>
                 </div>
+                <p className="text-gray-600 text-sm">{factor.description}</p>
               </div>
             ))}
           </div>
