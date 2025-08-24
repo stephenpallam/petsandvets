@@ -253,7 +253,7 @@ const VeterinaryDiagnosticServices = () => {
       </section>
 
       {/* Service Areas */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             Serving Your Community
@@ -272,13 +272,13 @@ const VeterinaryDiagnosticServices = () => {
       </section>
 
       {/* The Bottom Line */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             The Bottom Line: Knowledge is Power
           </h2>
-          <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+          <div className="p-8 rounded-xl" style={{ backgroundColor: primaryColor + '15' }}>
+            <p className="text-gray-700 leading-relaxed mb-6" style={{ fontSize: '1rem' }}>
               When it comes to your pet's health, knowledge is power—and diagnostics provide that knowledge. Whether it's 
               routine screening, detecting parasites, or identifying a complex illness, our diagnostic laboratory ensures 
               your pet gets the right care at the right time.
