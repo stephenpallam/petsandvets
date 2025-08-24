@@ -204,105 +204,114 @@ const UrgentCareBooking = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="relative bg-white" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h1 className="text-xl font-bold text-gray-900 mb-6">
-            Check In Online
-          </h1>
-          <div className="mb-6">
-            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: '#dc2626' }}>
-              Urgent Care Appointment Booking
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Progress Bar */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
-            <span>Step {currentTab + 1} of 6</span>
-            <span>{Math.round(((currentTab + 1) / 6) * 100)}% Complete</span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className="h-2 rounded-full transition-all duration-300" 
-              style={{ 
-                backgroundColor: primaryColor,
-                width: `${((currentTab + 1) / 6) * 100}%` 
-              }}
-            ></div>
-          </div>
+          <h1 className="text-2xl font-semibold text-gray-900">Urgent Care - Online Check In</h1>
         </div>
 
-        {message.text && (
-          <div className={`mb-6 p-4 rounded-lg flex items-center ${
-            message.type === 'success' 
-              ? 'bg-green-50 text-green-800 border border-green-200'
-              : 'bg-red-50 text-red-800 border border-red-200'
-          }`}>
-            {message.type === 'success' ? (
-              <CheckCircle className="h-5 w-5 mr-3" />
-            ) : (
-              <AlertCircle className="h-5 w-5 mr-3" />
-            )}
-            {message.text}
-          </div>
-        )}
-
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          {/* Step 1: Time Selection */}
-          {currentTab === 0 && (
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                <Clock className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
-                Please Select An Arrival Time For Today
-              </h2>
-              
-              {!availableToday ? (
-                <div className="text-center py-8">
-                  <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-                  <p className="text-lg text-gray-900 mb-2">Urgent Care is Closed Today</p>
-                  <p className="text-gray-600">Please check our hours and try again when we're open.</p>
-                  <Link 
-                    to="/our-hours" 
-                    className="inline-block mt-4 text-white px-6 py-3 rounded-lg font-medium transition-colors"
-                    style={{ backgroundColor: primaryColor }}
+        {/* Tab Navigation */}
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="border-b border-gray-200">
+            <nav className="flex">
+              {tabs.map((tab) => {
+                const IconComponent = tab.icon;
+                const isActive = currentTab === tab.id;
+                const isCompleted = isTabCompleted(tab.id);
+                const isEnabled = isTabEnabled(tab.id);
+                
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => goToTab(tab.id)}
+                    disabled={!isEnabled}
+                    className={`flex-1 flex items-center justify-center px-4 py-4 text-sm font-medium border-b-2 transition-colors ${
+                      isActive
+                        ? 'border-blue-500 text-blue-600 bg-blue-50'
+                        : isCompleted
+                        ? 'border-green-500 text-green-600 bg-green-50 hover:bg-green-100'
+                        : isEnabled
+                        ? 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                        : 'border-transparent text-gray-300 cursor-not-allowed'
+                    }`}
                   >
-                    View Our Hours
-                  </Link>
+                    <div className="flex items-center">
+                      {isCompleted ? (
+                        <Check className="h-5 w-5 mr-2" />
+                      ) : (
+                        <IconComponent className="h-5 w-5 mr-2" />
+                      )}
+                      <span className="hidden sm:inline">{tab.title}</span>
+                    </div>
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
+
+          {/* Tab Content */}
+          <div className="p-6 sm:p-8">
+            {/* Messages */}
+            {message.text && (
+              <div className={`mb-6 p-4 rounded-lg flex items-center ${
+                message.type === 'success' ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
+              }`}>
+                <AlertCircle className={`h-5 w-5 mr-3 ${
+                  message.type === 'success' ? 'text-green-600' : 'text-red-600'
+                }`} />
+                <p className={`${
+                  message.type === 'success' ? 'text-green-800' : 'text-red-800'
+                }`}>
+                  {message.text}
+                </p>
+              </div>
+            )}
+
+            {/* Tab 0: Time Selection */}
+            {currentTab === 0 && (
+              <div>
+                <div className="mb-6">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">Select an Arrival Time for Today</h2>
+                  <p className="text-gray-600">Choose your preferred appointment time</p>
                 </div>
-              ) : loading ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: primaryColor }}></div>
-                  <p className="text-gray-600">Loading available times...</p>
-                </div>
-              ) : timeSlots.length === 0 ? (
-                <div className="text-center py-8">
-                  <AlertCircle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
-                  <p className="text-lg text-gray-900 mb-2">No Available Slots Today</p>
-                  <p className="text-gray-600">All appointment slots for today are booked. Please call us for urgent needs.</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {timeSlots.map((slot, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleInputChange('appointment_time', slot.value)}
-                      className={`p-4 rounded-lg border-2 transition-all ${
-                        formData.appointment_time === slot.value
-                          ? 'border-blue-500 bg-blue-50 text-blue-700'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      {formatTime(slot.time)}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+
+                {loading ? (
+                  <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+                    <p className="mt-2 text-gray-600">Loading available times...</p>
+                  </div>
+                ) : !availableToday ? (
+                  <div className="text-center py-8">
+                    <Clock className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                    <p className="text-lg text-gray-900 mb-2">Urgent Care is Closed Today</p>
+                    <p className="text-gray-600">Please check back during our operating hours.</p>
+                  </div>
+                ) : timeSlots.length === 0 ? (
+                  <div className="text-center py-8">
+                    <Calendar className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                    <p className="text-lg text-gray-900 mb-2">No Available Times</p>
+                    <p className="text-gray-600">All appointment slots for today are booked.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {timeSlots.map((slot) => (
+                      <button
+                        key={slot.value}
+                        onClick={() => handleInputChange('appointment_time', slot.value)}
+                        className={`p-4 text-center rounded-lg border-2 transition-all ${
+                          formData.appointment_time === slot.value
+                            ? 'border-blue-500 bg-blue-50 text-blue-700'
+                            : 'border-gray-200 bg-white hover:border-gray-300 text-gray-900'
+                        }`}
+                      >
+                        <Clock className="h-5 w-5 mx-auto mb-2" />
+                        <div className="font-medium">{formatTime(slot.time)}</div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
           {/* Step 2: Owner Information */}
           {currentTab === 1 && (
