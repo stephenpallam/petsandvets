@@ -59,6 +59,15 @@ const UrgentCareAppointments = () => {
     }
   }, [authLoading, isAdmin, currentPage, filterDays]);
 
+  // Close status menus when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setShowStatusMenu({});
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
   const fetchAppointments = async () => {
     setLoading(true);
     try {
