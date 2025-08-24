@@ -173,18 +173,6 @@ const PetVaccinations = () => {
             Vaccines are a proven way to protect and support your pet's health:
           </p>
           
-          {/* Professional Image */}
-          <div className="mb-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.pexels.com/photos/7474568/pexels-photo-7474568.jpeg"
-                alt="Veterinary professional providing vaccination care to pet"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
-          </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {vaccineBenefits.slice(0, 3).map((benefit, index) => (
               <div key={index} className="bg-white p-6 rounded-xl shadow-md text-center">
