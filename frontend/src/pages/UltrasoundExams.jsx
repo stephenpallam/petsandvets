@@ -102,10 +102,26 @@ const UltrasoundExams = () => {
   ];
 
   const procedureSteps = [
-    "Initial assessment and positioning of your pet for optimal comfort",
-    "Gentle application of ultrasound gel to the examination area", 
-    "Real-time ultrasound examination with immediate image review",
-    "Discussion of findings and next steps with our veterinary team"
+    {
+      step: "1",
+      title: "Initial Assessment",
+      description: "Initial assessment and positioning of your pet for optimal comfort"
+    },
+    {
+      step: "2", 
+      title: "Gentle Preparation",
+      description: "Gentle application of ultrasound gel to the examination area"
+    },
+    {
+      step: "3",
+      title: "Real-time Examination", 
+      description: "Real-time ultrasound examination with immediate image review"
+    },
+    {
+      step: "4",
+      title: "Results Discussion",
+      description: "Discussion of findings and next steps with our veterinary team"
+    }
   ];
 
   const serviceAreas = [
