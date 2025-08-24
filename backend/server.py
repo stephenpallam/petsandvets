@@ -189,6 +189,14 @@ class UrgentCareAppointmentCreate(BaseModel):
     how_heard_about_us: str = ""
 
 
+class AppointmentListResponse(BaseModel):
+    appointments: List[UrgentCareAppointment]
+    total_count: int
+    page: int
+    page_size: int
+    total_pages: int
+
+
 # Auth Utilities
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
