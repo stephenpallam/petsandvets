@@ -597,7 +597,7 @@ const UrgentCareBooking = () => {
           )}
 
           {/* Navigation Buttons */}
-          {step < 6 && availableToday && timeSlots.length > 0 && (
+          {currentTab < 5 && availableToday && timeSlots.length > 0 && (
             <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
               {step > 1 && (
                 <button
