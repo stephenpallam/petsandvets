@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Clock, Calendar, Plus, Edit2, Trash2, Save, AlertCircle, CheckCircle } from 'lucide-react';
 
 const ConfigureHours = () => {
-  const { user, token, isAdmin } = useAuth();
+  const { user, token, isAdmin, loading } = useAuth();
   const [hospitalHours, setHospitalHours] = useState({
     monday: { is_open: true, open_time: '09:00', close_time: '18:00' },
     tuesday: { is_open: true, open_time: '09:00', close_time: '18:00' },
