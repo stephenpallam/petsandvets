@@ -495,6 +495,8 @@ const UrgentCareAppointments = () => {
                 </div>
               </div>
             )}
+              </>
+            )}
           </div>
         )}
       </div>
