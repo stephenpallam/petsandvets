@@ -172,35 +172,35 @@ const PetTravelCertificates = () => {
       </section>
 
       {/* Plan Ahead */}
-      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Plan Ahead</h2>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-xl text-center">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full mb-4 mx-auto" style={{ backgroundColor: `${primaryColor}15` }}>
-                <Calendar className="h-8 w-8" style={{ color: primaryColor }} />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-gray-50 p-4 rounded-lg text-center">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full mb-3 mx-auto" style={{ backgroundColor: `${primaryColor}15` }}>
+                <Calendar className="h-6 w-6" style={{ color: primaryColor }} />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-3">Schedule Early</h3>
-              <p className="text-sm text-gray-600">Schedule your appointment within 10 days of departure</p>
+              <h3 className="font-semibold text-gray-900 mb-2 text-sm">Schedule Early</h3>
+              <p className="text-xs text-gray-600">Schedule your appointment within 10 days of departure</p>
             </div>
             
-            <div className="bg-white p-6 rounded-xl text-center">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full mb-4 mx-auto" style={{ backgroundColor: '#10b98115' }}>
-                <Phone className="h-8 w-8" style={{ color: '#10b981' }} />
+            <div className="bg-gray-50 p-4 rounded-lg text-center">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full mb-3 mx-auto" style={{ backgroundColor: '#10b98115' }}>
+                <Phone className="h-6 w-6" style={{ color: '#10b981' }} />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-3">Confirm Requirements</h3>
-              <p className="text-sm text-gray-600">Contact your airline, cruise line, or destination country early to confirm requirements</p>
+              <h3 className="font-semibold text-gray-900 mb-2 text-sm">Confirm Requirements</h3>
+              <p className="text-xs text-gray-600">Contact your airline, cruise line, or destination country early to confirm requirements</p>
             </div>
             
-            <div className="bg-white p-6 rounded-xl text-center">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full mb-4 mx-auto" style={{ backgroundColor: '#8b5cf615' }}>
-                <MapPin className="h-8 w-8" style={{ color: '#8b5cf6' }} />
+            <div className="bg-gray-50 p-4 rounded-lg text-center">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full mb-3 mx-auto" style={{ backgroundColor: '#8b5cf615' }}>
+                <MapPin className="h-6 w-6" style={{ color: '#8b5cf6' }} />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-3">Final Destination</h3>
-              <p className="text-sm text-gray-600">If making multiple stops, your final destination must be listed on the certificate</p>
+              <h3 className="font-semibold text-gray-900 mb-2 text-sm">Final Destination</h3>
+              <p className="text-xs text-gray-600">If making multiple stops, your final destination must be listed on the certificate</p>
             </div>
           </div>
         </div>
