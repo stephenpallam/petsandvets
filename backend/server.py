@@ -160,6 +160,35 @@ class SpecialHoursCreate(BaseModel):
     urgent_care: DayHours
 
 
+class UrgentCareAppointment(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    appointment_time: str  # Format: "2025-01-15T15:30"
+    owner_first_name: str
+    owner_last_name: str
+    email: str
+    phone: str
+    pet_name: str
+    pet_type: str  # "dog" or "cat"
+    reason_for_visit: str
+    primary_vet_hospital: str = ""
+    how_heard_about_us: str = ""
+    status: str = "scheduled"  # "scheduled", "completed", "cancelled"
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class UrgentCareAppointmentCreate(BaseModel):
+    appointment_time: str
+    owner_first_name: str
+    owner_last_name: str
+    email: str
+    phone: str
+    pet_name: str
+    pet_type: str
+    reason_for_visit: str
+    primary_vet_hospital: str = ""
+    how_heard_about_us: str = ""
+
+
 # Auth Utilities
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
