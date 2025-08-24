@@ -510,6 +510,64 @@ const UrgentCare = () => {
         </div>
       </section>
 
+      {/* Urgent Care Hours Section */}
+      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-red-50 rounded-xl p-8 border-2 border-red-100">
+            <div className="text-center mb-6">
+              <h2 className="text-xl font-bold text-red-900 mb-2 flex items-center justify-center">
+                <Clock className="h-6 w-6 mr-3 text-red-600" />
+                Urgent Care Hours
+                {loading && <span className="ml-2 text-sm text-red-500">(Loading...)</span>}
+              </h2>
+              <p className="text-red-700 text-sm">Available by appointment only - Call ahead to schedule</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[
+                { day: 'Monday', key: 'monday' },
+                { day: 'Tuesday', key: 'tuesday' },
+                { day: 'Wednesday', key: 'wednesday' },
+                { day: 'Thursday', key: 'thursday' },
+                { day: 'Friday', key: 'friday' },
+                { day: 'Saturday', key: 'saturday' },
+                { day: 'Sunday', key: 'sunday' }
+              ].map((dayInfo, index) => {
+                const dayData = urgentCareHours?.[dayInfo.key];
+                const defaultHour = { is_open: true, open_time: '15:00', close_time: '22:00' }; // Default fallback
+                
+                return (
+                  <div key={index} className="bg-white p-4 rounded-lg shadow-sm border border-red-200">
+                    <div className="text-center">
+                      <h3 className="font-semibold text-gray-900 mb-1">{dayInfo.day}</h3>
+                      <p className={`text-sm font-medium ${
+                        (dayData?.is_open ?? defaultHour.is_open) ? 'text-red-600' : 'text-gray-500'
+                      }`}>
+                        {loading ? '...' : (dayData ? formatDayHours(dayData) : formatDayHours(defaultHour))}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            
+            <div className="mt-6 p-4 bg-red-100 rounded-lg border border-red-200">
+              <div className="flex items-start space-x-3">
+                <Info className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-sm text-red-800 mb-2">
+                    <strong>Urgent Care Services:</strong> For non-life-threatening conditions that need prompt attention but can wait for an appointment.
+                  </p>
+                  <p className="text-sm text-red-700">
+                    <strong>Call {hospitalInfo.phone}</strong> to schedule your urgent care visit during operating hours.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Emergency CTA */}
       <section style={{ background: `linear-gradient(135deg, ${urgentColor} 0%, #b91c1c 100%)`, paddingTop: '30px', paddingBottom: '30px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
