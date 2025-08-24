@@ -311,29 +311,29 @@ const PetOcularServices = () => {
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Comprehensive Treatment Options
           </h2>
-          <p className="text-center text-gray-600 mb-8">
+          <p className="text-center text-gray-600 mb-6 text-sm">
             Tailored treatment plans designed for your pet's specific condition and needs:
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {treatmentOptions.map((treatment, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md">
-                <div className="flex items-center mb-4">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
-                    <treatment.icon className="h-6 w-6" style={{ color: primaryColor }} />
+              <div key={index} className="bg-white p-4 rounded-lg shadow-sm">
+                <div className="flex items-center mb-3">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full mr-3" style={{ backgroundColor: primaryBg }}>
+                    <treatment.icon className="h-5 w-5" style={{ color: primaryColor }} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">{treatment.treatment}</h3>
+                    <h3 className="text-base font-semibold text-gray-900">{treatment.treatment}</h3>
                   </div>
                 </div>
-                <p className="text-gray-600 text-sm mb-4">{treatment.description}</p>
-                <div className="space-y-2">
+                <p className="text-gray-600 text-sm mb-3">{treatment.description}</p>
+                <div className="space-y-1">
                   <h4 className="font-semibold text-gray-900 text-sm">Approaches:</h4>
                   <div className="space-y-1">
                     {treatment.approaches.map((approach, appIndex) => (
-                      <div key={appIndex} className="flex items-center p-2 rounded-lg" style={{ backgroundColor: primaryBg }}>
-                        <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
-                        <span className="text-sm text-gray-700">{approach}</span>
+                      <div key={appIndex} className="flex items-center text-xs">
+                        <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
+                        <span className="text-gray-700">{approach}</span>
                       </div>
                     ))}
                   </div>
