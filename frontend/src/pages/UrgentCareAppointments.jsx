@@ -588,6 +588,26 @@ const UrgentCareAppointments = () => {
                 </div>
               </div>
             </div>
+            
+            {/* Modal Footer with Delete Button */}
+            <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-between">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => {
+                  setShowModal(false);
+                  confirmDelete(selectedAppointment);
+                }}
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 flex items-center"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete Appointment
+              </button>
+            </div>
           </div>
         </div>
       )}
