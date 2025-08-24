@@ -348,7 +348,7 @@ const DogEyeCare = () => {
             Protecting Your Dog's Vision and Quality of Life
           </h2>
           <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+            <p className="text-gray-700 leading-relaxed mb-6" style={{ fontSize: '1rem' }}>
               Your dog depends on healthy vision for confidence, mobility, and joy. Their eyes are essential 
               for navigating the world and maintaining their quality of life.
             </p>
