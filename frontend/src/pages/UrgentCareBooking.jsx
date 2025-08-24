@@ -538,13 +538,13 @@ const UrgentCareBooking = () => {
               <div>
                 <div className="mb-6">
                   <h2 className="text-xl font-semibold text-gray-900 mb-2">Additional Information</h2>
-                  <p className="text-gray-600">Help us serve you better</p>
+                  <p className="text-gray-600">Optional information to help us serve you better</p>
                 </div>
                 
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Primary Veterinary Hospital Name *
+                      Primary Veterinary Hospital Name (Optional)
                     </label>
                     <input
                       type="text"
@@ -561,13 +561,12 @@ const UrgentCareBooking = () => {
                         e.target.style.boxShadow = 'none';
                       }}
                       placeholder="Enter your regular vet's name"
-                      required
                     />
                   </div>
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      How did you hear about us? *
+                      How did you hear about us? (Optional)
                     </label>
                     <select
                       value={formData.how_heard_about_us}
@@ -582,9 +581,8 @@ const UrgentCareBooking = () => {
                         e.target.style.borderColor = '#d1d5db';
                         e.target.style.boxShadow = 'none';
                       }}
-                      required
                     >
-                      <option value="">Select an option</option>
+                      <option value="">Please select</option>
                       {howHeardOptions.map((option, index) => (
                         <option key={index} value={option}>
                           {option}
