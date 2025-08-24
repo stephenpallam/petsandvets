@@ -254,54 +254,23 @@ const BlockedCatsUrgentCare = () => {
         </div>
       </section>
 
-      {/* Emergency Alert */}
-      <section className="bg-red-600 py-6">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="flex items-center justify-center mb-4">
-              <AlertTriangle className="h-8 w-8 mr-3 text-white" />
-              <h2 className="text-xl font-bold text-white">FELINE EMERGENCY</h2>
-            </div>
-            <p className="text-white text-base mb-4 max-w-4xl mx-auto">
-              If your male cat is straining to urinate, crying in the litter box, or hasn't urinated 
-              in several hours, this is a life-threatening emergency. <strong>Call us immediately</strong> 
-              or come directly to our hospital.
-            </p>
-            <div className="bg-white p-4 rounded-lg inline-block">
-              <p className="text-red-600 font-bold text-lg">
-                Time is critical - untreated blockages can be fatal within 24-48 hours
-              </p>
-            </div>
+      {/* Hero Section */}
+      <section className="bg-white">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
+            Blocked Cats
+          </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+              Emergency Care for Blocked Cats
+            </span>
           </div>
-        </div>
-      </section>
-
-      {/* Introduction */}
-      <section className="bg-[#f8f9fa] py-6">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
-              Emergency Treatment for Blocked Cats
-            </h1>
-            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
-              At Pets and Vets Animal Hospital in South Riding, VA—serving Aldie, Ashburn, Chantilly, 
-              Centreville, Reston, and Herndon—we provide 24/7 emergency care for blocked cats. Male 
-              cats are particularly susceptible to urinary blockages, which are true medical emergencies 
-              requiring immediate intervention to save their lives.
-            </p>
-          </div>
-          
-          {/* Professional Image */}
-          <div className="mt-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.pexels.com/photos/7601454/pexels-photo-7601454.jpeg"
-                alt="Emergency veterinary care for blocked cat with specialized equipment"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
-          </div>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
+            At Pets and Vets Animal Hospital in South Riding, VA—serving Aldie, Ashburn, Chantilly, 
+            Centreville, Reston, and Herndon—we provide emergency care for blocked cats. Male 
+            cats are particularly susceptible to urinary blockages, which are true medical emergencies 
+            requiring immediate intervention to save their lives.
+          </p>
         </div>
       </section>
 
