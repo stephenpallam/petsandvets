@@ -245,33 +245,6 @@ const EndOfLifeCare = () => {
         </div>
       </section>
 
-      {/* Location & Hours Info */}
-      <section className="bg-gray-800 text-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-center md:text-left">
-            <div>
-              <div className="flex items-center justify-center md:justify-start mb-3">
-                <MapPin className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
-                <h3 className="font-semibold">Our Location</h3>
-              </div>
-              <p className="text-gray-300">
-                {hospitalInfo.address}<br />
-                South Riding, VA 20152
-              </p>
-            </div>
-            <div>
-              <div className="flex items-center justify-center md:justify-start mb-3">
-                <Clock className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
-                <h3 className="font-semibold">Available for Consultations</h3>
-              </div>
-              <p className="text-gray-300">
-                By appointment<br />
-                <span className="text-sm">Please call to schedule</span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
