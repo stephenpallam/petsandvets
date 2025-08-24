@@ -205,25 +205,23 @@ const UltrasoundExams = () => {
       </section>
 
       {/* Comfort and Care for Your Pet */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Comfort and Care for Your Pet
           </h2>
+          <p className="text-center text-gray-600 mb-8">
+            We prioritize your pet's comfort throughout the ultrasound procedure:
+          </p>
           
-          
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {comfortFeatures.map((feature, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md">
-                <div className="flex items-start">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-6 flex-shrink-0" style={{ backgroundColor: primaryBg }}>
-                    <feature.icon className="h-6 w-6" style={{ color: primaryColor }} />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-3">{feature.title}</h3>
-                    <p className="text-gray-600">{feature.description}</p>
-                  </div>
+              <div key={index} className="bg-white p-6 rounded-xl shadow-md text-center">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-4" style={{ backgroundColor: `${primaryColor}15` }}>
+                  <feature.icon className="h-6 w-6" style={{ color: primaryColor }} />
                 </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">{feature.title}</h3>
+                <p className="text-gray-600 text-sm">{feature.description}</p>
               </div>
             ))}
           </div>
