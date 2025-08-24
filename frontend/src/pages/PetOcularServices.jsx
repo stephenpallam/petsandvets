@@ -194,17 +194,7 @@ const PetOcularServices = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Blue Tagline Badge */}
-      <section className="bg-[#29add3] py-2">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <span className="inline-flex items-center px-4 py-1 rounded-full text-sm font-medium bg-white text-[#29add3]">
-              <Eye className="w-4 h-4 mr-2" />
-              Comprehensive Vision Care & Eye Health
-            </span>
-          </div>
-        </div>
-      </section>
+
 
       {/* Hero Section - Mobile Only */}
       <section className="text-white sticky z-40 block md:hidden" style={{ top: '4rem', background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '0.5rem', paddingBottom: '0.5rem' }}>
