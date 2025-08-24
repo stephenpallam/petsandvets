@@ -494,7 +494,7 @@ const ForeignBodySurgery = () => {
             Expert Surgical Care When Your Pet Needs It Most
           </h2>
           <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+            <p className="text-gray-700 leading-relaxed mb-6" style={{ fontSize: '1rem' }}>
               Foreign body obstructions require immediate attention and skilled surgical intervention. Our 
               experienced team combines advanced diagnostic technology with precise surgical techniques to 
               provide the life-saving care your pet needs.
