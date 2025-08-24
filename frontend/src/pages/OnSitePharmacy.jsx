@@ -262,31 +262,31 @@ const OnSitePharmacy = () => {
       </section>
 
       {/* Final CTA */}
-      <section style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '40px', paddingBottom: '40px' }}>
+      <section style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)` }} className="py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="flex items-center justify-center mb-4">
-            <Pill className="h-8 w-8 mr-3 text-white" />
-            <h2 className="font-bold text-white text-xl">
+            <Pill className="h-6 w-6 mr-2 text-white" />
+            <h2 className="font-bold text-white text-base">
               Get Your Pet's Medications Today
             </h2>
           </div>
-          <p className="mb-8 text-white text-lg leading-relaxed">
+          <p className="mb-6 text-white leading-relaxed" style={{ fontSize: '1rem' }}>
             Call us today to learn more about our on-site pharmacy or to request a refill!
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href={`tel:${hospitalInfo.phone}`}
-              className="inline-flex items-center justify-center bg-white px-8 py-4 rounded-lg font-bold text-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
+              className="inline-flex items-center justify-center bg-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               style={{ color: primaryColor }}
               onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
             >
-              <Phone className="mr-2 h-6 w-6" />
+              <Phone className="mr-2 h-5 w-5" />
               Call Now: {hospitalInfo.phone}
             </a>
             <Link
               to="/contact"
-              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = 'white';
                 e.target.style.color = primaryColor;
