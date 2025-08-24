@@ -367,28 +367,25 @@ const PetSpayNeuter = () => {
             Proper preparation ensures the safest surgical experience for your pet:
           </p>
           
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {preSurgicalCare.map((step, index) => (
               <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md">
-                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
-                  <div className="flex items-center mb-4 lg:mb-0">
-                    <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
-                      <step.icon className="h-8 w-8" style={{ color: primaryColor }} />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900">{step.step}</h3>
-                    </div>
+                <div className="flex items-center mb-4">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
+                    <step.icon className="h-6 w-6" style={{ color: primaryColor }} />
                   </div>
-                  <div className="flex-1">
-                    <p className="text-gray-700 mb-4">{step.description}</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {step.details.map((detail, detIndex) => (
-                        <div key={detIndex} className="flex items-center p-2 rounded-lg" style={{ backgroundColor: primaryBg }}>
-                          <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
-                          <span className="text-sm text-gray-700">{detail}</span>
-                        </div>
-                      ))}
-                    </div>
+                  <h3 className="text-lg font-semibold text-gray-900">{step.step}</h3>
+                </div>
+                <p className="text-gray-600 text-sm mb-4">{step.description}</p>
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-gray-900 text-sm">Includes:</h4>
+                  <div className="space-y-1">
+                    {step.details.slice(0, 2).map((detail, detIndex) => (
+                      <div key={detIndex} className="flex items-center text-xs text-gray-600">
+                        <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
+                        <span>{detail}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
