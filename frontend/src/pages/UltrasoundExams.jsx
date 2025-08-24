@@ -157,18 +157,7 @@ const UltrasoundExams = () => {
             The most common type, B-mode (two-dimensional) ultrasound, produces clear images of internal organs:
           </p>
           
-          {/* Professional Image */}
-          <div className="mb-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.pexels.com/photos/6235239/pexels-photo-6235239.jpeg"
-                alt="Veterinary professional performing ultrasound examination"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
-          </div>
-
+          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {detectionCapabilities.map((capability, index) => (
               <div key={index} className="bg-white p-6 rounded-xl shadow-md">
