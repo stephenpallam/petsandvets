@@ -556,6 +556,43 @@ async def delete_appointment(
     return {"message": "Appointment deleted successfully", "freed_slot": appointment.get("appointment_time")}
 
 
+@api_router.patch("/urgent-care-appointments/{appointment_id}/status")
+async def update_appointment_status(
+    appointment_id: str,
+    status: str,
+    current_user: User = Depends(get_admin_user)
+):
+    """Update appointment status (scheduled, completed, cancelled, no_show, abandoned)"""
+    
+    valid_statuses = ["scheduled", "completed", "cancelled", "no_show", "abandoned"]
+    if status not in valid_statuses:
+        raise HTTPException(status_code=400, detail=f"Invalid status. Must be one of: {valid_statuses}")
+    
+    appointment = await db.urgent_care_appointments.find_one({"id": appointment_id})
+    if not appointment:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+    
+    # Update the appointment status
+    result = await db.urgent_care_appointments.update_one(
+        {"id": appointment_id},
+        {"$set": {"status": status}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+    
+    # If status is abandoned, the time slot becomes available again
+    freed_slot = None
+    if status == "abandoned":
+        freed_slot = appointment.get("appointment_time")
+    
+    return {
+        "message": f"Appointment status updated to {status}",
+        "status": status,
+        "freed_slot": freed_slot
+    }
+
+
 @api_router.get("/urgent-care-time-slots/{date}")
 async def get_available_time_slots(date: str):
     """Get available time slots for urgent care booking for a specific date"""
