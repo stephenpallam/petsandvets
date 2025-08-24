@@ -290,13 +290,13 @@ const UrgentCareBooking = () => {
             {/* Messages */}
             {message.text && (
               <div className={`mb-6 p-4 rounded-lg flex items-center ${
-                message.type === 'success' ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
+                message.type === 'success' ? 'bg-blue-50 border border-blue-200' : 'bg-red-50 border border-red-200'
               }`}>
                 <AlertCircle className={`h-5 w-5 mr-3 ${
-                  message.type === 'success' ? 'text-green-600' : 'text-red-600'
+                  message.type === 'success' ? 'text-blue-600' : 'text-red-600'
                 }`} />
                 <p className={`${
-                  message.type === 'success' ? 'text-green-800' : 'text-red-800'
+                  message.type === 'success' ? 'text-blue-800' : 'text-red-800'
                 }`}>
                   {message.text}
                 </p>
