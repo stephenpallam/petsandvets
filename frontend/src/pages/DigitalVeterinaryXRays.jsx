@@ -170,7 +170,7 @@ const DigitalVeterinaryXRays = () => {
       </section>
 
       {/* What Are Digital X-Rays */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             What Are Digital X-Rays?
@@ -180,45 +180,41 @@ const DigitalVeterinaryXRays = () => {
             a clear, real-time view of your pet's internal organs and structures, including the:
           </p>
           
-          <div className="space-y-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
             {organSystems.map((system, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md">
-                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
-                  <div className="flex items-center mb-4 lg:mb-0">
-                    <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: `${system.color}15` }}>
-                      <system.icon className="h-8 w-8" style={{ color: system.color }} />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900">{system.system}</h3>
-                      <p className="text-gray-600 text-sm mt-1">{system.description}</p>
-                    </div>
+              <div key={index} className="bg-white p-4 rounded-lg shadow-sm">
+                <div className="flex items-center mb-3">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full mr-3" style={{ backgroundColor: `${system.color}15` }}>
+                    <system.icon className="h-5 w-5" style={{ color: system.color }} />
                   </div>
-                  <div className="flex-1">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {system.details.map((detail, detailIndex) => (
-                        <div key={detailIndex} className="flex items-center p-3 rounded-lg border-l-4" style={{ borderColor: system.color, backgroundColor: `${system.color}05` }}>
-                          <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: system.color }} />
-                          <span className="text-sm text-gray-700">{detail}</span>
-                        </div>
-                      ))}
-                    </div>
+                  <div>
+                    <h3 className="text-base font-semibold text-gray-900">{system.system}</h3>
+                    <p className="text-gray-600 text-sm">{system.description}</p>
                   </div>
+                </div>
+                <div className="grid grid-cols-1 gap-2">
+                  {system.details.map((detail, detailIndex) => (
+                    <div key={detailIndex} className="flex items-center text-sm text-gray-700">
+                      <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: system.color }} />
+                      <span>{detail}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}
           </div>
           
-          <div className="bg-blue-50 p-6 rounded-xl border-l-4 border-blue-500">
-            <h3 className="text-lg font-semibold text-blue-900 mb-4">Advanced Imaging Capabilities:</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+            <h3 className="text-base font-semibold text-blue-900 mb-3">Advanced Imaging Capabilities:</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {diagnosticCapabilities.map((capability, index) => (
-                <div key={index} className="flex items-center">
-                  <Target className="h-4 w-4 mr-2 text-blue-600 flex-shrink-0" />
-                  <span className="text-blue-800 text-sm">{capability}</span>
+                <div key={index} className="flex items-center text-sm">
+                  <Target className="h-3 w-3 mr-2 text-blue-600 flex-shrink-0" />
+                  <span className="text-blue-800">{capability}</span>
                 </div>
               ))}
             </div>
-            <p className="text-blue-800 text-sm mt-4 font-medium">
+            <p className="text-blue-800 text-sm mt-3 font-medium">
               This advanced imaging allows us to detect problems early and create effective treatment plans—often during the same visit.
             </p>
           </div>
