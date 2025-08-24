@@ -118,21 +118,19 @@ const OurTeam = () => {
       </section>
 
       {/* Team Philosophy */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-8 rounded-xl border-l-4" style={{ borderColor: primaryColor }}>
-            <div className="flex items-center mb-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: '#f8f9fa' }}>
-                <Heart className="h-6 w-6" style={{ color: primaryColor }} />
-              </div>
+          <div className="bg-white p-8 rounded-xl border-l-4" style={{ borderColor: primaryColor }}>
+            <div className="flex items-center justify-center mb-4">
+              <Heart className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
               <h3 className="text-xl font-bold text-gray-900">Our Team Philosophy</h3>
             </div>
-            <p className="text-gray-800 leading-relaxed mb-4">
+            <p className="text-gray-800 leading-relaxed mb-4 text-center">
               At Pets & Vets Animal Hospital, we believe that great veterinary care comes from a team that genuinely cares 
               about both pets and their families. Our professionals don't just bring medical expertise—they bring empathy, 
               understanding, and a commitment to making every visit as comfortable as possible for you and your pet.
             </p>
-            <div className="flex items-center">
+            <div className="flex items-center justify-center">
               <Star className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
               <span className="text-gray-800 font-medium">Professional • Caring • Experienced • Dedicated</span>
             </div>
