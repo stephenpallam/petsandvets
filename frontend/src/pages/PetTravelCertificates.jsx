@@ -259,13 +259,13 @@ const PetTravelCertificates = () => {
       </section>
 
       {/* Closing Message */}
-      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="p-6 rounded-xl border-l-4" style={{ backgroundColor: 'white', borderColor: primaryColor }}>
-            <p className="text-lg font-medium text-gray-800 mb-4">
+          <div className="p-4 rounded-lg border-l-4" style={{ backgroundColor: '#f8f9fa', borderColor: primaryColor }}>
+            <p className="text-base font-medium text-gray-800 mb-3" style={{ fontSize: '1rem' }}>
               With proper planning, your pet can travel safely by your side—whether across the state or across the globe.
             </p>
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-sm">
               Our experienced team is here to help ensure your pet meets all travel requirements for a smooth and safe journey.
             </p>
           </div>
