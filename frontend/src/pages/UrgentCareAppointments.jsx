@@ -202,11 +202,13 @@ const UrgentCareAppointments = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'completed': return 'bg-green-100 text-green-800';
-      case 'cancelled': return 'bg-red-100 text-red-800';
-      case 'no_show': return 'bg-orange-100 text-orange-800';
-      case 'abandoned': return 'bg-gray-100 text-gray-800';
-      default: return 'bg-blue-100 text-blue-800';
+      case 'completed': return '#059669';
+      case 'cancelled': return '#dc2626';
+      case 'no_show': return '#d97706';
+      case 'abandoned': return '#6b7280';
+      case 'verified': return '#7c3aed';
+      case 'checked_in': return '#059669';
+      default: return '#2563eb';
     }
   };
 
