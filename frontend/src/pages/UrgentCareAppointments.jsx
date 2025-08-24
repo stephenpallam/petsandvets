@@ -253,7 +253,7 @@ const UrgentCareAppointments = () => {
           <div className="bg-white rounded-xl shadow-lg overflow-hidden">
             <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-900">
-                All Appointments ({appointments.length})
+                All Urgent Care Appointments
               </h2>
             </div>
             
@@ -261,6 +261,9 @@ const UrgentCareAppointments = () => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      S.No
+                    </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Client Name
                     </th>
@@ -282,8 +285,11 @@ const UrgentCareAppointments = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {appointments.map((appointment) => (
+                  {appointments.map((appointment, index) => (
                     <tr key={appointment.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {(currentPage - 1) * pageSize + index + 1}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <User className="h-5 w-5 text-gray-400 mr-3" />
