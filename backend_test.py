@@ -968,6 +968,446 @@ def test_data_consistency_filtering_pagination():
         results.log_failure("Data Consistency (Filtering + Pagination)", str(e))
         return False
 
+# ============================================================================
+# NEW STATUS MANAGEMENT TESTS - ENHANCED URGENT CARE BOOKING SYSTEM
+# ============================================================================
+
+# Global variables for status testing
+status_test_appointment_id = None
+
+def test_create_appointment_for_status_testing():
+    """Create an appointment specifically for status management testing"""
+    global status_test_appointment_id
+    try:
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=3)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T15:30"
+        
+        appointment_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "Status",
+            "owner_last_name": "TestOwner",
+            "email": "status.test@veterinary.com",
+            "phone": "(555) 777-8888",
+            "pet_name": "StatusPet",
+            "pet_type": "dog",
+            "reason_for_visit": "Limping after playing in the yard",
+            "primary_vet_hospital": "Chantilly Animal Hospital",
+            "how_heard_about_us": "Google search"
+        }
+        
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=appointment_data)
+        if response.status_code == 200:
+            data = response.json()
+            if "id" in data and data.get("status") == "scheduled":
+                status_test_appointment_id = data["id"]
+                results.log_success("Create Appointment for Status Testing")
+                return True
+        results.log_failure("Create Appointment for Status Testing", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Create Appointment for Status Testing", str(e))
+        return False
+
+def test_update_appointment_status_valid():
+    """Test PATCH /urgent-care-appointments/{id}/status with valid status values"""
+    if not admin_token or not status_test_appointment_id:
+        results.log_failure("Update Appointment Status (Valid)", "No admin token or test appointment available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        
+        # Test updating to "completed" status
+        response = requests.patch(
+            f"{API_URL}/urgent-care-appointments/{status_test_appointment_id}/status",
+            params={"status": "completed"},
+            headers=headers
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("status") == "completed" and 
+                "message" in data and 
+                "completed" in data["message"]):
+                results.log_success("Update Appointment Status (Valid - Completed)")
+                return True
+        results.log_failure("Update Appointment Status (Valid)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Appointment Status (Valid)", str(e))
+        return False
+
+def test_update_appointment_status_invalid():
+    """Test PATCH /urgent-care-appointments/{id}/status with invalid status"""
+    if not admin_token or not status_test_appointment_id:
+        results.log_failure("Update Appointment Status (Invalid)", "No admin token or test appointment available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        
+        # Test with invalid status
+        response = requests.patch(
+            f"{API_URL}/urgent-care-appointments/{status_test_appointment_id}/status",
+            params={"status": "invalid_status"},
+            headers=headers
+        )
+        
+        if response.status_code == 400:
+            data = response.json()
+            if "Invalid status" in data.get("detail", ""):
+                results.log_success("Update Appointment Status (Invalid - 400 Error)")
+                return True
+        results.log_failure("Update Appointment Status (Invalid)", f"Expected 400, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Appointment Status (Invalid)", str(e))
+        return False
+
+def test_update_appointment_status_not_found():
+    """Test PATCH /urgent-care-appointments/{id}/status with invalid appointment ID"""
+    if not admin_token:
+        results.log_failure("Update Appointment Status (Not Found)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        fake_id = "non-existent-appointment-id-12345"
+        
+        response = requests.patch(
+            f"{API_URL}/urgent-care-appointments/{fake_id}/status",
+            params={"status": "completed"},
+            headers=headers
+        )
+        
+        if response.status_code == 404:
+            results.log_success("Update Appointment Status (Not Found - 404)")
+            return True
+        results.log_failure("Update Appointment Status (Not Found)", f"Expected 404, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Appointment Status (Not Found)", str(e))
+        return False
+
+def test_update_appointment_status_regular_user():
+    """Test PATCH /urgent-care-appointments/{id}/status with regular user (should fail)"""
+    if not user_token or not status_test_appointment_id:
+        results.log_failure("Update Appointment Status (Regular User)", "No user token or test appointment available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {user_token}"}
+        
+        response = requests.patch(
+            f"{API_URL}/urgent-care-appointments/{status_test_appointment_id}/status",
+            params={"status": "cancelled"},
+            headers=headers
+        )
+        
+        if response.status_code == 403:
+            results.log_success("Update Appointment Status (Regular User - Correctly Forbidden)")
+            return True
+        results.log_failure("Update Appointment Status (Regular User)", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Appointment Status (Regular User)", str(e))
+        return False
+
+def test_abandoned_appointment_slot_release():
+    """Test that abandoned appointments release their time slots"""
+    if not admin_token:
+        results.log_failure("Abandoned Appointment Slot Release", "No admin token available")
+        return False
+    
+    try:
+        from datetime import timedelta
+        
+        # Create appointment for a specific time slot
+        future_date = (datetime.now() + timedelta(days=4)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T16:00"
+        
+        appointment_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "Abandoned",
+            "owner_last_name": "SlotTest",
+            "email": "abandoned@slottest.com",
+            "phone": "(555) 888-9999",
+            "pet_name": "AbandonedPet",
+            "pet_type": "cat",
+            "reason_for_visit": "Vomiting and not eating",
+            "primary_vet_hospital": "Local Vet",
+            "how_heard_about_us": "Referral"
+        }
+        
+        # Create the appointment
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=appointment_data)
+        if response.status_code != 200:
+            results.log_failure("Abandoned Appointment Slot Release (Setup)", f"Failed to create appointment: {response.status_code}")
+            return False
+        
+        appointment_id = response.json()["id"]
+        
+        # Verify slot is not available (booked)
+        response = requests.get(f"{API_URL}/urgent-care-time-slots/{future_date}")
+        if response.status_code != 200:
+            results.log_failure("Abandoned Appointment Slot Release (Check Booked)", f"Failed to get time slots: {response.status_code}")
+            return False
+        
+        slots_data = response.json()
+        if slots_data.get("available"):
+            slot_times = [slot["time"] for slot in slots_data.get("slots", [])]
+            if "16:00" in slot_times:
+                results.log_failure("Abandoned Appointment Slot Release", "Slot should be booked but appears available")
+                return False
+        
+        # Update appointment status to "abandoned"
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.patch(
+            f"{API_URL}/urgent-care-appointments/{appointment_id}/status",
+            params={"status": "abandoned"},
+            headers=headers
+        )
+        
+        if response.status_code != 200:
+            results.log_failure("Abandoned Appointment Slot Release (Update Status)", f"Failed to update status: {response.status_code}")
+            return False
+        
+        # Verify slot becomes available again
+        response = requests.get(f"{API_URL}/urgent-care-time-slots/{future_date}")
+        if response.status_code == 200:
+            slots_data = response.json()
+            if slots_data.get("available"):
+                slot_times = [slot["time"] for slot in slots_data.get("slots", [])]
+                if "16:00" in slot_times:
+                    results.log_success("Abandoned Appointment Slot Release (Slot Available Again)")
+                    return True
+                else:
+                    results.log_failure("Abandoned Appointment Slot Release", "Slot not released after abandoning appointment")
+                    return False
+            else:
+                results.log_success("Abandoned Appointment Slot Release (Day Closed)")
+                return True
+        results.log_failure("Abandoned Appointment Slot Release (Check Released)", f"Status: {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Abandoned Appointment Slot Release", str(e))
+        return False
+
+def test_other_statuses_dont_release_slots():
+    """Test that completed, cancelled, no_show statuses don't release time slots"""
+    if not admin_token:
+        results.log_failure("Other Statuses Don't Release Slots", "No admin token available")
+        return False
+    
+    try:
+        from datetime import timedelta
+        
+        # Create appointment for a specific time slot
+        future_date = (datetime.now() + timedelta(days=5)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T17:30"
+        
+        appointment_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "NoRelease",
+            "owner_last_name": "SlotTest",
+            "email": "norelease@slottest.com",
+            "phone": "(555) 777-6666",
+            "pet_name": "NoReleasePet",
+            "pet_type": "dog",
+            "reason_for_visit": "Coughing and wheezing",
+            "primary_vet_hospital": "Main Vet Clinic",
+            "how_heard_about_us": "Website"
+        }
+        
+        # Create the appointment
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=appointment_data)
+        if response.status_code != 200:
+            results.log_failure("Other Statuses Don't Release Slots (Setup)", f"Failed to create appointment: {response.status_code}")
+            return False
+        
+        appointment_id = response.json()["id"]
+        
+        # Update appointment status to "completed" (should NOT release slot)
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.patch(
+            f"{API_URL}/urgent-care-appointments/{appointment_id}/status",
+            params={"status": "completed"},
+            headers=headers
+        )
+        
+        if response.status_code != 200:
+            results.log_failure("Other Statuses Don't Release Slots (Update Status)", f"Failed to update status: {response.status_code}")
+            return False
+        
+        # Verify slot is still NOT available (not released)
+        response = requests.get(f"{API_URL}/urgent-care-time-slots/{future_date}")
+        if response.status_code == 200:
+            slots_data = response.json()
+            if slots_data.get("available"):
+                slot_times = [slot["time"] for slot in slots_data.get("slots", [])]
+                if "17:30" not in slot_times:
+                    results.log_success("Other Statuses Don't Release Slots (Slot Still Blocked)")
+                    return True
+                else:
+                    results.log_failure("Other Statuses Don't Release Slots", "Slot was incorrectly released for completed status")
+                    return False
+            else:
+                results.log_success("Other Statuses Don't Release Slots (Day Closed)")
+                return True
+        results.log_failure("Other Statuses Don't Release Slots (Check)", f"Status: {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Other Statuses Don't Release Slots", str(e))
+        return False
+
+def test_all_valid_status_values():
+    """Test updating appointment to all valid status values"""
+    if not admin_token:
+        results.log_failure("All Valid Status Values", "No admin token available")
+        return False
+    
+    try:
+        from datetime import timedelta
+        
+        # Create appointment for testing all statuses
+        future_date = (datetime.now() + timedelta(days=6)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T18:30"
+        
+        appointment_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "AllStatus",
+            "owner_last_name": "TestUser",
+            "email": "allstatus@test.com",
+            "phone": "(555) 999-1111",
+            "pet_name": "AllStatusPet",
+            "pet_type": "cat",
+            "reason_for_visit": "Behavioral changes and lethargy",
+            "primary_vet_hospital": "Emergency Vet",
+            "how_heard_about_us": "Emergency referral"
+        }
+        
+        # Create the appointment
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=appointment_data)
+        if response.status_code != 200:
+            results.log_failure("All Valid Status Values (Setup)", f"Failed to create appointment: {response.status_code}")
+            return False
+        
+        appointment_id = response.json()["id"]
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        
+        # Test all valid statuses
+        valid_statuses = ["scheduled", "completed", "cancelled", "no_show", "abandoned"]
+        
+        for status in valid_statuses:
+            response = requests.patch(
+                f"{API_URL}/urgent-care-appointments/{appointment_id}/status",
+                params={"status": status},
+                headers=headers
+            )
+            
+            if response.status_code != 200:
+                results.log_failure("All Valid Status Values", f"Failed to update to {status}: {response.status_code}")
+                return False
+            
+            data = response.json()
+            if data.get("status") != status:
+                results.log_failure("All Valid Status Values", f"Status not updated correctly to {status}")
+                return False
+        
+        results.log_success("All Valid Status Values (All 5 Statuses)")
+        return True
+    except Exception as e:
+        results.log_failure("All Valid Status Values", str(e))
+        return False
+
+def test_time_slots_exclude_abandoned_appointments():
+    """Test that time slots API excludes abandoned appointments but includes others"""
+    try:
+        from datetime import timedelta
+        
+        # Create two appointments for the same day
+        future_date = (datetime.now() + timedelta(days=7)).strftime("%Y-%m-%d")
+        
+        # First appointment - will be abandoned
+        abandoned_appointment_data = {
+            "appointment_time": f"{future_date}T19:00",
+            "owner_first_name": "WillBeAbandoned",
+            "owner_last_name": "TestUser",
+            "email": "abandoned@exclude.com",
+            "phone": "(555) 111-2222",
+            "pet_name": "AbandonedPet",
+            "pet_type": "dog",
+            "reason_for_visit": "Will be abandoned",
+            "primary_vet_hospital": "Test Clinic",
+            "how_heard_about_us": "Testing"
+        }
+        
+        # Second appointment - will remain scheduled
+        scheduled_appointment_data = {
+            "appointment_time": f"{future_date}T19:30",
+            "owner_first_name": "WillStayScheduled",
+            "owner_last_name": "TestUser",
+            "email": "scheduled@exclude.com",
+            "phone": "(555) 333-4444",
+            "pet_name": "ScheduledPet",
+            "pet_type": "cat",
+            "reason_for_visit": "Will stay scheduled",
+            "primary_vet_hospital": "Test Clinic",
+            "how_heard_about_us": "Testing"
+        }
+        
+        # Create both appointments
+        response1 = requests.post(f"{API_URL}/urgent-care-appointments", json=abandoned_appointment_data)
+        response2 = requests.post(f"{API_URL}/urgent-care-appointments", json=scheduled_appointment_data)
+        
+        if response1.status_code != 200 or response2.status_code != 200:
+            results.log_failure("Time Slots Exclude Abandoned (Setup)", "Failed to create test appointments")
+            return False
+        
+        abandoned_id = response1.json()["id"]
+        scheduled_id = response2.json()["id"]
+        
+        # Update first appointment to abandoned
+        if admin_token:
+            headers = {"Authorization": f"Bearer {admin_token}"}
+            response = requests.patch(
+                f"{API_URL}/urgent-care-appointments/{abandoned_id}/status",
+                params={"status": "abandoned"},
+                headers=headers
+            )
+            
+            if response.status_code != 200:
+                results.log_failure("Time Slots Exclude Abandoned (Update)", f"Failed to abandon appointment: {response.status_code}")
+                return False
+        
+        # Check time slots - should show 19:00 as available but not 19:30
+        response = requests.get(f"{API_URL}/urgent-care-time-slots/{future_date}")
+        if response.status_code == 200:
+            slots_data = response.json()
+            if slots_data.get("available"):
+                slot_times = [slot["time"] for slot in slots_data.get("slots", [])]
+                
+                # 19:00 should be available (abandoned appointment)
+                # 19:30 should NOT be available (scheduled appointment)
+                if "19:00" in slot_times and "19:30" not in slot_times:
+                    results.log_success("Time Slots Exclude Abandoned (Correct Filtering)")
+                    return True
+                elif "19:00" not in slot_times and "19:30" not in slot_times:
+                    results.log_failure("Time Slots Exclude Abandoned", "Both slots blocked - abandoned slot not released")
+                    return False
+                else:
+                    results.log_failure("Time Slots Exclude Abandoned", f"Unexpected slot availability: 19:00={19:00 in slot_times}, 19:30={'19:30' in slot_times}")
+                    return False
+            else:
+                results.log_success("Time Slots Exclude Abandoned (Day Closed)")
+                return True
+        results.log_failure("Time Slots Exclude Abandoned (Check)", f"Status: {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Time Slots Exclude Abandoned", str(e))
+        return False
+
 def test_deleted_appointments_removed_from_results():
     """Test that deleted appointments are properly removed from filtered results"""
     if not admin_token:
