@@ -370,11 +370,8 @@ const UrgentCareAppointments = () => {
                         <div className="text-sm text-gray-900">{appointment.reason_for_visit}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <Clock className="h-4 w-4 text-gray-400 mr-2" />
-                          <div className="text-sm font-medium text-gray-900">
-                            {formatTimeOnly(appointment.appointment_time)}
-                          </div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {formatTimeOnly(appointment.appointment_time)}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium relative">
