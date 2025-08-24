@@ -99,7 +99,8 @@ const Header = () => {
           ]
         },
         { name: 'Download Forms', href: '/forms-download' },
-        ...(isAdmin() ? [{ name: 'Configure Hours', href: '/configure-hours' }] : [])
+        ...(isAdmin() ? [{ name: 'Configure Hours', href: '/configure-hours' }] : []),
+        ...(user ? [{ name: 'Register User', href: '/register-user' }] : [])
       ]
     },
     { 
