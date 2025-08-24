@@ -537,6 +537,25 @@ async def get_appointment_details(
     return UrgentCareAppointment(**appointment)
 
 
+@api_router.delete("/urgent-care-appointments/{appointment_id}")
+async def delete_appointment(
+    appointment_id: str,
+    current_user: User = Depends(get_admin_user)
+):
+    """Delete an urgent care appointment and free up the time slot"""
+    appointment = await db.urgent_care_appointments.find_one({"id": appointment_id})
+    if not appointment:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+    
+    # Delete the appointment
+    result = await db.urgent_care_appointments.delete_one({"id": appointment_id})
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+    
+    return {"message": "Appointment deleted successfully", "freed_slot": appointment.get("appointment_time")}
+
+
 @api_router.get("/urgent-care-time-slots/{date}")
 async def get_available_time_slots(date: str):
     """Get available time slots for urgent care booking for a specific date"""
