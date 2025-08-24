@@ -135,6 +135,8 @@ const UrgentCareBooking = () => {
       }
       setCurrentTab(currentTab + 1);
       setMessage({ type: '', text: '' });
+      // Scroll to top when advancing to next tab
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       setMessage({ type: 'error', text: 'Please complete all required fields' });
     }
@@ -162,6 +164,8 @@ const UrgentCareBooking = () => {
     if (currentTab > 0) {
       setCurrentTab(currentTab - 1);
       setMessage({ type: '', text: '' });
+      // Scroll to top when going back
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
