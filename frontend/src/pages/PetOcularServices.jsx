@@ -435,12 +435,12 @@ const PetOcularServices = () => {
       </section>
 
       {/* Contact CTA */}
-      <section style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)` }} className="py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
             Expert Eye Care for Your Pet
           </h2>
-          <p className="mb-8" style={{ color: 'white', fontSize: '1rem' }}>
+          <p className="mb-6" style={{ color: 'white', fontSize: '1rem' }}>
             Don't wait—early detection and treatment can save your pet's vision
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
