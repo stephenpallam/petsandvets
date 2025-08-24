@@ -125,25 +125,22 @@ const UltrasoundExams = () => {
         </div>
       </section>
 
-      {/* Introduction */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              Ultrasound
-            </h1>
-            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
-              When your pet isn't feeling well, answers matter. At Pets and Vets Animal Hospital & Urgent Care, 
-              we proudly provide safe, effective, and compassionate pet ultrasounds in Chantilly, VA, while also 
-              serving pet families across South Riding, Aldie, Ashburn, Centreville, Reston, and Herndon.
-            </p>
-            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto mt-4">
-              Ultrasound exams (ultrasonography) are a quick, non-invasive way for our veterinarians to see inside 
-              your dog or cat's body—without the risks of radiation used in X-rays. By recording sound wave echoes, 
-              ultrasounds produce real-time images that help us detect, diagnose, and guide treatment for a wide range 
-              of conditions, from abdominal issues to heart disease.
-            </p>
+      {/* Hero Section */}
+      <section className="bg-white">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
+            Ultrasound
+          </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+              Safe & Non-Invasive Imaging
+            </span>
           </div>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
+            When your pet isn't feeling well, answers matter. At Pets and Vets Animal Hospital & Urgent Care, 
+            ultrasounds produce real-time images that help us detect, diagnose, and guide treatment for a wide range 
+            of conditions—safely, comfortably, and without sedation or radiation.
+          </p>
         </div>
       </section>
 
