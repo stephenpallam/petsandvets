@@ -230,33 +230,24 @@ const ForeignBodySurgery = () => {
         </div>
       </section>
 
-      {/* Introduction */}
-      <section className="bg-white py-6">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
-              Foreign Body & GI Obstruction Surgery for Pets
-            </h1>
-            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
-              At Pets and Vets Animal Hospital in South Riding, VA—also serving Aldie, Ashburn, Chantilly, 
-              Centreville, Reston, and Herndon—we know how curious pets can be. Sometimes that curiosity leads 
-              them to swallow objects like toys, bones, or household items. Unfortunately, these can cause 
-              dangerous gastrointestinal (GI) obstructions that require urgent veterinary attention. Our 
-              experienced team is here to provide advanced diagnostics and life-saving surgery when needed.
-            </p>
+      {/* Hero Section */}
+      <section className="bg-white">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
+            Foreign Body & GI Obstruction Surgery
+          </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+              Life-Saving Foreign Body Removal Surgery
+            </span>
           </div>
-          
-          {/* Professional Image */}
-          <div className="mt-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.pexels.com/photos/3924779/pexels-photo-3924779.jpeg"
-                alt="Professional veterinary surgical team performing GI obstruction surgery"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
-          </div>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
+            At Pets and Vets Animal Hospital in South Riding, VA—also serving Aldie, Ashburn, Chantilly, 
+            Centreville, Reston, and Herndon—we know how curious pets can be. Sometimes that curiosity leads 
+            them to swallow objects like toys, bones, or household items. Unfortunately, these can cause 
+            dangerous gastrointestinal (GI) obstructions that require urgent veterinary attention. Our 
+            experienced team is here to provide advanced diagnostics and life-saving surgery when needed.
+          </p>
         </div>
       </section>
 
