@@ -155,30 +155,30 @@ const DogDietNutrition = () => {
       </section>
 
       {/* Benefits of Proper Diet */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
+      <section className="bg-[#f8f9fa] py-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">The Benefits of Proper Diet & Nutrition</h2>
-            <p className="text-gray-600 max-w-3xl mx-auto">
+            <p className="text-gray-600 max-w-3xl mx-auto text-sm">
               A well-balanced diet can make a dramatic difference in your pet's comfort and health. The right nutrition can help reduce or even eliminate:
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
             {healthImprovements.map((improvement, index) => (
-              <div key={index} className="flex items-center">
-                <CheckCircle className="h-5 w-5 mr-3 flex-shrink-0" style={{ color: '#10b981' }} />
-                <span className="text-gray-700">{improvement}</span>
+              <div key={index} className="flex items-center bg-white p-3 rounded-lg">
+                <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: '#10b981' }} />
+                <span className="text-gray-700 text-sm">{improvement}</span>
               </div>
             ))}
           </div>
 
-          <div className="p-6 rounded-xl border-l-4" style={{ backgroundColor: '#f8f9fa', borderColor: primaryColor }}>
-            <div className="flex items-center mb-4">
-              <Sparkles className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
-              <h3 className="text-lg font-semibold text-gray-900">Supplements & Support</h3>
+          <div className="p-4 rounded-lg border-l-4 bg-white" style={{ borderColor: primaryColor }}>
+            <div className="flex items-center mb-3">
+              <Sparkles className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
+              <h3 className="text-base font-semibold text-gray-900">Supplements & Support</h3>
             </div>
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-sm">
               Supplements for skin, coat, and joints can also provide added support, especially as pets get older.
             </p>
           </div>
