@@ -104,6 +104,67 @@
 
 user_problem_statement: "Create Urgent Care webpage - write a compact and impactful webpage with modern professional layout and styling for urgent veterinary care services"
 
+backend:
+  - task: "User Registration and Login System"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Successfully tested user registration endpoint (POST /api/register) and login endpoint (POST /api/login). Both admin and regular user authentication working correctly. Admin user (admin@hospital.com) and regular user registration/login functioning properly."
+
+  - task: "Authentication Middleware and User Profile"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Successfully tested authentication middleware with JWT tokens. GET /api/me endpoint working correctly for both admin and regular users. Invalid token handling working properly (returns 401 as expected)."
+
+  - task: "Hospital Hours Management API"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Successfully tested GET /api/hospital-hours and GET /api/urgent-care-hours endpoints. Both return proper weekly schedule data with all required days (monday-sunday) and correct time format."
+
+  - task: "Admin-Only Hospital Hours Updates"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Successfully tested admin-only endpoints PUT /api/hospital-hours and PUT /api/urgent-care-hours. Admin users can update hours successfully, regular users correctly receive 403 Forbidden response. Role-based access control working properly."
+
+  - task: "Combined Hours API Endpoint"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Successfully tested GET /api/hours/current endpoint. Returns current day's operating hours for both general practice and urgent care services. Handles regular hours and special hours logic correctly."
+
 frontend:
   - task: "Create Insurance & Payments Page for General Services"
     implemented: true
