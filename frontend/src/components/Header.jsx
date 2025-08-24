@@ -150,6 +150,7 @@ const Header = () => {
         return location.pathname.includes('/forms') || 
                location.pathname.includes('/your-first-visit') ||
                location.pathname.includes('/pet-insurance-payments') ||
+               location.pathname.includes('/urgent-care-appointments') ||
                location.pathname.includes('/configure-hours') ||
                location.pathname.includes('/register-user');
       
