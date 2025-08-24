@@ -320,40 +320,40 @@ const PetToothExtraction = () => {
       </section>
 
       {/* Pain Management and Recovery */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Pain Management and Recovery
           </h2>
-          <p className="text-center text-gray-600 mb-8">
+          <p className="text-center text-gray-600 mb-6 text-sm">
             Your pet's comfort is our top priority. We use comprehensive pain management protocols similar to 
             those prescribed for people to control pain and swelling.
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             {painManagementOptions.map((treatment, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md border-l-4" style={{ borderColor: primaryColor }}>
-                <div className="flex items-center mb-4">
-                  <Pill className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
-                  <h3 className="text-lg font-semibold text-gray-900">{treatment.treatment}</h3>
+              <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm border-l-4" style={{ borderColor: primaryColor }}>
+                <div className="flex items-center mb-3">
+                  <Pill className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
+                  <h3 className="text-base font-semibold text-gray-900">{treatment.treatment}</h3>
                 </div>
-                <p className="text-gray-600 text-sm mb-3">{treatment.description}</p>
+                <p className="text-gray-600 text-sm mb-2">{treatment.description}</p>
                 <div className="flex justify-between items-center">
-                  <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
                     {treatment.type}
                   </span>
-                  <span className="text-sm font-medium text-green-600">{treatment.duration}</span>
+                  <span className="text-xs font-medium text-green-600">{treatment.duration}</span>
                 </div>
               </div>
             ))}
           </div>
           
-          <div className="bg-green-50 p-6 rounded-xl border-l-4 border-green-500">
-            <div className="flex items-center mb-4">
-              <Heart className="h-6 w-6 mr-3 text-green-600" />
-              <h3 className="text-lg font-semibold text-green-900">Quick Recovery Timeline</h3>
+          <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+            <div className="flex items-center mb-3">
+              <Heart className="h-5 w-5 mr-2 text-green-600" />
+              <h3 className="text-base font-semibold text-green-900">Quick Recovery Timeline</h3>
             </div>
-            <p className="text-green-800">
+            <p className="text-green-800 text-sm">
               Most pets recover quickly, returning to their normal routines within days. We'll schedule a follow-up 
               exam to ensure recovery is on track and answer any questions you may have.
             </p>
