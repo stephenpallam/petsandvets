@@ -427,13 +427,13 @@ const PetSpayNeuter = () => {
             Why Choose Our Spay & Neuter Services?
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {whyChooseUs.map((feature, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
-                  <feature.icon className="h-8 w-8" style={{ color: primaryColor }} />
+              <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3" style={{ backgroundColor: primaryBg }}>
+                  <feature.icon className="h-6 w-6" style={{ color: primaryColor }} />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{feature.feature}</h3>
+                <h3 className="text-base font-semibold text-gray-900 mb-2">{feature.feature}</h3>
                 <p className="text-gray-600 text-sm">{feature.description}</p>
               </div>
             ))}
