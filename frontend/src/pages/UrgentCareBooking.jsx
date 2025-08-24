@@ -172,14 +172,16 @@ const UrgentCareBooking = () => {
       });
 
       if (response.ok) {
-        setStep(6); // Success step
+        setCurrentTab(5); // Success tab
+        setCompletedTabs([...completedTabs, 4]);
+        setMessage({ type: 'success', text: 'Appointment booked successfully!' });
       } else {
         const errorData = await response.json();
         setMessage({ type: 'error', text: errorData.detail || 'Failed to book appointment' });
       }
     } catch (error) {
-      console.error('Error booking appointment:', error);
-      setMessage({ type: 'error', text: 'Network error. Please try again.' });
+      console.error('Error submitting appointment:', error);
+      setMessage({ type: 'error', text: 'Unable to book appointment. Please try again.' });
     } finally {
       setLoading(false);
     }
