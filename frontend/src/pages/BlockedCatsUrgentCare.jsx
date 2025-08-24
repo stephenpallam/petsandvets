@@ -495,7 +495,7 @@ const BlockedCatsUrgentCare = () => {
             Serving Your Community
           </h2>
           <p className="text-gray-600 mb-6 text-sm">
-            We proudly provide emergency care for blocked cats throughout:
+            We provide emergency care for blocked cats throughout our service area:
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             {serviceAreas.map((area, index) => (
