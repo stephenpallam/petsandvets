@@ -441,6 +441,110 @@ async def delete_special_hours(
     return {"message": "Special hours deleted successfully"}
 
 
+# Urgent Care Appointments Routes
+@api_router.post("/urgent-care-appointments", response_model=UrgentCareAppointment)
+async def create_appointment(
+    appointment_data: UrgentCareAppointmentCreate
+):
+    appointment = UrgentCareAppointment(**appointment_data.dict())
+    await db.urgent_care_appointments.insert_one(appointment.dict())
+    return appointment
+
+
+@api_router.get("/urgent-care-appointments", response_model=List[UrgentCareAppointment])
+async def get_appointments(
+    current_user: User = Depends(get_admin_user)
+):
+    appointments = await db.urgent_care_appointments.find().sort("appointment_time", 1).to_list(1000)
+    return [UrgentCareAppointment(**appointment) for appointment in appointments]
+
+
+@api_router.get("/urgent-care-appointments/{appointment_id}", response_model=UrgentCareAppointment)
+async def get_appointment_details(
+    appointment_id: str,
+    current_user: User = Depends(get_admin_user)
+):
+    appointment = await db.urgent_care_appointments.find_one({"id": appointment_id})
+    if not appointment:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+    return UrgentCareAppointment(**appointment)
+
+
+@api_router.get("/urgent-care-time-slots/{date}")
+async def get_available_time_slots(date: str):
+    """Get available time slots for urgent care booking for a specific date"""
+    try:
+        # Get urgent care hours for the day
+        urgent_hours = await db.urgent_care_hours.find_one()
+        if not urgent_hours:
+            raise HTTPException(status_code=404, detail="Urgent care hours not found")
+        
+        # Get day of week from date
+        from datetime import datetime as dt
+        date_obj = dt.strptime(date, "%Y-%m-%d")
+        day_names = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+        day_name = day_names[date_obj.weekday()]
+        
+        day_hours = urgent_hours.get(day_name)
+        if not day_hours or not day_hours.get('is_open'):
+            return {"available": False, "message": "Urgent care is closed today"}
+        
+        # Generate time slots
+        from datetime import datetime, timedelta
+        open_time = day_hours['open_time']  # e.g., "15:00"
+        close_time = day_hours['close_time']  # e.g., "22:00"
+        
+        # Parse times
+        open_hour, open_min = map(int, open_time.split(':'))
+        close_hour, close_min = map(int, close_time.split(':'))
+        
+        # Create datetime objects for today
+        now = datetime.now()
+        today_str = now.strftime("%Y-%m-%d")
+        
+        slots = []
+        current_slot = datetime.strptime(f"{date} {open_time}", "%Y-%m-%d %H:%M")
+        end_time = datetime.strptime(f"{date} {close_time}", "%Y-%m-%d %H:%M")
+        
+        # If it's today, start from current time + 30 minutes
+        if date == today_str:
+            min_start_time = now + timedelta(minutes=30)
+            if current_slot < min_start_time:
+                # Round up to next 30-minute slot
+                minutes = min_start_time.minute
+                if minutes <= 30:
+                    next_slot_min = 30
+                else:
+                    next_slot_min = 0
+                    min_start_time = min_start_time.replace(hour=min_start_time.hour + 1)
+                
+                current_slot = min_start_time.replace(minute=next_slot_min, second=0, microsecond=0)
+        
+        while current_slot < end_time:
+            # Check if slot is already booked
+            existing_appointment = await db.urgent_care_appointments.find_one({
+                "appointment_time": current_slot.strftime("%Y-%m-%dT%H:%M"),
+                "status": "scheduled"
+            })
+            
+            if not existing_appointment:
+                slots.append({
+                    "time": current_slot.strftime("%H:%M"),
+                    "value": current_slot.strftime("%Y-%m-%dT%H:%M")
+                })
+            
+            current_slot += timedelta(minutes=30)
+        
+        return {
+            "available": True,
+            "slots": slots,
+            "date": date
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # Combined Hours API for frontend consumption
 @api_router.get("/hours/current")
 async def get_current_hours():
