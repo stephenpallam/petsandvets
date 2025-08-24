@@ -396,16 +396,13 @@ const UrgentCareAppointments = () => {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <select
                           value={appointment.status || 'scheduled'}
-                          onChange={(e) => updateAppointmentStatus(appointment.id, e.target.value)}
+                          onChange={(e) => handleStatusChange(appointment.id, e.target.value, appointment.status || 'scheduled')}
                           className="text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                          style={{ 
-                            color: appointment.status === 'completed' ? '#059669' : 
-                                   appointment.status === 'cancelled' ? '#dc2626' : 
-                                   appointment.status === 'no_show' ? '#d97706' : 
-                                   appointment.status === 'abandoned' ? '#6b7280' : '#2563eb'
-                          }}
+                          style={{ color: getStatusColor(appointment.status || 'scheduled') }}
                         >
                           <option value="scheduled">Scheduled</option>
+                          <option value="verified">Verified</option>
+                          <option value="checked_in">Checked In</option>
                           <option value="completed">Completed</option>
                           <option value="no_show">No Show</option>
                           <option value="cancelled">Cancelled</option>
