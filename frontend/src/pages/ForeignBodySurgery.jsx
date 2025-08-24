@@ -359,43 +359,29 @@ const ForeignBodySurgery = () => {
             At Pets and Vets Animal Hospital, we use advanced tools for accurate diagnosis:
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {diagnosticTools.map((tool, index) => (
               <div key={index} className="bg-white p-6 rounded-xl shadow-md">
                 <div className="flex items-center mb-4">
                   <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: `${tool.color}15` }}>
                     <tool.icon className="h-6 w-6" style={{ color: tool.color }} />
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">{tool.tool}</h3>
-                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">{tool.tool}</h3>
                 </div>
                 <p className="text-gray-600 text-sm mb-4">{tool.description}</p>
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-gray-900 text-sm">Capabilities:</h4>
+                  <h4 className="font-semibold text-gray-900 text-sm">Key Features:</h4>
                   <div className="space-y-1">
-                    {tool.capabilities.map((capability, capIndex) => (
-                      <div key={capIndex} className="flex items-center p-2 rounded-lg" style={{ backgroundColor: `${tool.color}05` }}>
-                        <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: tool.color }} />
-                        <span className="text-sm text-gray-700">{capability}</span>
+                    {tool.capabilities.slice(0, 2).map((capability, capIndex) => (
+                      <div key={capIndex} className="flex items-center text-xs text-gray-600">
+                        <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: tool.color }} />
+                        <span>{capability}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
             ))}
-          </div>
-          
-          {/* Professional Image */}
-          <div className="mt-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.pexels.com/photos/5486963/pexels-photo-5486963.jpeg"
-                alt="Advanced veterinary diagnostic equipment and surgical preparation"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
           </div>
         </div>
       </section>
