@@ -290,7 +290,7 @@ const UrgentCareBooking = () => {
           )}
 
           {/* Step 2: Owner Information */}
-          {step === 2 && (
+          {currentTab === 1 && (
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
                 <User className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
