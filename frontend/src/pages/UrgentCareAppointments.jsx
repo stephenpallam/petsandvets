@@ -169,14 +169,6 @@ const UrgentCareAppointments = () => {
     }
   };
 
-  const toggleStatusMenu = (appointmentId, event) => {
-    event.stopPropagation();
-    setShowStatusMenu(prev => ({
-      ...prev,
-      [appointmentId]: !prev[appointmentId]
-    }));
-  };
-
   const getStatusColor = (status) => {
     switch (status) {
       case 'completed': return 'bg-green-100 text-green-800';
