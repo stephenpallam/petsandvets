@@ -48,205 +48,175 @@ const PetBladderStoneRemoval = () => {
 
   const bladderStoneTypes = [
     {
-      type: "Struvite Stones",
-      description: "Most common type, often caused by bacterial infections and dietary factors",
-      characteristics: ["Associated with UTIs", "More common in female dogs", "Can dissolve with dietary management", "Often recurrent without proper treatment"],
-      icon: CircleDot,
-      color: "#10b981"
+      type: 'Struvite Stones',
+      color: '#10b981',
+      icon: Droplets,
+      description: 'Most common in female dogs and cats, often forming due to bacterial infections.',
+      characteristics: [
+        'Dissolve with prescription diets',
+        'Associated with urinary tract infections',
+        'More common in alkaline urine',
+        'Can form rapidly'
+      ]
     },
     {
-      type: "Calcium Oxalate Stones",
-      description: "Hard stones that typically require surgical removal",
-      characteristics: ["Cannot be dissolved medically", "More common in males", "Higher recurrence rate", "Requires surgical intervention"],
-      icon: Target,
-      color: "#ef4444"
+      type: 'Calcium Oxalate Stones',
+      color: '#f59e0b',
+      icon: FlaskConical,
+      description: 'Hard stones that cannot be dissolved and typically require surgical removal.',
+      characteristics: [
+        'Cannot be dissolved medically',
+        'More common in male dogs',
+        'Associated with acidic urine',
+        'High recurrence rate'
+      ]
     },
     {
-      type: "Urate Stones",
-      description: "Less common stones often related to genetic factors or liver disease",
-      characteristics: ["Breed predisposition exists", "May indicate liver problems", "Can sometimes be dissolved", "Requires specialized diet"],
-      icon: Sparkles,
-      color: "#8b5cf6"
+      type: 'Uric Acid Stones',
+      color: '#8b5cf6',
+      icon: TestTube,
+      description: 'Less common stones that can sometimes be managed with dietary modifications.',
+      characteristics: [
+        'Genetic predisposition in some breeds',
+        'May respond to dietary management',
+        'Associated with liver disease',
+        'More common in Dalmatians'
+      ]
     },
     {
-      type: "Cystine Stones",
-      description: "Rare genetic condition causing amino acid crystal formation",
-      characteristics: ["Hereditary condition", "Usually in young animals", "Requires lifelong management", "Preventable with proper diet"],
-      icon: Star,
-      color: "#f59e0b"
+      type: 'Cystine Stones',
+      color: '#ef4444',
+      icon: Microscope,
+      description: 'Rare stones caused by a genetic defect affecting amino acid metabolism.',
+      characteristics: [
+        'Hereditary condition',
+        'More common in male dogs',
+        'Difficult to manage',
+        'High recurrence rate'
+      ]
     }
   ];
 
   const symptoms = [
     {
-      symptom: "Frequent Urination Attempts",
-      description: "Straining to urinate with little or no urine production",
-      severity: "High Priority",
+      symptom: 'Frequent Urination',
+      color: '#f59e0b',
+      severity: 'Moderate',
+      icon: Clock,
+      description: 'Your pet may urinate more frequently than normal, often in small amounts.'
+    },
+    {
+      symptom: 'Blood in Urine',
+      color: '#ef4444',
+      severity: 'Severe',
       icon: AlertTriangle,
-      color: dangerColor
+      description: 'Pink, red, or brown-tinged urine is a serious sign that requires immediate attention.'
     },
     {
-      symptom: "Blood in Urine",
-      description: "Pink, red, or dark-colored urine indicating bladder irritation",
-      severity: "Concerning",
-      icon: Droplets,
-      color: "#dc2626"
-    },
-    {
-      symptom: "Painful Urination", 
-      description: "Crying, whimpering, or signs of discomfort while urinating",
-      severity: "High Priority",
-      icon: Heart,
-      color: dangerColor
-    },
-    {
-      symptom: "Accidents in the House",
-      description: "Inappropriate urination due to urgency and bladder irritation",
-      severity: "Monitor Closely",
-      icon: Home,
-      color: warningColor
-    },
-    {
-      symptom: "Lethargy and Loss of Appetite",
-      description: "General discomfort affecting normal behavior and eating",
-      severity: "Concerning",
+      symptom: 'Straining to Urinate',
+      color: '#ef4444',
+      severity: 'Severe',
       icon: Activity,
-      color: "#8b5cf6"
+      description: 'Difficulty or obvious discomfort when attempting to urinate.'
+    },
+    {
+      symptom: 'Urinating in Unusual Places',
+      color: '#f59e0b',
+      severity: 'Moderate',
+      icon: Home,
+      description: 'House-trained pets may start urinating indoors or in inappropriate locations.'
+    },
+    {
+      symptom: 'Lethargy & Loss of Appetite',
+      color: '#f59e0b',
+      severity: 'Moderate',
+      icon: Heart,
+      description: 'General discomfort and pain can cause decreased energy and interest in food.'
+    },
+    {
+      symptom: 'Excessive Licking',
+      color: '#f59e0b',
+      severity: 'Moderate',
+      icon: Target,
+      description: 'Pets may lick their genital area excessively due to discomfort or irritation.'
     }
   ];
 
   const diagnosticProcess = [
     {
-      step: "Physical Examination",
-      description: "Comprehensive assessment of symptoms and physical condition",
-      details: ["Bladder palpation", "Pain assessment", "Overall health evaluation", "Medical history review"],
-      icon: Stethoscope
+      step: 'Physical Examination',
+      icon: Stethoscope,
+      description: 'Comprehensive physical exam to assess your pet\'s overall health and identify areas of discomfort.',
+      details: [
+        'Abdominal palpation',
+        'Pain assessment',
+        'General health evaluation',
+        'Vital signs monitoring'
+      ]
     },
     {
-      step: "Urinalysis & Culture",
-      description: "Laboratory analysis to identify infection and stone composition",
-      details: ["Urine crystal analysis", "Bacterial culture testing", "pH level measurement", "Protein and blood detection"],
-      icon: TestTube
+      step: 'Urinalysis & Culture',
+      icon: FlaskConical,
+      description: 'Laboratory analysis of urine to identify bacteria, crystals, and other abnormalities.',
+      details: [
+        'Bacterial culture and sensitivity',
+        'Crystal identification',
+        'pH and specific gravity',
+        'Microscopic examination'
+      ]
     },
     {
-      step: "Advanced Imaging",
-      description: "X-rays and ultrasound to locate and measure stones",
-      details: ["Digital radiographs", "Ultrasound examination", "Stone size assessment", "Surgical planning"],
-      icon: Scan
+      step: 'Imaging Studies',
+      icon: Scan,
+      description: 'X-rays and ultrasound to locate stones and assess bladder health.',
+      details: [
+        'Radiographs (X-rays)',
+        'Ultrasound examination',
+        'Stone size and location',
+        'Bladder wall assessment'
+      ]
     }
   ];
 
   const surgicalOptions = [
     {
-      procedure: "Cystotomy",
-      description: "Surgical opening of the bladder to remove stones",
-      details: ["Most common procedure", "Complete stone removal", "Bladder examination", "Immediate relief"],
-      duration: "1-2 hours",
-      icon: Scissors
+      surgery: 'Cystotomy',
+      icon: Scissors,
+      description: 'The most common surgical procedure to remove bladder stones through a small incision.',
+      details: [
+        'Direct stone removal',
+        'Bladder wall examination',
+        'Complete stone extraction',
+        'Tissue biopsy if needed'
+      ],
+      recovery: '7-14 days'
     },
     {
-      procedure: "Laser Lithotripsy",
-      description: "Advanced laser technology to break up stones",
-      details: ["Minimally invasive option", "Breaks stones into fragments", "Less tissue trauma", "Faster recovery"],
-      duration: "1-3 hours", 
-      icon: Zap
-    },
-    {
-      procedure: "Urethral Stone Removal",
-      description: "Specialized procedure for stones blocking the urethra",
-      details: ["Emergency procedure", "Immediate blockage relief", "Catheter placement", "Life-saving intervention"],
-      duration: "1-2 hours",
-      icon: Target
-    }
-  ];
-
-  const postSurgicalCare = [
-    {
-      care: "Pain Management",
-      description: "Comprehensive protocols to ensure patient comfort during recovery",
-      icon: Pill
-    },
-    {
-      care: "Antibiotic Therapy",
-      description: "Preventing infection and treating existing bacterial issues",
-      icon: Shield
-    },
-    {
-      care: "Activity Restriction",
-      description: "Controlled exercise to allow proper healing of surgical sites",
-      icon: Timer
-    },
-    {
-      care: "Dietary Management",
-      description: "Specialized nutrition to prevent stone recurrence",
-      icon: Leaf
-    },
-    {
-      care: "Follow-up Monitoring",
-      description: "Regular check-ups to ensure complete recovery and prevention",
-      icon: Calendar
-    },
-    {
-      care: "Emergency Support",
-      description: "24/7 availability for any post-surgical concerns",
-      icon: Phone
-    }
-  ];
-
-  const preventionStrategies = [
-    {
-      strategy: "Dietary Management",
-      description: "Specialized prescription diets designed to prevent stone formation",
-      icon: Leaf
-    },
-    {
-      strategy: "Increased Water Intake",
-      description: "Promoting adequate hydration to dilute urine and flush the system",
-      icon: Droplets
-    },
-    {
-      strategy: "Regular Monitoring",
-      description: "Routine urine testing and examinations to catch problems early",
-      icon: Search
-    },
-    {
-      strategy: "Weight Management",
-      description: "Maintaining optimal body weight to reduce stone formation risk",
-      icon: Target
-    }
-  ];
-
-  const whyChooseUs = [
-    {
-      feature: "Advanced Surgical Techniques",
-      description: "Multiple surgical options including traditional and minimally invasive procedures",
-      icon: Award
-    },
-    {
-      feature: "Complete Diagnostic Capabilities",
-      description: "In-house lab, digital X-rays, and ultrasound for accurate diagnosis",
-      icon: Microscope
-    },
-    {
-      feature: "Comprehensive Aftercare",
-      description: "Detailed recovery plans and ongoing prevention strategies",
-      icon: Shield
-    },
-    {
-      feature: "Emergency Availability",
-      description: "Urgent care for blocked animals requiring immediate intervention",
-      icon: Clock
+      surgery: 'Laser Lithotripsy',
+      icon: Zap,
+      description: 'Advanced technique using laser energy to break stones into smaller pieces.',
+      details: [
+        'Minimally invasive',
+        'Breaks stones into fragments',
+        'Faster recovery',
+        'Less tissue trauma'
+      ],
+      recovery: '3-7 days'
     }
   ];
 
   const serviceAreas = [
-    "South Riding", "Aldie", "Ashburn", "Chantilly", "Centreville", "Reston", "Herndon"
+    'South Riding',
+    'Aldie',
+    'Ashburn',
+    'Chantilly',
+    'Centreville',
+    'Reston',
+    'Herndon'
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-
-
+    <div className="min-h-screen bg-white">
       {/* Hero Section - Mobile Only */}
       <section className="text-white sticky z-40 block md:hidden" style={{ top: '4rem', background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '0.5rem', paddingBottom: '0.5rem' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -354,26 +324,26 @@ const PetBladderStoneRemoval = () => {
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Our Diagnostic Process
           </h2>
-          <p className="text-center text-gray-600 mb-8">
+          <p className="text-center text-gray-600 mb-6 text-sm">
             Accurate diagnosis is essential for effective treatment planning:
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {diagnosticProcess.map((step, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md">
-                <div className="flex items-center mb-4">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
-                    <step.icon className="h-6 w-6" style={{ color: primaryColor }} />
+              <div key={index} className="bg-white p-4 rounded-lg shadow-sm">
+                <div className="flex items-center mb-3">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full mr-3" style={{ backgroundColor: primaryBg }}>
+                    <step.icon className="h-5 w-5" style={{ color: primaryColor }} />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900">{step.step}</h3>
+                  <h3 className="text-base font-semibold text-gray-900">{step.step}</h3>
                 </div>
-                <p className="text-gray-600 text-sm mb-4">{step.description}</p>
-                <div className="space-y-2">
+                <p className="text-gray-600 text-sm mb-3">{step.description}</p>
+                <div className="space-y-1">
                   <h4 className="font-semibold text-gray-900 text-sm">Includes:</h4>
                   <div className="space-y-1">
                     {step.details.slice(0, 2).map((detail, detIndex) => (
                       <div key={detIndex} className="flex items-center text-xs text-gray-600">
-                        <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
+                        <CheckCircle className="h-2 w-2 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
                         <span>{detail}</span>
                       </div>
                     ))}
@@ -389,33 +359,33 @@ const PetBladderStoneRemoval = () => {
       <section className="bg-white py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
-            Advanced Surgical Treatment Options
+            Advanced Surgical Options
           </h2>
-          <p className="text-center text-gray-600 mb-8">
-            We offer multiple surgical approaches tailored to your pet's specific condition:
+          <p className="text-center text-gray-600 mb-6 text-sm">
+            We offer multiple surgical approaches to ensure the best outcome for your pet:
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {surgicalOptions.map((option, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md">
-                <div className="flex items-center mb-4">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
-                    <option.icon className="h-6 w-6" style={{ color: primaryColor }} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {surgicalOptions.map((surgery, index) => (
+              <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm">
+                <div className="flex items-center mb-3">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full mr-3" style={{ backgroundColor: primaryBg }}>
+                    <surgery.icon className="h-5 w-5" style={{ color: primaryColor }} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">{option.procedure}</h3>
+                    <h3 className="text-base font-semibold text-gray-900">{surgery.surgery}</h3>
                     <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
-                      {option.duration}
+                      Recovery: {surgery.recovery}
                     </span>
                   </div>
                 </div>
-                <p className="text-gray-600 text-sm mb-4">{option.description}</p>
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-gray-900 text-sm">Key Features:</h4>
+                <p className="text-gray-600 text-sm mb-3">{surgery.description}</p>
+                <div className="space-y-1">
+                  <h4 className="font-semibold text-gray-900 text-sm">Features:</h4>
                   <div className="space-y-1">
-                    {option.details.slice(0, 2).map((detail, detIndex) => (
+                    {surgery.details.slice(0, 2).map((detail, detIndex) => (
                       <div key={detIndex} className="flex items-center text-xs text-gray-600">
-                        <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
+                        <CheckCircle className="h-2 w-2 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
                         <span>{detail}</span>
                       </div>
                     ))}
@@ -427,95 +397,26 @@ const PetBladderStoneRemoval = () => {
         </div>
       </section>
 
-      {/* Post-Surgical Care */}
-      <section className="bg-[#f8f9fa] py-6">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
-            Comprehensive Post-Surgical Care
-          </h2>
-          <p className="text-center text-gray-600 mb-8">
-            Recovery support designed to ensure optimal healing and prevent recurrence:
-          </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {postSurgicalCare.map((care, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
-                  <care.icon className="h-8 w-8" style={{ color: primaryColor }} />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{care.care}</h3>
-                <p className="text-gray-600 text-sm">{care.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Prevention Strategies */}
-      <section className="bg-white py-6">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
-            Prevention Strategies
-          </h2>
-          <p className="text-center text-gray-600 mb-8">
-            Preventing bladder stone recurrence through targeted interventions:
-          </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {preventionStrategies.map((strategy, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4 bg-green-100">
-                  <strategy.icon className="h-8 w-8 text-green-600" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{strategy.strategy}</h3>
-                <p className="text-gray-600 text-sm">{strategy.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Why Choose Us */}
-      <section className="bg-[#f8f9fa] py-6">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
-            Why Choose Our Bladder Stone Services?
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {whyChooseUs.map((feature, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
-                  <feature.icon className="h-8 w-8" style={{ color: primaryColor }} />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{feature.feature}</h3>
-                <p className="text-gray-600 text-sm">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Expert Care Message */}
-      <section className="bg-white py-6">
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
-            Expert Bladder Stone Treatment & Prevention
+            Restoring Your Pet's Comfort & Health
           </h2>
-          <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-gray-700 leading-relaxed mb-6 text-lg">
-              Bladder stones can cause significant discomfort and serious complications if left 
-              untreated. Our experienced team combines advanced surgical techniques with 
-              comprehensive prevention strategies to ensure your pet's long-term urinary health.
+          <div className="p-6 rounded-lg" style={{ backgroundColor: primaryBg }}>
+            <p className="text-gray-700 leading-relaxed mb-4" style={{ fontSize: '1rem' }}>
+              Bladder stones can cause significant pain and complications, but with proper diagnosis 
+              and expert surgical care, your pet can return to a comfortable, healthy life. Our 
+              experienced team is dedicated to providing the safest, most effective treatment options.
             </p>
-            <div className="bg-white p-6 rounded-lg">
-              <div className="flex items-center justify-center mb-4">
-                <Target className="h-8 w-8 mr-3" style={{ color: primaryColor }} />
-                <h3 className="text-xl font-semibold text-gray-900">Complete Urinary Care</h3>
+            <div className="bg-white p-4 rounded-lg">
+              <div className="flex items-center justify-center mb-3">
+                <Scissors className="h-6 w-6 mr-2" style={{ color: primaryColor }} />
+                <h3 className="text-base font-semibold text-gray-900">Expert Surgical Care</h3>
               </div>
-              <p className="text-gray-800 font-semibold">
-                From emergency intervention to long-term prevention—trust our dedicated team 
-                to provide the specialized care your pet needs.
+              <p className="text-gray-800 text-sm font-semibold">
+                From diagnosis through complete recovery—trust our skilled surgical team to 
+                provide the specialized care your pet needs for optimal urinary health.
               </p>
             </div>
           </div>
@@ -523,13 +424,13 @@ const PetBladderStoneRemoval = () => {
       </section>
 
       {/* Service Areas */}
-      <section className="bg-[#f8f9fa] py-6">
+      <section className="bg-white py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             Serving Your Community
           </h2>
-          <p className="text-gray-600 mb-6">
-            We proudly provide expert bladder stone treatment to pets and families throughout:
+          <p className="text-gray-600 mb-6 text-sm">
+            We proudly provide expert bladder stone removal services to pet families across:
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             {serviceAreas.map((area, index) => (
@@ -542,13 +443,13 @@ const PetBladderStoneRemoval = () => {
       </section>
 
       {/* Contact CTA */}
-      <section style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)` }} className="py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
-            Expert Bladder Stone Treatment
+            Schedule Your Pet's Bladder Stone Evaluation
           </h2>
-          <p className="mb-8" style={{ color: 'white', fontSize: '1rem' }}>
-            Don't let bladder stones cause discomfort—get expert treatment today
+          <p className="mb-6" style={{ color: 'white', fontSize: '1rem' }}>
+            Expert diagnosis and surgical treatment for bladder stones and urinary health
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
