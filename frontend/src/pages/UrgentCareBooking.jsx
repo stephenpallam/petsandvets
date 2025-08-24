@@ -314,259 +314,198 @@ const UrgentCareBooking = () => {
             )}
 
             {/* Tab 1: Owner Information */}
-          {currentTab === 1 && (
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                <User className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
-                Pet Owner Information
-              </h2>
-              
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      First Name *
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.owner_first_name}
-                      onChange={(e) => handleInputChange('owner_first_name', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                      style={{ '--tw-ring-color': primaryColor }}
-                      onFocus={(e) => {
-                        e.target.style.borderColor = primaryColor;
-                        e.target.style.boxShadow = `0 0 0 2px rgba(41, 173, 211, 0.2)`;
-                      }}
-                      onBlur={(e) => {
-                        e.target.style.borderColor = '#d1d5db';
-                        e.target.style.boxShadow = 'none';
-                      }}
-                      placeholder="Enter your first name"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Last Name *
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.owner_last_name}
-                      onChange={(e) => handleInputChange('owner_last_name', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                      style={{ '--tw-ring-color': primaryColor }}
-                      onFocus={(e) => {
-                        e.target.style.borderColor = primaryColor;
-                        e.target.style.boxShadow = `0 0 0 2px rgba(41, 173, 211, 0.2)`;
-                      }}
-                      onBlur={(e) => {
-                        e.target.style.borderColor = '#d1d5db';
-                        e.target.style.boxShadow = 'none';
-                      }}
-                      placeholder="Enter your last name"
-                      required
-                    />
-                  </div>
+            {currentTab === 1 && (
+              <div>
+                <div className="mb-6">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">Pet Owner Information</h2>
+                  <p className="text-gray-600">Please provide your contact information</p>
                 </div>
                 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address *
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                    <input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
-                      className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                      style={{ '--tw-ring-color': primaryColor }}
-                      onFocus={(e) => {
-                        e.target.style.borderColor = primaryColor;
-                        e.target.style.boxShadow = `0 0 0 2px rgba(41, 173, 211, 0.2)`;
-                      }}
-                      onBlur={(e) => {
-                        e.target.style.borderColor = '#d1d5db';
-                        e.target.style.boxShadow = 'none';
-                      }}
-                      placeholder="Enter your email address"
-                      required
-                    />
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        First Name *
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.owner_first_name}
+                        onChange={(e) => handleInputChange('owner_first_name', e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                        style={{ '--tw-ring-color': primaryColor }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = primaryColor;
+                          e.target.style.boxShadow = `0 0 0 2px rgba(41, 173, 211, 0.2)`;
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = '#d1d5db';
+                          e.target.style.boxShadow = 'none';
+                        }}
+                        placeholder="Enter your first name"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Last Name *
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.owner_last_name}
+                        onChange={(e) => handleInputChange('owner_last_name', e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                        style={{ '--tw-ring-color': primaryColor }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = primaryColor;
+                          e.target.style.boxShadow = `0 0 0 2px rgba(41, 173, 211, 0.2)`;
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = '#d1d5db';
+                          e.target.style.boxShadow = 'none';
+                        }}
+                        placeholder="Enter your last name"
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number *
-                  </label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                    <input
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange('phone', e.target.value)}
-                      className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                      style={{ '--tw-ring-color': primaryColor }}
-                      onFocus={(e) => {
-                        e.target.style.borderColor = primaryColor;
-                        e.target.style.boxShadow = `0 0 0 2px rgba(41, 173, 211, 0.2)`;
-                      }}
-                      onBlur={(e) => {
-                        e.target.style.borderColor = '#d1d5db';
-                        e.target.style.boxShadow = 'none';
-                      }}
-                      placeholder="Enter your phone number"
-                      required
-                    />
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Email Address *
+                    </label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                      <input
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                        style={{ '--tw-ring-color': primaryColor }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = primaryColor;
+                          e.target.style.boxShadow = `0 0 0 2px rgba(41, 173, 211, 0.2)`;
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = '#d1d5db';
+                          e.target.style.boxShadow = 'none';
+                        }}
+                        placeholder="Enter your email address"
+                        required
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Phone Number *
+                    </label>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                      <input
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                        className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                        style={{ '--tw-ring-color': primaryColor }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = primaryColor;
+                          e.target.style.boxShadow = `0 0 0 2px rgba(41, 173, 211, 0.2)`;
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = '#d1d5db';
+                          e.target.style.boxShadow = 'none';
+                        }}
+                        placeholder="Enter your phone number"
+                        required
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Step 3: Pet Information */}
-          {currentTab === 2 && (
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                <Heart className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
-                Pet Information
-              </h2>
-              
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Pet Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.pet_name}
-                    onChange={(e) => handleInputChange('pet_name', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                    style={{ '--tw-ring-color': primaryColor }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = primaryColor;
-                      e.target.style.boxShadow = `0 0 0 2px rgba(41, 173, 211, 0.2)`;
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = '#d1d5db';
-                      e.target.style.boxShadow = 'none';
-                    }}
-                    placeholder="Enter your pet's name"
-                    required
-                  />
+            {/* Tab 2: Pet Information */}
+            {currentTab === 2 && (
+              <div>
+                <div className="mb-6">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">Pet Information</h2>
+                  <p className="text-gray-600">Tell us about your pet</p>
+                </div>
+                
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Pet Name *
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.pet_name}
+                      onChange={(e) => handleInputChange('pet_name', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                      style={{ '--tw-ring-color': primaryColor }}
+                      onFocus={(e) => {
+                        e.target.style.borderColor = primaryColor;
+                        e.target.style.boxShadow = `0 0 0 2px rgba(41, 173, 211, 0.2)`;
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = '#d1d5db';
+                        e.target.style.boxShadow = 'none';
+                      }}
+                      placeholder="Enter your pet's name"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-4">
+                      Pet Type *
+                    </label>
+                    <div className="grid grid-cols-2 gap-4">
+                      <button
+                        type="button"
+                        onClick={() => handleInputChange('pet_type', 'dog')}
+                        className={`p-6 rounded-lg border-2 transition-all text-center ${
+                          formData.pet_type === 'dog'
+                            ? 'border-blue-500 bg-blue-50 text-blue-700'
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        <div className="text-4xl mb-2">🐕</div>
+                        <div className="font-semibold">Dog</div>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleInputChange('pet_type', 'cat')}
+                        className={`p-6 rounded-lg border-2 transition-all text-center ${
+                          formData.pet_type === 'cat'
+                            ? 'border-blue-500 bg-blue-50 text-blue-700'
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        <div className="text-4xl mb-2">🐱</div>
+                        <div className="font-semibold">Cat</div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Tab 3: Reason for Visit */}
+            {currentTab === 3 && (
+              <div>
+                <div className="mb-6">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">Reason for Visit</h2>
+                  <p className="text-gray-600">What brings your pet in today?</p>
                 </div>
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-4">
-                    Pet Type *
-                  </label>
-                  <div className="grid grid-cols-2 gap-4">
-                    <button
-                      type="button"
-                      onClick={() => handleInputChange('pet_type', 'dog')}
-                      className={`p-6 rounded-lg border-2 transition-all text-center ${
-                        formData.pet_type === 'dog'
-                          ? 'border-blue-500 bg-blue-50 text-blue-700'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      <div className="text-4xl mb-2">🐕</div>
-                      <div className="font-semibold">Dog</div>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleInputChange('pet_type', 'cat')}
-                      className={`p-6 rounded-lg border-2 transition-all text-center ${
-                        formData.pet_type === 'cat'
-                          ? 'border-blue-500 bg-blue-50 text-blue-700'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      <div className="text-4xl mb-2">🐱</div>
-                      <div className="font-semibold">Cat</div>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Step 4: Reason for Visit */}
-          {currentTab === 3 && (
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                <Stethoscope className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
-                Reason for Visit
-              </h2>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-4">
-                  What brings your pet in today? *
-                </label>
-                <select
-                  value={formData.reason_for_visit}
-                  onChange={(e) => handleInputChange('reason_for_visit', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                  style={{ '--tw-ring-color': primaryColor }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = primaryColor;
-                    e.target.style.boxShadow = `0 0 0 2px rgba(41, 173, 211, 0.2)`;
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = '#d1d5db';
-                    e.target.style.boxShadow = 'none';
-                  }}
-                  required
-                >
-                  <option value="">Select reason for visit</option>
-                  {reasonOptions.map((reason, index) => (
-                    <option key={index} value={reason}>
-                      {reason}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          )}
-
-          {/* Step 5: Additional Information */}
-          {currentTab === 4 && (
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                Additional Information
-              </h2>
-              
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Primary Veterinary Hospital Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.primary_vet_hospital}
-                    onChange={(e) => handleInputChange('primary_vet_hospital', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                    style={{ '--tw-ring-color': primaryColor }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = primaryColor;
-                      e.target.style.boxShadow = `0 0 0 2px rgba(41, 173, 211, 0.2)`;
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = '#d1d5db';
-                      e.target.style.boxShadow = 'none';
-                    }}
-                    placeholder="Enter your regular vet's name"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    How did you hear about us? *
+                    Select the reason for your visit *
                   </label>
                   <select
-                    value={formData.how_heard_about_us}
-                    onChange={(e) => handleInputChange('how_heard_about_us', e.target.value)}
+                    value={formData.reason_for_visit}
+                    onChange={(e) => handleInputChange('reason_for_visit', e.target.value)}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
                     style={{ '--tw-ring-color': primaryColor }}
                     onFocus={(e) => {
@@ -579,85 +518,147 @@ const UrgentCareBooking = () => {
                     }}
                     required
                   >
-                    <option value="">Select an option</option>
-                    {howHeardOptions.map((option, index) => (
-                      <option key={index} value={option}>
-                        {option}
+                    <option value="">Select reason for visit</option>
+                    {reasonOptions.map((reason, index) => (
+                      <option key={index} value={reason}>
+                        {reason}
                       </option>
                     ))}
                   </select>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Step 6: Success */}
-          {currentTab === 5 && (
-            <div className="text-center py-8">
-              <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-6" />
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Appointment Booked Successfully!
-              </h2>
-              <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
-                <h3 className="font-semibold text-green-800 mb-4">Appointment Details:</h3>
-                <div className="space-y-2 text-left text-green-700">
-                  <p><strong>Date:</strong> Today</p>
-                  <p><strong>Time:</strong> {formatTime(formData.appointment_time.split('T')[1])}</p>
-                  <p><strong>Pet:</strong> {formData.pet_name} ({formData.pet_type})</p>
-                  <p><strong>Reason:</strong> {formData.reason_for_visit}</p>
+            {/* Tab 4: Additional Information */}
+            {currentTab === 4 && (
+              <div>
+                <div className="mb-6">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">Additional Information</h2>
+                  <p className="text-gray-600">Help us serve you better</p>
+                </div>
+                
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Primary Veterinary Hospital Name *
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.primary_vet_hospital}
+                      onChange={(e) => handleInputChange('primary_vet_hospital', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                      style={{ '--tw-ring-color': primaryColor }}
+                      onFocus={(e) => {
+                        e.target.style.borderColor = primaryColor;
+                        e.target.style.boxShadow = `0 0 0 2px rgba(41, 173, 211, 0.2)`;
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = '#d1d5db';
+                        e.target.style.boxShadow = 'none';
+                      }}
+                      placeholder="Enter your regular vet's name"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      How did you hear about us? *
+                    </label>
+                    <select
+                      value={formData.how_heard_about_us}
+                      onChange={(e) => handleInputChange('how_heard_about_us', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                      style={{ '--tw-ring-color': primaryColor }}
+                      onFocus={(e) => {
+                        e.target.style.borderColor = primaryColor;
+                        e.target.style.boxShadow = `0 0 0 2px rgba(41, 173, 211, 0.2)`;
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = '#d1d5db';
+                        e.target.style.boxShadow = 'none';
+                      }}
+                      required
+                    >
+                      <option value="">Select an option</option>
+                      {howHeardOptions.map((option, index) => (
+                        <option key={index} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               </div>
-              <p className="text-gray-600 mb-6">
-                We'll see you and {formData.pet_name} at your scheduled time. Please arrive 10 minutes early.
-              </p>
-              <Link 
-                to="/" 
-                className="inline-block text-white px-8 py-3 rounded-lg font-medium transition-colors"
-                style={{ backgroundColor: primaryColor }}
-              >
-                Return to Home
-              </Link>
-            </div>
-          )}
+            )}
 
-          {/* Navigation Buttons */}
-          {currentTab < 5 && availableToday && timeSlots.length > 0 && (
-            <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
-              {currentTab > 0 && (
-                <button
-                  onClick={prevStep}
-                  className="flex items-center px-6 py-3 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            {/* Tab 5: Success */}
+            {currentTab === 5 && (
+              <div className="text-center py-8">
+                <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-6" />
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  Appointment Booked Successfully!
+                </h2>
+                <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
+                  <h3 className="font-semibold text-green-800 mb-4">Appointment Details:</h3>
+                  <div className="space-y-2 text-left text-green-700">
+                    <p><strong>Date:</strong> Today</p>
+                    <p><strong>Time:</strong> {formatTime(formData.appointment_time.split('T')[1])}</p>
+                    <p><strong>Pet:</strong> {formData.pet_name} ({formData.pet_type})</p>
+                    <p><strong>Reason:</strong> {formData.reason_for_visit}</p>
+                  </div>
+                </div>
+                <p className="text-gray-600 mb-6">
+                  We'll see you and {formData.pet_name} at your scheduled time. Please arrive 10 minutes early.
+                </p>
+                <Link 
+                  to="/" 
+                  className="inline-block text-white px-8 py-3 rounded-lg font-medium transition-colors"
+                  style={{ backgroundColor: primaryColor }}
                 >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Previous
-                </button>
-              )}
-              
-              <div className="ml-auto">
-                {currentTab < 4 ? (
+                  Return to Home
+                </Link>
+              </div>
+            )}
+
+            {/* Navigation Buttons */}
+            {currentTab < 5 && availableToday && timeSlots.length > 0 && (
+              <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
+                {currentTab > 0 && (
                   <button
-                    onClick={nextStep}
-                    disabled={!validateStep()}
-                    className="flex items-center px-8 py-3 text-white rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                    style={{ backgroundColor: validateStep() ? primaryColor : '#9ca3af' }}
+                    onClick={prevStep}
+                    className="flex items-center px-6 py-3 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                   >
-                    Next
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </button>
-                ) : (
-                  <button
-                    onClick={submitAppointment}
-                    disabled={!validateStep() || loading}
-                    className="flex items-center px-8 py-3 text-white rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                    style={{ backgroundColor: validateStep() && !loading ? primaryColor : '#9ca3af' }}
-                  >
-                    {loading ? 'Booking...' : 'Book Appointment'}
-                    {!loading && <CheckCircle className="h-4 w-4 ml-2" />}
+                    Previous
                   </button>
                 )}
+                
+                <div className="ml-auto">
+                  {currentTab < 4 ? (
+                    <button
+                      onClick={nextStep}
+                      disabled={!validateStep()}
+                      className="flex items-center px-8 py-3 text-white rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{ backgroundColor: validateStep() ? primaryColor : '#9ca3af' }}
+                    >
+                      Next
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={submitAppointment}
+                      disabled={!validateStep() || loading}
+                      className="flex items-center px-8 py-3 text-white rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{ backgroundColor: validateStep() && !loading ? primaryColor : '#9ca3af' }}
+                    >
+                      {loading ? 'Booking...' : 'Book Appointment'}
+                      {!loading && <CheckCircle className="h-4 w-4 ml-2" />}
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>
