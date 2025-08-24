@@ -362,24 +362,24 @@ const PetToothExtraction = () => {
       </section>
 
       {/* A Healthier, Happier Pet */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             A Healthier, Happier Pet
           </h2>
-          <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+          <div className="p-6 rounded-lg" style={{ backgroundColor: primaryBg }}>
+            <p className="text-gray-700 leading-relaxed mb-4" style={{ fontSize: '1rem' }}>
               Many owners notice an immediate improvement in their pet's energy, appetite, and overall happiness 
               once dental pain is relieved. Removing problem teeth allows your pet to return to comfortable eating, 
               playing, and enjoying life without pain.
             </p>
-            <div className="bg-white p-6 rounded-lg">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Post-Extraction Benefits:</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="bg-white p-4 rounded-lg">
+              <h3 className="text-base font-semibold text-gray-900 mb-3">Post-Extraction Benefits:</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {recoveryBenefits.map((benefit, index) => (
                   <div key={index} className="flex items-center">
-                    <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
-                    <span className="text-sm text-gray-700">{benefit}</span>
+                    <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
+                    <span className="text-xs text-gray-700">{benefit}</span>
                   </div>
                 ))}
               </div>
