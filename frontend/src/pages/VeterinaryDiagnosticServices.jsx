@@ -223,7 +223,7 @@ const VeterinaryDiagnosticServices = () => {
       </section>
 
       {/* Fast, Accurate, Compassionate Care */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Fast, Accurate, Compassionate Care
@@ -232,23 +232,11 @@ const VeterinaryDiagnosticServices = () => {
             Our diagnostic services are designed to give you peace of mind and your pet the care they deserve.
           </p>
           
-          {/* Professional Image */}
-          <div className="mb-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.unsplash.com/photo-1583912267670-6575ad472688"
-                alt="Professional veterinary scientist performing diagnostic testing with microscope"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
-          </div>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {careFeatures.map((feature, index) => (
               <div key={index} className="bg-white p-6 rounded-xl shadow-md text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
-                  <feature.icon className="h-8 w-8" style={{ color: primaryColor }} />
+                <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-4" style={{ backgroundColor: `${primaryColor}15` }}>
+                  <feature.icon className="h-6 w-6" style={{ color: primaryColor }} />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">{feature.title}</h3>
                 <p className="text-gray-600 text-sm">{feature.description}</p>
@@ -256,10 +244,9 @@ const VeterinaryDiagnosticServices = () => {
             ))}
           </div>
           
-          <div className="mt-8 p-6 rounded-xl" style={{ backgroundColor: primaryBg }}>
+          <div className="mt-8 p-6 rounded-xl" style={{ backgroundColor: primaryColor + '15' }}>
             <p className="text-center font-medium" style={{ color: primaryColor }}>
-              With most results available in-house, you won't wait long for answers—and we'll walk you through 
-              the findings and next steps with clarity and compassion.
+              Professional diagnostic testing with results you can trust—providing answers when your pet needs them most.
             </p>
           </div>
         </div>
