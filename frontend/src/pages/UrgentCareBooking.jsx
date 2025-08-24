@@ -401,7 +401,7 @@ const UrgentCareBooking = () => {
           )}
 
           {/* Step 3: Pet Information */}
-          {step === 3 && (
+          {currentTab === 2 && (
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
                 <Heart className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
