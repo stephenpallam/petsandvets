@@ -143,9 +143,58 @@ const UrgentCareAppointments = () => {
     }
   };
 
-  const confirmDelete = (appointment) => {
-    setAppointmentToDelete(appointment);
-    setShowDeleteConfirm(true);
+  const updateAppointmentStatus = async (appointmentId, newStatus) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/urgent-care-appointments/${appointmentId}/status?status=${newStatus}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        let message = `Appointment status updated to ${newStatus}.`;
+        if (data.freed_slot) {
+          message += ` Time slot ${data.freed_slot} is now available for booking.`;
+        }
+        setMessage({ type: 'success', text: message });
+        fetchAppointments(); // Refresh the list
+        setShowStatusMenu({}); // Close all menus
+      } else {
+        setMessage({ type: 'error', text: 'Failed to update appointment status' });
+      }
+    } catch (error) {
+      console.error('Error updating appointment status:', error);
+      setMessage({ type: 'error', text: 'Failed to update appointment status' });
+    }
+  };
+
+  const toggleStatusMenu = (appointmentId) => {
+    setShowStatusMenu(prev => ({
+      ...prev,
+      [appointmentId]: !prev[appointmentId]
+    }));
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'completed': return 'bg-green-100 text-green-800';
+      case 'cancelled': return 'bg-red-100 text-red-800';
+      case 'no_show': return 'bg-orange-100 text-orange-800';
+      case 'abandoned': return 'bg-gray-100 text-gray-800';
+      default: return 'bg-blue-100 text-blue-800';
+    }
+  };
+
+  const formatTimeOnly = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
   };
 
   const formatDate = (dateString) => {
