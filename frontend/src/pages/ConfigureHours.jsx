@@ -216,6 +216,17 @@ const ConfigureHours = () => {
     }
   };
 
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: '#29add3' }}></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!isAdmin()) {
     return (
       <div className="min-h-screen bg-gray-50 py-12">
@@ -224,6 +235,7 @@ const ConfigureHours = () => {
             <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-red-800 mb-2">Access Denied</h2>
             <p className="text-red-600">You need administrator privileges to configure hospital hours.</p>
+            <p className="text-red-600 text-sm mt-2">Please log in with an admin account.</p>
           </div>
         </div>
       </div>
