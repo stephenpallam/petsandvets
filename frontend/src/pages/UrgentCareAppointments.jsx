@@ -200,21 +200,29 @@ const UrgentCareAppointments = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="relative bg-white" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h1 className="text-xl font-bold text-gray-900 mb-6">
-            Urgent Care Appointments
-          </h1>
-          <div className="mb-6">
-            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: '#dc2626' }}>
-              Admin Dashboard
-            </span>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Filter Section */}
+        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <label className="text-sm font-medium text-gray-700">Filter by:</label>
+              <select
+                value={filterDays}
+                onChange={(e) => handleFilterChange(e.target.value)}
+                className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
+              >
+                {filterOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="text-sm text-gray-500">
+              Total: {totalCount} appointments
+            </div>
           </div>
         </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {message.text && (
           <div className={`mb-6 p-4 rounded-lg flex items-center ${
             message.type === 'success' 
