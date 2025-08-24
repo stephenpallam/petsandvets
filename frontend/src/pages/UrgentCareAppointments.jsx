@@ -291,14 +291,9 @@ const UrgentCareAppointments = () => {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: primaryColor }}></div>
             <p className="text-gray-600">Loading appointments...</p>
           </div>
-        ) : appointments.length === 0 ? (
-          <div className="text-center py-12">
-            <Calendar className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No Appointments</h3>
-            <p className="text-gray-500">No urgent care appointments have been booked yet.</p>
-          </div>
         ) : (
           <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+            {/* Header - Always visible */}
             <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-gray-900">
@@ -321,7 +316,16 @@ const UrgentCareAppointments = () => {
               </div>
             </div>
             
-            <div className="overflow-x-auto">
+            {/* Content Area */}
+            {appointments.length === 0 ? (
+              <div className="text-center py-12">
+                <Calendar className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No Appointments</h3>
+                <p className="text-gray-500">No urgent care appointments found for the selected time period.</p>
+              </div>
+            ) : (
+              <>
+                <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
