@@ -284,7 +284,7 @@ const PetOcularServices = () => {
             Precise diagnosis is the foundation of effective eye care:
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {diagnosticServices.map((service, index) => (
               <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md">
                 <div className="flex items-center mb-4">
@@ -309,18 +309,6 @@ const PetOcularServices = () => {
                 </div>
               </div>
             ))}
-          </div>
-          
-          {/* Professional Image */}
-          <div className="mt-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.pexels.com/photos/6816861/pexels-photo-6816861.jpeg"
-                alt="Advanced veterinary ophthalmic diagnostic equipment"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
           </div>
         </div>
       </section>
