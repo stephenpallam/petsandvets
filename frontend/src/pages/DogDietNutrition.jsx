@@ -125,28 +125,28 @@ const DogDietNutrition = () => {
       </section>
 
       {/* When to Adjust Diet */}
-      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">When to Adjust Your Pet's Diet</h2>
-            <p className="text-gray-600 max-w-3xl mx-auto">
+            <p className="text-gray-600 max-w-3xl mx-auto text-sm">
               Your pet's nutritional needs change throughout their life. A diet change may be recommended when:
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             {dietChangeTriggers.map((trigger, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6 mx-auto" style={{ backgroundColor: '#f8f9fa' }}>
-                  <trigger.icon className="h-8 w-8" style={{ color: primaryColor }} />
+              <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full mb-3 mx-auto" style={{ backgroundColor: '#f8f9fa' }}>
+                  <trigger.icon className="h-6 w-6" style={{ color: primaryColor }} />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3 text-center">{trigger.trigger}</h3>
+                <h3 className="text-base font-semibold text-gray-900 mb-2 text-center">{trigger.trigger}</h3>
                 <p className="text-gray-600 text-sm text-center">{trigger.description}</p>
               </div>
             ))}
           </div>
 
-          <div className="mt-8 text-center">
+          <div className="text-center">
             <p className="text-base text-gray-600">
               Our veterinary team can create a customized nutrition plan that fits your pet's stage of life, lifestyle, and health needs.
             </p>
