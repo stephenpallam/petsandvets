@@ -758,13 +758,14 @@ const UrgentCareBooking = () => {
             )}
 
             {/* Navigation Buttons */}
-            {currentTab < 5 && availableToday && timeSlots.length > 0 && (
+            {currentTab < 6 && availableToday && timeSlots.length > 0 && (
               <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
                 {currentTab > 0 && (
                   <button
                     onClick={prevStep}
                     className="flex items-center px-6 py-3 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                   >
+                    <ArrowLeft className="h-4 w-4 mr-2" />
                     Previous
                   </button>
                 )}
@@ -780,17 +781,27 @@ const UrgentCareBooking = () => {
                       Next
                       <ArrowRight className="h-4 w-4 ml-2" />
                     </button>
-                  ) : (
+                  ) : currentTab === 4 ? (
+                    <button
+                      onClick={nextStep}
+                      disabled={!validateStep()}
+                      className="flex items-center px-8 py-3 text-white rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{ backgroundColor: validateStep() ? primaryColor : '#9ca3af' }}
+                    >
+                      Review Appointment
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </button>
+                  ) : currentTab === 5 ? (
                     <button
                       onClick={submitAppointment}
-                      disabled={!validateStep() || loading}
+                      disabled={loading}
                       className="flex items-center px-8 py-3 text-white rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                      style={{ backgroundColor: validateStep() && !loading ? primaryColor : '#9ca3af' }}
+                      style={{ backgroundColor: !loading ? primaryColor : '#9ca3af' }}
                     >
-                      {loading ? 'Booking...' : 'Book Appointment'}
+                      {loading ? 'Booking...' : 'Confirm & Book Appointment'}
                       {!loading && <CheckCircle className="h-4 w-4 ml-2" />}
                     </button>
-                  )}
+                  ) : null}
                 </div>
               </div>
             )}
