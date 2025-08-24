@@ -359,15 +359,17 @@ const UrgentCareAppointments = () => {
                         {(currentPage - 1) * pageSize + index + 1}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">
-                          {appointment.owner_first_name} {appointment.owner_last_name}
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">
+                            {appointment.owner_first_name} {appointment.owner_last_name}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {appointment.pet_name} ({appointment.pet_type})
+                          </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div>
-                          <div className="text-sm font-medium text-gray-900">{appointment.pet_name}</div>
-                          <div className="text-sm text-gray-500 capitalize">{appointment.pet_type}</div>
-                        </div>
+                        <div className="text-sm text-gray-900">{appointment.phone}</div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm text-gray-900">{appointment.reason_for_visit}</div>
@@ -377,69 +379,33 @@ const UrgentCareAppointments = () => {
                           {formatTimeOnly(appointment.appointment_time)}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium relative">
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => fetchAppointmentDetails(appointment.id)}
-                            className="text-indigo-600 hover:text-indigo-900 p-2 rounded hover:bg-indigo-50"
-                            title="View Details"
-                          >
-                            <Eye className="h-4 w-4" />
-                          </button>
-                          
-                          <div className="relative">
-                            <button
-                              onClick={(e) => toggleStatusMenu(appointment.id, e)}
-                              className="text-gray-600 hover:text-gray-900 p-2 rounded hover:bg-gray-50"
-                              title="Update Status"
-                            >
-                              <MoreVertical className="h-4 w-4" />
-                            </button>
-                            
-                            {showStatusMenu[appointment.id] && (
-                              <div className="absolute right-0 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-10">
-                                <div className="py-1">
-                                  <button
-                                    onClick={() => updateAppointmentStatus(appointment.id, 'completed')}
-                                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-800"
-                                  >
-                                    <CheckCircle className="h-4 w-4 mr-2 text-green-600" />
-                                    Completed
-                                  </button>
-                                  <button
-                                    onClick={() => updateAppointmentStatus(appointment.id, 'no_show')}
-                                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-800"
-                                  >
-                                    <UserX className="h-4 w-4 mr-2 text-orange-600" />
-                                    No Show
-                                  </button>
-                                  <button
-                                    onClick={() => updateAppointmentStatus(appointment.id, 'cancelled')}
-                                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-800"
-                                  >
-                                    <XCircle className="h-4 w-4 mr-2 text-red-600" />
-                                    Cancelled
-                                  </button>
-                                  <button
-                                    onClick={() => updateAppointmentStatus(appointment.id, 'abandoned')}
-                                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-800"
-                                  >
-                                    <Ban className="h-4 w-4 mr-2 text-gray-600" />
-                                    Abandoned
-                                  </button>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                          
-                          <button
-                            onClick={() => confirmDelete(appointment)}
-                            className="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50"
-                            title="Delete"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <select
+                          value={appointment.status || 'scheduled'}
+                          onChange={(e) => updateAppointmentStatus(appointment.id, e.target.value)}
+                          className="text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                          style={{ 
+                            color: appointment.status === 'completed' ? '#059669' : 
+                                   appointment.status === 'cancelled' ? '#dc2626' : 
+                                   appointment.status === 'no_show' ? '#d97706' : 
+                                   appointment.status === 'abandoned' ? '#6b7280' : '#2563eb'
+                          }}
+                        >
+                          <option value="scheduled">Scheduled</option>
+                          <option value="completed">Completed</option>
+                          <option value="no_show">No Show</option>
+                          <option value="cancelled">Cancelled</option>
+                          <option value="abandoned">Abandoned</option>
+                        </select>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button
+                          onClick={() => fetchAppointmentDetails(appointment.id)}
+                          className="text-indigo-600 hover:text-indigo-900 p-2 rounded hover:bg-indigo-50"
+                          title="View Details"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </button>
                       </td>
                     </tr>
                   ))}
