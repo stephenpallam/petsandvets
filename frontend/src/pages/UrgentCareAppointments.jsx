@@ -261,28 +261,6 @@ const UrgentCareAppointments = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Filter Section */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <label className="text-sm font-medium text-gray-700">Filter by:</label>
-              <select
-                value={filterDays}
-                onChange={(e) => handleFilterChange(e.target.value)}
-                className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
-              >
-                {filterOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="text-sm text-gray-500">
-              Total: {totalCount} appointments
-            </div>
-          </div>
-        </div>
         {message.text && (
           <div className={`mb-6 p-4 rounded-lg flex items-center ${
             message.type === 'success' 
