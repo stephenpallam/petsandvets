@@ -208,7 +208,7 @@ const PetMicrochipping = () => {
       </section>
 
       {/* Service Areas */}
-      <section style={{ backgroundColor: primaryBg, paddingTop: '40px', paddingBottom: '40px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             Proudly Serving Your Community
