@@ -596,8 +596,140 @@ const UrgentCareBooking = () => {
               </div>
             )}
 
-            {/* Tab 5: Success */}
+            {/* Tab 5: Review & Confirm */}
             {currentTab === 5 && (
+              <div>
+                <div className="mb-6">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">Review & Confirm Your Appointment</h2>
+                  <p className="text-gray-600">Please review all details before confirming your appointment</p>
+                </div>
+
+                <div className="space-y-6">
+                  {/* Appointment Time */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-lg font-semibold text-blue-900 mb-2">Appointment Time</h3>
+                        <p className="text-blue-800">
+                          <strong>Today</strong> at <strong>{formatTime(formData.appointment_time.split('T')[1])}</strong>
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => goToTab(0)}
+                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                      >
+                        Change Time
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Pet Owner Information */}
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900">Pet Owner Information</h3>
+                      <button
+                        onClick={() => goToTab(1)}
+                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                      >
+                        Edit Info
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-500 mb-1">Name</label>
+                        <p className="text-gray-900">{formData.owner_first_name} {formData.owner_last_name}</p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-500 mb-1">Phone</label>
+                        <p className="text-gray-900">{formData.phone}</p>
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-500 mb-1">Email</label>
+                        <p className="text-gray-900">{formData.email}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Pet Information */}
+                  <div className="bg-white border border-gray-200 rounded-lg p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900">Pet Information</h3>
+                      <button
+                        onClick={() => goToTab(2)}
+                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                      >
+                        Edit Pet Info
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-500 mb-1">Pet Name</label>
+                        <p className="text-gray-900">{formData.pet_name}</p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-500 mb-1">Pet Type</label>
+                        <p className="text-gray-900 capitalize">{formData.pet_type}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Visit Reason */}
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900">Reason for Visit</h3>
+                      <button
+                        onClick={() => goToTab(3)}
+                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                      >
+                        Change Reason
+                      </button>
+                    </div>
+                    <p className="text-gray-900">{formData.reason_for_visit}</p>
+                  </div>
+
+                  {/* Additional Information */}
+                  <div className="bg-white border border-gray-200 rounded-lg p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900">Additional Information</h3>
+                      <button
+                        onClick={() => goToTab(4)}
+                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                      >
+                        Edit Details
+                      </button>
+                    </div>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-500 mb-1">Primary Veterinary Hospital</label>
+                        <p className="text-gray-900">{formData.primary_vet_hospital}</p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-500 mb-1">How did you hear about us?</label>
+                        <p className="text-gray-900">{formData.how_heard_about_us}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Important Notice */}
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                    <div className="flex items-start">
+                      <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5 mr-3" />
+                      <div>
+                        <h3 className="text-sm font-semibold text-yellow-800 mb-2">Important Notice</h3>
+                        <ul className="text-sm text-yellow-700 space-y-1">
+                          <li>• Please arrive 10 minutes before your scheduled appointment</li>
+                          <li>• Bring any previous medical records if available</li>
+                          <li>• Have your pet secured on a leash or in a carrier</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Tab 6: Success */}
+            {currentTab === 6 && (
               <div className="text-center py-8">
                 <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-6" />
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">
