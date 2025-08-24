@@ -101,27 +101,25 @@ const DogDietNutrition = () => {
       </section>
 
       {/* Why Nutrition Matters */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
+      <section className="bg-[#f8f9fa] py-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Why Nutrition Matters</h2>
-          </div>
-          <div className="space-y-6">
-            <p className="text-base text-gray-600 leading-relaxed">
+            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto mb-6">
               Obesity is one of the most common health concerns in pets. It's easy to overfeed a pet that knows how to beg, but extra weight can lead to arthritis, heart disease, diabetes, and a shorter lifespan. With the right diet and exercise, your pet can stay within a healthy weight range and avoid these risks.
             </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {nutritionBenefits.map((benefit, index) => (
-                <div key={index} className="text-center">
-                  <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: `${benefit.color}15` }}>
-                    <benefit.icon className="h-8 w-8" style={{ color: benefit.color }} />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">{benefit.title}</h3>
-                  <p className="text-sm text-gray-600">{benefit.description}</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {nutritionBenefits.map((benefit, index) => (
+              <div key={index} className="text-center bg-white p-4 rounded-lg shadow-sm">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3" style={{ backgroundColor: `${benefit.color}15` }}>
+                  <benefit.icon className="h-6 w-6" style={{ color: benefit.color }} />
                 </div>
-              ))}
-            </div>
+                <h3 className="font-semibold text-gray-900 mb-2 text-base">{benefit.title}</h3>
+                <p className="text-sm text-gray-600">{benefit.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
