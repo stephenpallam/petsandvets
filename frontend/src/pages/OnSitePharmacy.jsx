@@ -124,9 +124,9 @@ const OnSitePharmacy = () => {
       </section>
 
       {/* Why Choose Our Pharmacy */}
-      <section className="bg-white" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <div className="text-center mb-8">
             <h2 className="text-xl font-bold text-gray-900 mb-4">
               Why Choose Our In-House Pharmacy?
             </h2>
@@ -136,16 +136,41 @@ const OnSitePharmacy = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {pharmacyBenefits.map((benefit, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: `${benefit.color}15` }}>
-                  <benefit.icon className="h-8 w-8" style={{ color: benefit.color }} />
+              <div key={index} className="bg-white p-4 rounded-lg shadow-sm text-center">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3" style={{ backgroundColor: `${benefit.color}15` }}>
+                  <benefit.icon className="h-6 w-6" style={{ color: benefit.color }} />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3 text-center">{benefit.title}</h3>
-                <p className="text-gray-700 leading-relaxed text-center">{benefit.description}</p>
+                <h3 className="text-base font-semibold text-gray-900 mb-2">{benefit.title}</h3>
+                <p className="text-gray-700 text-sm leading-relaxed">{benefit.description}</p>
               </div>
             ))}
+          </div>
+
+          {/* Key Stats moved here */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3" style={{ backgroundColor: `${accentGreen}15` }}>
+                <Zap className="h-6 w-6" style={{ color: accentGreen }} />
+              </div>
+              <h3 className="font-bold text-gray-900 text-base">Immediate</h3>
+              <p className="text-gray-600 text-sm">No waiting or delays</p>
+            </div>
+            <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3" style={{ backgroundColor: `${accentBlue}15` }}>
+                <Users className="h-6 w-6" style={{ color: accentBlue }} />
+              </div>
+              <h3 className="font-bold text-gray-900 text-base">Expert Care</h3>
+              <p className="text-gray-600 text-sm">Professional guidance available</p>
+            </div>
+            <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3" style={{ backgroundColor: `${accentPurple}15` }}>
+                <Shield className="h-6 w-6" style={{ color: accentPurple }} />
+              </div>
+              <h3 className="font-bold text-gray-900 text-base">Trusted</h3>
+              <p className="text-gray-600 text-sm">Veterinary-approved only</p>
+            </div>
           </div>
         </div>
       </section>
