@@ -145,6 +145,8 @@ const UrgentCareBooking = () => {
     if (completedTabs.includes(tabIndex) || tabIndex === Math.min(...completedTabs) + 1 || tabIndex === 0) {
       setCurrentTab(tabIndex);
       setMessage({ type: '', text: '' });
+      // Scroll to top when changing tabs
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
