@@ -248,29 +248,31 @@ const BlockedCatsUrgentCare = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="font-bold" style={{ fontSize: '1.125rem' }}>
-              Blocked Cats - Emergency Care
+              Blocked Cats
             </h1>
           </div>
         </div>
       </section>
 
       {/* Hero Section */}
-      <section className="bg-white">
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
-          <h1 className="text-xl font-bold text-gray-900 mb-6">
-            Blocked Cats
-          </h1>
-          <div className="mb-6">
-            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
-              Emergency Care for Blocked Cats
-            </span>
+      <section className="bg-white pt-6" style={{ paddingBottom: '8px' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h1 className="text-xl font-bold text-gray-900 mb-4">
+              Blocked Cats
+            </h1>
+            <div className="mb-6">
+              <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+                Emergency Care for Blocked Cats
+              </span>
+            </div>
+            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
+              At Pets and Vets Animal Hospital in South Riding, VA—serving Aldie, Ashburn, Chantilly, 
+              Centreville, Reston, and Herndon—we provide emergency care for blocked cats. Male 
+              cats are particularly susceptible to urinary blockages, which are true medical emergencies 
+              requiring immediate intervention to save their lives.
+            </p>
           </div>
-          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
-            At Pets and Vets Animal Hospital in South Riding, VA—serving Aldie, Ashburn, Chantilly, 
-            Centreville, Reston, and Herndon—we provide emergency care for blocked cats. Male 
-            cats are particularly susceptible to urinary blockages, which are true medical emergencies 
-            requiring immediate intervention to save their lives.
-          </p>
         </div>
       </section>
 
