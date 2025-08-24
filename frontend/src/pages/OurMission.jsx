@@ -104,12 +104,12 @@ const OurMission = () => {
       </section>
 
       {/* Service Areas */}
-      <section className="bg-white" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             Proudly Serving Northern Virginia
           </h2>
-          <p className="text-gray-700 mb-6">
+          <p className="text-gray-600 mb-6">
             Delivering exceptional veterinary care across these communities:
           </p>
           <div className="flex flex-wrap justify-center gap-3">
