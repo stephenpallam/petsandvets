@@ -203,12 +203,12 @@ const DogDietNutrition = () => {
       </section>
 
       {/* Contact CTA */}
-      <section style={{ backgroundColor: primaryColor, paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ backgroundColor: primaryColor }} className="py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-xl font-bold text-white mb-4">
+          <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
             Ready to Discuss Your Pet's Nutrition Plan?
           </h2>
-          <p className="text-blue-100 mb-8">
+          <p className="text-blue-100 mb-6" style={{ fontSize: '1rem' }}>
             Our experienced veterinary team can help create a customized nutrition plan for your pet's specific needs.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
