@@ -156,28 +156,28 @@ const PetMicrochipping = () => {
       </section>
 
       {/* Safety Combo Section */}
-      <section style={{ backgroundColor: primaryBg, paddingTop: '40px', paddingBottom: '40px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="bg-white p-8 rounded-xl shadow-lg">
-            <div className="flex items-center justify-center mb-6">
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center justify-center w-12 h-12 rounded-full" style={{ backgroundColor: `${accentGreen}15` }}>
-                  <Award className="h-6 w-6" style={{ color: accentGreen }} />
+          <div className="bg-gray-50 p-6 rounded-lg">
+            <div className="flex items-center justify-center mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center justify-center w-10 h-10 rounded-full" style={{ backgroundColor: `${accentGreen}15` }}>
+                  <Award className="h-5 w-5" style={{ color: accentGreen }} />
                 </div>
-                <span className="text-2xl font-bold text-gray-700">+</span>
-                <div className="flex items-center justify-center w-12 h-12 rounded-full" style={{ backgroundColor: `${primaryColor}15` }}>
-                  <Radio className="h-6 w-6" style={{ color: primaryColor }} />
+                <span className="text-xl font-bold text-gray-700">+</span>
+                <div className="flex items-center justify-center w-10 h-10 rounded-full" style={{ backgroundColor: `${primaryColor}15` }}>
+                  <Radio className="h-5 w-5" style={{ color: primaryColor }} />
                 </div>
-                <span className="text-2xl font-bold text-gray-700">=</span>
-                <div className="flex items-center justify-center w-12 h-12 rounded-full" style={{ backgroundColor: `${accentBlue}15` }}>
-                  <Shield className="h-6 w-6" style={{ color: accentBlue }} />
+                <span className="text-xl font-bold text-gray-700">=</span>
+                <div className="flex items-center justify-center w-10 h-10 rounded-full" style={{ backgroundColor: `${accentBlue}15` }}>
+                  <Shield className="h-5 w-5" style={{ color: accentBlue }} />
                 </div>
               </div>
             </div>
             <h2 className="text-xl font-bold text-gray-900 mb-4">
               Microchip + Collar = The Ultimate Safety Combo
             </h2>
-            <p className="text-gray-700 leading-relaxed">
+            <p className="text-gray-700 leading-relaxed text-sm">
               While collars with ID tags are essential, they can fall off or become unreadable. A microchip offers 
               permanent, unalterable identification linked directly to you. <strong>The best practice? Use both methods 
               for the highest level of protection.</strong>
