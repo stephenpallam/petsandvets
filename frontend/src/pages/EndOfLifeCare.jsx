@@ -70,22 +70,23 @@ const EndOfLifeCare = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative" style={{ background: `linear-gradient(135deg, ${gentleGray} 0%, #ffffff 50%, ${softBlue} 100%)` }}>
-        <div className="absolute inset-0 bg-white/60"></div>
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
-          <div className="flex items-center justify-center mb-6">
-            <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: softBlue }}>
-              <Heart className="h-8 w-8" style={{ color: primaryColor }} />
-            </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-              Compassionate End-of-Life Care for Pets
+      <section className="bg-white pt-6" style={{ paddingBottom: '8px' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h1 className="text-xl font-bold text-gray-900 mb-4">
+              End-of-Life Care
             </h1>
+            <div className="mb-6">
+              <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+                Compassionate Final Care
+              </span>
+            </div>
+            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
+              Saying goodbye to a beloved pet is one of the hardest decisions a pet owner ever faces. 
+              At Pets and Vets Animal Hospital, we're here to guide you through this emotional journey 
+              with respect, empathy, and unwavering compassion.
+            </p>
           </div>
-          <p className="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto">
-            Saying goodbye to a beloved pet is one of the hardest decisions a pet owner ever faces. 
-            At Pets and Vets Animal Hospital, we're here to guide you through this emotional journey 
-            with respect, empathy, and unwavering compassion.
-          </p>
         </div>
       </section>
 
