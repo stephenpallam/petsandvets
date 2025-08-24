@@ -177,6 +177,17 @@ const UrgentCareBooking = () => {
     return `${hour12}:${minutes} ${ampm}`;
   };
 
+  const formatDateAndDay = () => {
+    const today = new Date();
+    const options = { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    };
+    return today.toLocaleDateString('en-US', options);
+  };
+
   const submitAppointment = async () => {
     setLoading(true);
     try {
