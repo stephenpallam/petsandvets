@@ -339,12 +339,12 @@ const DentalCleanings = () => {
       </section>
 
       {/* Service Areas */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             Serving Your Community
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-600 mb-6 text-sm">
             We proudly provide professional dental cleaning services to pet families across:
           </p>
           <div className="flex flex-wrap justify-center gap-3">
