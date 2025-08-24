@@ -470,18 +470,18 @@ const BlockedCatsUrgentCare = () => {
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             Life-Saving Emergency Care When Minutes Count
           </h2>
-          <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+          <div className="p-6 rounded-lg" style={{ backgroundColor: primaryBg }}>
+            <p className="text-gray-700 leading-relaxed mb-4" style={{ fontSize: '1rem' }}>
               Urinary blockages in male cats are true medical emergencies. Every minute counts 
               when your cat's life is at stake. Our experienced emergency team is equipped with 
               the specialized knowledge and equipment needed to save blocked cats.
             </p>
-            <div className="bg-white p-6 rounded-lg">
-              <div className="flex items-center justify-center mb-4">
-                <Cat className="h-8 w-8 mr-3" style={{ color: primaryColor }} />
-                <h3 className="text-xl font-semibold text-gray-900">Emergency Excellence</h3>
+            <div className="bg-white p-4 rounded-lg">
+              <div className="flex items-center justify-center mb-3">
+                <Cat className="h-6 w-6 mr-2" style={{ color: primaryColor }} />
+                <h3 className="text-base font-semibold text-gray-900">Emergency Excellence</h3>
               </div>
-              <p className="text-gray-800 font-semibold">
+              <p className="text-gray-800 text-sm font-semibold">
                 Don't wait—if your cat shows signs of a blockage, call immediately or come 
                 directly to our hospital. We're here to save lives when every second matters.
               </p>
