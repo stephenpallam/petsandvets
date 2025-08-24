@@ -492,6 +492,7 @@ test_plan:
     - "Create Dog & Cat Ultrasound Exams Page"
     - "Create Pet Vaccinations Page"
     - "Create Preventive Pet Care Page"
+    - "Online Booking System for Urgent Care"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
