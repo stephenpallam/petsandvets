@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Phone, Clock, MapPin, ChevronDown } from 'lucide-react';
+import { Menu, X, Phone, Clock, MapPin, ChevronDown, LogIn, LogOut, Settings } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import Login from './Login';
+import Register from './Register';
 import { hospitalInfo } from '../mock';
 
 const Header = () => {
