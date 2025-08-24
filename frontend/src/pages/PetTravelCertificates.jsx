@@ -273,12 +273,12 @@ const PetTravelCertificates = () => {
       </section>
 
       {/* Contact CTA */}
-      <section style={{ backgroundColor: primaryColor, paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ backgroundColor: primaryColor }} className="py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
             Ready to Get Your Pet's Travel Certificate?
           </h2>
-          <p className="text-blue-100 mb-8" style={{ fontSize: '1rem' }}>
+          <p className="text-blue-100 mb-6" style={{ fontSize: '1rem' }}>
             Schedule your appointment today and ensure your pet is ready for their next adventure.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
