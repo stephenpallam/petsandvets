@@ -116,9 +116,9 @@ const PetMicrochipping = () => {
       </section>
 
       {/* Why Microchips Matter */}
-      <section className="bg-white" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <div className="text-center mb-8">
             <h2 className="text-xl font-bold text-gray-900 mb-4">
               Why Microchips Matter
             </h2>
@@ -128,14 +128,27 @@ const PetMicrochipping = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {whyMicrochips.map((reason, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: `${reason.color}15` }}>
-                  <reason.icon className="h-8 w-8" style={{ color: reason.color }} />
+              <div key={index} className="bg-white p-4 rounded-lg shadow-sm text-center">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3" style={{ backgroundColor: `${reason.color}15` }}>
+                  <reason.icon className="h-6 w-6" style={{ color: reason.color }} />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{reason.title}</h3>
-                <p className="text-gray-700 leading-relaxed">{reason.description}</p>
+                <h3 className="text-base font-semibold text-gray-900 mb-2">{reason.title}</h3>
+                <p className="text-gray-700 text-sm leading-relaxed">{reason.description}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Quick Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            {benefitStats.map((stat, index) => (
+              <div key={index} className="text-center p-4 bg-white rounded-lg shadow-sm">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3" style={{ backgroundColor: `${stat.color}15` }}>
+                  <stat.icon className="h-6 w-6" style={{ color: stat.color }} />
+                </div>
+                <h3 className="font-bold text-gray-900 text-base">{stat.title}</h3>
+                <p className="text-gray-600 text-sm">{stat.description}</p>
               </div>
             ))}
           </div>
