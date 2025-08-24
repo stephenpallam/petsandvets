@@ -196,7 +196,13 @@ const Home = () => {
                     <Clock className="h-5 w-5" style={{ color: primaryColor }} />
                     <div className="text-left">
                       <p className="font-semibold text-gray-900">Urgent Care</p>
-                      <p className="text-sm text-gray-600">3 PM - 10 PM Daily</p>
+                      <p className="text-sm text-gray-600">
+                        {hoursLoading ? (
+                          <span className="animate-pulse">Loading hours...</span>
+                        ) : (
+                          getHoursStatus(urgentCareHours, 'urgent')
+                        )}
+                      </p>
                     </div>
                   </div>
                   <Link
@@ -217,7 +223,13 @@ const Home = () => {
                     <MapPin className="h-5 w-5" style={{ color: primaryColor }} />
                     <div className="text-left">
                       <p className="font-semibold text-gray-900">General Practice</p>
-                      <p className="text-sm text-gray-600">9:00 AM - 6:00 PM Today</p>
+                      <p className="text-sm text-gray-600">
+                        {hoursLoading ? (
+                          <span className="animate-pulse">Loading hours...</span>
+                        ) : (
+                          getHoursStatus(hospitalHours, 'general')
+                        )}
+                      </p>
                     </div>
                   </div>
                   <Link
