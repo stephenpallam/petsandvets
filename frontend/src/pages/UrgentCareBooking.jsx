@@ -10,6 +10,7 @@ import {
   CheckCircle, 
   AlertCircle,
   ArrowRight,
+  ArrowLeft,
   Stethoscope,
   Check
 } from 'lucide-react';
