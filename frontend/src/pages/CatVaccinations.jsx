@@ -399,7 +399,7 @@ const CatVaccinations = () => {
             The Bottom Line: Essential Preventive Care
           </h2>
           <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+            <p className="text-gray-700 leading-relaxed mb-6" style={{ fontSize: '1rem' }}>
               Vaccinating your cat is not optional—it's an essential part of responsible pet ownership. 
               Whether your cat spends their days exploring outside or lounging indoors, vaccines safeguard 
               them from illness and support a long, healthy life.
