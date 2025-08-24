@@ -265,7 +265,7 @@ const UrgentCareBooking = () => {
                       isActive
                         ? 'border-blue-500 text-blue-600 bg-blue-50'
                         : isCompleted
-                        ? 'border-green-500 text-green-600 bg-green-50 hover:bg-green-100'
+                        ? 'border-blue-500 text-blue-600 bg-blue-50 hover:bg-blue-100'
                         : isEnabled
                         ? 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                         : 'border-transparent text-gray-300 cursor-not-allowed'
