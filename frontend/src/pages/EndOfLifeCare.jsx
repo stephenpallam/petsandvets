@@ -91,24 +91,24 @@ const EndOfLifeCare = () => {
       </section>
 
       {/* Philosophy Section */}
-      <section className="bg-white" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <div className="text-center mb-8">
             <div className="flex items-center justify-center mb-4">
-              <Shield className="h-8 w-8 mr-3" style={{ color: primaryColor }} />
+              <Shield className="h-6 w-6 mr-2" style={{ color: primaryColor }} />
               <h2 className="text-xl font-bold text-gray-900">
                 Our Philosophy: Dignified Care, Not Convenience
               </h2>
             </div>
           </div>
           
-          <div className="bg-blue-50 p-8 rounded-xl border-l-4" style={{ borderColor: primaryColor }}>
-            <p className="text-gray-800 leading-relaxed mb-4">
+          <div className="bg-blue-50 p-6 rounded-lg border-l-4" style={{ borderColor: primaryColor }}>
+            <p className="text-gray-800 leading-relaxed mb-3 text-sm">
               <strong>We do not perform convenience euthanasia.</strong> Every end-of-life decision begins with a 
               comprehensive examination and discussion. Only after assessing your pet's medical status, exploring 
               all alternatives, and with your final consent, will we proceed.
             </p>
-            <p className="text-gray-800 leading-relaxed">
+            <p className="text-gray-800 leading-relaxed text-sm">
               We begin with calming medications to ease anxiety and pain—ensuring your pet is peaceful and comfortable.
             </p>
           </div>
