@@ -153,6 +153,21 @@ const UrgentCareBooking = () => {
     return completedTabs.includes(tabIndex);
   };
 
+  const prevStep = () => {
+    if (currentTab > 0) {
+      setCurrentTab(currentTab - 1);
+      setMessage({ type: '', text: '' });
+    }
+  };
+
+  const nextStep = () => {
+    goToNextTab();
+  };
+
+  const validateStep = () => {
+    return validateCurrentTab();
+  };
+
   const formatTime = (timeString) => {
     const [hours, minutes] = timeString.split(':');
     const hour12 = parseInt(hours) % 12 || 12;
