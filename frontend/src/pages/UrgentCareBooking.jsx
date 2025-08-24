@@ -9,13 +9,14 @@ import {
   Heart, 
   CheckCircle, 
   AlertCircle,
-  ArrowLeft,
   ArrowRight,
-  Stethoscope
+  Stethoscope,
+  Check
 } from 'lucide-react';
 
 const UrgentCareBooking = () => {
-  const [step, setStep] = useState(1);
+  const [currentTab, setCurrentTab] = useState(0);
+  const [completedTabs, setCompletedTabs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [timeSlots, setTimeSlots] = useState([]);
   const [availableToday, setAvailableToday] = useState(true);
@@ -36,6 +37,15 @@ const UrgentCareBooking = () => {
 
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
   const primaryColor = '#29add3';
+
+  const tabs = [
+    { id: 0, title: 'Select Time', icon: Clock },
+    { id: 1, title: 'Your Information', icon: User },
+    { id: 2, title: 'Pet Details', icon: Heart },
+    { id: 3, title: 'Visit Reason', icon: Stethoscope },
+    { id: 4, title: 'Additional Info', icon: CheckCircle },
+    { id: 5, title: 'Confirmation', icon: Check }
+  ];
 
   const reasonOptions = [
     'Sick / Illness',
