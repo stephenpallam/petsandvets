@@ -298,7 +298,7 @@ const DogWellnessExams = () => {
             An Investment in Your Dog's Future
           </h2>
           <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+            <p className="text-gray-700 leading-relaxed mb-6" style={{ fontSize: '1rem' }}>
               Wellness exams are more than routine checkups—they're an investment in your dog's future. 
               By catching problems early, preventing disease, and providing personalized care, they help ensure 
               a longer, healthier, and happier life for your best friend.
