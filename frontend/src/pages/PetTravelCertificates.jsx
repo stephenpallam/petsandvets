@@ -138,33 +138,33 @@ const PetTravelCertificates = () => {
       </section>
 
       {/* What to Expect */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">What to Expect</h2>
-            <p className="text-gray-600 max-w-3xl mx-auto">
+            <p className="text-gray-600 max-w-3xl mx-auto text-sm">
               During your pet's travel exam, our accredited veterinarian will:
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {examSteps.map((step, index) => (
-              <div key={index} className="text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mb-4 mx-auto" style={{ backgroundColor: `${step.color}15` }}>
-                  <step.icon className="h-8 w-8" style={{ color: step.color }} />
+              <div key={index} className="text-center bg-white p-4 rounded-lg shadow-sm">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full mb-3 mx-auto" style={{ backgroundColor: `${step.color}15` }}>
+                  <step.icon className="h-6 w-6" style={{ color: step.color }} />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">{step.step}</h3>
-                <p className="text-sm text-gray-600">{step.description}</p>
+                <h3 className="font-semibold text-gray-900 mb-2 text-sm">{step.step}</h3>
+                <p className="text-xs text-gray-600">{step.description}</p>
               </div>
             ))}
           </div>
 
-          <div className="mt-8 p-6 rounded-xl border-l-4" style={{ backgroundColor: '#fff3cd', borderColor: '#f59e0b' }}>
-            <div className="flex items-center mb-4">
-              <AlertCircle className="h-6 w-6 mr-3" style={{ color: '#f59e0b' }} />
-              <h3 className="text-lg font-semibold text-gray-900">Important Note</h3>
+          <div className="mt-6 p-4 rounded-lg border-l-4" style={{ backgroundColor: '#fff3cd', borderColor: '#f59e0b' }}>
+            <div className="flex items-center mb-3">
+              <AlertCircle className="h-5 w-5 mr-2" style={{ color: '#f59e0b' }} />
+              <h3 className="text-base font-semibold text-gray-900">Important Note</h3>
             </div>
-            <p className="text-gray-700">
+            <p className="text-gray-700 text-sm">
               If your pet's Rabies vaccine was done elsewhere, please bring the official certificate to your appointment.
             </p>
           </div>
