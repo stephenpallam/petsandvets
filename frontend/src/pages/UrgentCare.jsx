@@ -401,7 +401,7 @@ const UrgentCare = () => {
       </section>
 
       {/* Why Choose Us */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white" style={{ paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Why Choose Pets and Vets for Urgent Care?
