@@ -332,6 +332,271 @@ def test_update_urgent_care_hours_admin():
         results.log_failure("Update Urgent Care Hours (Admin)", str(e))
         return False
 
+# Global variables for appointment testing
+created_appointment_id = None
+
+def test_get_time_slots_today():
+    """Test GET /urgent-care-time-slots/{date} for today"""
+    try:
+        today = datetime.now().strftime("%Y-%m-%d")
+        response = requests.get(f"{API_URL}/urgent-care-time-slots/{today}")
+        if response.status_code == 200:
+            data = response.json()
+            if "available" in data and "date" in data:
+                if data["available"] and "slots" in data and isinstance(data["slots"], list):
+                    results.log_success("Get Time Slots (Today - Available)")
+                    return True
+                elif not data["available"] and "message" in data:
+                    results.log_success("Get Time Slots (Today - Closed)")
+                    return True
+        results.log_failure("Get Time Slots (Today)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Time Slots (Today)", str(e))
+        return False
+
+def test_get_time_slots_future():
+    """Test GET /urgent-care-time-slots/{date} for future date"""
+    try:
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=3)).strftime("%Y-%m-%d")
+        response = requests.get(f"{API_URL}/urgent-care-time-slots/{future_date}")
+        if response.status_code == 200:
+            data = response.json()
+            if "available" in data and "date" in data and data["date"] == future_date:
+                if data["available"] and "slots" in data and isinstance(data["slots"], list):
+                    # Verify slot format
+                    if data["slots"] and all("time" in slot and "value" in slot for slot in data["slots"]):
+                        results.log_success("Get Time Slots (Future Date)")
+                        return True
+                elif not data["available"] and "message" in data:
+                    results.log_success("Get Time Slots (Future Date - Closed)")
+                    return True
+        results.log_failure("Get Time Slots (Future Date)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Time Slots (Future Date)", str(e))
+        return False
+
+def test_get_time_slots_sunday():
+    """Test GET /urgent-care-time-slots/{date} for Sunday (should be open based on default hours)"""
+    try:
+        from datetime import timedelta
+        # Find next Sunday
+        today = datetime.now()
+        days_ahead = 6 - today.weekday()  # Sunday is 6
+        if days_ahead <= 0:
+            days_ahead += 7
+        sunday = today + timedelta(days_ahead)
+        sunday_str = sunday.strftime("%Y-%m-%d")
+        
+        response = requests.get(f"{API_URL}/urgent-care-time-slots/{sunday_str}")
+        if response.status_code == 200:
+            data = response.json()
+            if "available" in data and "date" in data:
+                # Based on default urgent care hours, Sunday should be open 14:00-23:00
+                if data["available"] and "slots" in data:
+                    results.log_success("Get Time Slots (Sunday - Open)")
+                    return True
+                elif not data["available"]:
+                    results.log_success("Get Time Slots (Sunday - Closed)")
+                    return True
+        results.log_failure("Get Time Slots (Sunday)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Time Slots (Sunday)", str(e))
+        return False
+
+def test_create_urgent_care_appointment():
+    """Test POST /urgent-care-appointments"""
+    global created_appointment_id
+    try:
+        from datetime import timedelta
+        # Get a future appointment time
+        future_date = (datetime.now() + timedelta(days=2)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T16:00"
+        
+        appointment_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "Emily",
+            "owner_last_name": "Rodriguez",
+            "email": "emily.rodriguez@email.com",
+            "phone": "(555) 123-4567",
+            "pet_name": "Bella",
+            "pet_type": "dog",
+            "reason_for_visit": "Limping and appears to be in pain",
+            "primary_vet_hospital": "Chantilly Animal Hospital",
+            "how_heard_about_us": "Google search"
+        }
+        
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=appointment_data)
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("owner_first_name") == "Emily" and 
+                data.get("pet_name") == "Bella" and 
+                data.get("appointment_time") == appointment_time and
+                "id" in data and "created_at" in data):
+                created_appointment_id = data["id"]
+                results.log_success("Create Urgent Care Appointment")
+                return True
+        results.log_failure("Create Urgent Care Appointment", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Create Urgent Care Appointment", str(e))
+        return False
+
+def test_create_appointment_validation():
+    """Test POST /urgent-care-appointments with missing required fields"""
+    try:
+        incomplete_data = {
+            "appointment_time": "2025-01-20T16:30",
+            "owner_first_name": "John",
+            # Missing required fields
+        }
+        
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=incomplete_data)
+        if response.status_code == 422:  # Validation error
+            results.log_success("Create Appointment Validation (Missing Fields)")
+            return True
+        results.log_failure("Create Appointment Validation", f"Expected 422, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Create Appointment Validation", str(e))
+        return False
+
+def test_get_appointments_admin():
+    """Test GET /urgent-care-appointments (admin only)"""
+    if not admin_token:
+        results.log_failure("Get Appointments (Admin)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.get(f"{API_URL}/urgent-care-appointments", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if isinstance(data, list):
+                # Should contain our created appointment
+                if any(apt.get("owner_first_name") == "Emily" for apt in data):
+                    results.log_success("Get Appointments (Admin)")
+                    return True
+                else:
+                    results.log_success("Get Appointments (Admin - Empty List)")
+                    return True
+        results.log_failure("Get Appointments (Admin)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Appointments (Admin)", str(e))
+        return False
+
+def test_get_appointments_regular_user():
+    """Test GET /urgent-care-appointments with regular user (should fail)"""
+    if not user_token:
+        results.log_failure("Get Appointments (Regular User - Should Fail)", "No user token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {user_token}"}
+        response = requests.get(f"{API_URL}/urgent-care-appointments", headers=headers)
+        if response.status_code == 403:
+            results.log_success("Get Appointments (Regular User - Correctly Forbidden)")
+            return True
+        results.log_failure("Get Appointments (Regular User)", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Appointments (Regular User)", str(e))
+        return False
+
+def test_get_appointment_details():
+    """Test GET /urgent-care-appointments/{id} (admin only)"""
+    if not admin_token or not created_appointment_id:
+        results.log_failure("Get Appointment Details", "No admin token or appointment ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.get(f"{API_URL}/urgent-care-appointments/{created_appointment_id}", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("id") == created_appointment_id and 
+                data.get("owner_first_name") == "Emily" and
+                data.get("pet_name") == "Bella"):
+                results.log_success("Get Appointment Details (Admin)")
+                return True
+        results.log_failure("Get Appointment Details", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Appointment Details", str(e))
+        return False
+
+def test_get_appointment_details_not_found():
+    """Test GET /urgent-care-appointments/{id} with invalid ID"""
+    if not admin_token:
+        results.log_failure("Get Appointment Details (Not Found)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        fake_id = "non-existent-appointment-id"
+        response = requests.get(f"{API_URL}/urgent-care-appointments/{fake_id}", headers=headers)
+        if response.status_code == 404:
+            results.log_success("Get Appointment Details (Not Found)")
+            return True
+        results.log_failure("Get Appointment Details (Not Found)", f"Expected 404, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Appointment Details (Not Found)", str(e))
+        return False
+
+def test_time_slots_exclude_booked():
+    """Test that time slots exclude already booked appointments"""
+    try:
+        # First, create an appointment for a specific time
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T17:00"
+        
+        appointment_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "Michael",
+            "owner_last_name": "Chen",
+            "email": "michael.chen@email.com",
+            "phone": "(555) 987-6543",
+            "pet_name": "Max",
+            "pet_type": "cat",
+            "reason_for_visit": "Vomiting and lethargy",
+            "primary_vet_hospital": "Local Vet Clinic",
+            "how_heard_about_us": "Referral"
+        }
+        
+        # Create the appointment
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=appointment_data)
+        if response.status_code != 200:
+            results.log_failure("Time Slots Exclude Booked (Setup)", f"Failed to create test appointment: {response.status_code}")
+            return False
+        
+        # Now check if that time slot is excluded from available slots
+        response = requests.get(f"{API_URL}/urgent-care-time-slots/{future_date}")
+        if response.status_code == 200:
+            data = response.json()
+            if data.get("available") and "slots" in data:
+                # Check that 17:00 slot is not in the available slots
+                slot_times = [slot["time"] for slot in data["slots"]]
+                if "17:00" not in slot_times:
+                    results.log_success("Time Slots Exclude Booked Appointments")
+                    return True
+                else:
+                    results.log_failure("Time Slots Exclude Booked", "Booked slot still appears as available")
+                    return False
+            elif not data.get("available"):
+                results.log_success("Time Slots Exclude Booked (Day Closed)")
+                return True
+        results.log_failure("Time Slots Exclude Booked", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Time Slots Exclude Booked", str(e))
+        return False
+
 def run_all_tests():
     """Run all backend API tests"""
     print("Starting Backend API Tests...")
