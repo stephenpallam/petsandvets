@@ -625,6 +625,67 @@ const UrgentCareAppointments = () => {
         </div>
       )}
 
+      {/* Status Change Confirmation Modal */}
+      {showStatusConfirm && statusChange.appointmentId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md">
+            {/* Header */}
+            <div className="p-6 border-b border-gray-200 rounded-t-xl" style={{ backgroundColor: primaryColor }}>
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-white">Confirm Status Change</h3>
+                <button
+                  onClick={() => setShowStatusConfirm(false)}
+                  className="text-white hover:text-gray-200 transition-colors"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+            
+            {/* Content */}
+            <div className="p-6">
+              <div className="flex items-center mb-4">
+                <AlertCircle className="h-8 w-8 text-orange-500 mr-3" />
+                <div>
+                  <h4 className="text-lg font-medium text-gray-900">Update Appointment Status</h4>
+                  <p className="text-sm text-gray-500">Confirm the status change for this appointment</p>
+                </div>
+              </div>
+              
+              <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
+                <p className="text-sm text-orange-800">
+                  Are you sure you want to change the status from <strong className="capitalize">{statusChange.currentStatus}</strong> to <strong className="capitalize">{statusChange.newStatus}</strong>?
+                </p>
+                {statusChange.newStatus === 'abandoned' && (
+                  <p className="text-sm text-orange-700 mt-2">
+                    <strong>Note:</strong> Setting status to "Abandoned" will free up the appointment time slot for new bookings.
+                  </p>
+                )}
+              </div>
+            </div>
+              
+            {/* Footer */}
+            <div className="px-6 py-4 bg-gray-100 border-t border-gray-200 flex justify-end gap-3 rounded-b-xl">
+              <button
+                onClick={() => setShowStatusConfirm(false)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmStatusChange}
+                className="px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md transition-colors"
+                style={{ backgroundColor: primaryColor }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
+              >
+                Confirm Change
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && appointmentToDelete && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
