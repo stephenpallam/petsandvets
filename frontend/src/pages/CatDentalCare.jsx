@@ -327,7 +327,7 @@ const CatDentalCare = () => {
             A Healthy Smile is Essential for Your Cat
           </h2>
           <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+            <p className="text-gray-700 leading-relaxed mb-6" style={{ fontSize: '1rem' }}>
               A healthy smile isn't just adorable—it's essential. Consistent at-home care and regular 
               professional cleanings help ensure your cat leads a pain-free, vibrant life.
             </p>
