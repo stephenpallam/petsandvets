@@ -46,33 +46,45 @@ const OurTeam = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Team Members - Moved to Top */}
-      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '30px' }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">
-              Meet Our Veterinary Professionals
-            </h2>
-            <p className="text-gray-700">
-              Get to know the dedicated individuals who make up our veterinary family
-            </p>
+      {/* Hero Section */}
+      <section className="bg-white">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
+            Our Team
+          </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+              Professional • Caring • Experienced • Dedicated
+            </span>
           </div>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
+            Get to know the dedicated individuals who make up our veterinary family
+          </p>
+        </div>
+      </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {/* Team Members */}
+      <section className="bg-[#f8f9fa] py-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-xl font-bold text-gray-900 mb-8 text-center">
+            Meet Our Veterinary Professionals
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {team.map((member) => (
-              <div key={member.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+              <div key={member.id} className="bg-white rounded-xl shadow-md overflow-hidden">
                 <img
                   src={member.image}
                   alt={member.name}
-                  className="w-full h-64 object-cover"
+                  className="w-full h-48 object-cover"
                 />
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
-                  <p className="font-semibold mb-3" style={{ color: primaryColor }}>{member.role}</p>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{member.name}</h3>
+                  <p className="font-semibold mb-3 text-sm" style={{ color: primaryColor }}>{member.role}</p>
                   <p className="text-gray-600 mb-4 text-sm leading-relaxed">{member.bio}</p>
                   <div className="flex items-center">
                     <GraduationCap className="h-4 w-4 mr-2" style={{ color: primaryColor }} />
-                    <p className="text-sm text-gray-500 font-medium">{member.education}</p>
+                    <p className="text-xs text-gray-500 font-medium">{member.education}</p>
                   </div>
                 </div>
               </div>
