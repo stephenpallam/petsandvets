@@ -121,7 +121,7 @@ const UrgentCareBooking = () => {
       case 3:
         return formData.reason_for_visit;
       case 4:
-        return formData.primary_vet_hospital && formData.how_heard_about_us;
+        return true; // Primary vet hospital and how heard about us are now optional
       default:
         return false;
     }
