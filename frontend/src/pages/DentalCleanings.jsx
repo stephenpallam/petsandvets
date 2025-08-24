@@ -212,34 +212,34 @@ const DentalCleanings = () => {
       </section>
 
       {/* What a Pet Dental Cleaning Involves */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             What a Pet Dental Cleaning Involves
           </h2>
-          <p className="text-center text-gray-600 mb-8">
+          <p className="text-center text-gray-600 mb-6 text-sm">
             Our comprehensive cleanings include:
           </p>
           
-          <div className="space-y-6 mb-8">
+          <div className="space-y-4 mb-6">
             {cleaningProcedures.map((procedure, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md">
-                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
-                  <div className="flex items-center mb-4 lg:mb-0">
-                    <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: `${procedure.color}15` }}>
-                      <procedure.icon className="h-8 w-8" style={{ color: procedure.color }} />
+              <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm">
+                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-4">
+                  <div className="flex items-center mb-3 lg:mb-0">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-full mr-3" style={{ backgroundColor: `${procedure.color}15` }}>
+                      <procedure.icon className="h-6 w-6" style={{ color: procedure.color }} />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900">{procedure.procedure}</h3>
+                      <h3 className="text-base font-semibold text-gray-900">{procedure.procedure}</h3>
                       <p className="text-gray-600 text-sm mt-1">{procedure.description}</p>
                     </div>
                   </div>
                   <div className="flex-1">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                       {procedure.details.map((detail, detailIndex) => (
-                        <div key={detailIndex} className="flex items-center p-3 rounded-lg border-l-4" style={{ borderColor: procedure.color, backgroundColor: `${procedure.color}05` }}>
-                          <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: procedure.color }} />
-                          <span className="text-sm text-gray-700">{detail}</span>
+                        <div key={detailIndex} className="flex items-center p-2 rounded border-l-4" style={{ borderColor: procedure.color, backgroundColor: `${procedure.color}05` }}>
+                          <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: procedure.color }} />
+                          <span className="text-xs text-gray-700">{detail}</span>
                         </div>
                       ))}
                     </div>
@@ -249,12 +249,12 @@ const DentalCleanings = () => {
             ))}
           </div>
           
-          <div className="bg-blue-50 p-6 rounded-xl border-l-4 border-blue-500">
-            <div className="flex items-center mb-4">
-              <Shield className="h-6 w-6 mr-3 text-blue-600" />
-              <h3 className="text-lg font-semibold text-blue-900">Safe Anesthesia Protocol</h3>
+          <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+            <div className="flex items-center mb-3">
+              <Shield className="h-5 w-5 mr-2 text-blue-600" />
+              <h3 className="text-base font-semibold text-blue-900">Safe Anesthesia Protocol</h3>
             </div>
-            <p className="text-blue-800">
+            <p className="text-blue-800 text-sm">
               Because a complete cleaning can only be done safely under anesthesia, your pet will be kept pain-free 
               and comfortable throughout the procedure. Our experienced team monitors your pet closely to ensure 
               maximum safety and comfort.
