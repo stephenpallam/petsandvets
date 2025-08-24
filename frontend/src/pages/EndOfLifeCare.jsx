@@ -135,22 +135,22 @@ const EndOfLifeCare = () => {
       </section>
 
       {/* Process Steps */}
-      <section className="bg-white" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-12 text-center">
+          <h2 className="text-xl font-bold text-gray-900 mb-8 text-center">
             What You Can Expect From Our Process
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {processSteps.map((step, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
-                <div className="flex items-start mb-4">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: `${step.color}15` }}>
-                    <step.icon className="h-6 w-6" style={{ color: step.color }} />
+              <div key={index} className="bg-white p-4 rounded-lg shadow-sm">
+                <div className="flex items-start mb-3">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full mr-3" style={{ backgroundColor: `${step.color}15` }}>
+                    <step.icon className="h-5 w-5" style={{ color: step.color }} />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{step.step}</h3>
-                    <p className="text-gray-700 leading-relaxed">{step.description}</p>
+                    <h3 className="text-base font-semibold text-gray-900 mb-2">{step.step}</h3>
+                    <p className="text-gray-700 text-sm leading-relaxed">{step.description}</p>
                   </div>
                 </div>
               </div>
