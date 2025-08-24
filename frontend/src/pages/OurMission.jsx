@@ -74,7 +74,7 @@ const OurMission = () => {
                 <Heart className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
                 <h3 className="text-xl font-semibold text-gray-900">Our Promise</h3>
               </div>
-              <p className="text-lg font-medium italic text-gray-800 text-center">
+              <p className="font-medium italic text-gray-800 text-center" style={{ fontSize: '1rem' }}>
                 "We strive to provide excellent modern care for the modern pet, because every pet deserves the best possible care."
               </p>
             </div>
