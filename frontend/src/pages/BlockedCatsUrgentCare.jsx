@@ -282,19 +282,19 @@ const BlockedCatsUrgentCare = () => {
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Critical Emergency Symptoms
           </h2>
-          <p className="text-center text-gray-600 mb-8">
+          <p className="text-center text-gray-600 mb-6 text-sm">
             <strong>Contact us immediately if your cat shows any of these signs:</strong>
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {emergencySymptoms.map((symptom, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md">
-                <div className="flex items-center mb-4">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: `${symptom.color}15` }}>
-                    <symptom.icon className="h-6 w-6" style={{ color: symptom.color }} />
+              <div key={index} className="bg-white p-4 rounded-lg shadow-sm">
+                <div className="flex items-center mb-3">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full mr-3" style={{ backgroundColor: `${symptom.color}15` }}>
+                    <symptom.icon className="h-5 w-5" style={{ color: symptom.color }} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">{symptom.symptom}</h3>
+                    <h3 className="text-base font-semibold text-gray-900">{symptom.symptom}</h3>
                     <div className="flex items-center space-x-1 mt-1">
                       <span className="px-2 py-1 rounded-full text-xs font-medium text-white" style={{ backgroundColor: symptom.color }}>
                         {symptom.severity}
