@@ -465,7 +465,7 @@ def test_create_appointment_validation():
         return False
 
 def test_get_appointments_admin():
-    """Test GET /urgent-care-appointments (admin only)"""
+    """Test GET /urgent-care-appointments (admin only) - Enhanced with pagination"""
     if not admin_token:
         results.log_failure("Get Appointments (Admin)", "No admin token available")
         return False
@@ -475,14 +475,19 @@ def test_get_appointments_admin():
         response = requests.get(f"{API_URL}/urgent-care-appointments", headers=headers)
         if response.status_code == 200:
             data = response.json()
-            if isinstance(data, list):
-                # Should contain our created appointment
-                if any(apt.get("owner_first_name") == "Emily" for apt in data):
-                    results.log_success("Get Appointments (Admin)")
-                    return True
-                else:
-                    results.log_success("Get Appointments (Admin - Empty List)")
-                    return True
+            # Check new pagination response format
+            if (isinstance(data, dict) and 
+                "appointments" in data and 
+                "total_count" in data and 
+                "page" in data and 
+                "page_size" in data and 
+                "total_pages" in data):
+                results.log_success("Get Appointments (Admin - Enhanced Format)")
+                return True
+            elif isinstance(data, list):
+                # Fallback for old format
+                results.log_success("Get Appointments (Admin - Legacy Format)")
+                return True
         results.log_failure("Get Appointments (Admin)", f"Status: {response.status_code}, Response: {response.text}")
         return False
     except Exception as e:
