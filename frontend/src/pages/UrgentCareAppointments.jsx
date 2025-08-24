@@ -139,6 +139,40 @@ const UrgentCareAppointments = () => {
     }
   };
 
+  const handleStatusChange = (appointmentId, newStatus, currentStatus) => {
+    setStatusChange({ appointmentId, newStatus, currentStatus });
+    setShowStatusConfirm(true);
+  };
+
+  const confirmStatusChange = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/urgent-care-appointments/${statusChange.appointmentId}/status?status=${statusChange.newStatus}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        let message = `Appointment status updated to ${statusChange.newStatus}.`;
+        if (data.freed_slot) {
+          message += ` Time slot ${data.freed_slot} is now available for booking.`;
+        }
+        setMessage({ type: 'success', text: message });
+        fetchAppointments(); // Refresh the list
+        setShowStatusConfirm(false);
+        setStatusChange({ appointmentId: null, newStatus: '', currentStatus: '' });
+      } else {
+        setMessage({ type: 'error', text: 'Failed to update appointment status' });
+      }
+    } catch (error) {
+      console.error('Error updating appointment status:', error);
+      setMessage({ type: 'error', text: 'Failed to update appointment status' });
+    }
+  };
+
   const updateAppointmentStatus = async (appointmentId, newStatus) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/urgent-care-appointments/${appointmentId}/status?status=${newStatus}`, {
