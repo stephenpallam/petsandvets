@@ -116,16 +116,16 @@ const EndOfLifeCare = () => {
       </section>
 
       {/* Gentle Goodbye Section */}
-      <section style={{ backgroundColor: gentleGray, paddingTop: '40px', paddingBottom: '40px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="flex items-center justify-center mb-6">
-            <Users className="h-8 w-8 mr-3" style={{ color: primaryColor }} />
+          <div className="flex items-center justify-center mb-4">
+            <Users className="h-6 w-6 mr-2" style={{ color: primaryColor }} />
             <h2 className="text-xl font-bold text-gray-900">
               A Gentle Goodbye, Together
             </h2>
           </div>
-          <div className="bg-white p-8 rounded-xl shadow-md">
-            <p className="text-gray-800 leading-relaxed text-lg">
+          <div className="bg-gray-50 p-6 rounded-lg">
+            <p className="text-gray-800 leading-relaxed" style={{ fontSize: '1rem' }}>
               We invite you to be present—bring your family, loved ones, and cherished memories. 
               This is your time to hold your pet close, reflect on your journey together, and 
               say goodbye with love and grace.
