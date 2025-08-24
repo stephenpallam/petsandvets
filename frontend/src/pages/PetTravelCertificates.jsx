@@ -207,51 +207,51 @@ const PetTravelCertificates = () => {
       </section>
 
       {/* Helpful Resources */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Helpful Resources</h2>
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-sm">
               Get the latest travel requirements and guidelines from official sources:
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-gray-50 p-6 rounded-xl">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-gray-900">USDA Pet Travel Guidelines</h3>
-                <div className="flex items-center justify-center w-8 h-8 rounded-full" style={{ backgroundColor: `${primaryColor}15` }}>
-                  <Plane className="h-4 w-4" style={{ color: primaryColor }} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-white p-4 rounded-lg">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-semibold text-gray-900 text-sm">USDA Pet Travel Guidelines</h3>
+                <div className="flex items-center justify-center w-6 h-6 rounded-full" style={{ backgroundColor: `${primaryColor}15` }}>
+                  <Plane className="h-3 w-3" style={{ color: primaryColor }} />
                 </div>
               </div>
-              <p className="text-sm text-gray-600 mb-4">Official guidelines for domestic and international pet travel requirements</p>
+              <p className="text-xs text-gray-600 mb-3">Official guidelines for domestic and international pet travel requirements</p>
               <a
                 href="https://www.aphis.usda.gov/aphis/pet-travel"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-sm font-semibold transition-colors hover:opacity-80"
+                className="inline-flex items-center text-xs font-semibold transition-colors hover:opacity-80"
                 style={{ color: primaryColor }}
               >
-                Visit USDA Guidelines <ExternalLink className="ml-1 h-4 w-4" />
+                Visit USDA Guidelines <ExternalLink className="ml-1 h-3 w-3" />
               </a>
             </div>
             
-            <div className="bg-gray-50 p-6 rounded-xl">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-gray-900">CDC Dog Import Requirements</h3>
-                <div className="flex items-center justify-center w-8 h-8 rounded-full" style={{ backgroundColor: '#10b98115' }}>
-                  <Globe className="h-4 w-4" style={{ color: '#10b981' }} />
+            <div className="bg-white p-4 rounded-lg">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-semibold text-gray-900 text-sm">CDC Dog Import Requirements</h3>
+                <div className="flex items-center justify-center w-6 h-6 rounded-full" style={{ backgroundColor: '#10b98115' }}>
+                  <Globe className="h-3 w-3" style={{ color: '#10b981' }} />
                 </div>
               </div>
-              <p className="text-sm text-gray-600 mb-4">CDC requirements for bringing dogs into the United States</p>
+              <p className="text-xs text-gray-600 mb-3">CDC requirements for bringing dogs into the United States</p>
               <a
                 href="https://www.cdc.gov/importation/bringing-an-animal-into-the-united-states/dogs.html"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-sm font-semibold transition-colors hover:opacity-80"
+                className="inline-flex items-center text-xs font-semibold transition-colors hover:opacity-80"
                 style={{ color: '#10b981' }}
               >
-                Visit CDC Requirements <ExternalLink className="ml-1 h-4 w-4" />
+                Visit CDC Requirements <ExternalLink className="ml-1 h-3 w-3" />
               </a>
             </div>
           </div>
