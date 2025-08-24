@@ -240,19 +240,22 @@ const UrgentCare = () => {
         </div>
       </section>
 
-      {/* Introduction */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
-              Urgent Care
-            </h1>
-            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
-              When your pet needs care—not just quickly, but right away—our Urgent Veterinary Services deliver 
-              fast, compassionate relief when your regular vet is closed or unavailable. At Pets and Vets Animal 
-              Hospital, we treat your family pets with the expertise and empathy they deserve.
-            </p>
+      {/* Hero Section */}
+      <section className="bg-white">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
+            Urgent Care
+          </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+              Fast Relief When You Need It Most
+            </span>
           </div>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
+            When your pet needs care—not just quickly, but right away—our Urgent Veterinary Services deliver 
+            fast, compassionate relief when your regular vet is closed or unavailable. At Pets and Vets Animal 
+            Hospital, we treat your family pets with the expertise and empathy they deserve.
+          </p>
         </div>
       </section>
 
