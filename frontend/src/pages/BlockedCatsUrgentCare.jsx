@@ -346,25 +346,25 @@ const BlockedCatsUrgentCare = () => {
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Emergency Treatment Protocol
           </h2>
-          <p className="text-center text-gray-600 mb-8">
+          <p className="text-center text-gray-600 mb-6 text-sm">
             Our immediate response protocol for blocked cats follows these critical steps:
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {emergencyTreatment.map((step, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md">
-                <div className="flex items-center mb-4">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
-                    <step.icon className="h-6 w-6" style={{ color: primaryColor }} />
+              <div key={index} className="bg-white p-4 rounded-lg shadow-sm">
+                <div className="flex items-center mb-3">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full mr-3" style={{ backgroundColor: primaryBg }}>
+                    <step.icon className="h-5 w-5" style={{ color: primaryColor }} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">{step.step}</h3>
+                    <h3 className="text-base font-semibold text-gray-900">{step.step}</h3>
                     <span className="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">
                       {step.urgency}
                     </span>
                   </div>
                 </div>
-                <p className="text-gray-600 text-sm mb-4">{step.description}</p>
+                <p className="text-gray-600 text-sm">{step.description}</p>
                 <div className="space-y-2">
                   <h4 className="font-semibold text-gray-900 text-sm">Includes:</h4>
                   <div className="space-y-1">
