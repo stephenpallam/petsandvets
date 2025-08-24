@@ -537,6 +537,57 @@ const UrgentCareAppointments = () => {
           </div>
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && appointmentToDelete && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900">Confirm Delete</h3>
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            
+            <div className="p-6">
+              <div className="flex items-center mb-4">
+                <AlertCircle className="h-8 w-8 text-red-500 mr-3" />
+                <div>
+                  <h4 className="text-lg font-medium text-gray-900">Delete Appointment</h4>
+                  <p className="text-sm text-gray-500">This action cannot be undone</p>
+                </div>
+              </div>
+              
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <p className="text-sm text-red-800">
+                  Are you sure you want to delete the appointment for <strong>{appointmentToDelete.owner_first_name} {appointmentToDelete.owner_last_name}</strong> and their pet <strong>{appointmentToDelete.pet_name}</strong>?
+                </p>
+                <p className="text-sm text-red-700 mt-2">
+                  <strong>Time:</strong> {formatDate(appointmentToDelete.appointment_time)} at {formatTime(appointmentToDelete.appointment_time)}
+                </p>
+              </div>
+              
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => deleteAppointment(appointmentToDelete.id)}
+                  className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700"
+                >
+                  Delete Appointment
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
