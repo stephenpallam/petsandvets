@@ -191,12 +191,12 @@ const Home = () => {
               {/* Info and CTA Compartments */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {/* Left Compartment - Urgent Care */}
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3 bg-white/60 backdrop-blur-sm py-4 pr-4 pl-0 rounded-lg">
-                    <Clock className="h-5 w-5" style={{ color: primaryColor }} />
-                    <div className="text-left">
+                <div className="flex flex-col">
+                  <div className="flex items-start space-x-3 bg-white/60 backdrop-blur-sm py-4 pr-4 pl-0 rounded-lg h-20 mb-4">
+                    <Clock className="h-5 w-5 mt-1" style={{ color: primaryColor }} />
+                    <div className="text-left flex-1">
                       <p className="font-semibold text-gray-900">Urgent Care</p>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-600 leading-tight">
                         {hoursLoading ? (
                           <span className="animate-pulse">Loading hours...</span>
                         ) : (
@@ -218,12 +218,12 @@ const Home = () => {
                 </div>
 
                 {/* Right Compartment - General Practice */}
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3 bg-white/60 backdrop-blur-sm py-4 pr-4 pl-0 rounded-lg">
-                    <MapPin className="h-5 w-5" style={{ color: primaryColor }} />
-                    <div className="text-left">
+                <div className="flex flex-col">
+                  <div className="flex items-start space-x-3 bg-white/60 backdrop-blur-sm py-4 pr-4 pl-0 rounded-lg h-20 mb-4">
+                    <MapPin className="h-5 w-5 mt-1" style={{ color: primaryColor }} />
+                    <div className="text-left flex-1">
                       <p className="font-semibold text-gray-900">General Practice</p>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-600 leading-tight">
                         {hoursLoading ? (
                           <span className="animate-pulse">Loading hours...</span>
                         ) : (
