@@ -397,47 +397,34 @@ const ForeignBodySurgery = () => {
             Our skilled surgeons provide precise, safe, and compassionate care:
           </p>
           
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {surgicalProcess.map((phase, index) => (
               <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md">
-                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
-                  <div className="flex items-center mb-4 lg:mb-0">
-                    <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
-                      <phase.icon className="h-8 w-8" style={{ color: primaryColor }} />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900">{phase.phase}</h3>
-                      <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
-                        Duration: {phase.duration}
-                      </span>
-                    </div>
+                <div className="flex items-center mb-4">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
+                    <phase.icon className="h-6 w-6" style={{ color: primaryColor }} />
                   </div>
-                  <div className="flex-1">
-                    <p className="text-gray-700 mb-4">{phase.description}</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {phase.procedures.map((procedure, procIndex) => (
-                        <div key={procIndex} className="flex items-center p-2 rounded-lg" style={{ backgroundColor: primaryBg }}>
-                          <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
-                          <span className="text-sm text-gray-700">{procedure}</span>
-                        </div>
-                      ))}
-                    </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">{phase.phase}</h3>
+                    <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                      {phase.duration}
+                    </span>
+                  </div>
+                </div>
+                <p className="text-gray-600 text-sm mb-4">{phase.description}</p>
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-gray-900 text-sm">Key Steps:</h4>
+                  <div className="space-y-1">
+                    {phase.procedures.slice(0, 2).map((procedure, procIndex) => (
+                      <div key={procIndex} className="flex items-center text-xs text-gray-600">
+                        <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
+                        <span>{procedure}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
             ))}
-          </div>
-          
-          {/* Professional Image */}
-          <div className="mt-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.pexels.com/photos/7121954/pexels-photo-7121954.jpeg"
-                alt="Professional veterinary surgical team performing GI obstruction removal"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
           </div>
         </div>
       </section>
