@@ -307,7 +307,7 @@ const CatDiagnosticImaging = () => {
             The Bottom Line: Seeing Beyond What's Visible
           </h2>
           <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+            <p className="text-gray-700 leading-relaxed mb-6" style={{ fontSize: '1rem' }}>
               Cat diagnostic imaging is one of the most powerful tools in modern veterinary care. It allows vets to see beyond 
               what the eye can detect, ensuring earlier diagnoses, targeted treatments, and better outcomes for your feline friend.
             </p>
