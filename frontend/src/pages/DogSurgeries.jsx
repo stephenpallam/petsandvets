@@ -97,12 +97,16 @@ const DogSurgeries = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${primaryBg} 0%, #ffffff 50%, #f0fdff 100%)` }}>
-        <div className="absolute inset-0 bg-white/40"></div>
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
           <h1 className="text-xl font-bold text-gray-900 mb-6">
             Dog Surgeries
           </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+              Expert Surgical Care for Your Dog
+            </span>
+          </div>
           <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
             At Pets and Vets Animal Hospital, we perform a wide range of surgical procedures to keep your dog healthy and improve their quality of life. From routine spays and neuters to life-saving operations, our experienced veterinary team ensures your pet receives safe, compassionate, and expert care.
           </p>
@@ -110,7 +114,7 @@ const DogSurgeries = () => {
       </section>
 
       {/* Common Surgeries */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '15px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Common Surgeries We Perform</h2>
@@ -121,7 +125,7 @@ const DogSurgeries = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {surgeries.map((surgery, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl hover:shadow-md transition-shadow">
+              <div key={index} className="bg-white p-6 rounded-xl hover:shadow-md transition-shadow">
                 <div className="flex items-start">
                   <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4 flex-shrink-0" style={{ backgroundColor: `${surgery.color}15` }}>
                     <surgery.icon className="h-6 w-6" style={{ color: surgery.color }} />
@@ -138,7 +142,7 @@ const DogSurgeries = () => {
       </section>
 
       {/* Our Commitment to Safety */}
-      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white" style={{ paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Our Commitment to Safety</h2>
@@ -149,7 +153,7 @@ const DogSurgeries = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {safetyFeatures.map((feature, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl text-center shadow-md">
+              <div key={index} className="bg-gray-50 p-6 rounded-xl text-center shadow-md">
                 <div className="flex items-center justify-center w-16 h-16 rounded-full mb-4 mx-auto" style={{ backgroundColor: `${feature.color}15` }}>
                   <feature.icon className="h-8 w-8" style={{ color: feature.color }} />
                 </div>
@@ -160,7 +164,7 @@ const DogSurgeries = () => {
           </div>
 
           <div className="mt-8 text-center">
-            <div className="p-6 rounded-xl border-l-4" style={{ backgroundColor: 'white', borderColor: primaryColor }}>
+            <div className="p-6 rounded-xl border-l-4" style={{ backgroundColor: primaryBg, borderColor: primaryColor }}>
               <p className="text-base font-medium text-gray-800">
                 Every surgery includes a thorough pre-anesthetic evaluation, advanced monitoring during the procedure, and tailored post-operative care to ensure a smooth recovery.
               </p>
@@ -170,7 +174,7 @@ const DogSurgeries = () => {
       </section>
 
       {/* Why Choose Us */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Why Choose Our Surgical Team</h2>
@@ -205,7 +209,7 @@ const DogSurgeries = () => {
       </section>
 
       {/* Service Areas */}
-      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white" style={{ paddingTop: '15px', paddingBottom: '30px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Serving Your Community</h2>
