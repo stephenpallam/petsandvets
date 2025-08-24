@@ -330,6 +330,3 @@ const Register = ({ onClose }) => {
 };
 
 export default Register;
-};
-
-export default Register;
