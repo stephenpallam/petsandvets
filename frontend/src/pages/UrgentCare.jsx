@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Heart, 
@@ -51,15 +51,56 @@ import {
   Frown,
   Wind,
   Star,
-  Navigation
+  Navigation,
+  Info
 } from 'lucide-react';
 import { hospitalInfo } from '../mock';
 
 const UrgentCare = () => {
+  const [urgentCareHours, setUrgentCareHours] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+
   const primaryColor = '#29add3';
   const primaryLight = '#5bc0db';
   const primaryBg = '#e6f7fb';
   const urgentColor = '#dc2626';
+
+  // Helper function to format time from 24-hour to 12-hour
+  const formatTime = (time) => {
+    if (!time) return '';
+    const [hours, minutes] = time.split(':');
+    const hour12 = parseInt(hours) % 12 || 12;
+    const ampm = parseInt(hours) >= 12 ? 'PM' : 'AM';
+    return `${hour12}:${minutes} ${ampm}`;
+  };
+
+  // Helper function to format day hours
+  const formatDayHours = (dayData) => {
+    if (!dayData || !dayData.is_open) {
+      return 'Closed';
+    }
+    return `${formatTime(dayData.open_time)} - ${formatTime(dayData.close_time)}`;
+  };
+
+  useEffect(() => {
+    const fetchUrgentCareHours = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/urgent-care-hours`);
+        if (response.ok) {
+          const data = await response.json();
+          setUrgentCareHours(data);
+        }
+      } catch (error) {
+        console.error('Error fetching urgent care hours:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUrgentCareHours();
+  }, []);
 
   const petIllnesses = [
     {
