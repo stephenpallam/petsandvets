@@ -189,8 +189,8 @@ const UrgentCareBooking = () => {
       });
 
       if (response.ok) {
-        setCurrentTab(5); // Success tab
-        setCompletedTabs([...completedTabs, 4]);
+        setCurrentTab(6); // Success tab
+        setCompletedTabs([...completedTabs, 5]);
         setMessage({ type: 'success', text: 'Appointment booked successfully!' });
       } else {
         const errorData = await response.json();
