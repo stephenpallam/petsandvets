@@ -284,7 +284,7 @@ const PreventivePetCare = () => {
             Schedule Your Pet's Exam Today
           </h2>
           <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+            <p className="text-gray-700 leading-relaxed mb-6" style={{ fontSize: '1rem' }}>
               Preventive care is the foundation of lifelong health. Don't wait until symptoms appear—protect your pet now 
               with a comprehensive wellness exam that covers every aspect of their health and wellbeing.
             </p>
