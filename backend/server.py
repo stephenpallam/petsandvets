@@ -172,7 +172,7 @@ class UrgentCareAppointment(BaseModel):
     reason_for_visit: str
     primary_vet_hospital: str = ""
     how_heard_about_us: str = ""
-    status: str = "scheduled"  # "scheduled", "completed", "cancelled"
+    status: str = "scheduled"  # "scheduled", "completed", "cancelled", "no_show", "abandoned"
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 
