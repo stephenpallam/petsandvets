@@ -1083,6 +1083,27 @@ def run_all_tests():
     # Integration tests
     test_time_slots_exclude_booked()
     
+    print("\n" + "="*50)
+    print("ENHANCED URGENT CARE BOOKING SYSTEM TESTS - NEW FEATURES")
+    print("="*50)
+    
+    # Enhanced Appointments API with Pagination & Filtering
+    test_appointments_pagination()
+    test_appointments_filtering_today()
+    test_appointments_filtering_last_7_days()
+    test_appointments_filtering_last_30_days()
+    test_appointments_filtering_last_1_year()
+    test_appointments_pagination_multiple_pages()
+    
+    # Delete Appointment API
+    test_delete_appointment_admin()
+    test_delete_appointment_regular_user()
+    test_delete_appointment_invalid_id()
+    
+    # Data Consistency Tests
+    test_data_consistency_filtering_pagination()
+    test_deleted_appointments_removed_from_results()
+    
     # Print summary
     success = results.summary()
     return success
