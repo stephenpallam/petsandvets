@@ -325,31 +325,30 @@ const PetSpayNeuter = () => {
             Optimal timing depends on your pet's age, breed, and individual health factors:
           </p>
           
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {ageGuidelines.map((guideline, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md border-l-4" style={{ borderColor: guideline.color }}>
-                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
-                  <div className="flex items-center mb-4 lg:mb-0">
-                    <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: `${guideline.color}15` }}>
-                      <Calendar className="h-8 w-8" style={{ color: guideline.color }} />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900">{guideline.age}</h3>
-                      <span className="px-3 py-1 text-white text-xs font-medium rounded-full" style={{ backgroundColor: guideline.color }}>
-                        {guideline.timing}
-                      </span>
-                    </div>
+              <div key={index} className="bg-white p-6 rounded-xl shadow-md">
+                <div className="flex items-center mb-4">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: `${guideline.color}15` }}>
+                    <Calendar className="h-6 w-6" style={{ color: guideline.color }} />
                   </div>
-                  <div className="flex-1">
-                    <p className="text-gray-700 mb-4">{guideline.description}</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {guideline.considerations.map((consideration, conIndex) => (
-                        <div key={conIndex} className="flex items-center p-2 rounded-lg" style={{ backgroundColor: `${guideline.color}05` }}>
-                          <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: guideline.color }} />
-                          <span className="text-sm text-gray-700">{consideration}</span>
-                        </div>
-                      ))}
-                    </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">{guideline.age}</h3>
+                    <span className="px-2 py-1 text-white text-xs font-medium rounded-full" style={{ backgroundColor: guideline.color }}>
+                      {guideline.timing}
+                    </span>
+                  </div>
+                </div>
+                <p className="text-gray-600 text-sm mb-4">{guideline.description}</p>
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-gray-900 text-sm">Key Points:</h4>
+                  <div className="space-y-1">
+                    {guideline.considerations.slice(0, 2).map((consideration, conIndex) => (
+                      <div key={conIndex} className="flex items-center text-xs text-gray-600">
+                        <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: guideline.color }} />
+                        <span>{consideration}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
