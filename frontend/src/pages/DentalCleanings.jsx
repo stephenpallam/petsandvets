@@ -146,37 +146,30 @@ const DentalCleanings = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="font-bold" style={{ fontSize: '1.125rem' }}>
-              Dental Cleanings
+              Dental Cleaning
             </h1>
           </div>
         </div>
       </section>
 
-      {/* Introduction */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      {/* Hero Section */}
+      <section className="bg-white pt-6" style={{ paddingBottom: '8px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
-              Dog & Cat Dental Cleanings in Chantilly, VA
+            <h1 className="text-xl font-bold text-gray-900 mb-4">
+              Dental Cleaning
             </h1>
+            <div className="mb-6">
+              <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+                Professional Oral Health Care
+              </span>
+            </div>
             <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
               Does your pet have bad breath, discolored teeth, or tartar buildup? Just like people, pets need regular 
               dental care to protect their health. At Pets and Vets Animal Hospital & Urgent Care, we provide safe, 
               thorough dog and cat dental cleanings in Chantilly, VA, proudly serving pet families in South Riding, 
               Aldie, Ashburn, Centreville, Reston, and Herndon.
             </p>
-          </div>
-          
-          {/* Professional Image */}
-          <div className="mt-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.unsplash.com/photo-1644675443401-ea4c14bad0e6"
-                alt="Professional veterinary dental cleaning examination"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
           </div>
         </div>
       </section>
