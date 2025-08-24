@@ -331,7 +331,7 @@ const DogSkinCare = () => {
             The Bottom Line: Your Dog's Skin Reflects Their Health
           </h2>
           <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+            <p className="text-gray-700 leading-relaxed mb-6" style={{ fontSize: '1rem' }}>
               Your dog's skin is a reflection of their overall health. Early diagnosis and treatment can prevent pain, 
               secondary infections, and long-term complications that affect quality of life.
             </p>
