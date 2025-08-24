@@ -213,11 +213,6 @@ const PetOcularServices = () => {
           <h1 className="text-xl font-bold text-gray-900 mb-6">
             Eye Care
           </h1>
-          <div className="mb-6">
-            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
-              Comprehensive Vision Care & Eye Health
-            </span>
-          </div>
           <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
             At Pets and Vets Animal Hospital in South Riding, VA—serving Aldie, Ashburn, Chantilly, 
             Centreville, Reston, and the surrounding areas—we understand how crucial your pet's vision 
