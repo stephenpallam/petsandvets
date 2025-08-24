@@ -39,35 +39,42 @@ const OurMission = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Mission Statement */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">
-              Our Mission
-            </h2>
+      {/* Hero Section */}
+      <section className="bg-white">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
+            Our Mission
+          </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+              Excellent Modern Care for the Modern Pet
+            </span>
           </div>
-          
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
+            Pets & Vets Animal Hospital is pleased to deliver the very best veterinary care to your pets residing in 
+            South Riding, Chantilly, Aldie, Ashburn, Herndon, Centreville, and Fairfax in Northern Virginia. Our team 
+            of licensed veterinarians and support staff provides vaccinations, parasite control, and comprehensive care 
+            to ensure your family pets stay healthy.
+          </p>
+        </div>
+      </section>
+
+      {/* Mission Statement */}
+      <section className="bg-[#f8f9fa] py-6">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-6">
-            <p className="text-base text-gray-600 leading-relaxed">
-              Pets & Vets Animal Hospital is pleased to deliver the very best veterinary care to your pets residing in 
-              South Riding, Chantilly, Aldie, Ashburn, Herndon, Centreville, and Fairfax in Northern Virginia. Our team 
-              of licensed veterinarians and support staff provides vaccinations, parasite control, and comprehensive care 
-              to ensure your family pets stay healthy.
-            </p>
-            
-            <p className="text-base text-gray-600 leading-relaxed">
+            <p className="text-base text-gray-600 leading-relaxed text-center">
               We believe quality pet care, food, medicines, and pet supplies should be available to all caring and 
               responsible pet owners. It is our mission to provide high-quality treatment options for your pets in our 
               state-of-the-art facility, which is equipped with the latest veterinary technologies.
             </p>
             
-            <div className="p-8 rounded-xl border-l-4" style={{ backgroundColor: '#f8f9fa', borderColor: primaryColor }}>
-              <div className="flex items-center mb-4">
+            <div className="p-8 rounded-xl border-l-4 bg-white" style={{ borderColor: primaryColor }}>
+              <div className="flex items-center justify-center mb-4">
                 <Heart className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
                 <h3 className="text-xl font-semibold text-gray-900">Our Promise</h3>
               </div>
-              <p className="text-lg font-medium italic text-gray-800">
+              <p className="text-lg font-medium italic text-gray-800 text-center">
                 "We strive to provide excellent modern care for the modern pet, because every pet deserves the best possible care."
               </p>
             </div>
