@@ -342,13 +342,8 @@ const UrgentCareAppointments = () => {
                         {(currentPage - 1) * pageSize + index + 1}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <User className="h-5 w-5 text-gray-400 mr-3" />
-                          <div>
-                            <div className="text-sm font-medium text-gray-900">
-                              {appointment.owner_first_name} {appointment.owner_last_name}
-                            </div>
-                          </div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {appointment.owner_first_name} {appointment.owner_last_name}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -366,43 +361,72 @@ const UrgentCareAppointments = () => {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <Clock className="h-4 w-4 text-gray-400 mr-2" />
-                          <div>
-                            <div className={`text-sm font-medium ${isToday(appointment.appointment_time) ? 'text-blue-600' : 'text-gray-900'}`}>
-                              {isToday(appointment.appointment_time) ? 'Today' : formatDate(appointment.appointment_time)}
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              {formatTime(appointment.appointment_time)}
-                            </div>
+                          <div className="text-sm font-medium text-gray-900">
+                            {formatTimeOnly(appointment.appointment_time)}
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          isPast(appointment.appointment_time) 
-                            ? 'bg-gray-100 text-gray-800'
-                            : isToday(appointment.appointment_time)
-                            ? 'bg-blue-100 text-blue-800'
-                            : 'bg-green-100 text-green-800'
-                        }`}>
-                          {isPast(appointment.appointment_time) ? 'Past' : 
-                           isToday(appointment.appointment_time) ? 'Today' : 'Scheduled'}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium relative">
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => fetchAppointmentDetails(appointment.id)}
-                            className="flex items-center text-indigo-600 hover:text-indigo-900 px-2 py-1 rounded"
+                            className="text-indigo-600 hover:text-indigo-900 p-2 rounded hover:bg-indigo-50"
+                            title="View Details"
                           >
-                            <Eye className="h-4 w-4 mr-1" />
-                            View
+                            <Eye className="h-4 w-4" />
                           </button>
+                          
+                          <div className="relative">
+                            <button
+                              onClick={() => toggleStatusMenu(appointment.id)}
+                              className="text-gray-600 hover:text-gray-900 p-2 rounded hover:bg-gray-50"
+                              title="Update Status"
+                            >
+                              <MoreVertical className="h-4 w-4" />
+                            </button>
+                            
+                            {showStatusMenu[appointment.id] && (
+                              <div className="absolute right-0 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-10">
+                                <div className="py-1">
+                                  <button
+                                    onClick={() => updateAppointmentStatus(appointment.id, 'completed')}
+                                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-800"
+                                  >
+                                    <CheckCircle className="h-4 w-4 mr-2 text-green-600" />
+                                    Completed
+                                  </button>
+                                  <button
+                                    onClick={() => updateAppointmentStatus(appointment.id, 'no_show')}
+                                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-800"
+                                  >
+                                    <UserX className="h-4 w-4 mr-2 text-orange-600" />
+                                    No Show
+                                  </button>
+                                  <button
+                                    onClick={() => updateAppointmentStatus(appointment.id, 'cancelled')}
+                                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-800"
+                                  >
+                                    <XCircle className="h-4 w-4 mr-2 text-red-600" />
+                                    Cancelled
+                                  </button>
+                                  <button
+                                    onClick={() => updateAppointmentStatus(appointment.id, 'abandoned')}
+                                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-800"
+                                  >
+                                    <Ban className="h-4 w-4 mr-2 text-gray-600" />
+                                    Abandoned
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                          
                           <button
                             onClick={() => confirmDelete(appointment)}
-                            className="flex items-center text-red-600 hover:text-red-900 px-2 py-1 rounded"
+                            className="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50"
+                            title="Delete"
                           >
-                            <Trash2 className="h-4 w-4 mr-1" />
-                            Delete
+                            <Trash2 className="h-4 w-4" />
                           </button>
                         </div>
                       </td>
