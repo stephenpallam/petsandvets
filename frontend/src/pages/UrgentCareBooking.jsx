@@ -599,7 +599,7 @@ const UrgentCareBooking = () => {
           {/* Navigation Buttons */}
           {currentTab < 5 && availableToday && timeSlots.length > 0 && (
             <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
-              {step > 1 && (
+              {currentTab > 0 && (
                 <button
                   onClick={prevStep}
                   className="flex items-center px-6 py-3 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
