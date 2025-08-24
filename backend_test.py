@@ -625,6 +625,28 @@ def run_all_tests():
     test_update_hospital_hours_regular_user()
     test_update_urgent_care_hours_admin()
     
+    print("\n" + "="*50)
+    print("URGENT CARE BOOKING SYSTEM TESTS")
+    print("="*50)
+    
+    # Urgent Care Time Slots API tests
+    test_get_time_slots_today()
+    test_get_time_slots_future()
+    test_get_time_slots_sunday()
+    
+    # Urgent Care Appointment Creation API tests
+    test_create_urgent_care_appointment()
+    test_create_appointment_validation()
+    
+    # Admin Appointments API tests
+    test_get_appointments_admin()
+    test_get_appointments_regular_user()
+    test_get_appointment_details()
+    test_get_appointment_details_not_found()
+    
+    # Integration tests
+    test_time_slots_exclude_booked()
+    
     # Print summary
     success = results.summary()
     return success
