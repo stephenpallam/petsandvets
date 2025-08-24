@@ -268,34 +268,6 @@ const PetMicrochipping = () => {
         </div>
       </section>
 
-      {/* Bottom Info Bar */}
-      <section className="bg-[#f8f9fa] py-6">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-            <div className="p-4 bg-white rounded-lg">
-              <div className="flex items-center justify-center mb-2">
-                <Clock className="h-4 w-4 mr-2" style={{ color: primaryColor }} />
-                <span className="font-semibold text-sm">Quick Procedure</span>
-              </div>
-              <p className="text-gray-600 text-xs">Takes only seconds to complete</p>
-            </div>
-            <div className="p-4 bg-white rounded-lg">
-              <div className="flex items-center justify-center mb-2">
-                <MapPin className="h-4 w-4 mr-2" style={{ color: primaryColor }} />
-                <span className="font-semibold text-sm">Convenient Location</span>
-              </div>
-              <p className="text-gray-600 text-xs">South Riding, VA</p>
-            </div>
-            <div className="p-4 bg-white rounded-lg">
-              <div className="flex items-center justify-center mb-2">
-                <Star className="h-4 w-4 mr-2" style={{ color: primaryColor }} />
-                <span className="font-semibold text-sm">Professional Care</span>
-              </div>
-              <p className="text-gray-600 text-xs">Skilled veterinary team</p>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
