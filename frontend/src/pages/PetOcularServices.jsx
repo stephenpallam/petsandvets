@@ -247,31 +247,25 @@ const PetOcularServices = () => {
             Early detection and treatment are crucial for maintaining your pet's vision and comfort:
           </p>
           
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {eyeConditions.map((condition, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md border-l-4" style={{ borderColor: condition.color }}>
-                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
-                  <div className="flex items-center mb-4 lg:mb-0">
-                    <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: `${condition.color}15` }}>
-                      <condition.icon className="h-8 w-8" style={{ color: condition.color }} />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900">{condition.condition}</h3>
-                    </div>
+              <div key={index} className="bg-white p-6 rounded-xl shadow-md">
+                <div className="flex items-center mb-4">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: `${condition.color}15` }}>
+                    <condition.icon className="h-6 w-6" style={{ color: condition.color }} />
                   </div>
-                  <div className="flex-1">
-                    <p className="text-gray-700 mb-4">{condition.description}</p>
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Common Symptoms:</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        {condition.symptoms.map((symptom, symIndex) => (
-                          <div key={symIndex} className="flex items-center p-2 rounded-lg" style={{ backgroundColor: `${condition.color}05` }}>
-                            <CircleDot className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: condition.color }} />
-                            <span className="text-sm text-gray-700">{symptom}</span>
-                          </div>
-                        ))}
+                  <h3 className="text-lg font-semibold text-gray-900">{condition.condition}</h3>
+                </div>
+                <p className="text-gray-600 text-sm mb-4">{condition.description}</p>
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-gray-900 text-sm">Key Signs:</h4>
+                  <div className="space-y-1">
+                    {condition.symptoms.slice(0, 2).map((symptom, symIndex) => (
+                      <div key={symIndex} className="flex items-center text-xs text-gray-600">
+                        <CircleDot className="h-2 w-2 mr-2 flex-shrink-0" style={{ color: condition.color }} />
+                        <span>{symptom}</span>
                       </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
               </div>
