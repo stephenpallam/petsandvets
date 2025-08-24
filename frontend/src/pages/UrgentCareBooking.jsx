@@ -760,64 +760,75 @@ const UrgentCareBooking = () => {
 
             {/* Tab 6: Success */}
             {currentTab === 6 && (
-              <div className="text-center py-12">
-                {/* Success Icon with Gradient Background */}
-                <div className="relative mb-8">
-                  <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-r from-green-400 to-green-600 flex items-center justify-center shadow-lg">
-                    <CheckCircle className="h-12 w-12 text-white" />
-                  </div>
-                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-8 bg-gradient-to-b from-green-400/20 to-transparent rounded-full blur-sm"></div>
-                </div>
-
+              <div className="text-center py-12 max-w-4xl mx-auto">
                 {/* Success Message */}
-                <div className="mb-8">
-                  <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                    Appointment Confirmed!
+                <div className="mb-10">
+                  <h2 className="text-4xl font-bold text-gray-900 mb-6">
+                    Appointment Booked Successfully!
                   </h2>
-                  <p className="text-lg text-gray-600 max-w-md mx-auto">
-                    Your urgent care appointment has been successfully booked. We look forward to caring for {formData.pet_name}.
-                  </p>
+                  
+                  {/* Personalized Message Section */}
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 mb-8 border border-blue-100">
+                    <p className="text-xl text-gray-700 leading-relaxed">
+                      <span className="font-semibold text-gray-900">
+                        {capitalizeWords(formData.owner_first_name)} {capitalizeWords(formData.owner_last_name)}
+                      </span>, your urgent care appointment has been successfully booked. 
+                      We look forward to caring for <span className="font-semibold text-gray-900">{capitalizeWords(formData.pet_name)}</span>.
+                    </p>
+                  </div>
                 </div>
 
-                {/* Appointment Summary Card */}
-                <div className="max-w-md mx-auto mb-8">
-                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-6 shadow-sm">
-                    <div className="text-center mb-4">
-                      <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-blue-800 bg-blue-100">
-                        <Clock className="h-4 w-4 mr-1" />
+                {/* Appointment Summary Card - Wider */}
+                <div className="max-w-2xl mx-auto mb-10">
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-8 shadow-lg">
+                    <div className="text-center mb-6">
+                      <div className="inline-flex items-center px-4 py-2 rounded-full text-lg font-semibold text-blue-800 bg-blue-100">
+                        <Clock className="h-5 w-5 mr-2" />
                         Appointment Summary
                       </div>
                     </div>
                     
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-gray-600">Date:</span>
-                        <span className="text-sm font-semibold text-gray-900">{formatDateAndDay()}</span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-lg">
+                      <div className="flex items-center justify-between md:justify-start">
+                        <span className="font-medium text-gray-600 mr-4">Client:</span>
+                        <span className="font-semibold text-gray-900">
+                          {capitalizeWords(formData.owner_first_name)} {capitalizeWords(formData.owner_last_name)}
+                        </span>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-gray-600">Time:</span>
-                        <span className="text-sm font-semibold text-gray-900">{formatTime(formData.appointment_time.split('T')[1])}</span>
+                      <div className="flex items-center justify-between md:justify-start">
+                        <span className="font-medium text-gray-600 mr-4">Date:</span>
+                        <span className="font-semibold text-gray-900">{formatDateAndDay()}</span>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-gray-600">Pet:</span>
-                        <span className="text-sm font-semibold text-gray-900">{formData.pet_name}</span>
+                      <div className="flex items-center justify-between md:justify-start">
+                        <span className="font-medium text-gray-600 mr-4">Time:</span>
+                        <span className="font-semibold text-gray-900">{formatTime(formData.appointment_time.split('T')[1])}</span>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-gray-600">Type:</span>
-                        <span className="text-sm font-semibold text-gray-900 capitalize">{formData.pet_type}</span>
+                      <div className="flex items-center justify-between md:justify-start">
+                        <span className="font-medium text-gray-600 mr-4">Pet:</span>
+                        <span className="font-semibold text-gray-900">
+                          {capitalizeWords(formData.pet_name)} ({capitalizeWords(formData.pet_type)})
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between md:justify-start">
+                        <span className="font-medium text-gray-600 mr-4">Phone:</span>
+                        <span className="font-semibold text-gray-900">{formatPhoneNumber(formData.phone)}</span>
+                      </div>
+                      <div className="flex items-center justify-between md:justify-start">
+                        <span className="font-medium text-gray-600 mr-4">Email:</span>
+                        <span className="font-semibold text-gray-900">{formData.email}</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Important Reminders */}
-                <div className="max-w-lg mx-auto mb-8">
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                <div className="max-w-2xl mx-auto mb-10">
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
                     <div className="flex items-start">
-                      <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
+                      <AlertCircle className="h-6 w-6 text-yellow-600 mt-1 mr-4 flex-shrink-0" />
                       <div className="text-left">
-                        <h3 className="text-sm font-semibold text-yellow-800 mb-2">Important Reminders</h3>
-                        <ul className="text-xs text-yellow-700 space-y-1">
+                        <h3 className="text-lg font-semibold text-yellow-800 mb-3">Important Reminders</h3>
+                        <ul className="text-base text-yellow-700 space-y-2">
                           <li>• Please arrive 10 minutes before your scheduled time</li>
                           <li>• Bring any previous medical records if available</li>
                           <li>• Have your pet secured on a leash or in a carrier</li>
@@ -828,22 +839,24 @@ const UrgentCareBooking = () => {
                 </div>
 
                 {/* Action Button */}
-                <Link 
-                  to="/urgent-care" 
-                  className="inline-flex items-center px-8 py-4 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
-                  style={{ 
-                    background: `linear-gradient(135deg, ${primaryColor} 0%, #1e88e5 100%)` 
-                  }}
-                >
-                  <Stethoscope className="h-5 w-5 mr-2" />
-                  Urgent Care Services
-                </Link>
+                <div className="mb-8">
+                  <Link 
+                    to="/urgent-care" 
+                    className="inline-flex items-center px-10 py-4 text-lg text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                    style={{ 
+                      background: `linear-gradient(135deg, ${primaryColor} 0%, #1e88e5 100%)` 
+                    }}
+                  >
+                    <Stethoscope className="h-6 w-6 mr-3" />
+                    Urgent Care Services
+                  </Link>
+                </div>
 
                 {/* Additional Help */}
-                <div className="mt-8 pt-6 border-t border-gray-200">
-                  <p className="text-sm text-gray-500 mb-2">Need to make changes to your appointment?</p>
-                  <p className="text-sm text-gray-600">
-                    Please call us at <span className="font-medium text-gray-900">(555) 123-4567</span>
+                <div className="pt-8 border-t border-gray-200">
+                  <p className="text-lg text-gray-600 mb-3">Need to make changes to your appointment?</p>
+                  <p className="text-lg text-gray-700">
+                    Please call us at <a href={`tel:${hospitalInfo.phone}`} className="font-semibold text-blue-600 hover:text-blue-800">{hospitalInfo.phone}</a>
                   </p>
                 </div>
               </div>
