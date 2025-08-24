@@ -34,9 +34,9 @@ import {
   CircleDot,
   Users,
   Home,
-  Siren,
-  PhoneCall,
-  Emergency
+  Star,
+  Leaf,
+  Cat
 } from 'lucide-react';
 import { hospitalInfo } from '../mock';
 
@@ -44,143 +44,219 @@ const BlockedCatsUrgentCare = () => {
   const primaryColor = '#29add3';
   const primaryLight = '#5bc0db';
   const primaryBg = '#e6f7fb';
-  const emergencyColor = '#dc2626';
   const warningColor = '#f59e0b';
+  const dangerColor = '#ef4444';
 
-  const emergencySignsData = [
+  const emergencySymptoms = [
     {
-      sign: "Straining or Crying in Litter Box",
-      description: "Repeated attempts to urinate with visible distress or vocalization",
-      urgency: "EMERGENCY",
+      symptom: "Straining to Urinate",
+      description: "Frequent trips to litter box with little or no urine production",
+      severity: "EMERGENCY",
       icon: AlertTriangle,
-      color: emergencyColor
+      color: dangerColor,
+      timeframe: "Seek immediate care"
     },
     {
-      sign: "Frequent Unsuccessful Urination",
-      description: "Multiple trips to litter box with little to no urine produced",
-      urgency: "EMERGENCY", 
-      icon: Clock,
-      color: emergencyColor
+      symptom: "Crying or Vocalizing",
+      description: "Painful sounds while attempting to urinate or general distress",
+      severity: "EMERGENCY",
+      icon: Cat,
+      color: dangerColor,
+      timeframe: "Do not wait"
     },
     {
-      sign: "Blood in Urine",
-      description: "Pink, red, or dark-colored urine indicating severe irritation",
-      urgency: "CRITICAL",
-      icon: Droplets,
-      color: "#b91c1c"
-    },
-    {
-      sign: "Lethargy, Vomiting, Loss of Appetite",
-      description: "Systemic signs indicating toxin buildup and kidney stress",
-      urgency: "CRITICAL",
-      icon: Heart,
-      color: "#b91c1c"
-    },
-    {
-      sign: "Swollen, Painful Belly",
-      description: "Distended abdomen from urine backup and bladder expansion",
-      urgency: "LIFE-THREATENING",
-      icon: Target,
-      color: "#7f1d1d"
-    }
-  ];
-
-  const treatmentSteps = [
-    {
-      step: "Emergency Stabilization",
-      description: "Immediate IV fluid therapy and pain relief to stabilize your cat's condition",
-      procedures: ["IV fluid administration", "Pain management protocols", "Vital signs monitoring", "Electrolyte correction"],
-      icon: Zap,
-      urgency: "Immediate"
-    },
-    {
-      step: "Catheter Unblocking",
-      description: "Sterile catheter placement to flush the urethra and restore urine flow",
-      procedures: ["Sterile catheter insertion", "Urethra flushing", "Obstruction removal", "Flow restoration"],
-      icon: Target,
-      urgency: "Critical"
-    },
-    {
-      step: "Continuous Monitoring",
-      description: "Close observation to prevent re-blockage and ensure stable recovery",
-      procedures: ["24-hour monitoring", "Re-blockage prevention", "Kidney function testing", "Recovery assessment"],
+      symptom: "Lethargy & Loss of Appetite",
+      description: "Sudden decrease in energy and interest in food or treats",
+      severity: "URGENT",
       icon: Activity,
-      urgency: "Ongoing"
+      color: "#dc2626",
+      timeframe: "Within hours"
+    },
+    {
+      symptom: "Vomiting",
+      description: "Nausea and vomiting due to toxin buildup from inability to urinate",
+      severity: "CRITICAL",
+      icon: Target,
+      color: dangerColor,
+      timeframe: "Life-threatening"
+    },
+    {
+      symptom: "Hiding or Unusual Behavior",
+      description: "Seeking isolation, aggression, or other abnormal behaviors",
+      severity: "CONCERNING",
+      icon: Eye,
+      color: warningColor,
+      timeframe: "Monitor closely"
     }
   ];
 
-  const surgicalOption = {
-    name: "Perineal Urethrostomy (PU Surgery)",
-    description: "Advanced surgical procedure for cats with repeated blockages",
-    benefits: ["Creates wider urethral opening", "Reduces future blockage risk", "Long-term relief", "Improved quality of life"],
-    process: ["Advanced anesthesia protocols", "Skilled surgical technique", "Close post-operative care", "Recovery monitoring"],
-    candidateInfo: "Recommended for male cats with recurrent blockages or severe urethral damage"
-  };
+  const riskFactors = [
+    {
+      factor: "Male Cats",
+      description: "Males have narrower urethras making blockages more likely",
+      risk: "High Risk",
+      icon: Target,
+      color: dangerColor
+    },
+    {
+      factor: "Dry Food Diet",
+      description: "Low moisture intake can contribute to urinary crystal formation",
+      risk: "Moderate Risk",
+      icon: Droplets,
+      color: warningColor
+    },
+    {
+      factor: "Stress & Environment",
+      description: "Changes in routine, moving, or multi-cat households increase risk",
+      risk: "Variable Risk",
+      icon: Home,
+      color: "#8b5cf6"
+    },
+    {
+      factor: "Previous Blockages",
+      description: "Cats with history of blockages are at higher risk for recurrence",
+      risk: "Very High Risk",
+      icon: AlertTriangle,
+      color: "#dc2626"
+    },
+    {
+      factor: "Obesity",
+      description: "Overweight cats have increased risk of urinary complications",
+      risk: "Moderate Risk",
+      icon: Heart,
+      color: warningColor
+    }
+  ];
+
+  const emergencyTreatment = [
+    {
+      step: "Immediate Stabilization",
+      description: "Emergency catheterization to relieve blockage and restore urine flow",
+      urgency: "Life-saving",
+      procedures: ["Urethral catheterization", "Bladder emptying", "Pain management", "IV fluid therapy"],
+      icon: Zap
+    },
+    {
+      step: "Toxin Management",
+      description: "Treatment of electrolyte imbalances and toxin buildup",
+      urgency: "Critical",
+      procedures: ["Blood chemistry monitoring", "Electrolyte correction", "Kidney function support", "Cardiac monitoring"],
+      icon: TestTube
+    },
+    {
+      step: "Catheter Management",
+      description: "Maintaining catheter placement for proper drainage and healing",
+      urgency: "Essential",
+      procedures: ["Sterile catheter care", "Continuous monitoring", "Infection prevention", "Comfort measures"],
+      icon: Monitor
+    }
+  ];
 
   const preventionStrategies = [
     {
-      strategy: "Increased Hydration",
-      description: "Fresh water and wet food to dilute urine and flush the urinary tract",
+      strategy: "Increased Water Intake",
+      description: "Multiple water sources and wet food to promote hydration",
+      methods: ["Fresh water daily", "Water fountains", "Wet food diet", "Flavor water with tuna juice"],
       icon: Droplets
     },
     {
-      strategy: "Prescription Urinary Diets",
-      description: "Specialized nutrition to prevent crystal formation and maintain urinary health",
-      icon: Pill
-    },
-    {
-      strategy: "Regular Veterinary Monitoring",
-      description: "Scheduled checkups with urinalysis for early detection and prevention",
-      icon: Stethoscope
-    },
-    {
       strategy: "Stress Reduction",
-      description: "Environmental enrichment and stress management to reduce blockage triggers",
+      description: "Environmental management to reduce stress-related urinary issues",
+      methods: ["Consistent routine", "Multiple litter boxes", "Quiet feeding areas", "Pheromone diffusers"],
       icon: Heart
+    },
+    {
+      strategy: "Diet Management",
+      description: "Urinary health diets designed to prevent crystal formation",
+      methods: ["Prescription urinary diets", "Controlled mineral content", "Proper pH balance", "Regular feeding schedule"],
+      icon: Leaf
+    },
+    {
+      strategy: "Regular Monitoring",
+      description: "Routine check-ups and early detection of urinary issues",
+      methods: ["Annual urinalysis", "Weight management", "Behavior monitoring", "Quick response to symptoms"],
+      icon: Search
     }
   ];
 
-  const whyChooseUsEmergency = [
+  const recoverySupport = [
     {
-      feature: "Emergency Expertise",
-      description: "Immediate response protocols for life-threatening feline urinary blockages",
-      icon: Siren
+      support: "Hospitalization & Monitoring",
+      description: "24/7 care during critical recovery period",
+      icon: Monitor
     },
     {
-      feature: "Advanced Surgical Skills",
-      description: "Experienced surgeons skilled in PU surgery with proven success rates",
-      icon: Scissors
+      support: "Pain Management",
+      description: "Comprehensive comfort protocols during treatment",
+      icon: Pill
     },
     {
-      feature: "24/7 Critical Care",
-      description: "Round-the-clock monitoring and emergency intervention capabilities", 
+      support: "Nutritional Support",
+      description: "Specialized diets to support recovery and prevention",
+      icon: Leaf
+    },
+    {
+      support: "Follow-up Care",
+      description: "Regular monitoring to prevent recurrence",
+      icon: Calendar
+    },
+    {
+      support: "Owner Education",
+      description: "Training on prevention strategies and warning signs",
+      icon: FileText
+    },
+    {
+      support: "Emergency Planning",
+      description: "24/7 support and emergency contact protocols",
+      icon: Phone
+    }
+  ];
+
+  const whyChooseUs = [
+    {
+      feature: "24/7 Emergency Care",
+      description: "Immediate availability for blocked cat emergencies—no appointment needed",
       icon: Clock
     },
     {
-      feature: "Compassionate Emergency Care",
-      description: "Understanding the stress and providing support throughout the crisis",
+      feature: "Advanced Equipment",
+      description: "Specialized catheters and monitoring equipment for feline urinary emergencies",
+      icon: Award
+    },
+    {
+      feature: "Experienced Team",
+      description: "Veterinarians trained in emergency feline urinary blockage treatment",
+      icon: Stethoscope
+    },
+    {
+      feature: "Comprehensive Care",
+      description: "From emergency treatment through long-term prevention planning",
       icon: Shield
     }
   ];
 
   const serviceAreas = [
-    "Chantilly", "South Riding", "Aldie", "Ashburn", "Centreville", "Reston", "Herndon"
-  ];
-
-  const criticalFactors = [
-    "Every hour without treatment increases kidney damage",
-    "Toxin buildup can cause death within 24-72 hours",
-    "Early intervention greatly improves survival rates",
-    "Male cats are at highest risk due to narrow urethra"
+    "South Riding", "Aldie", "Ashburn", "Chantilly", "Centreville", "Reston", "Herndon"
   ];
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Emergency Hero Section - Mobile Only */}
-      <section className="text-white sticky z-40 block md:hidden" style={{ top: '4rem', background: `linear-gradient(135deg, ${emergencyColor} 0%, #b91c1c 100%)`, paddingTop: '0.5rem', paddingBottom: '0.5rem' }}>
+      {/* Blue Tagline Badge */}
+      <section className="bg-[#29add3] py-2">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center flex items-center justify-center">
-            <Siren className="h-5 w-5 mr-2" />
+          <div className="text-center">
+            <span className="inline-flex items-center px-4 py-1 rounded-full text-sm font-medium bg-white text-[#29add3]">
+              <Cat className="w-4 h-4 mr-2" />
+              24/7 Emergency Care for Blocked Cats
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* Hero Section - Mobile Only */}
+      <section className="text-white sticky z-40 block md:hidden" style={{ top: '4rem', background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '0.5rem', paddingBottom: '0.5rem' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
             <h1 className="font-bold" style={{ fontSize: '1.125rem' }}>
               Blocked Cats - Emergency Care
             </h1>
@@ -188,41 +264,40 @@ const BlockedCatsUrgentCare = () => {
         </div>
       </section>
 
-      {/* Critical Emergency Alert */}
-      <section style={{ background: `linear-gradient(135deg, ${emergencyColor} 0%, #b91c1c 100%)`, paddingTop: '20px', paddingBottom: '20px' }}>
+      {/* Emergency Alert */}
+      <section className="bg-red-600 py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white bg-opacity-95 p-6 rounded-xl shadow-lg text-center">
+          <div className="text-center">
             <div className="flex items-center justify-center mb-4">
-              <AlertTriangle className="h-8 w-8 mr-3 text-red-600" />
-              <h2 className="text-xl font-bold text-red-900">LIFE-THREATENING EMERGENCY</h2>
+              <AlertTriangle className="h-8 w-8 mr-3 text-white" />
+              <h2 className="text-xl font-bold text-white">FELINE EMERGENCY</h2>
             </div>
-            <p className="text-red-800 font-semibold text-lg mb-4">
-              If your cat is showing signs of urinary blockage, this is a veterinary emergency. 
-              Call us immediately or come in right away.
+            <p className="text-white text-base mb-4 max-w-4xl mx-auto">
+              If your male cat is straining to urinate, crying in the litter box, or hasn't urinated 
+              in several hours, this is a life-threatening emergency. <strong>Call us immediately</strong> 
+              or come directly to our hospital.
             </p>
-            <a
-              href={`tel:${hospitalInfo.phone}`}
-              className="inline-flex items-center justify-center bg-red-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-red-700 transition-colors duration-200"
-            >
-              <PhoneCall className="mr-2 h-6 w-6" />
-              EMERGENCY: {hospitalInfo.phone}
-            </a>
+            <div className="bg-white p-4 rounded-lg inline-block">
+              <p className="text-red-600 font-bold text-lg">
+                Time is critical - untreated blockages can be fatal within 24-48 hours
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Introduction */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
-              Blocked Cats – Life-Saving Care for Urinary Blockages
+              Emergency Treatment for Blocked Cats
             </h1>
             <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
-              At Pets and Vets Animal Hospital & Urgent Care in Chantilly, VA, we know how frightening it is when 
-              your cat struggles to urinate. Urinary blockages in cats—especially male cats—are life-threatening 
-              emergencies that require immediate veterinary care. With expert treatment and advanced surgical options, 
-              our team is here to save lives and restore your cat's comfort.
+              At Pets and Vets Animal Hospital in South Riding, VA—serving Aldie, Ashburn, Chantilly, 
+              Centreville, Reston, and Herndon—we provide 24/7 emergency care for blocked cats. Male 
+              cats are particularly susceptible to urinary blockages, which are true medical emergencies 
+              requiring immediate intervention to save their lives.
             </p>
           </div>
           
@@ -230,8 +305,8 @@ const BlockedCatsUrgentCare = () => {
           <div className="mt-8 flex justify-center">
             <div className="relative max-w-2xl">
               <img 
-                src="https://images.unsplash.com/photo-1733783506192-653df6185a7d"
-                alt="Professional veterinary examination of cat for urinary blockage emergency"
+                src="https://images.pexels.com/photos/7601454/pexels-photo-7601454.jpeg"
+                alt="Emergency veterinary care for blocked cat with specialized equipment"
                 className="w-full h-64 object-cover rounded-xl shadow-lg"
               />
               <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
@@ -240,243 +315,182 @@ const BlockedCatsUrgentCare = () => {
         </div>
       </section>
 
-      {/* What Is a Urinary Blockage */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      {/* Emergency Symptoms */}
+      <section className="bg-white py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
-            What Is a Urinary Blockage?
-          </h2>
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white p-8 rounded-xl shadow-md">
-              <div className="flex items-center mb-4">
-                <AlertTriangle className="h-8 w-8 mr-4 text-red-600" />
-                <h3 className="text-lg font-semibold text-gray-900">Life-Threatening Emergency</h3>
-              </div>
-              <p className="text-gray-700 leading-relaxed mb-6">
-                A urinary blockage occurs when the urethra becomes obstructed by crystals, stones, or mucus plugs. 
-                This prevents urine from passing, leading to dangerous toxin buildup, severe pain, kidney damage, 
-                and—if untreated—death.
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="p-4 rounded-lg bg-red-50 border-l-4 border-red-500">
-                  <h4 className="font-semibold text-red-900 mb-3">Critical Time Factors</h4>
-                  <div className="space-y-2">
-                    {criticalFactors.map((factor, index) => (
-                      <div key={index} className="flex items-start">
-                        <Clock className="h-4 w-4 mr-2 text-red-600 flex-shrink-0 mt-0.5" />
-                        <span className="text-red-800 text-sm">{factor}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="p-4 rounded-lg bg-blue-50 border-l-4 border-blue-500">
-                  <h4 className="font-semibold text-blue-900 mb-3">Common Causes</h4>
-                  <ul className="text-sm text-blue-800 space-y-2">
-                    <li className="flex items-center">
-                      <CircleDot className="h-3 w-3 mr-2 flex-shrink-0" />
-                      Urinary crystals (struvite, calcium oxalate)
-                    </li>
-                    <li className="flex items-center">
-                      <CircleDot className="h-3 w-3 mr-2 flex-shrink-0" />
-                      Bladder stones or debris
-                    </li>
-                    <li className="flex items-center">
-                      <CircleDot className="h-3 w-3 mr-2 flex-shrink-0" />
-                      Mucus plugs from inflammation
-                    </li>
-                    <li className="flex items-center">
-                      <CircleDot className="h-3 w-3 mr-2 flex-shrink-0" />
-                      Urethral strictures or swelling
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Emergency Signs */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
-            Emergency Signs of a Blocked Cat
+            Critical Emergency Symptoms
           </h2>
           <p className="text-center text-gray-600 mb-8">
-            <strong>Call us immediately if you notice:</strong>
+            <strong>Contact us immediately if your cat shows any of these signs:</strong>
           </p>
           
           <div className="space-y-6">
-            {emergencySignsData.map((sign, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md border-l-4" style={{ borderColor: sign.color }}>
+            {emergencySymptoms.map((symptom, index) => (
+              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md border-l-4" style={{ borderColor: symptom.color }}>
                 <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
                   <div className="flex items-center mb-4 lg:mb-0">
-                    <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: `${sign.color}15` }}>
-                      <sign.icon className="h-8 w-8" style={{ color: sign.color }} />
+                    <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: `${symptom.color}15` }}>
+                      <symptom.icon className="h-8 w-8" style={{ color: symptom.color }} />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900">{sign.sign}</h3>
-                      <span className="px-3 py-1 rounded-full text-xs font-bold text-white" style={{ backgroundColor: sign.color }}>
-                        {sign.urgency}
-                      </span>
+                      <h3 className="text-xl font-semibold text-gray-900">{symptom.symptom}</h3>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <span className="px-3 py-1 rounded-full text-xs font-medium text-white" style={{ backgroundColor: symptom.color }}>
+                          {symptom.severity}
+                        </span>
+                        <span className="px-3 py-1 bg-gray-200 text-gray-800 text-xs font-medium rounded-full">
+                          {symptom.timeframe}
+                        </span>
+                      </div>
                     </div>
                   </div>
                   <div className="flex-1">
-                    <p className="text-gray-700 leading-relaxed">{sign.description}</p>
+                    <p className="text-gray-700 leading-relaxed">{symptom.description}</p>
                   </div>
                 </div>
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Risk Factors */}
+      <section className="bg-[#f8f9fa] py-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
+            Risk Factors for Urinary Blockages
+          </h2>
+          <p className="text-center text-gray-600 mb-8">
+            Understanding risk factors helps with prevention and early recognition:
+          </p>
           
-          <div className="mt-8 bg-red-50 p-6 rounded-xl border-2 border-red-500">
-            <div className="flex items-center justify-center mb-4">
-              <Siren className="h-8 w-8 mr-3 text-red-600" />
-              <h3 className="text-xl font-bold text-red-900">Don't Wait - Every Hour Matters</h3>
-            </div>
-            <p className="text-red-800 text-center font-semibold text-lg">
-              If your cat is blocked, don't wait—every hour matters. This is a life-threatening emergency requiring immediate veterinary intervention.
-            </p>
+          <div className="space-y-6">
+            {riskFactors.map((factor, index) => (
+              <div key={index} className="bg-white p-6 rounded-xl shadow-md border-l-4" style={{ borderColor: factor.color }}>
+                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
+                  <div className="flex items-center mb-4 lg:mb-0">
+                    <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: `${factor.color}15` }}>
+                      <factor.icon className="h-8 w-8" style={{ color: factor.color }} />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900">{factor.factor}</h3>
+                      <span className="px-3 py-1 rounded-full text-xs font-medium text-white" style={{ backgroundColor: factor.color }}>
+                        {factor.risk}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-gray-700 leading-relaxed">{factor.description}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Treatment Options */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      {/* Emergency Treatment */}
+      <section className="bg-white py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
-            How We Treat Urinary Blockages
+            Emergency Treatment Protocol
           </h2>
+          <p className="text-center text-gray-600 mb-8">
+            Our immediate response protocol for blocked cats follows these critical steps:
+          </p>
           
-          {/* Emergency Treatment Steps */}
-          <div className="mb-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6 text-center">Emergency Stabilization & Unblocking</h3>
-            <div className="space-y-6">
-              {treatmentSteps.map((step, index) => (
-                <div key={index} className="bg-white p-6 rounded-xl shadow-md">
-                  <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
-                    <div className="flex items-center mb-4 lg:mb-0">
-                      <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
-                        <step.icon className="h-8 w-8" style={{ color: primaryColor }} />
-                      </div>
-                      <div>
-                        <h4 className="text-xl font-semibold text-gray-900">{step.step}</h4>
-                        <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
-                          {step.urgency}
-                        </span>
-                      </div>
+          <div className="space-y-6">
+            {emergencyTreatment.map((step, index) => (
+              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md">
+                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
+                  <div className="flex items-center mb-4 lg:mb-0">
+                    <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
+                      <step.icon className="h-8 w-8" style={{ color: primaryColor }} />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-gray-700 mb-4">{step.description}</p>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {step.procedures.map((procedure, procIndex) => (
-                          <div key={procIndex} className="flex items-center p-2 rounded-lg" style={{ backgroundColor: primaryBg }}>
-                            <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
-                            <span className="text-sm text-gray-700">{procedure}</span>
-                          </div>
-                        ))}
-                      </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900">{step.step}</h3>
+                      <span className="px-3 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">
+                        {step.urgency}
+                      </span>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          {/* Professional Image */}
-          <div className="mt-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.unsplash.com/photo-1733783489145-f3d3ee7a9ccf"
-                alt="Professional veterinary care for blocked cat emergency treatment"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Surgical Option */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
-            Advanced Surgical Care
-          </h2>
-          
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-xl shadow-md">
-              <div className="flex items-center mb-4">
-                <Scissors className="h-8 w-8 mr-4" style={{ color: primaryColor }} />
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900">{surgicalOption.name}</h3>
-                  <p className="text-gray-600">{surgicalOption.description}</p>
-                </div>
-              </div>
-              <p className="text-gray-700 mb-6">{surgicalOption.candidateInfo}</p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white p-4 rounded-lg">
-                  <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-                    <Award className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
-                    Benefits
-                  </h4>
-                  <div className="space-y-2">
-                    {surgicalOption.benefits.map((benefit, index) => (
-                      <div key={index} className="flex items-center">
-                        <CheckCircle className="h-4 w-4 mr-2 text-green-600 flex-shrink-0" />
-                        <span className="text-sm text-gray-700">{benefit}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="bg-white p-4 rounded-lg">
-                  <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-                    <Stethoscope className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
-                    Surgical Process
-                  </h4>
-                  <div className="space-y-2">
-                    {surgicalOption.process.map((step, index) => (
-                      <div key={index} className="flex items-center">
-                        <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
-                        <span className="text-sm text-gray-700">{step}</span>
-                      </div>
-                    ))}
+                  <div className="flex-1">
+                    <p className="text-gray-700 mb-4">{step.description}</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {step.procedures.map((procedure, procIndex) => (
+                        <div key={procIndex} className="flex items-center p-2 rounded-lg" style={{ backgroundColor: primaryBg }}>
+                          <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
+                          <span className="text-sm text-gray-700">{procedure}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          
-          {/* Professional Image */}
-          <div className="mt-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.unsplash.com/photo-1721907043581-ae2fdca684e8"
-                alt="Professional veterinary surgeon providing compassionate care for blocked cat"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Prevention Strategies */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
-            Preventing Future Blockages
+            Prevention Strategies
           </h2>
+          <p className="text-center text-gray-600 mb-8">
+            Preventing urinary blockages through proactive care and environmental management:
+          </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="space-y-6">
             {preventionStrategies.map((strategy, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
-                  <strategy.icon className="h-8 w-8" style={{ color: primaryColor }} />
+              <div key={index} className="bg-white p-6 rounded-xl shadow-md">
+                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
+                  <div className="flex items-center mb-4 lg:mb-0">
+                    <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4 bg-green-100">
+                      <strategy.icon className="h-8 w-8 text-green-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900">{strategy.strategy}</h3>
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-gray-700 mb-4">{strategy.description}</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {strategy.methods.map((method, methIndex) => (
+                        <div key={methIndex} className="flex items-center p-2 rounded-lg bg-green-50">
+                          <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0 text-green-600" />
+                          <span className="text-sm text-gray-700">{method}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{strategy.strategy}</h3>
-                <p className="text-gray-600 text-sm">{strategy.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Recovery Support */}
+      <section className="bg-white py-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
+            Recovery & Ongoing Support
+          </h2>
+          <p className="text-center text-gray-600 mb-8">
+            Comprehensive support throughout recovery and prevention of future episodes:
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {recoverySupport.map((support, index) => (
+              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md text-center">
+                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
+                  <support.icon className="h-8 w-8" style={{ color: primaryColor }} />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">{support.support}</h3>
+                <p className="text-gray-600 text-sm">{support.description}</p>
               </div>
             ))}
           </div>
@@ -484,15 +498,15 @@ const BlockedCatsUrgentCare = () => {
       </section>
 
       {/* Why Choose Us */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
-            Why Choose Our Emergency Care
+            Why Choose Our Emergency Care?
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {whyChooseUsEmergency.map((feature, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md text-center">
+            {whyChooseUs.map((feature, index) => (
+              <div key={index} className="bg-white p-6 rounded-xl shadow-md text-center">
                 <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
                   <feature.icon className="h-8 w-8" style={{ color: primaryColor }} />
                 </div>
@@ -504,26 +518,26 @@ const BlockedCatsUrgentCare = () => {
         </div>
       </section>
 
-      {/* Emergency Care Message */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      {/* Life-Saving Care Message */}
+      <section className="bg-white py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
-            Your Cat's Life Depends on Fast, Expert Care
+            Life-Saving Emergency Care When Minutes Count
           </h2>
           <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
             <p className="text-gray-700 leading-relaxed mb-6 text-lg">
-              Urinary blockages are true veterinary emergencies where every minute counts. Our experienced emergency 
-              team is equipped with advanced diagnostic tools and surgical expertise to provide immediate, life-saving 
-              care when your cat needs it most.
+              Urinary blockages in male cats are true medical emergencies. Every minute counts 
+              when your cat's life is at stake. Our experienced emergency team is equipped with 
+              the specialized knowledge and equipment needed to save blocked cats.
             </p>
             <div className="bg-white p-6 rounded-lg">
               <div className="flex items-center justify-center mb-4">
-                <Siren className="h-8 w-8 mr-3" style={{ color: emergencyColor }} />
-                <h3 className="text-xl font-semibold text-gray-900">Emergency Veterinary Care</h3>
+                <Cat className="h-8 w-8 mr-3" style={{ color: primaryColor }} />
+                <h3 className="text-xl font-semibold text-gray-900">24/7 Emergency Excellence</h3>
               </div>
               <p className="text-gray-800 font-semibold">
-                From emergency stabilization to advanced surgery—we're ready when you need us most. 
-                Don't wait if your cat shows signs of urinary blockage.
+                Don't wait—if your cat shows signs of a blockage, call immediately or come 
+                directly to our hospital. We're here to save lives when every second matters.
               </p>
             </div>
           </div>
@@ -531,13 +545,13 @@ const BlockedCatsUrgentCare = () => {
       </section>
 
       {/* Service Areas */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
-            Emergency Care for Your Community
+            Serving Your Community
           </h2>
           <p className="text-gray-600 mb-6">
-            We proudly serve families and their cats throughout:
+            We proudly provide 24/7 emergency care for blocked cats throughout:
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             {serviceAreas.map((area, index) => (
@@ -550,34 +564,31 @@ const BlockedCatsUrgentCare = () => {
       </section>
 
       {/* Emergency Contact CTA */}
-      <section style={{ background: `linear-gradient(135deg, ${emergencyColor} 0%, #b91c1c 100%)`, paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ background: `linear-gradient(135deg, ${dangerColor} 0%, #dc2626 100%)`, paddingTop: '30px', paddingBottom: '30px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="flex items-center justify-center mb-4">
-            <Siren className="h-8 w-8 mr-3 text-white" />
-            <h2 className="font-bold text-white text-xl">
-              EMERGENCY: Is Your Cat Blocked?
-            </h2>
-          </div>
-          <p className="mb-8 text-white text-lg font-semibold">
-            Don't wait—call immediately or come in right away. Your cat's life depends on fast action.
+          <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
+            FELINE EMERGENCY - CALL NOW
+          </h2>
+          <p className="mb-8" style={{ color: 'white', fontSize: '1rem' }}>
+            If your cat is blocked or showing signs of blockage, this is a life-threatening emergency
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href={`tel:${hospitalInfo.phone}`}
-              className="inline-flex items-center justify-center bg-white px-8 py-4 rounded-lg font-bold text-lg transition-colors duration-200"
-              style={{ color: emergencyColor }}
+              className="inline-flex items-center justify-center bg-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
+              style={{ color: dangerColor }}
               onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
             >
-              <PhoneCall className="mr-2 h-6 w-6" />
-              CALL NOW: {hospitalInfo.phone}
+              <Phone className="mr-2 h-5 w-5" />
+              EMERGENCY: {hospitalInfo.phone}
             </a>
             <Link
               to="/contact"
-              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = 'white';
-                e.target.style.color = emergencyColor;
+                e.target.style.color = dangerColor;
               }}
               onMouseLeave={(e) => {
                 e.target.style.backgroundColor = 'transparent';  
@@ -588,10 +599,6 @@ const BlockedCatsUrgentCare = () => {
               <MapPin className="ml-2 h-5 w-5" />
             </Link>
           </div>
-          <p className="mt-6 text-white text-sm">
-            <strong>Pets and Vets Animal Hospital & Urgent Care</strong><br />
-            We're ready when you need us most.
-          </p>
         </div>
       </section>
     </div>

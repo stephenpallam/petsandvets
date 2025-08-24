@@ -217,6 +217,18 @@ const ForeignBodySurgery = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Blue Tagline Badge */}
+      <section className="bg-[#29add3] py-2">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <span className="inline-flex items-center px-4 py-1 rounded-full text-sm font-medium bg-white text-[#29add3]">
+              <Scissors className="w-4 h-4 mr-2" />
+              Life-Saving Foreign Body Removal Surgery
+            </span>
+          </div>
+        </div>
+      </section>
+
       {/* Hero Section - Mobile Only */}
       <section className="text-white sticky z-40 block md:hidden" style={{ top: '4rem', background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '0.5rem', paddingBottom: '0.5rem' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -229,7 +241,7 @@ const ForeignBodySurgery = () => {
       </section>
 
       {/* Introduction */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
@@ -259,7 +271,7 @@ const ForeignBodySurgery = () => {
       </section>
 
       {/* What Is a GI Obstruction */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             What Is a GI Obstruction?
@@ -315,7 +327,7 @@ const ForeignBodySurgery = () => {
       </section>
 
       {/* Symptoms Section */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Symptoms of GI Obstruction in Pets
@@ -361,7 +373,7 @@ const ForeignBodySurgery = () => {
       </section>
 
       {/* Diagnostic Methods */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             How We Diagnose Obstructions
@@ -412,7 +424,7 @@ const ForeignBodySurgery = () => {
       </section>
 
       {/* Surgical Treatment */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Surgical Treatment for GI Obstructions
@@ -468,7 +480,7 @@ const ForeignBodySurgery = () => {
       </section>
 
       {/* Aftercare & Prevention */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Aftercare & Prevention
@@ -505,7 +517,7 @@ const ForeignBodySurgery = () => {
       </section>
 
       {/* Why Choose Us */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Why Choose Pets and Vets Animal Hospital?
@@ -526,7 +538,7 @@ const ForeignBodySurgery = () => {
       </section>
 
       {/* Expert Surgical Care Message */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             Expert Surgical Care When Your Pet Needs It Most
@@ -552,7 +564,7 @@ const ForeignBodySurgery = () => {
       </section>
 
       {/* Service Areas */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             Serving Your Community
@@ -582,7 +594,7 @@ const ForeignBodySurgery = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href={`tel:${hospitalInfo.phone}`}
-              className="inline-flex items-center justify-center bg-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              className="inline-flex items-center justify-center bg-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               style={{ color: primaryColor }}
               onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
@@ -592,7 +604,7 @@ const ForeignBodySurgery = () => {
             </a>
             <Link
               to="/contact"
-              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = 'white';
                 e.target.style.color = primaryColor;
