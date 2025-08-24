@@ -56,6 +56,8 @@ import SurgeryAnesthesiaConsent from "./pages/forms/SurgeryAnesthesiaConsent";
 import DentalConsent from "./pages/forms/DentalConsent";
 import RequestPetRecords from "./pages/forms/RequestPetRecords";
 import FormsDownload from "./pages/forms/FormsDownload";
+import UrgentCareBooking from "./pages/UrgentCareBooking";
+import UrgentCareAppointments from "./pages/UrgentCareAppointments";
 
 function App() {
   return (
