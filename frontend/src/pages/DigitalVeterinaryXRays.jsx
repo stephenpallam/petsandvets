@@ -222,37 +222,25 @@ const DigitalVeterinaryXRays = () => {
       </section>
 
       {/* Benefits of Digital X-Rays for Pets */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Benefits of Digital X-Rays for Pets
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {digitalBenefits.map((benefit, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: `${benefit.color}15` }}>
-                  <benefit.icon className="h-8 w-8" style={{ color: benefit.color }} />
+              <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3" style={{ backgroundColor: `${benefit.color}15` }}>
+                  <benefit.icon className="h-6 w-6" style={{ color: benefit.color }} />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{benefit.benefit}</h3>
-                <p className="text-gray-600 text-sm mb-3">{benefit.description}</p>
-                <span className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: `${benefit.color}20`, color: benefit.color }}>
+                <h3 className="text-base font-semibold text-gray-900 mb-2">{benefit.benefit}</h3>
+                <p className="text-gray-600 text-sm mb-2">{benefit.description}</p>
+                <span className="px-2 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: `${benefit.color}20`, color: benefit.color }}>
                   {benefit.highlight}
                 </span>
               </div>
             ))}
-          </div>
-          
-          {/* Professional Image */}
-          <div className="mt-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.unsplash.com/photo-1631563018856-81be9c118283"
-                alt="Professional veterinary consultation reviewing X-ray results"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
           </div>
         </div>
       </section>
