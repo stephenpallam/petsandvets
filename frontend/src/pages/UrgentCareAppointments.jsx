@@ -290,9 +290,25 @@ const UrgentCareAppointments = () => {
         ) : (
           <div className="bg-white rounded-xl shadow-lg overflow-hidden">
             <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">
-                All Urgent Care Appointments
-              </h2>
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Appointments
+                </h2>
+                <div className="flex items-center gap-3">
+                  <select
+                    value={filterDays}
+                    onChange={(e) => handleFilterChange(e.target.value)}
+                    className="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white min-w-[160px]"
+                    style={{ borderColor: primaryColor }}
+                  >
+                    {filterOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
             </div>
             
             <div className="overflow-x-auto">
