@@ -402,17 +402,17 @@ const PetSpayNeuter = () => {
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Post-Surgical Recovery Care
           </h2>
-          <p className="text-center text-gray-600 mb-8">
+          <p className="text-center text-gray-600 mb-6 text-sm">
             Comprehensive support for optimal healing and recovery:
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {postSurgicalCare.map((care, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
-                  <care.icon className="h-8 w-8" style={{ color: primaryColor }} />
+              <div key={index} className="bg-white p-4 rounded-lg shadow-sm text-center">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3" style={{ backgroundColor: primaryBg }}>
+                  <care.icon className="h-6 w-6" style={{ color: primaryColor }} />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{care.care}</h3>
+                <h3 className="text-base font-semibold text-gray-900 mb-2">{care.care}</h3>
                 <p className="text-gray-600 text-sm">{care.description}</p>
               </div>
             ))}
