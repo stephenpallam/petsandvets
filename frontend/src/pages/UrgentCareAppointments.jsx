@@ -197,6 +197,11 @@ const UrgentCareAppointments = () => {
     });
   };
 
+  const confirmDelete = (appointment) => {
+    setAppointmentToDelete(appointment);
+    setShowDeleteConfirm(true);
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
