@@ -238,7 +238,7 @@ const UrgentCareBooking = () => {
 
         <div className="bg-white rounded-xl shadow-lg p-8">
           {/* Step 1: Time Selection */}
-          {step === 1 && (
+          {currentTab === 0 && (
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
                 <Clock className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
