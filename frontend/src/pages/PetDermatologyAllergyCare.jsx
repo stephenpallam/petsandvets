@@ -383,23 +383,23 @@ const PetDermatologyAllergyCare = () => {
       </section>
 
       {/* The Bottom Line */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             Comfortable, Itch-Free Living for Your Pet
           </h2>
-          <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+          <div className="p-6 rounded-lg" style={{ backgroundColor: primaryBg }}>
+            <p className="text-gray-700 leading-relaxed mb-4" style={{ fontSize: '1rem' }}>
               Don't let allergies make your pet miserable. With proper diagnosis and treatment, most pets can live 
               comfortable, itch-free lives. Our comprehensive approach combines advanced testing, personalized treatment 
               plans, and ongoing support to give your pet the relief they deserve.
             </p>
-            <div className="bg-white p-6 rounded-lg">
-              <div className="flex items-center justify-center mb-4">
-                <Shield className="h-8 w-8 mr-3" style={{ color: primaryColor }} />
-                <h3 className="text-xl font-semibold text-gray-900">Expert Dermatology & Allergy Care</h3>
+            <div className="bg-white p-4 rounded-lg">
+              <div className="flex items-center justify-center mb-3">
+                <Shield className="h-6 w-6 mr-2" style={{ color: primaryColor }} />
+                <h3 className="text-base font-semibold text-gray-900">Expert Dermatology & Allergy Care</h3>
               </div>
-              <p className="text-gray-800 font-semibold">
+              <p className="text-gray-800 text-sm font-semibold">
                 From environmental allergies to food sensitivities—trust our experienced team to identify triggers, 
                 provide effective treatments, and help your beloved companion live their most comfortable life.
               </p>
