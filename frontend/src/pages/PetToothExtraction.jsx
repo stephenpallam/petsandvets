@@ -170,37 +170,30 @@ const PetToothExtraction = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="font-bold" style={{ fontSize: '1.125rem' }}>
-              Pet Tooth Extractions
+              Tooth Extractions
             </h1>
           </div>
         </div>
       </section>
 
-      {/* Introduction */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      {/* Hero Section */}
+      <section className="bg-white pt-6" style={{ paddingBottom: '8px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
-              Pet Tooth Extractions
+            <h1 className="text-xl font-bold text-gray-900 mb-4">
+              Tooth Extractions
             </h1>
+            <div className="mb-6">
+              <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+                Compassionate Pain Relief
+              </span>
+            </div>
             <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
               Dental pain in pets often goes unnoticed—dogs and cats rarely show obvious symptoms until the problem 
               is severe. You may notice subtle signs like chewing on one side, avoiding hard food, or changes in behavior. 
               At Pets and Vets Animal Hospital & Urgent Care, we provide safe and compassionate pet tooth extractions in 
               Chantilly, VA, proudly serving families in South Riding, Aldie, Ashburn, Centreville, Reston, and Herndon.
             </p>
-          </div>
-          
-          {/* Professional Image */}
-          <div className="mt-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.unsplash.com/photo-1565090567208-c8038cfcf6cd"
-                alt="Professional veterinary dental examination and surgical care"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
           </div>
         </div>
       </section>
