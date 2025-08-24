@@ -118,6 +118,8 @@ function App() {
               <Route path="/forms/dental-consent" element={<DentalConsent />} />
               <Route path="/forms/request-pet-records" element={<RequestPetRecords />} />
               <Route path="/forms-download" element={<FormsDownload />} />
+              <Route path="/urgent-care-booking" element={<UrgentCareBooking />} />
+              <Route path="/urgent-care-appointments" element={<UrgentCareAppointments />} />
             </Routes>
           </main>
           <Footer />
