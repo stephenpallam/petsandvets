@@ -415,7 +415,7 @@ const PetVaccinations = () => {
             The Bottom Line: Lifesaving Protection
           </h2>
           <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+            <p className="text-gray-700 leading-relaxed mb-6" style={{ fontSize: '1rem' }}>
               Vaccines are more than shots—they are lifesaving protection. Whether your pet spends their days 
               indoors, outdoors, or a mix of both, vaccinations keep them safe, healthy, and part of your family 
               for years to come.
