@@ -506,7 +506,7 @@ const UrgentCareBooking = () => {
           )}
 
           {/* Step 5: Additional Information */}
-          {step === 5 && (
+          {currentTab === 4 && (
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
                 Additional Information
