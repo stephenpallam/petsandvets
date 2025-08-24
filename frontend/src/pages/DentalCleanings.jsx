@@ -175,35 +175,35 @@ const DentalCleanings = () => {
       </section>
 
       {/* Why Dental Cleanings Matter */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Why Dental Cleanings Matter
           </h2>
-          <p className="text-center text-gray-600 mb-8">
+          <p className="text-center text-gray-600 mb-6 text-sm">
             Poor dental health can lead to pain, tooth loss, infection, and even affect your pet's heart, liver, 
             and kidneys. Professional cleanings remove harmful plaque and bacteria, protecting both your pet's 
             mouth and overall health.
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             {healthImpacts.map((impact, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
-                  <impact.icon className="h-8 w-8" style={{ color: primaryColor }} />
+              <div key={index} className="bg-white p-4 rounded-lg shadow-sm text-center">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3" style={{ backgroundColor: primaryBg }}>
+                  <impact.icon className="h-6 w-6" style={{ color: primaryColor }} />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{impact.impact}</h3>
+                <h3 className="text-base font-semibold text-gray-900 mb-2">{impact.impact}</h3>
                 <p className="text-gray-600 text-sm">{impact.description}</p>
               </div>
             ))}
           </div>
           
-          <div className="mt-8 bg-red-50 p-6 rounded-xl border-l-4 border-red-500">
-            <div className="flex items-center mb-4">
-              <AlertTriangle className="h-6 w-6 mr-3 text-red-600" />
-              <h3 className="text-lg font-semibold text-red-900">Critical Health Connection</h3>
+          <div className="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
+            <div className="flex items-center mb-3">
+              <AlertTriangle className="h-5 w-5 mr-2 text-red-600" />
+              <h3 className="text-base font-semibold text-red-900">Critical Health Connection</h3>
             </div>
-            <p className="text-red-800">
+            <p className="text-red-800 text-sm">
               Dental bacteria can enter your pet's bloodstream and travel to vital organs, potentially causing 
               serious health complications. Professional dental cleanings are essential preventive care.
             </p>
