@@ -144,8 +144,8 @@ const UltrasoundExams = () => {
         </div>
       </section>
 
-      {/* What Ultrasounds Can Detect */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      {/* What Is Ultrasound */}
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             What Ultrasounds Can Detect
@@ -154,31 +154,29 @@ const UltrasoundExams = () => {
             The most common type, B-mode (two-dimensional) ultrasound, produces clear images of internal organs:
           </p>
           
-          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {detectionCapabilities.map((capability, index) => (
               <div key={index} className="bg-white p-6 rounded-xl shadow-md">
                 <div className="flex items-center mb-4">
-                  <capability.icon className="h-8 w-8 mr-4" style={{ color: primaryColor }} />
-                  <h3 className="text-xl font-semibold text-gray-900">{capability.category}</h3>
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: `${capability.color}15` }}>
+                    <capability.icon className="h-6 w-6" style={{ color: capability.color }} />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">{capability.category}</h3>
                 </div>
-                <p className="text-gray-600 mb-4">{capability.description}</p>
-                <div className="grid grid-cols-2 gap-2">
-                  {capability.conditions.map((condition, conditionIndex) => (
-                    <div key={conditionIndex} className="flex items-center p-2 rounded-lg" style={{ backgroundColor: primaryBg }}>
-                      <CheckCircle className="h-4 w-4 mr-2" style={{ color: primaryColor }} />
-                      <span className="text-sm text-gray-700">{condition}</span>
-                    </div>
-                  ))}
+                <p className="text-gray-600 text-sm mb-4">{capability.description}</p>
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-gray-900 text-sm">Common Conditions:</h4>
+                  <div className="space-y-1">
+                    {capability.conditions.slice(0, 3).map((condition, condIndex) => (
+                      <div key={condIndex} className="flex items-center text-xs text-gray-600">
+                        <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: capability.color }} />
+                        <span>{condition}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             ))}
-          </div>
-
-          <div className="mt-8 p-6 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-center font-medium" style={{ color: primaryColor }}>
-              This makes ultrasound an essential diagnostic tool for both wellness checks and emergency situations.
-            </p>
           </div>
         </div>
       </section>
