@@ -459,12 +459,71 @@ async def create_appointment(
     return appointment
 
 
-@api_router.get("/urgent-care-appointments", response_model=List[UrgentCareAppointment])
+@api_router.get("/urgent-care-appointments", response_model=AppointmentListResponse)
 async def get_appointments(
+    filter_days: Optional[str] = "today",  # today, last_7_days, last_15_days, last_30_days, last_3_months, last_6_months, last_1_year
+    page: int = 1,
+    page_size: int = 20,
     current_user: User = Depends(get_admin_user)
 ):
-    appointments = await db.urgent_care_appointments.find().sort("appointment_time", 1).to_list(1000)
-    return [UrgentCareAppointment(**appointment) for appointment in appointments]
+    """Get paginated and filtered appointments"""
+    
+    # Calculate date range based on filter
+    now = datetime.utcnow()
+    
+    if filter_days == "today":
+        start_date = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_date = now.replace(hour=23, minute=59, second=59, microsecond=999999)
+    elif filter_days == "last_7_days":
+        start_date = (now - timedelta(days=7)).replace(hour=0, minute=0, second=0, microsecond=0)
+        end_date = (now - timedelta(days=1)).replace(hour=23, minute=59, second=59, microsecond=999999)
+    elif filter_days == "last_15_days":
+        start_date = (now - timedelta(days=15)).replace(hour=0, minute=0, second=0, microsecond=0)
+        end_date = now.replace(hour=23, minute=59, second=59, microsecond=999999)
+    elif filter_days == "last_30_days":
+        start_date = (now - timedelta(days=30)).replace(hour=0, minute=0, second=0, microsecond=0)
+        end_date = now.replace(hour=23, minute=59, second=59, microsecond=999999)
+    elif filter_days == "last_3_months":
+        start_date = (now - timedelta(days=90)).replace(hour=0, minute=0, second=0, microsecond=0)
+        end_date = now.replace(hour=23, minute=59, second=59, microsecond=999999)
+    elif filter_days == "last_6_months":
+        start_date = (now - timedelta(days=180)).replace(hour=0, minute=0, second=0, microsecond=0)
+        end_date = now.replace(hour=23, minute=59, second=59, microsecond=999999)
+    elif filter_days == "last_1_year":
+        start_date = (now - timedelta(days=365)).replace(hour=0, minute=0, second=0, microsecond=0)
+        end_date = now.replace(hour=23, minute=59, second=59, microsecond=999999)
+    else:
+        # Default to today
+        start_date = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_date = now.replace(hour=23, minute=59, second=59, microsecond=999999)
+    
+    # Build filter query
+    filter_query = {
+        "created_at": {
+            "$gte": start_date,
+            "$lte": end_date
+        }
+    }
+    
+    # Get total count
+    total_count = await db.urgent_care_appointments.count_documents(filter_query)
+    
+    # Calculate pagination
+    skip = (page - 1) * page_size
+    total_pages = (total_count + page_size - 1) // page_size
+    
+    # Get appointments with pagination
+    appointments_data = await db.urgent_care_appointments.find(filter_query).sort("appointment_time", -1).skip(skip).limit(page_size).to_list(page_size)
+    
+    appointments = [UrgentCareAppointment(**appointment) for appointment in appointments_data]
+    
+    return AppointmentListResponse(
+        appointments=appointments,
+        total_count=total_count,
+        page=page,
+        page_size=page_size,
+        total_pages=total_pages
+    )
 
 
 @api_router.get("/urgent-care-appointments/{appointment_id}", response_model=UrgentCareAppointment)
