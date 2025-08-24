@@ -499,7 +499,7 @@ const BlockedCatsUrgentCare = () => {
             <div className="bg-white p-6 rounded-lg">
               <div className="flex items-center justify-center mb-4">
                 <Cat className="h-8 w-8 mr-3" style={{ color: primaryColor }} />
-                <h3 className="text-xl font-semibold text-gray-900">24/7 Emergency Excellence</h3>
+                <h3 className="text-xl font-semibold text-gray-900">Emergency Excellence</h3>
               </div>
               <p className="text-gray-800 font-semibold">
                 Don't wait—if your cat shows signs of a blockage, call immediately or come 
