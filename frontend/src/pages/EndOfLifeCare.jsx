@@ -181,20 +181,20 @@ const EndOfLifeCare = () => {
       </section>
 
       {/* Final Act of Love */}
-      <section className="bg-white" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="flex items-center justify-center mb-6">
-            <Heart className="h-8 w-8 mr-3 text-red-500" />
+          <div className="flex items-center justify-center mb-4">
+            <Heart className="h-6 w-6 mr-2 text-red-500" />
             <h2 className="text-xl font-bold text-gray-900">
               A Final Act of Love
             </h2>
           </div>
           
-          <div className="bg-red-50 p-8 rounded-xl border-l-4 border-red-500">
-            <p className="text-gray-800 leading-relaxed text-lg mb-4">
+          <div className="bg-red-50 p-6 rounded-lg border-l-4 border-red-500">
+            <p className="text-gray-800 leading-relaxed mb-3" style={{ fontSize: '1rem' }}>
               <strong>Choosing euthanasia is never a sign of giving up—it's the ultimate act of love and compassion.</strong>
             </p>
-            <p className="text-gray-800 leading-relaxed text-lg">
+            <p className="text-gray-800 leading-relaxed" style={{ fontSize: '1rem' }}>
               We're honored to walk this path with you and ensure your pet's final moments are calm, 
               respectful, and filled with love.
             </p>
