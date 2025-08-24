@@ -500,73 +500,17 @@ const Header = () => {
             >
               Urgent Care
             </Link>
-
-            {/* Mobile Auth Buttons */}
-            <div className="border-t border-gray-200 pt-3 mt-3">
-              {user ? (
-                <div className="space-y-3">
-                  <div className="text-center text-sm text-gray-600">
-                    Hello, {user.full_name}
-                    {user.role === 'admin' && <div className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded inline-block ml-2">Admin</div>}
-                  </div>
-                  <button
-                    onClick={() => {
-                      logout();
-                      setIsMenuOpen(false);
-                    }}
-                    className="flex items-center justify-center w-full text-gray-600 hover:text-gray-800 px-3 py-2 rounded-lg transition-colors"
-                  >
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  <button
-                    onClick={() => {
-                      setShowLogin(true);
-                      setIsMenuOpen(false);
-                    }}
-                    className="flex items-center justify-center w-full text-gray-600 hover:text-gray-800 px-3 py-2 rounded-lg transition-colors"
-                  >
-                    <LogIn className="h-4 w-4 mr-2" />
-                    Login
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowRegister(true);
-                      setIsMenuOpen(false);
-                    }}
-                    className="flex items-center justify-center w-full bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    Register
-                  </button>
-                </div>
-              )}
-            </div>
           </div>
         </div>
       )}
 
       {/* Auth Modals */}
       {showLogin && (
-        <Login 
-          onClose={() => setShowLogin(false)}
-          onSwitchToRegister={() => {
-            setShowLogin(false);
-            setShowRegister(true);
-          }}
-        />
+        <Login onClose={() => setShowLogin(false)} />
       )}
       
-      {showRegister && (
-        <Register 
-          onClose={() => setShowRegister(false)}
-          onSwitchToLogin={() => {
-            setShowRegister(false);
-            setShowLogin(true);
-          }}
-        />
+      {showRegister && user && (
+        <Register onClose={() => setShowRegister(false)} />
       )}
     </header>
   );
