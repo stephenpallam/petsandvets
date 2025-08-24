@@ -135,6 +135,7 @@ const OurHours = () => {
           <div className="text-center mb-12">
             <h2 className="text-xl font-bold text-gray-900 mb-4">
               Operating Hours
+              {loading && <span className="ml-2 text-sm text-gray-500">(Loading...)</span>}
             </h2>
             <p className="text-gray-700 mb-2">
               All services are provided by appointment only - please call ahead to schedule
@@ -161,20 +162,60 @@ const OurHours = () => {
               
               <div className="space-y-3">
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600 font-medium">Monday - Friday:</span>
-                  <span className="font-bold text-red-600">3:00 PM - 10:00 PM</span>
+                  <span className="text-gray-600 font-medium">Monday:</span>
+                  <span className={`font-medium ${
+                    (urgentCareHours?.monday?.is_open ?? defaultHours.urgent.monday.is_open) ? 'text-red-600' : 'text-red-600'
+                  }`}>
+                    {urgentCareHours ? formatDayHours(urgentCareHours.monday) : formatDayHours(defaultHours.urgent.monday)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600 font-medium">Tuesday:</span>
+                  <span className={`font-medium ${
+                    (urgentCareHours?.tuesday?.is_open ?? defaultHours.urgent.tuesday.is_open) ? 'text-red-600' : 'text-red-600'
+                  }`}>
+                    {urgentCareHours ? formatDayHours(urgentCareHours.tuesday) : formatDayHours(defaultHours.urgent.tuesday)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600 font-medium">Wednesday:</span>
+                  <span className={`font-medium ${
+                    (urgentCareHours?.wednesday?.is_open ?? defaultHours.urgent.wednesday.is_open) ? 'text-red-600' : 'text-red-600'
+                  }`}>
+                    {urgentCareHours ? formatDayHours(urgentCareHours.wednesday) : formatDayHours(defaultHours.urgent.wednesday)}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <span className="text-gray-600 font-medium">Thursday:</span>
-                  <span className="font-medium text-red-600">Closed</span>
+                  <span className={`font-medium ${
+                    (urgentCareHours?.thursday?.is_open ?? defaultHours.urgent.thursday.is_open) ? 'text-red-600' : 'text-red-600'
+                  }`}>
+                    {urgentCareHours ? formatDayHours(urgentCareHours.thursday) : formatDayHours(defaultHours.urgent.thursday)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600 font-medium">Friday:</span>
+                  <span className={`font-medium ${
+                    (urgentCareHours?.friday?.is_open ?? defaultHours.urgent.friday.is_open) ? 'text-red-600' : 'text-red-600'
+                  }`}>
+                    {urgentCareHours ? formatDayHours(urgentCareHours.friday) : formatDayHours(defaultHours.urgent.friday)}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <span className="text-gray-600 font-medium">Saturday:</span>
-                  <span className="font-bold text-red-600">10:00 AM - 8:00 PM</span>
+                  <span className={`font-medium ${
+                    (urgentCareHours?.saturday?.is_open ?? defaultHours.urgent.saturday.is_open) ? 'text-red-600' : 'text-red-600'
+                  }`}>
+                    {urgentCareHours ? formatDayHours(urgentCareHours.saturday) : formatDayHours(defaultHours.urgent.saturday)}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center py-2">
                   <span className="text-gray-600 font-medium">Sunday:</span>
-                  <span className="font-bold text-red-600">10:00 AM - 6:00 PM</span>
+                  <span className={`font-medium ${
+                    (urgentCareHours?.sunday?.is_open ?? defaultHours.urgent.sunday.is_open) ? 'text-red-600' : 'text-red-600'
+                  }`}>
+                    {urgentCareHours ? formatDayHours(urgentCareHours.sunday) : formatDayHours(defaultHours.urgent.sunday)}
+                  </span>
                 </div>
               </div>
 
@@ -200,24 +241,60 @@ const OurHours = () => {
               
               <div className="space-y-3">
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600 font-medium">Monday - Wednesday, Friday:</span>
-                  <span className="font-medium text-gray-900">{hours.generalPractice.monday}</span>
+                  <span className="text-gray-600 font-medium">Monday:</span>
+                  <span className={`font-medium ${
+                    (hospitalHours?.monday?.is_open ?? defaultHours.hospital.monday.is_open) ? 'text-gray-900' : 'text-red-600'
+                  }`}>
+                    {hospitalHours ? formatDayHours(hospitalHours.monday) : formatDayHours(defaultHours.hospital.monday)}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <span className="text-gray-600 font-medium">Tuesday:</span>
-                  <span className="font-medium text-gray-900">{hours.generalPractice.tuesday}</span>
+                  <span className={`font-medium ${
+                    (hospitalHours?.tuesday?.is_open ?? defaultHours.hospital.tuesday.is_open) ? 'text-gray-900' : 'text-red-600'
+                  }`}>
+                    {hospitalHours ? formatDayHours(hospitalHours.tuesday) : formatDayHours(defaultHours.hospital.tuesday)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600 font-medium">Wednesday:</span>
+                  <span className={`font-medium ${
+                    (hospitalHours?.wednesday?.is_open ?? defaultHours.hospital.wednesday.is_open) ? 'text-gray-900' : 'text-red-600'
+                  }`}>
+                    {hospitalHours ? formatDayHours(hospitalHours.wednesday) : formatDayHours(defaultHours.hospital.wednesday)}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <span className="text-gray-600 font-medium">Thursday:</span>
-                  <span className="font-medium text-red-600">{hours.generalPractice.thursday}</span>
+                  <span className={`font-medium ${
+                    (hospitalHours?.thursday?.is_open ?? defaultHours.hospital.thursday.is_open) ? 'text-gray-900' : 'text-red-600'
+                  }`}>
+                    {hospitalHours ? formatDayHours(hospitalHours.thursday) : formatDayHours(defaultHours.hospital.thursday)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600 font-medium">Friday:</span>
+                  <span className={`font-medium ${
+                    (hospitalHours?.friday?.is_open ?? defaultHours.hospital.friday.is_open) ? 'text-gray-900' : 'text-red-600'
+                  }`}>
+                    {hospitalHours ? formatDayHours(hospitalHours.friday) : formatDayHours(defaultHours.hospital.friday)}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <span className="text-gray-600 font-medium">Saturday:</span>
-                  <span className="font-medium text-gray-900">{hours.generalPractice.saturday}</span>
+                  <span className={`font-medium ${
+                    (hospitalHours?.saturday?.is_open ?? defaultHours.hospital.saturday.is_open) ? 'text-gray-900' : 'text-red-600'
+                  }`}>
+                    {hospitalHours ? formatDayHours(hospitalHours.saturday) : formatDayHours(defaultHours.hospital.saturday)}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center py-2">
                   <span className="text-gray-600 font-medium">Sunday:</span>
-                  <span className="font-medium text-red-600">{hours.generalPractice.sunday}</span>
+                  <span className={`font-medium ${
+                    (hospitalHours?.sunday?.is_open ?? defaultHours.hospital.sunday.is_open) ? 'text-gray-900' : 'text-red-600'
+                  }`}>
+                    {hospitalHours ? formatDayHours(hospitalHours.sunday) : formatDayHours(defaultHours.hospital.sunday)}
+                  </span>
                 </div>
               </div>
 
