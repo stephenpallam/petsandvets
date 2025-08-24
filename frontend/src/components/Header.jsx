@@ -9,7 +9,10 @@ import { hospitalInfo } from '../mock';
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
   const location = useLocation();
+  const { user, logout, isAdmin } = useAuth();
 
   const navigation = [
     { name: 'Home', href: '/' },
