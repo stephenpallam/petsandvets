@@ -147,31 +147,24 @@ const DigitalVeterinaryXRays = () => {
         </div>
       </section>
 
-      {/* Introduction */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      {/* Hero Section */}
+      <section className="bg-white py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
-              Digital Veterinary X-Rays in Chantilly, VA
+            <h1 className="text-xl font-bold text-gray-900 mb-4">
+              Digital X-Rays
             </h1>
+            <div className="mb-6">
+              <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+                Fast & Accurate Digital Imaging
+              </span>
+            </div>
             <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
               When your pet needs an X-ray, safety and accuracy matter most. At Pets and Vets Animal Hospital & Urgent Care, 
               we provide advanced digital veterinary X-rays in Chantilly, VA, proudly serving families in South Riding, Aldie, 
               Ashburn, Centreville, Reston, and Herndon. Our state-of-the-art radiology technology helps us diagnose conditions 
               quickly, safely, and with exceptional clarity.
             </p>
-          </div>
-          
-          {/* Professional Image */}
-          <div className="mt-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.pexels.com/photos/6234978/pexels-photo-6234978.jpeg"
-                alt="Professional veterinary X-ray equipment and radiology services"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
           </div>
         </div>
       </section>
