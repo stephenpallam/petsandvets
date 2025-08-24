@@ -644,10 +644,10 @@ async def get_available_time_slots(date: str):
                 current_slot = min_start_time.replace(minute=next_slot_min, second=0, microsecond=0)
         
         while current_slot < end_time:
-            # Check if slot is already booked
+            # Check if slot is already booked (exclude abandoned appointments as they free up slots)
             existing_appointment = await db.urgent_care_appointments.find_one({
                 "appointment_time": current_slot.strftime("%Y-%m-%dT%H:%M"),
-                "status": "scheduled"
+                "status": {"$nin": ["abandoned"]}  # Exclude abandoned appointments
             })
             
             if not existing_appointment:
