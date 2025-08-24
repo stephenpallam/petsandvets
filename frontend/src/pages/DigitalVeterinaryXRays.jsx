@@ -141,7 +141,7 @@ const DigitalVeterinaryXRays = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="font-bold" style={{ fontSize: '1.125rem' }}>
-              Digital Veterinary X-Rays
+              Digital X-Rays
             </h1>
           </div>
         </div>
