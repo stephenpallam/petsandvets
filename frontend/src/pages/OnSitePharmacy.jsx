@@ -240,22 +240,22 @@ const OnSitePharmacy = () => {
       </section>
 
       {/* Special Features Highlight */}
-      <section className="bg-white" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-r from-blue-50 to-green-50 p-8 rounded-xl border-l-4" style={{ borderColor: primaryColor }}>
-            <div className="flex items-center mb-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
-                <Star className="h-6 w-6" style={{ color: primaryColor }} />
+          <div className="bg-blue-50 p-6 rounded-lg border-l-4" style={{ borderColor: primaryColor }}>
+            <div className="flex items-center mb-3">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full mr-3" style={{ backgroundColor: primaryBg }}>
+                <Star className="h-5 w-5" style={{ color: primaryColor }} />
               </div>
-              <h3 className="text-xl font-bold text-gray-900">Ready to Make Care Easier?</h3>
+              <h3 className="text-base font-bold text-gray-900">Ready to Make Care Easier?</h3>
             </div>
-            <p className="text-gray-800 leading-relaxed mb-4">
+            <p className="text-gray-800 leading-relaxed mb-3 text-sm">
               If your pet needs a prescription or refill, we've got you covered—right at our hospital in South Riding, VA, 
               serving the surrounding communities including Aldie, Ashburn, Chantilly, Centreville, Reston, and Herndon.
             </p>
             <div className="flex items-center">
-              <CheckCircle className="h-5 w-5 mr-2" style={{ color: accentGreen }} />
-              <span className="text-gray-800 font-medium">No extra trips • No waiting • Just convenient care</span>
+              <CheckCircle className="h-4 w-4 mr-2" style={{ color: accentGreen }} />
+              <span className="text-gray-800 font-medium text-sm">No extra trips • No waiting • Just convenient care</span>
             </div>
           </div>
         </div>
