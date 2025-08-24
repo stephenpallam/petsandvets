@@ -184,7 +184,7 @@ const VeterinaryDiagnosticServices = () => {
       </section>
 
       {/* Common Diagnostic Tests We Perform */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Common Diagnostic Tests We Perform
@@ -193,28 +193,27 @@ const VeterinaryDiagnosticServices = () => {
             Our in-house veterinary lab allows us to run a wide variety of tests for fast and accurate results:
           </p>
           
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {diagnosticTests.map((test, index) => (
               <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md">
-                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
-                  <div className="flex items-center mb-4 lg:mb-0">
-                    <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: `${test.color}15` }}>
-                      <test.icon className="h-8 w-8" style={{ color: test.color }} />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900">{test.category}</h3>
-                      <p className="text-gray-600 text-sm mt-1">{test.description}</p>
-                    </div>
+                <div className="flex items-center mb-4">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: `${test.color}15` }}>
+                    <test.icon className="h-6 w-6" style={{ color: test.color }} />
                   </div>
-                  <div className="flex-1">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {test.tests.map((testItem, testIndex) => (
-                        <div key={testIndex} className="flex items-center p-3 rounded-lg border-l-4" style={{ borderColor: test.color, backgroundColor: `${test.color}05` }}>
-                          <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: test.color }} />
-                          <span className="text-sm text-gray-700">{testItem}</span>
-                        </div>
-                      ))}
-                    </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">{test.category}</h3>
+                    <p className="text-gray-600 text-xs mt-1">{test.description}</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-gray-900 text-sm">Available Tests:</h4>
+                  <div className="space-y-1">
+                    {test.tests.slice(0, 3).map((testItem, testIndex) => (
+                      <div key={testIndex} className="flex items-center text-xs text-gray-600">
+                        <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: test.color }} />
+                        <span>{testItem}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
