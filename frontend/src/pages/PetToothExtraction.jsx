@@ -199,24 +199,24 @@ const PetToothExtraction = () => {
       </section>
 
       {/* Hidden Pain Recognition */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Recognizing Hidden Dental Pain
           </h2>
-          <p className="text-center text-gray-600 mb-8">
+          <p className="text-center text-gray-600 mb-6 text-sm">
             Pets rarely show obvious signs of dental pain. Watch for these subtle indicators:
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             {warningSignsData.map((category, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">{category.sign}</h3>
-                <div className="space-y-2 mb-4">
+              <div key={index} className="bg-white p-4 rounded-lg shadow-sm">
+                <h3 className="text-base font-semibold text-gray-900 mb-3">{category.sign}</h3>
+                <div className="space-y-1 mb-3">
                   {category.examples.map((example, exampleIndex) => (
                     <div key={exampleIndex} className="flex items-center">
-                      <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
-                      <span className="text-sm text-gray-700">{example}</span>
+                      <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
+                      <span className="text-xs text-gray-700">{example}</span>
                     </div>
                   ))}
                 </div>
@@ -225,12 +225,12 @@ const PetToothExtraction = () => {
             ))}
           </div>
           
-          <div className="bg-orange-50 p-6 rounded-xl border-l-4 border-orange-500">
-            <div className="flex items-center mb-4">
-              <Eye className="h-6 w-6 mr-3 text-orange-600" />
-              <h3 className="text-lg font-semibold text-orange-900">Early Detection is Critical</h3>
+          <div className="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
+            <div className="flex items-center mb-3">
+              <Eye className="h-5 w-5 mr-2 text-orange-600" />
+              <h3 className="text-base font-semibold text-orange-900">Early Detection is Critical</h3>
             </div>
-            <p className="text-orange-800">
+            <p className="text-orange-800 text-sm">
               Many dental problems go unnoticed until they're severe. Regular dental examinations help identify 
               issues before they become painful emergencies requiring extraction.
             </p>
