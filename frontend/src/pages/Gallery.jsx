@@ -31,16 +31,37 @@ const Gallery = () => {
         </div>
       </section>
 
+      {/* Hero Section */}
+      <section className="bg-white">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
+            Our Facility
+          </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+              Modern Design • Strategic Location • Efficient Service
+            </span>
+          </div>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
+            Our hospital features the latest veterinary technology and comfortable spaces 
+            designed with your pet's wellbeing in mind.
+          </p>
+        </div>
+      </section>
+
       {/* Gallery Grid */}
-      <section className="py-16">
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-xl font-bold text-gray-900 mb-8 text-center">
+            Facility Gallery
+          </h2>
           {facilityImages.length === 0 ? (
             <div className="text-center py-12">
               <Camera className="h-16 w-16 text-gray-400 mx-auto mb-4" />
               <p className="text-xl text-gray-600">No images found.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {facilityImages.map((image) => (
                 <div
                   key={image.id}
@@ -51,7 +72,7 @@ const Gallery = () => {
                     <img
                       src={image.url}
                       alt={image.title}
-                      className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                      className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                     />
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                       <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
@@ -60,8 +81,8 @@ const Gallery = () => {
                     </div>
                   </div>
                   
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  <div className="p-4">
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">
                       {image.title}
                     </h3>
                     <p className="text-gray-600 text-sm">
