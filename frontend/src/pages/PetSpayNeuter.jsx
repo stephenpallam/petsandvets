@@ -246,28 +246,25 @@ const PetSpayNeuter = () => {
             Spaying and neutering provide numerous health and behavioral benefits:
           </p>
           
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {healthBenefits.map((benefit, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md border-l-4" style={{ borderColor: benefit.color }}>
-                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
-                  <div className="flex items-center mb-4 lg:mb-0">
-                    <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: `${benefit.color}15` }}>
-                      <benefit.icon className="h-8 w-8" style={{ color: benefit.color }} />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900">{benefit.benefit}</h3>
-                    </div>
+              <div key={index} className="bg-white p-6 rounded-xl shadow-md">
+                <div className="flex items-center mb-4">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: `${benefit.color}15` }}>
+                    <benefit.icon className="h-6 w-6" style={{ color: benefit.color }} />
                   </div>
-                  <div className="flex-1">
-                    <p className="text-gray-700 mb-4">{benefit.description}</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {benefit.details.map((detail, detIndex) => (
-                        <div key={detIndex} className="flex items-center p-2 rounded-lg" style={{ backgroundColor: `${benefit.color}05` }}>
-                          <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: benefit.color }} />
-                          <span className="text-sm text-gray-700">{detail}</span>
-                        </div>
-                      ))}
-                    </div>
+                  <h3 className="text-lg font-semibold text-gray-900">{benefit.benefit}</h3>
+                </div>
+                <p className="text-gray-600 text-sm mb-4">{benefit.description}</p>
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-gray-900 text-sm">Key Benefits:</h4>
+                  <div className="space-y-1">
+                    {benefit.details.slice(0, 2).map((detail, detIndex) => (
+                      <div key={detIndex} className="flex items-center text-xs text-gray-600">
+                        <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: benefit.color }} />
+                        <span>{detail}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
