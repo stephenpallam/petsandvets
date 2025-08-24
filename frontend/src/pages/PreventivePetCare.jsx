@@ -149,7 +149,7 @@ const PreventivePetCare = () => {
       </section>
 
       {/* What's Included in Our Preventive Care Exams */}
-      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '15px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             What's Included in Our Preventive Care Exams
@@ -158,28 +158,27 @@ const PreventivePetCare = () => {
             Comprehensive evaluation covering every aspect of your pet's health and wellbeing:
           </p>
           
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {examComponents.map((component, index) => (
               <div key={index} className="bg-white p-6 rounded-xl shadow-md">
-                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
-                  <div className="flex items-center mb-4 lg:mb-0">
-                    <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: `${component.color}15` }}>
-                      <component.icon className="h-8 w-8" style={{ color: component.color }} />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900">{component.title}</h3>
-                      <p className="text-gray-600 text-sm mt-1">{component.description}</p>
-                    </div>
+                <div className="flex items-center mb-4">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: `${component.color}15` }}>
+                    <component.icon className="h-6 w-6" style={{ color: component.color }} />
                   </div>
-                  <div className="flex-1">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {component.details.map((detail, detailIndex) => (
-                        <div key={detailIndex} className="flex items-center p-3 rounded-lg border-l-4" style={{ borderColor: component.color, backgroundColor: `${component.color}05` }}>
-                          <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: component.color }} />
-                          <span className="text-sm text-gray-700">{detail}</span>
-                        </div>
-                      ))}
-                    </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">{component.title}</h3>
+                    <p className="text-gray-600 text-xs mt-1">{component.description}</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-gray-900 text-sm">Key Components:</h4>
+                  <div className="space-y-1">
+                    {component.details.slice(0, 3).map((detail, detailIndex) => (
+                      <div key={detailIndex} className="flex items-center text-xs text-gray-600">
+                        <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: component.color }} />
+                        <span>{detail}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
