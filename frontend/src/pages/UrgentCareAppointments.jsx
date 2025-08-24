@@ -31,6 +31,7 @@ const UrgentCareAppointments = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [appointmentToDelete, setAppointmentToDelete] = useState(null);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [showStatusMenu, setShowStatusMenu] = useState({});
   
   // Pagination and filtering states
   const [currentPage, setCurrentPage] = useState(1);
