@@ -227,17 +227,16 @@ const ConfigureHours = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section - Similar to Urgent Care page */}
-      <div className="relative bg-white py-16">
+      {/* Hero Section - Matching Urgent Care page styling */}
+      <div className="relative bg-white" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
             Configure Hospital Hours
           </h1>
-          <div 
-            className="inline-block px-8 py-4 rounded-lg text-white text-lg font-medium shadow-lg"
-            style={{ backgroundColor: '#29add3' }}
-          >
-            Manage general practice and urgent care operating hours
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: '#29add3' }}>
+              Manage general practice and urgent care operating hours
+            </span>
           </div>
         </div>
       </div>
