@@ -82,20 +82,21 @@ const DogDietNutrition = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${primaryBg} 0%, #ffffff 50%, #f0fdff 100%)` }}>
-        <div className="absolute inset-0 bg-white/40"></div>
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-          <div className="flex items-center justify-center mb-6">
-            <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
-              <Utensils className="h-8 w-8" style={{ color: primaryColor }} />
-            </div>
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900">
-              Pet Diet & Nutrition Care
+      <section className="bg-white pt-6" style={{ paddingBottom: '8px' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h1 className="text-xl font-bold text-gray-900 mb-4">
+              Diet & Nutrition
             </h1>
+            <div className="mb-6">
+              <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+                Healthy Life Starts Here
+              </span>
+            </div>
+            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
+              A healthy life begins with a healthy diet. Just like people, pets need proper nutrition to thrive. The right food choices not only help your pet fight disease but also maintain a healthy weight, boost energy, and improve their overall quality of life.
+            </p>
           </div>
-          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
-            A healthy life begins with a healthy diet. Just like people, pets need proper nutrition to thrive. The right food choices not only help your pet fight disease but also maintain a healthy weight, boost energy, and improve their overall quality of life.
-          </p>
         </div>
       </section>
 
