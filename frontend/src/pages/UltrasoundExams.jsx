@@ -302,7 +302,7 @@ const UltrasoundExams = () => {
             The Bottom Line: Safe, Fast, and Effective Diagnostics
           </h2>
           <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+            <p className="text-gray-700 leading-relaxed mb-6" style={{ fontSize: '1rem' }}>
               Ultrasound exams are one of the safest, fastest, and most effective ways to diagnose health conditions 
               in dogs and cats. Whether confirming a pregnancy, assessing organ health, or investigating unexplained 
               symptoms, ultrasound provides vital insight that leads to better care and peace of mind.
