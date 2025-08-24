@@ -245,18 +245,23 @@ const UltrasoundExams = () => {
       </section>
 
       {/* The Procedure */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="bg-white py-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             What to Expect During the Procedure
           </h2>
-          <div className="space-y-4">
+          <p className="text-center text-gray-600 mb-8">
+            Simple, safe, and comfortable procedure for your pet:
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {procedureSteps.map((step, index) => (
-              <div key={index} className="flex items-start p-4 rounded-lg border-l-4" style={{ borderColor: primaryColor, backgroundColor: primaryBg }}>
-                <div className="flex items-center justify-center w-8 h-8 rounded-full mr-4 flex-shrink-0" style={{ backgroundColor: primaryColor }}>
-                  <span className="text-white font-bold text-sm">{index + 1}</span>
+              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md text-center">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-4" style={{ backgroundColor: `${primaryColor}15` }}>
+                  <span className="text-lg font-bold" style={{ color: primaryColor }}>{step.step}</span>
                 </div>
-                <p className="text-gray-700">{step}</p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">{step.title}</h3>
+                <p className="text-gray-600 text-sm">{step.description}</p>
               </div>
             ))}
           </div>
