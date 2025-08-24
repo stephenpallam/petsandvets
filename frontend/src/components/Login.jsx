@@ -40,12 +40,12 @@ const Login = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md relative">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}>
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md relative" style={{ margin: 'auto' }}>
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors z-10"
         >
           <X className="h-5 w-5" />
         </button>
@@ -88,7 +88,18 @@ const Login = ({ onClose }) => {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors"
-                  style={{ focusRingColor: '#29add3' }}
+                  style={{ 
+                    '--tw-ring-color': '#29add3',
+                    outline: 'none'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#29add3';
+                    e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#d1d5db';
+                    e.target.style.boxShadow = 'none';
+                  }}
                   placeholder="Enter your email"
                   required
                 />
@@ -108,7 +119,18 @@ const Login = ({ onClose }) => {
                   value={formData.password}
                   onChange={handleChange}
                   className="w-full pl-10 pr-12 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors"
-                  style={{ focusRingColor: '#29add3' }}
+                  style={{ 
+                    '--tw-ring-color': '#29add3',
+                    outline: 'none'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#29add3';
+                    e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#d1d5db';
+                    e.target.style.boxShadow = 'none';
+                  }}
                   placeholder="Enter your password"
                   required
                 />
@@ -134,8 +156,10 @@ const Login = ({ onClose }) => {
               className="w-full text-white py-2.5 px-4 rounded-lg hover:opacity-90 focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium"
               style={{ 
                 backgroundColor: '#29add3',
-                focusRingColor: '#29add3'
+                '--tw-ring-color': '#29add3'
               }}
+              onMouseEnter={(e) => e.target.style.opacity = '0.9'}
+              onMouseLeave={(e) => e.target.style.opacity = '1'}
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
