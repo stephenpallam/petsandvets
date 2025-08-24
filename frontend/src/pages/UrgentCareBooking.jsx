@@ -215,7 +215,7 @@ const UrgentCareBooking = () => {
               className="h-2 rounded-full transition-all duration-300" 
               style={{ 
                 backgroundColor: primaryColor,
-                width: `${(step / 5) * 100}%` 
+                width: `${((currentTab + 1) / 6) * 100}%` 
               }}
             ></div>
           </div>
