@@ -602,6 +602,437 @@ def test_time_slots_exclude_booked():
         results.log_failure("Time Slots Exclude Booked", str(e))
         return False
 
+# ============================================================================
+# ENHANCED URGENT CARE BOOKING SYSTEM TESTS - NEW FEATURES
+# ============================================================================
+
+def test_appointments_pagination():
+    """Test GET /urgent-care-appointments with pagination parameters"""
+    if not admin_token:
+        results.log_failure("Appointments Pagination", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        
+        # Test with specific page size
+        response = requests.get(f"{API_URL}/urgent-care-appointments?page=1&page_size=5", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if (isinstance(data, dict) and 
+                "appointments" in data and 
+                "total_count" in data and 
+                "page" in data and data["page"] == 1 and
+                "page_size" in data and data["page_size"] == 5 and
+                "total_pages" in data and
+                isinstance(data["appointments"], list)):
+                results.log_success("Appointments Pagination (Page Size 5)")
+                return True
+        results.log_failure("Appointments Pagination", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Appointments Pagination", str(e))
+        return False
+
+def test_appointments_filtering_today():
+    """Test GET /urgent-care-appointments with today filter"""
+    if not admin_token:
+        results.log_failure("Appointments Filtering (Today)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.get(f"{API_URL}/urgent-care-appointments?filter_days=today", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if (isinstance(data, dict) and 
+                "appointments" in data and 
+                "total_count" in data and
+                isinstance(data["appointments"], list)):
+                results.log_success("Appointments Filtering (Today)")
+                return True
+        results.log_failure("Appointments Filtering (Today)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Appointments Filtering (Today)", str(e))
+        return False
+
+def test_appointments_filtering_last_7_days():
+    """Test GET /urgent-care-appointments with last_7_days filter"""
+    if not admin_token:
+        results.log_failure("Appointments Filtering (Last 7 Days)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.get(f"{API_URL}/urgent-care-appointments?filter_days=last_7_days", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if (isinstance(data, dict) and 
+                "appointments" in data and 
+                "total_count" in data and
+                isinstance(data["appointments"], list)):
+                results.log_success("Appointments Filtering (Last 7 Days)")
+                return True
+        results.log_failure("Appointments Filtering (Last 7 Days)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Appointments Filtering (Last 7 Days)", str(e))
+        return False
+
+def test_appointments_filtering_last_30_days():
+    """Test GET /urgent-care-appointments with last_30_days filter"""
+    if not admin_token:
+        results.log_failure("Appointments Filtering (Last 30 Days)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.get(f"{API_URL}/urgent-care-appointments?filter_days=last_30_days", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if (isinstance(data, dict) and 
+                "appointments" in data and 
+                "total_count" in data and
+                isinstance(data["appointments"], list)):
+                results.log_success("Appointments Filtering (Last 30 Days)")
+                return True
+        results.log_failure("Appointments Filtering (Last 30 Days)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Appointments Filtering (Last 30 Days)", str(e))
+        return False
+
+def test_appointments_filtering_last_1_year():
+    """Test GET /urgent-care-appointments with last_1_year filter"""
+    if not admin_token:
+        results.log_failure("Appointments Filtering (Last 1 Year)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.get(f"{API_URL}/urgent-care-appointments?filter_days=last_1_year", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if (isinstance(data, dict) and 
+                "appointments" in data and 
+                "total_count" in data and
+                isinstance(data["appointments"], list)):
+                results.log_success("Appointments Filtering (Last 1 Year)")
+                return True
+        results.log_failure("Appointments Filtering (Last 1 Year)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Appointments Filtering (Last 1 Year)", str(e))
+        return False
+
+def test_appointments_pagination_multiple_pages():
+    """Test GET /urgent-care-appointments with multiple pages"""
+    if not admin_token:
+        results.log_failure("Appointments Pagination (Multiple Pages)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        
+        # First, create several appointments to test pagination
+        from datetime import timedelta
+        appointments_created = []
+        
+        for i in range(3):
+            future_date = (datetime.now() + timedelta(days=i+5)).strftime("%Y-%m-%d")
+            appointment_time = f"{future_date}T16:{30 + i*10:02d}"
+            
+            appointment_data = {
+                "appointment_time": appointment_time,
+                "owner_first_name": f"TestOwner{i}",
+                "owner_last_name": "PaginationTest",
+                "email": f"test{i}@pagination.com",
+                "phone": f"(555) 123-456{i}",
+                "pet_name": f"Pet{i}",
+                "pet_type": "dog",
+                "reason_for_visit": f"Pagination test appointment {i}",
+                "primary_vet_hospital": "Test Hospital",
+                "how_heard_about_us": "Testing"
+            }
+            
+            response = requests.post(f"{API_URL}/urgent-care-appointments", json=appointment_data)
+            if response.status_code == 200:
+                appointments_created.append(response.json()["id"])
+        
+        # Test pagination with page_size=2
+        response = requests.get(f"{API_URL}/urgent-care-appointments?page=1&page_size=2&filter_days=last_1_year", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if (isinstance(data, dict) and 
+                "appointments" in data and 
+                "total_count" in data and
+                "page" in data and data["page"] == 1 and
+                "page_size" in data and data["page_size"] == 2 and
+                "total_pages" in data and
+                len(data["appointments"]) <= 2):
+                results.log_success("Appointments Pagination (Multiple Pages)")
+                return True
+        results.log_failure("Appointments Pagination (Multiple Pages)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Appointments Pagination (Multiple Pages)", str(e))
+        return False
+
+def test_delete_appointment_admin():
+    """Test DELETE /urgent-care-appointments/{id} with admin authentication"""
+    if not admin_token:
+        results.log_failure("Delete Appointment (Admin)", "No admin token available")
+        return False
+    
+    try:
+        # First create an appointment to delete
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=7)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T18:00"
+        
+        appointment_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "DeleteTest",
+            "owner_last_name": "AdminUser",
+            "email": "delete.test@admin.com",
+            "phone": "(555) 999-0001",
+            "pet_name": "DeleteMe",
+            "pet_type": "cat",
+            "reason_for_visit": "Test appointment for deletion",
+            "primary_vet_hospital": "Test Hospital",
+            "how_heard_about_us": "Testing"
+        }
+        
+        # Create appointment
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=appointment_data)
+        if response.status_code != 200:
+            results.log_failure("Delete Appointment (Admin - Setup)", f"Failed to create test appointment: {response.status_code}")
+            return False
+        
+        appointment_id = response.json()["id"]
+        
+        # Now delete it
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.delete(f"{API_URL}/urgent-care-appointments/{appointment_id}", headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if ("message" in data and 
+                "freed_slot" in data and 
+                data["freed_slot"] == appointment_time):
+                results.log_success("Delete Appointment (Admin)")
+                return True
+        results.log_failure("Delete Appointment (Admin)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Delete Appointment (Admin)", str(e))
+        return False
+
+def test_delete_appointment_regular_user():
+    """Test DELETE /urgent-care-appointments/{id} with regular user (should fail)"""
+    if not user_token:
+        results.log_failure("Delete Appointment (Regular User - Should Fail)", "No user token available")
+        return False
+    
+    try:
+        # First create an appointment to attempt deletion
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=8)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T19:00"
+        
+        appointment_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "DeleteTest",
+            "owner_last_name": "RegularUser",
+            "email": "delete.test@user.com",
+            "phone": "(555) 999-0002",
+            "pet_name": "CantDeleteMe",
+            "pet_type": "dog",
+            "reason_for_visit": "Test appointment for failed deletion",
+            "primary_vet_hospital": "Test Hospital",
+            "how_heard_about_us": "Testing"
+        }
+        
+        # Create appointment
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=appointment_data)
+        if response.status_code != 200:
+            results.log_failure("Delete Appointment (Regular User - Setup)", f"Failed to create test appointment: {response.status_code}")
+            return False
+        
+        appointment_id = response.json()["id"]
+        
+        # Try to delete with regular user token (should fail)
+        headers = {"Authorization": f"Bearer {user_token}"}
+        response = requests.delete(f"{API_URL}/urgent-care-appointments/{appointment_id}", headers=headers)
+        
+        if response.status_code == 403:
+            results.log_success("Delete Appointment (Regular User - Correctly Forbidden)")
+            return True
+        results.log_failure("Delete Appointment (Regular User)", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Delete Appointment (Regular User)", str(e))
+        return False
+
+def test_delete_appointment_invalid_id():
+    """Test DELETE /urgent-care-appointments/{id} with invalid ID (should return 404)"""
+    if not admin_token:
+        results.log_failure("Delete Appointment (Invalid ID)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        fake_id = "non-existent-appointment-id-12345"
+        response = requests.delete(f"{API_URL}/urgent-care-appointments/{fake_id}", headers=headers)
+        
+        if response.status_code == 404:
+            results.log_success("Delete Appointment (Invalid ID - 404)")
+            return True
+        results.log_failure("Delete Appointment (Invalid ID)", f"Expected 404, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Delete Appointment (Invalid ID)", str(e))
+        return False
+
+def test_data_consistency_filtering_pagination():
+    """Test data consistency across filtering and pagination"""
+    if not admin_token:
+        results.log_failure("Data Consistency (Filtering + Pagination)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        
+        # Create appointments with different dates
+        from datetime import timedelta
+        appointments_created = []
+        
+        # Create one appointment for today (if possible)
+        today = datetime.now().strftime("%Y-%m-%d")
+        today_appointment = {
+            "appointment_time": f"{today}T20:00",
+            "owner_first_name": "TodayTest",
+            "owner_last_name": "Consistency",
+            "email": "today@consistency.com",
+            "phone": "(555) 111-0001",
+            "pet_name": "TodayPet",
+            "pet_type": "dog",
+            "reason_for_visit": "Today's appointment for consistency test",
+            "primary_vet_hospital": "Test Hospital",
+            "how_heard_about_us": "Testing"
+        }
+        
+        # Create future appointments
+        for i in range(2):
+            future_date = (datetime.now() + timedelta(days=i+10)).strftime("%Y-%m-%d")
+            appointment_time = f"{future_date}T17:{30 + i*15:02d}"
+            
+            appointment_data = {
+                "appointment_time": appointment_time,
+                "owner_first_name": f"FutureTest{i}",
+                "owner_last_name": "Consistency",
+                "email": f"future{i}@consistency.com",
+                "phone": f"(555) 111-000{i+2}",
+                "pet_name": f"FuturePet{i}",
+                "pet_type": "cat",
+                "reason_for_visit": f"Future appointment {i} for consistency test",
+                "primary_vet_hospital": "Test Hospital",
+                "how_heard_about_us": "Testing"
+            }
+            
+            response = requests.post(f"{API_URL}/urgent-care-appointments", json=appointment_data)
+            if response.status_code == 200:
+                appointments_created.append(response.json()["id"])
+        
+        # Test filtering with pagination
+        response = requests.get(f"{API_URL}/urgent-care-appointments?filter_days=last_1_year&page=1&page_size=10", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if (isinstance(data, dict) and 
+                "appointments" in data and 
+                "total_count" in data and
+                "page" in data and
+                "page_size" in data and
+                "total_pages" in data and
+                isinstance(data["appointments"], list)):
+                
+                # Verify that total_count matches the actual number of appointments
+                total_count = data["total_count"]
+                if total_count >= len(appointments_created):
+                    results.log_success("Data Consistency (Filtering + Pagination)")
+                    return True
+        results.log_failure("Data Consistency (Filtering + Pagination)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Data Consistency (Filtering + Pagination)", str(e))
+        return False
+
+def test_deleted_appointments_removed_from_results():
+    """Test that deleted appointments are properly removed from filtered results"""
+    if not admin_token:
+        results.log_failure("Deleted Appointments Removed", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        
+        # Create an appointment
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=12)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T16:30"
+        
+        appointment_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "DeletedTest",
+            "owner_last_name": "RemovalCheck",
+            "email": "deleted@removal.com",
+            "phone": "(555) 222-0001",
+            "pet_name": "WillBeDeleted",
+            "pet_type": "dog",
+            "reason_for_visit": "Appointment to be deleted for removal test",
+            "primary_vet_hospital": "Test Hospital",
+            "how_heard_about_us": "Testing"
+        }
+        
+        # Create appointment
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=appointment_data)
+        if response.status_code != 200:
+            results.log_failure("Deleted Appointments Removed (Setup)", f"Failed to create test appointment: {response.status_code}")
+            return False
+        
+        appointment_id = response.json()["id"]
+        
+        # Get appointments count before deletion
+        response = requests.get(f"{API_URL}/urgent-care-appointments?filter_days=last_1_year", headers=headers)
+        if response.status_code != 200:
+            results.log_failure("Deleted Appointments Removed (Pre-Delete Count)", f"Failed to get appointments: {response.status_code}")
+            return False
+        
+        count_before = response.json()["total_count"]
+        
+        # Delete the appointment
+        response = requests.delete(f"{API_URL}/urgent-care-appointments/{appointment_id}", headers=headers)
+        if response.status_code != 200:
+            results.log_failure("Deleted Appointments Removed (Delete)", f"Failed to delete appointment: {response.status_code}")
+            return False
+        
+        # Get appointments count after deletion
+        response = requests.get(f"{API_URL}/urgent-care-appointments?filter_days=last_1_year", headers=headers)
+        if response.status_code == 200:
+            count_after = response.json()["total_count"]
+            if count_after == count_before - 1:
+                results.log_success("Deleted Appointments Removed from Results")
+                return True
+            else:
+                results.log_failure("Deleted Appointments Removed", f"Count before: {count_before}, Count after: {count_after}")
+                return False
+        results.log_failure("Deleted Appointments Removed (Post-Delete Count)", f"Status: {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Deleted Appointments Removed", str(e))
+        return False
+
 def run_all_tests():
     """Run all backend API tests"""
     print("Starting Backend API Tests...")
