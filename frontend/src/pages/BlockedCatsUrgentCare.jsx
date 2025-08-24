@@ -361,7 +361,7 @@ const BlockedCatsUrgentCare = () => {
       </section>
 
       {/* Emergency Treatment */}
-      <section className="bg-white py-6">
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Emergency Treatment Protocol
@@ -370,31 +370,30 @@ const BlockedCatsUrgentCare = () => {
             Our immediate response protocol for blocked cats follows these critical steps:
           </p>
           
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {emergencyTreatment.map((step, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md">
-                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
-                  <div className="flex items-center mb-4 lg:mb-0">
-                    <div className="flex items-center justify-center w-16 h-16 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
-                      <step.icon className="h-8 w-8" style={{ color: primaryColor }} />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900">{step.step}</h3>
-                      <span className="px-3 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">
-                        {step.urgency}
-                      </span>
-                    </div>
+              <div key={index} className="bg-white p-6 rounded-xl shadow-md">
+                <div className="flex items-center mb-4">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: primaryBg }}>
+                    <step.icon className="h-6 w-6" style={{ color: primaryColor }} />
                   </div>
-                  <div className="flex-1">
-                    <p className="text-gray-700 mb-4">{step.description}</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {step.procedures.map((procedure, procIndex) => (
-                        <div key={procIndex} className="flex items-center p-2 rounded-lg" style={{ backgroundColor: primaryBg }}>
-                          <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
-                          <span className="text-sm text-gray-700">{procedure}</span>
-                        </div>
-                      ))}
-                    </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">{step.step}</h3>
+                    <span className="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">
+                      {step.urgency}
+                    </span>
+                  </div>
+                </div>
+                <p className="text-gray-600 text-sm mb-4">{step.description}</p>
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-gray-900 text-sm">Includes:</h4>
+                  <div className="space-y-1">
+                    {step.procedures.slice(0, 2).map((procedure, procIndex) => (
+                      <div key={procIndex} className="flex items-center text-xs text-gray-600">
+                        <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
+                        <span>{procedure}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
