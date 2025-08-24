@@ -214,7 +214,7 @@ const BlockedCatsUrgentCare = () => {
 
   const whyChooseUs = [
     {
-      feature: "24/7 Emergency Care",
+      feature: "Emergency Care",
       description: "Immediate availability for blocked cat emergencies—no appointment needed",
       icon: Clock
     },
