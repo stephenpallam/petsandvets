@@ -160,7 +160,6 @@ const UrgentCareAppointments = () => {
         }
         setMessage({ type: 'success', text: message });
         fetchAppointments(); // Refresh the list
-        setShowStatusMenu({}); // Close all menus
       } else {
         setMessage({ type: 'error', text: 'Failed to update appointment status' });
       }
