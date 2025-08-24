@@ -128,7 +128,7 @@ const CatDiagnosticImaging = () => {
       </section>
 
       {/* What Is Cat Diagnostic Imaging */}
-      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '15px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             What Is Cat Diagnostic Imaging?
@@ -136,34 +136,33 @@ const CatDiagnosticImaging = () => {
           <p className="text-center text-gray-600 mb-8">
             Diagnostic imaging uses specialized equipment to create detailed pictures of a cat's bones, organs, and tissues:
           </p>
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {imagingTypes.map((imaging, index) => (
               <div key={index} className="bg-white p-6 rounded-xl shadow-md">
-                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
-                  <div className="flex items-center mb-4 lg:mb-0">
-                    <imaging.icon className="h-8 w-8 mr-4" style={{ color: primaryColor }} />
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900">{imaging.type}</h3>
-                      <div className="flex space-x-4 mt-2">
-                        <span className="px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">
-                          {imaging.speed}
-                        </span>
-                        <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
-                          {imaging.cost}
-                        </span>
-                      </div>
+                <div className="flex items-center mb-4">
+                  <imaging.icon className="h-6 w-6 mr-4" style={{ color: primaryColor }} />
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">{imaging.type}</h3>
+                    <div className="flex space-x-2 mt-2">
+                      <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                        {imaging.speed}
+                      </span>
+                      <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                        {imaging.cost}
+                      </span>
                     </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="text-gray-600 mb-4">{imaging.description}</p>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
-                      {imaging.features.map((feature, featureIndex) => (
-                        <div key={featureIndex} className="flex items-center p-2 rounded-lg" style={{ backgroundColor: primaryBg }}>
-                          <CheckCircle className="h-4 w-4 mr-2" style={{ color: primaryColor }} />
-                          <span className="text-sm text-gray-700">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
+                </div>
+                <p className="text-gray-600 text-sm mb-4">{imaging.description}</p>
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-gray-900 text-sm">Key Uses:</h4>
+                  <div className="space-y-1">
+                    {imaging.features.slice(0, 3).map((feature, featureIndex) => (
+                      <div key={featureIndex} className="flex items-center text-xs text-gray-600">
+                        <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
+                        <span>{feature}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
