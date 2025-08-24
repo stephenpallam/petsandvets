@@ -214,7 +214,7 @@ const PetDermatologyAllergyCare = () => {
       </section>
 
       {/* Environmental Allergies in Pets */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Environmental Allergies in Pets
@@ -223,28 +223,28 @@ const PetDermatologyAllergyCare = () => {
             Environmental allergies are among the most common reasons pets visit the vet. Common triggers include:
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             {environmentalAllergens.map((allergen, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: `${allergen.color}15` }}>
-                  <allergen.icon className="h-8 w-8" style={{ color: allergen.color }} />
+              <div key={index} className="bg-white p-4 rounded-lg shadow-sm text-center">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3" style={{ backgroundColor: `${allergen.color}15` }}>
+                  <allergen.icon className="h-6 w-6" style={{ color: allergen.color }} />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{allergen.allergen}</h3>
-                <p className="text-gray-600 text-sm mb-3">{allergen.description}</p>
-                <span className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: `${allergen.color}20`, color: allergen.color }}>
+                <h3 className="text-base font-semibold text-gray-900 mb-2">{allergen.allergen}</h3>
+                <p className="text-gray-600 text-sm mb-2">{allergen.description}</p>
+                <span className="px-2 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: `${allergen.color}20`, color: allergen.color }}>
                   {allergen.season}
                 </span>
               </div>
             ))}
           </div>
           
-          <div className="bg-orange-50 p-6 rounded-xl border-l-4 border-orange-500">
-            <h3 className="text-lg font-semibold text-orange-900 mb-4">Common Environmental Allergy Symptoms:</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
+            <h3 className="text-base font-semibold text-orange-900 mb-3">Common Environmental Allergy Symptoms:</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {environmentalSymptoms.map((symptom, index) => (
-                <div key={index} className="flex items-center">
-                  <AlertTriangle className="h-4 w-4 mr-2 text-orange-600 flex-shrink-0" />
-                  <span className="text-orange-800 text-sm">{symptom}</span>
+                <div key={index} className="flex items-center text-sm">
+                  <AlertTriangle className="h-3 w-3 mr-2 text-orange-600 flex-shrink-0" />
+                  <span className="text-orange-800">{symptom}</span>
                 </div>
               ))}
             </div>
