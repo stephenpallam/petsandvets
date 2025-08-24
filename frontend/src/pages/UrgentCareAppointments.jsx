@@ -101,6 +101,47 @@ const UrgentCareAppointments = () => {
     }
   };
 
+  const deleteAppointment = async (appointmentId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/urgent-care-appointments/${appointmentId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setMessage({ type: 'success', text: `Appointment deleted successfully. Time slot ${data.freed_slot} is now available for booking.` });
+        fetchAppointments(); // Refresh the list
+        setShowDeleteConfirm(false);
+        setAppointmentToDelete(null);
+      } else {
+        setMessage({ type: 'error', text: 'Failed to delete appointment' });
+      }
+    } catch (error) {
+      console.error('Error deleting appointment:', error);
+      setMessage({ type: 'error', text: 'Failed to delete appointment' });
+    }
+  };
+
+  const handleFilterChange = (newFilter) => {
+    setFilterDays(newFilter);
+    setCurrentPage(1); // Reset to first page when changing filter
+  };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
+  const confirmDelete = (appointment) => {
+    setAppointmentToDelete(appointment);
+    setShowDeleteConfirm(true);
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
