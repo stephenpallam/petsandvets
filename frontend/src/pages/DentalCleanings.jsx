@@ -264,29 +264,29 @@ const DentalCleanings = () => {
       </section>
 
       {/* Signs Your Pet May Need a Cleaning */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Signs Your Pet May Need a Cleaning
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             {warningSignsData.map((warning, index) => (
-              <div key={index} className={`bg-white p-6 rounded-xl shadow-md border-l-4 ${
+              <div key={index} className={`bg-white p-4 rounded-lg shadow-sm border-l-4 ${
                 warning.severity === 'early' ? 'border-yellow-500' :
                 warning.severity === 'moderate' ? 'border-orange-500' :
                 'border-red-500'
               }`}>
-                <div className="flex items-center mb-4">
-                  <warning.icon className={`h-6 w-6 mr-3 ${
+                <div className="flex items-center mb-3">
+                  <warning.icon className={`h-5 w-5 mr-2 ${
                     warning.severity === 'early' ? 'text-yellow-600' :
                     warning.severity === 'moderate' ? 'text-orange-600' :
                     'text-red-600'
                   }`} />
-                  <h3 className="text-lg font-semibold text-gray-900">{warning.sign}</h3>
+                  <h3 className="text-base font-semibold text-gray-900">{warning.sign}</h3>
                 </div>
-                <p className="text-gray-600 text-sm mb-3">{warning.description}</p>
-                <span className={`px-3 py-1 text-xs font-medium rounded-full ${
+                <p className="text-gray-600 text-sm mb-2">{warning.description}</p>
+                <span className={`px-2 py-1 text-xs font-medium rounded-full ${
                   warning.severity === 'early' ? 'bg-yellow-100 text-yellow-800' :
                   warning.severity === 'moderate' ? 'bg-orange-100 text-orange-800' :
                   'bg-red-100 text-red-800'
@@ -298,24 +298,12 @@ const DentalCleanings = () => {
             ))}
           </div>
           
-          {/* Professional Image */}
-          <div className="mt-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.unsplash.com/photo-1563488055907-7d993a2df623"
-                alt="Cat showing teeth during dental examination"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
+          <div className="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
+            <div className="flex items-center mb-3">
+              <Clock className="h-5 w-5 mr-2 text-orange-600" />
+              <h3 className="text-base font-semibold text-orange-900">Early Intervention is Key</h3>
             </div>
-          </div>
-          
-          <div className="mt-8 bg-orange-50 p-6 rounded-xl border-l-4 border-orange-500">
-            <div className="flex items-center mb-4">
-              <Clock className="h-6 w-6 mr-3 text-orange-600" />
-              <h3 className="text-lg font-semibold text-orange-900">Early Intervention is Key</h3>
-            </div>
-            <p className="text-orange-800">
+            <p className="text-orange-800 text-sm">
               If you notice these symptoms, your pet may already have dental disease. Early care helps prevent 
               painful complications and more extensive treatments.
             </p>
