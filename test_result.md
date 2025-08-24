@@ -460,6 +460,18 @@ frontend:
         agent: "main"
         comment: "Verified page displays correctly with color-coded exam components, benefit highlights, AVMA recommendation, second opinions section, and compelling CTA section"
 
+  - task: "Online Booking System for Urgent Care"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/UrgentCareBooking.jsx, /app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Discovered existing comprehensive booking system already implemented with multi-step form (time selection, owner info, pet info, visit reason, additional details), backend APIs for appointments and time slots, and admin appointments management page. Added missing routes to App.js for /urgent-care-booking and /urgent-care-appointments. System includes time slot availability checking based on urgent care hours, appointment creation, and admin dashboard."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"
