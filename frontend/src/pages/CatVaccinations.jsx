@@ -127,25 +127,28 @@ const CatVaccinations = () => {
         </div>
       </section>
 
-      {/* Introduction */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              Cat Vaccinations
-            </h1>
-            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
-              Vaccinations are one of the simplest, safest, and most effective ways to keep your cat healthy. 
-              They protect against dangerous and often fatal diseases, strengthen your cat's immune system, and 
-              provide peace of mind for you as a pet owner. At Pets & Vets Animal Hospital, we're here to guide 
-              you through the essentials of cat vaccinations and why they are a cornerstone of preventive care.
-            </p>
+      {/* Hero Section */}
+      <section className="bg-white">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
+            Cat Vaccinations
+          </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+              Essential Protection for Your Cat
+            </span>
           </div>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
+            Vaccinations are one of the simplest, safest, and most effective ways to keep your cat healthy. 
+            They protect against dangerous and often fatal diseases, strengthen your cat's immune system, and 
+            provide peace of mind for you as a pet owner. At Pets & Vets Animal Hospital, we're here to guide 
+            you through the essentials of cat vaccinations and why they are a cornerstone of preventive care.
+          </p>
         </div>
       </section>
 
       {/* Why Vaccinations Are Essential */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '15px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Why Vaccinations Are Essential
@@ -197,7 +200,7 @@ const CatVaccinations = () => {
       </section>
 
       {/* Core Vaccines */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white" style={{ paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Core Vaccines - Essential for All Cats
@@ -236,7 +239,7 @@ const CatVaccinations = () => {
       </section>
 
       {/* Lifestyle Vaccines */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Lifestyle Vaccines - Recommended Based on Risk
@@ -273,7 +276,7 @@ const CatVaccinations = () => {
       </section>
 
       {/* Vaccination Schedules */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white" style={{ paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Vaccination Schedules
@@ -310,7 +313,7 @@ const CatVaccinations = () => {
       </section>
 
       {/* Risks vs. Rewards */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Risks vs. Rewards
@@ -348,7 +351,7 @@ const CatVaccinations = () => {
       </section>
 
       {/* The Danger of Skipping Vaccines */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white" style={{ paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             The Danger of Skipping Vaccines
@@ -390,19 +393,12 @@ const CatVaccinations = () => {
       </section>
 
       {/* The Bottom Line */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '15px', paddingBottom: '30px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             The Bottom Line: Essential Preventive Care
           </h2>
           <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <div className="mb-6">
-              <img 
-                src="https://images.pexels.com/photos/6816857/pexels-photo-6816857.jpeg"
-                alt="Veterinary professional providing cat care"
-                className="w-full max-w-md h-48 object-cover rounded-lg shadow-md mx-auto"
-              />
-            </div>
             <p className="text-gray-700 leading-relaxed mb-6 text-lg">
               Vaccinating your cat is not optional—it's an essential part of responsible pet ownership. 
               Whether your cat spends their days exploring outside or lounging indoors, vaccines safeguard 
@@ -420,7 +416,7 @@ const CatVaccinations = () => {
       {/* Contact CTA */}
       <section style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '30px', paddingBottom: '30px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
+          <h2 className="font-bold text-white mb-6" style={{ fontSize: '1rem' }}>
             Schedule Your Cat's Vaccinations Today
           </h2>
           <p className="mb-8" style={{ color: 'white', fontSize: '1rem' }}>
@@ -429,7 +425,7 @@ const CatVaccinations = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href={`tel:${hospitalInfo.phone}`}
-              className="inline-flex items-center justify-center bg-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              className="inline-flex items-center justify-center bg-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               style={{ color: primaryColor }}
               onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
@@ -439,7 +435,7 @@ const CatVaccinations = () => {
             </a>
             <Link
               to="/contact"
-              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = 'white';
                 e.target.style.color = primaryColor;
