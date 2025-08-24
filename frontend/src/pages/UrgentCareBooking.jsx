@@ -105,37 +105,52 @@ const UrgentCareBooking = () => {
     setMessage({ type: '', text: '' });
   };
 
-  const validateStep = () => {
-    switch (step) {
-      case 1:
+  const validateCurrentTab = () => {
+    switch (currentTab) {
+      case 0:
         return formData.appointment_time !== '';
-      case 2:
+      case 1:
         return formData.owner_first_name && formData.owner_last_name && 
                formData.email && formData.phone &&
                /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) &&
                /^\d{10,}$/.test(formData.phone.replace(/\D/g, ''));
-      case 3:
+      case 2:
         return formData.pet_name && formData.pet_type;
-      case 4:
+      case 3:
         return formData.reason_for_visit;
-      case 5:
+      case 4:
         return formData.primary_vet_hospital && formData.how_heard_about_us;
       default:
         return false;
     }
   };
 
-  const nextStep = () => {
-    if (validateStep()) {
-      setStep(step + 1);
+  const goToNextTab = () => {
+    if (validateCurrentTab()) {
+      if (!completedTabs.includes(currentTab)) {
+        setCompletedTabs([...completedTabs, currentTab]);
+      }
+      setCurrentTab(currentTab + 1);
+      setMessage({ type: '', text: '' });
     } else {
       setMessage({ type: 'error', text: 'Please complete all required fields' });
     }
   };
 
-  const prevStep = () => {
-    setStep(step - 1);
-    setMessage({ type: '', text: '' });
+  const goToTab = (tabIndex) => {
+    // Can only go to completed tabs or the next available tab
+    if (completedTabs.includes(tabIndex) || tabIndex === Math.min(...completedTabs) + 1 || tabIndex === 0) {
+      setCurrentTab(tabIndex);
+      setMessage({ type: '', text: '' });
+    }
+  };
+
+  const isTabEnabled = (tabIndex) => {
+    return tabIndex === 0 || completedTabs.includes(tabIndex - 1);
+  };
+
+  const isTabCompleted = (tabIndex) => {
+    return completedTabs.includes(tabIndex);
   };
 
   const formatTime = (timeString) => {
