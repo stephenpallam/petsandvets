@@ -312,24 +312,24 @@ const DentalCleanings = () => {
       </section>
 
       {/* Healthier Mouth, Healthier Pet */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             Healthier Mouth, Healthier Pet
           </h2>
-          <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+          <div className="p-6 rounded-lg" style={{ backgroundColor: primaryBg }}>
+            <p className="text-gray-700 leading-relaxed mb-4" style={{ fontSize: '1rem' }}>
               A professional dental cleaning doesn't just freshen breath—it prevents infection, saves teeth, and 
               improves your pet's quality of life. Regular dental care is an investment in your pet's long-term 
               health and happiness.
             </p>
-            <div className="bg-white p-6 rounded-lg">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Quality of Life Benefits:</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="bg-white p-4 rounded-lg">
+              <h3 className="text-base font-semibold text-gray-900 mb-3">Quality of Life Benefits:</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {qualityOfLifeBenefits.map((benefit, index) => (
                   <div key={index} className="flex items-center">
-                    <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
-                    <span className="text-sm text-gray-700">{benefit}</span>
+                    <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: primaryColor }} />
+                    <span className="text-xs text-gray-700">{benefit}</span>
                   </div>
                 ))}
               </div>
