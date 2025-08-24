@@ -98,7 +98,8 @@ const Header = () => {
             { name: 'Request Pet Records', href: '/forms/request-pet-records' }
           ]
         },
-        { name: 'Download Forms', href: '/forms-download' }
+        { name: 'Download Forms', href: '/forms-download' },
+        ...(isAdmin() ? [{ name: 'Configure Hours', href: '/configure-hours' }] : [])
       ]
     },
     { 
