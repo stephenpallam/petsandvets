@@ -226,13 +226,23 @@ const ConfigureHours = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Configure Hospital Hours</h1>
-          <p className="text-lg text-gray-600">Manage general practice and urgent care operating hours</p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section - Similar to Urgent Care page */}
+      <div className="relative bg-white py-16">
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            Configure Hospital Hours
+          </h1>
+          <div 
+            className="inline-block px-8 py-4 rounded-lg text-white text-lg font-medium shadow-lg"
+            style={{ backgroundColor: '#29add3' }}
+          >
+            Manage general practice and urgent care operating hours
+          </div>
         </div>
+      </div>
 
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {message.text && (
           <div className={`mb-6 p-4 rounded-lg flex items-center ${
             message.type === 'success' 
@@ -253,13 +263,14 @@ const ConfigureHours = () => {
           <div className="p-6 border-b border-gray-200">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold text-gray-900 flex items-center">
-                <Clock className="h-5 w-5 mr-2 text-blue-600" />
+                <Clock className="h-5 w-5 mr-2" style={{ color: '#29add3' }} />
                 General Practice Hours
               </h2>
               <button
                 onClick={() => saveHours('hospital')}
                 disabled={loading}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center"
+                className="text-white px-4 py-2 rounded-lg hover:opacity-90 transition-colors disabled:opacity-50 flex items-center font-medium"
+                style={{ backgroundColor: '#29add3' }}
               >
                 <Save className="h-4 w-4 mr-2" />
                 Save Changes
@@ -272,12 +283,16 @@ const ConfigureHours = () => {
                 <div key={day.key} className="border border-gray-200 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="font-medium text-gray-900">{day.label}</h3>
-                    <label className="flex items-center">
+                    <label className="flex items-center cursor-pointer">
                       <input
                         type="checkbox"
                         checked={hospitalHours[day.key]?.is_open || false}
                         onChange={(e) => handleDayChange('hospital', day.key, 'is_open', e.target.checked)}
-                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        className="rounded border-gray-300 focus:ring-2 disabled:opacity-50"
+                        style={{ 
+                          accentColor: '#29add3',
+                          '--tw-ring-color': '#29add3'
+                        }}
                       />
                       <span className="ml-2 text-sm text-gray-600">Open</span>
                     </label>
@@ -290,7 +305,19 @@ const ConfigureHours = () => {
                           type="time"
                           value={hospitalHours[day.key]?.open_time || ''}
                           onChange={(e) => handleDayChange('hospital', day.key, 'open_time', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:border-transparent"
+                          style={{ 
+                            '--tw-ring-color': '#29add3',
+                            outline: 'none'
+                          }}
+                          onFocus={(e) => {
+                            e.target.style.borderColor = '#29add3';
+                            e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
+                          }}
+                          onBlur={(e) => {
+                            e.target.style.borderColor = '#d1d5db';
+                            e.target.style.boxShadow = 'none';
+                          }}
                         />
                       </div>
                       <div>
@@ -299,7 +326,19 @@ const ConfigureHours = () => {
                           type="time"
                           value={hospitalHours[day.key]?.close_time || ''}
                           onChange={(e) => handleDayChange('hospital', day.key, 'close_time', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:border-transparent"
+                          style={{ 
+                            '--tw-ring-color': '#29add3',
+                            outline: 'none'
+                          }}
+                          onFocus={(e) => {
+                            e.target.style.borderColor = '#29add3';
+                            e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
+                          }}
+                          onBlur={(e) => {
+                            e.target.style.borderColor = '#d1d5db';
+                            e.target.style.boxShadow = 'none';
+                          }}
                         />
                       </div>
                     </div>
@@ -315,13 +354,13 @@ const ConfigureHours = () => {
           <div className="p-6 border-b border-gray-200">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold text-gray-900 flex items-center">
-                <Clock className="h-5 w-5 mr-2 text-red-600" />
+                <Clock className="h-5 w-5 mr-2" style={{ color: '#dc2626' }} />
                 Urgent Care Hours
               </h2>
               <button
                 onClick={() => saveHours('urgent')}
                 disabled={loading}
-                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center"
+                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center font-medium"
               >
                 <Save className="h-4 w-4 mr-2" />
                 Save Changes
@@ -334,12 +373,16 @@ const ConfigureHours = () => {
                 <div key={day.key} className="border border-gray-200 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="font-medium text-gray-900">{day.label}</h3>
-                    <label className="flex items-center">
+                    <label className="flex items-center cursor-pointer">
                       <input
                         type="checkbox"
                         checked={urgentCareHours[day.key]?.is_open || false}
                         onChange={(e) => handleDayChange('urgent', day.key, 'is_open', e.target.checked)}
-                        className="rounded border-gray-300 text-red-600 focus:ring-red-500"
+                        className="rounded border-gray-300 focus:ring-2 disabled:opacity-50"
+                        style={{ 
+                          accentColor: '#dc2626',
+                          '--tw-ring-color': '#dc2626'
+                        }}
                       />
                       <span className="ml-2 text-sm text-gray-600">Open</span>
                     </label>
@@ -352,7 +395,19 @@ const ConfigureHours = () => {
                           type="time"
                           value={urgentCareHours[day.key]?.open_time || ''}
                           onChange={(e) => handleDayChange('urgent', day.key, 'open_time', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:border-transparent"
+                          style={{ 
+                            '--tw-ring-color': '#dc2626',
+                            outline: 'none'
+                          }}
+                          onFocus={(e) => {
+                            e.target.style.borderColor = '#dc2626';
+                            e.target.style.boxShadow = '0 0 0 2px rgba(220, 38, 38, 0.2)';
+                          }}
+                          onBlur={(e) => {
+                            e.target.style.borderColor = '#d1d5db';
+                            e.target.style.boxShadow = 'none';
+                          }}
                         />
                       </div>
                       <div>
@@ -361,7 +416,19 @@ const ConfigureHours = () => {
                           type="time"
                           value={urgentCareHours[day.key]?.close_time || ''}
                           onChange={(e) => handleDayChange('urgent', day.key, 'close_time', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:border-transparent"
+                          style={{ 
+                            '--tw-ring-color': '#dc2626',
+                            outline: 'none'
+                          }}
+                          onFocus={(e) => {
+                            e.target.style.borderColor = '#dc2626';
+                            e.target.style.boxShadow = '0 0 0 2px rgba(220, 38, 38, 0.2)';
+                          }}
+                          onBlur={(e) => {
+                            e.target.style.borderColor = '#d1d5db';
+                            e.target.style.boxShadow = 'none';
+                          }}
                         />
                       </div>
                     </div>
@@ -376,7 +443,7 @@ const ConfigureHours = () => {
         <div className="bg-white rounded-lg shadow-md">
           <div className="p-6 border-b border-gray-200">
             <h2 className="text-xl font-semibold text-gray-900 flex items-center">
-              <Calendar className="h-5 w-5 mr-2 text-green-600" />
+              <Calendar className="h-5 w-5 mr-2" style={{ color: '#16a34a' }} />
               Special Hours & Holidays
             </h2>
           </div>
@@ -391,7 +458,19 @@ const ConfigureHours = () => {
                     type="date"
                     value={newSpecialHour.date}
                     onChange={(e) => setNewSpecialHour({...newSpecialHour, date: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:border-transparent"
+                    style={{ 
+                      '--tw-ring-color': '#16a34a',
+                      outline: 'none'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#16a34a';
+                      e.target.style.boxShadow = '0 0 0 2px rgba(22, 163, 74, 0.2)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = '#d1d5db';
+                      e.target.style.boxShadow = 'none';
+                    }}
                   />
                 </div>
                 <div>
@@ -401,7 +480,19 @@ const ConfigureHours = () => {
                     value={newSpecialHour.name}
                     onChange={(e) => setNewSpecialHour({...newSpecialHour, name: e.target.value})}
                     placeholder="e.g., Christmas Day"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:border-transparent"
+                    style={{ 
+                      '--tw-ring-color': '#16a34a',
+                      outline: 'none'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#16a34a';
+                      e.target.style.boxShadow = '0 0 0 2px rgba(22, 163, 74, 0.2)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = '#d1d5db';
+                      e.target.style.boxShadow = 'none';
+                    }}
                   />
                 </div>
               </div>
@@ -409,7 +500,7 @@ const ConfigureHours = () => {
                 {/* General Practice Special Hours */}
                 <div className="border border-gray-200 rounded p-3">
                   <h4 className="font-medium text-gray-700 mb-2">General Practice</h4>
-                  <label className="flex items-center mb-2">
+                  <label className="flex items-center mb-2 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={newSpecialHour.general_practice.is_open}
@@ -417,7 +508,11 @@ const ConfigureHours = () => {
                         ...newSpecialHour,
                         general_practice: { ...newSpecialHour.general_practice, is_open: e.target.checked }
                       })}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="rounded border-gray-300 focus:ring-2"
+                      style={{ 
+                        accentColor: '#29add3',
+                        '--tw-ring-color': '#29add3'
+                      }}
                     />
                     <span className="ml-2 text-sm">Open</span>
                   </label>
@@ -430,7 +525,19 @@ const ConfigureHours = () => {
                           ...newSpecialHour,
                           general_practice: { ...newSpecialHour.general_practice, open_time: e.target.value }
                         })}
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:border-transparent"
+                        style={{ 
+                          '--tw-ring-color': '#29add3',
+                          outline: 'none'
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = '#29add3';
+                          e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = '#d1d5db';
+                          e.target.style.boxShadow = 'none';
+                        }}
                       />
                       <input
                         type="time"
@@ -439,7 +546,19 @@ const ConfigureHours = () => {
                           ...newSpecialHour,
                           general_practice: { ...newSpecialHour.general_practice, close_time: e.target.value }
                         })}
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:border-transparent"
+                        style={{ 
+                          '--tw-ring-color': '#29add3',
+                          outline: 'none'
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = '#29add3';
+                          e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = '#d1d5db';
+                          e.target.style.boxShadow = 'none';
+                        }}
                       />
                     </div>
                   )}
@@ -447,7 +566,7 @@ const ConfigureHours = () => {
                 {/* Urgent Care Special Hours */}
                 <div className="border border-gray-200 rounded p-3">
                   <h4 className="font-medium text-gray-700 mb-2">Urgent Care</h4>
-                  <label className="flex items-center mb-2">
+                  <label className="flex items-center mb-2 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={newSpecialHour.urgent_care.is_open}
@@ -455,7 +574,11 @@ const ConfigureHours = () => {
                         ...newSpecialHour,
                         urgent_care: { ...newSpecialHour.urgent_care, is_open: e.target.checked }
                       })}
-                      className="rounded border-gray-300 text-red-600 focus:ring-red-500"
+                      className="rounded border-gray-300 focus:ring-2"
+                      style={{ 
+                        accentColor: '#dc2626',
+                        '--tw-ring-color': '#dc2626'
+                      }}
                     />
                     <span className="ml-2 text-sm">Open</span>
                   </label>
@@ -468,7 +591,19 @@ const ConfigureHours = () => {
                           ...newSpecialHour,
                           urgent_care: { ...newSpecialHour.urgent_care, open_time: e.target.value }
                         })}
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:border-transparent"
+                        style={{ 
+                          '--tw-ring-color': '#dc2626',
+                          outline: 'none'
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = '#dc2626';
+                          e.target.style.boxShadow = '0 0 0 2px rgba(220, 38, 38, 0.2)';
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = '#d1d5db';
+                          e.target.style.boxShadow = 'none';
+                        }}
                       />
                       <input
                         type="time"
@@ -477,7 +612,19 @@ const ConfigureHours = () => {
                           ...newSpecialHour,
                           urgent_care: { ...newSpecialHour.urgent_care, close_time: e.target.value }
                         })}
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:border-transparent"
+                        style={{ 
+                          '--tw-ring-color': '#dc2626',
+                          outline: 'none'
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = '#dc2626';
+                          e.target.style.boxShadow = '0 0 0 2px rgba(220, 38, 38, 0.2)';
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = '#d1d5db';
+                          e.target.style.boxShadow = 'none';
+                        }}
                       />
                     </div>
                   )}
@@ -485,7 +632,7 @@ const ConfigureHours = () => {
               </div>
               <button
                 onClick={addSpecialHour}
-                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center"
+                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center font-medium"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add Special Hours
@@ -519,7 +666,7 @@ const ConfigureHours = () => {
                       </div>
                       <button
                         onClick={() => deleteSpecialHour(hour.id)}
-                        className="text-red-600 hover:text-red-800 p-2"
+                        className="text-red-600 hover:text-red-800 p-2 rounded-lg hover:bg-red-50 transition-colors"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
