@@ -313,7 +313,7 @@ const UrgentCareBooking = () => {
               </div>
             )}
 
-          {/* Step 2: Owner Information */}
+            {/* Tab 1: Owner Information */}
           {currentTab === 1 && (
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
