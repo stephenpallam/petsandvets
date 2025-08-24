@@ -246,7 +246,7 @@ const DigitalVeterinaryXRays = () => {
       </section>
 
       {/* Safe, Painless, and Stress-Free */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Safe, Painless, and Stress-Free
@@ -257,24 +257,24 @@ const DigitalVeterinaryXRays = () => {
             technology, the radiation exposure is minimal and harmless for both pets and humans.
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {safetyFeatures.map((feature, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
-                  <feature.icon className="h-8 w-8" style={{ color: primaryColor }} />
+              <div key={index} className="bg-white p-4 rounded-lg shadow-sm text-center">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3" style={{ backgroundColor: primaryBg }}>
+                  <feature.icon className="h-6 w-6" style={{ color: primaryColor }} />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{feature.feature}</h3>
+                <h3 className="text-base font-semibold text-gray-900 mb-2">{feature.feature}</h3>
                 <p className="text-gray-600 text-sm">{feature.description}</p>
               </div>
             ))}
           </div>
           
-          <div className="mt-8 p-6 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <div className="flex items-center justify-center mb-4">
-              <Shield className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
-              <h3 className="text-lg font-semibold text-gray-900">Maximum Safety Standards</h3>
+          <div className="mt-6 p-4 rounded-lg" style={{ backgroundColor: primaryBg }}>
+            <div className="flex items-center justify-center mb-3">
+              <Shield className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
+              <h3 className="text-base font-semibold text-gray-900">Maximum Safety Standards</h3>
             </div>
-            <p className="text-center font-medium" style={{ color: primaryColor }}>
+            <p className="text-center text-sm font-medium" style={{ color: primaryColor }}>
               Modern digital radiology technology ensures minimal radiation exposure while delivering superior diagnostic 
               images for accurate treatment planning.
             </p>
