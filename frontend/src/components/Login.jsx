@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Eye, EyeOff, Lock, Mail, AlertCircle, CheckCircle } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, AlertCircle, CheckCircle, X } from 'lucide-react';
 
-const Login = ({ onClose, onSwitchToRegister }) => {
+const Login = ({ onClose }) => {
   const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
@@ -40,24 +40,35 @@ const Login = ({ onClose, onSwitchToRegister }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md relative">
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+        >
+          <X className="h-5 w-5" />
+        </button>
+
         <div className="p-6">
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Sign In</h2>
-            <p className="text-gray-600">Access the hospital management system</p>
+            <div className="mx-auto mb-4 w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: '#29add3' }}>
+              <Lock className="h-8 w-8 text-white" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-1">Sign In</h2>
+            <p className="text-gray-600 text-sm">Access hospital management</p>
           </div>
 
           {message.text && (
-            <div className={`mb-4 p-3 rounded-lg flex items-center ${
+            <div className={`mb-4 p-3 rounded-lg flex items-center text-sm ${
               message.type === 'success' 
                 ? 'bg-green-50 text-green-800 border border-green-200'
                 : 'bg-red-50 text-red-800 border border-red-200'
             }`}>
               {message.type === 'success' ? (
-                <CheckCircle className="h-4 w-4 mr-2" />
+                <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" />
               ) : (
-                <AlertCircle className="h-4 w-4 mr-2" />
+                <AlertCircle className="h-4 w-4 mr-2 flex-shrink-0" />
               )}
               {message.text}
             </div>
@@ -76,7 +87,8 @@ const Login = ({ onClose, onSwitchToRegister }) => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors"
+                  style={{ focusRingColor: '#29add3' }}
                   placeholder="Enter your email"
                   required
                 />
@@ -95,7 +107,8 @@ const Login = ({ onClose, onSwitchToRegister }) => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-12 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-12 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors"
+                  style={{ focusRingColor: '#29add3' }}
                   placeholder="Enter your password"
                   required
                 />
@@ -109,7 +122,7 @@ const Login = ({ onClose, onSwitchToRegister }) => {
               </div>
             </div>
 
-            <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
+            <div className="text-xs text-gray-500 rounded-lg p-3" style={{ backgroundColor: '#f0fdff' }}>
               <strong>Test Account:</strong><br />
               Email: admin@hospital.com<br />
               Password: admin123
@@ -118,32 +131,15 @@ const Login = ({ onClose, onSwitchToRegister }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full text-white py-2.5 px-4 rounded-lg hover:opacity-90 focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium"
+              style={{ 
+                backgroundColor: '#29add3',
+                focusRingColor: '#29add3'
+              }}
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
-
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <button
-                onClick={onSwitchToRegister}
-                className="text-blue-600 hover:text-blue-700 font-medium"
-              >
-                Register here
-              </button>
-            </p>
-          </div>
-
-          <div className="mt-4 text-center">
-            <button
-              onClick={onClose}
-              className="text-sm text-gray-500 hover:text-gray-700"
-            >
-              Cancel
-            </button>
-          </div>
         </div>
       </div>
     </div>
