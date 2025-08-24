@@ -1,9 +1,73 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Phone, Mail, MapPin, Clock, Facebook, Instagram, Twitter } from 'lucide-react';
-import { hospitalInfo, hours } from '../mock';
+import { hospitalInfo } from '../mock';
 
 const Footer = () => {
+  const [hospitalHours, setHospitalHours] = useState(null);
+  const [urgentCareHours, setUrgentCareHours] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+
+  const formatTime = (time) => {
+    if (!time) return '';
+    // Convert 24-hour format to 12-hour format
+    const [hours, minutes] = time.split(':');
+    const hour12 = parseInt(hours) % 12 || 12;
+    const ampm = parseInt(hours) >= 12 ? 'PM' : 'AM';
+    return `${hour12}:${minutes} ${ampm}`;
+  };
+
+  const formatDayHours = (dayData) => {
+    if (!dayData || !dayData.is_open) {
+      return 'Closed';
+    }
+    return `${formatTime(dayData.open_time)} - ${formatTime(dayData.close_time)}`;
+  };
+
+  useEffect(() => {
+    const fetchHours = async () => {
+      try {
+        // Fetch hospital hours
+        const hospitalResponse = await fetch(`${API_BASE_URL}/api/hospital-hours`);
+        if (hospitalResponse.ok) {
+          const hospitalData = await hospitalResponse.json();
+          setHospitalHours(hospitalData);
+        }
+
+        // Fetch urgent care hours
+        const urgentResponse = await fetch(`${API_BASE_URL}/api/urgent-care-hours`);
+        if (urgentResponse.ok) {
+          const urgentData = await urgentResponse.json();
+          setUrgentCareHours(urgentData);
+        }
+      } catch (error) {
+        console.error('Error fetching hours:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHours();
+  }, []);
+
+  // Fallback to static data while loading or if fetch fails
+  const defaultHours = {
+    generalPractice: {
+      monday: '9:00 AM - 6:00 PM',
+      tuesday: '9:00 AM - 6:00 PM',
+      wednesday: '9:00 AM - 6:00 PM',
+      thursday: '9:00 AM - 6:00 PM',
+      friday: '9:00 AM - 6:00 PM',
+      saturday: '9:00 AM - 5:00 PM',
+      sunday: 'Closed'
+    },
+    urgentCare: {
+      everyday: '3:00 PM - 10:00 PM'
+    }
+  };
+
   return (
     <footer className="bg-gray-900 text-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -111,35 +175,50 @@ const Footer = () => {
             <h4 className="text-lg font-semibold text-white flex items-center">
               <Clock className="h-5 w-5 mr-2" style={{ color: '#5bc0db' }} />
               General Practice Hours
+              {loading && <span className="ml-2 text-xs text-gray-400">(loading...)</span>}
             </h4>
             <div className="space-y-1 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-300">Monday:</span>
-                <span className="text-white">{hours.generalPractice.monday}</span>
+                <span className="text-white">
+                  {hospitalHours ? formatDayHours(hospitalHours.monday) : defaultHours.generalPractice.monday}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-300">Tuesday:</span>
-                <span className="text-white">{hours.generalPractice.tuesday}</span>
+                <span className="text-white">
+                  {hospitalHours ? formatDayHours(hospitalHours.tuesday) : defaultHours.generalPractice.tuesday}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-300">Wednesday:</span>
-                <span className="text-white">{hours.generalPractice.wednesday}</span>
+                <span className="text-white">
+                  {hospitalHours ? formatDayHours(hospitalHours.wednesday) : defaultHours.generalPractice.wednesday}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-300">Thursday:</span>
-                <span className="text-white">{hours.generalPractice.thursday}</span>
+                <span className="text-white">
+                  {hospitalHours ? formatDayHours(hospitalHours.thursday) : defaultHours.generalPractice.thursday}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-300">Friday:</span>
-                <span className="text-white">{hours.generalPractice.friday}</span>
+                <span className="text-white">
+                  {hospitalHours ? formatDayHours(hospitalHours.friday) : defaultHours.generalPractice.friday}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-300">Saturday:</span>
-                <span className="text-white">{hours.generalPractice.saturday}</span>
+                <span className="text-white">
+                  {hospitalHours ? formatDayHours(hospitalHours.saturday) : defaultHours.generalPractice.saturday}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-300">Sunday:</span>
-                <span className="text-white">{hours.generalPractice.sunday}</span>
+                <span className="text-white">
+                  {hospitalHours ? formatDayHours(hospitalHours.sunday) : defaultHours.generalPractice.sunday}
+                </span>
               </div>
             </div>
           </div>
@@ -149,12 +228,46 @@ const Footer = () => {
             <h4 className="text-lg font-semibold text-white flex items-center">
               <Clock className="h-5 w-5 mr-2 text-red-400" />
               Urgent Care Hours
+              {loading && <span className="ml-2 text-xs text-gray-400">(loading...)</span>}
             </h4>
             <div className="text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-300">Every Day:</span>
-                <span className="text-white font-medium">{hours.urgentCare.everyday}</span>
-              </div>
+              {urgentCareHours ? (
+                <div className="space-y-1">
+                  <div className="flex justify-between">
+                    <span className="text-gray-300">Monday:</span>
+                    <span className="text-white">{formatDayHours(urgentCareHours.monday)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-300">Tuesday:</span>
+                    <span className="text-white">{formatDayHours(urgentCareHours.tuesday)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-300">Wednesday:</span>
+                    <span className="text-white">{formatDayHours(urgentCareHours.wednesday)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-300">Thursday:</span>
+                    <span className="text-white">{formatDayHours(urgentCareHours.thursday)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-300">Friday:</span>
+                    <span className="text-white">{formatDayHours(urgentCareHours.friday)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-300">Saturday:</span>
+                    <span className="text-white">{formatDayHours(urgentCareHours.saturday)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-300">Sunday:</span>
+                    <span className="text-white">{formatDayHours(urgentCareHours.sunday)}</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Every Day:</span>
+                  <span className="text-white font-medium">{defaultHours.urgentCare.everyday}</span>
+                </div>
+              )}
               <p className="text-red-400 text-xs mt-2">Walk-ins welcome or call ahead</p>
             </div>
           </div>
