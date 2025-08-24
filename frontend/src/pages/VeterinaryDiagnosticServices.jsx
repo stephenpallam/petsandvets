@@ -153,39 +153,32 @@ const VeterinaryDiagnosticServices = () => {
       </section>
 
       {/* Why Veterinary Diagnostics Are Important */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Why Veterinary Diagnostics Are Important
           </h2>
           <p className="text-center text-gray-600 mb-8">
-            Diagnostics are the foundation of effective veterinary care. By analyzing blood, urine, tissues, or other samples, we can:
+            Modern diagnostic tools help us provide faster, more accurate care for your pet:
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {diagnosticBenefits.map((benefit, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: primaryBg }}>
-                  <benefit.icon className="h-8 w-8" style={{ color: primaryColor }} />
+              <div key={index} className="bg-white p-6 rounded-xl shadow-md">
+                <div className="flex items-center mb-4">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: `${primaryColor}15` }}>
+                    <benefit.icon className="h-6 w-6" style={{ color: primaryColor }} />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">{benefit.benefit}</h3>
+                    <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                      {benefit.highlight}
+                    </span>
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{benefit.benefit}</h3>
-                <p className="text-gray-600 text-sm mb-3">{benefit.description}</p>
-                <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
-                  {benefit.highlight}
-                </span>
+                <p className="text-gray-600 text-sm">{benefit.description}</p>
               </div>
             ))}
-          </div>
-          
-          <div className="bg-blue-50 p-6 rounded-xl border-l-4 border-blue-500">
-            <div className="flex items-center mb-4">
-              <Search className="h-6 w-6 mr-3 text-blue-600" />
-              <h3 className="text-lg font-semibold text-blue-900">Foundation of Effective Care</h3>
-            </div>
-            <p className="text-blue-800">
-              Advanced diagnostic testing provides the critical information veterinarians need to deliver targeted, 
-              effective treatment that gets your pet feeling better faster.
-            </p>
           </div>
         </div>
       </section>
