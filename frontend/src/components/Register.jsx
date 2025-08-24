@@ -63,148 +63,89 @@ const Register = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}>
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md relative max-h-[90vh] overflow-y-auto" style={{ margin: 'auto' }}>
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors z-10"
+    <>
+      {/* Full page overlay */}
+      <div 
+        className="fixed inset-0 bg-black bg-opacity-50 z-50" 
+        style={{ 
+          position: 'fixed', 
+          top: 0, 
+          left: 0, 
+          right: 0, 
+          bottom: 0,
+          zIndex: 9999 
+        }}
+        onClick={onClose}
+      />
+      
+      {/* Modal */}
+      <div 
+        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        style={{ 
+          position: 'fixed', 
+          top: 0, 
+          left: 0, 
+          right: 0, 
+          bottom: 0,
+          zIndex: 10000,
+          pointerEvents: 'none'
+        }}
+      >
+        <div 
+          className="bg-white rounded-xl shadow-2xl w-full max-w-md relative max-h-[90vh] overflow-y-auto"
+          style={{ 
+            margin: 'auto',
+            pointerEvents: 'auto'
+          }}
+          onClick={(e) => e.stopPropagation()}
         >
-          <X className="h-5 w-5" />
-        </button>
-
-        <div className="p-6">
-          <div className="text-center mb-6">
-            <div className="mx-auto mb-4 w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: '#29add3' }}>
-              <User className="h-8 w-8 text-white" />
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 border-b border-gray-100">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#29add3' }}>
+                <User className="h-5 w-5 text-white" />
+              </div>
+              <h2 className="text-lg font-bold text-gray-900">Create Account</h2>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-1">Create Account</h2>
-            <p className="text-gray-600 text-sm">Register new hospital staff</p>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <X className="h-5 w-5" />
+            </button>
           </div>
 
-          {message.text && (
-            <div className={`mb-4 p-3 rounded-lg flex items-center text-sm ${
-              message.type === 'success' 
-                ? 'bg-green-50 text-green-800 border border-green-200'
-                : 'bg-red-50 text-red-800 border border-red-200'
-            }`}>
-              {message.type === 'success' ? (
-                <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" />
-              ) : (
-                <AlertCircle className="h-4 w-4 mr-2 flex-shrink-0" />
-              )}
-              {message.text}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name
-              </label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <input
-                  type="text"
-                  id="fullName"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors"
-                  style={{ 
-                    '--tw-ring-color': '#29add3',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = '#29add3';
-                    e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = '#d1d5db';
-                    e.target.style.boxShadow = 'none';
-                  }}
-                  placeholder="Enter full name"
-                  required
-                />
+          {/* Main Content */}
+          <div className="p-4">
+            {message.text && (
+              <div className={`mb-4 p-3 rounded-lg flex items-center text-sm ${
+                message.type === 'success' 
+                  ? 'bg-green-50 text-green-800 border border-green-200'
+                  : 'bg-red-50 text-red-800 border border-red-200'
+              }`}>
+                {message.type === 'success' ? (
+                  <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" />
+                ) : (
+                  <AlertCircle className="h-4 w-4 mr-2 flex-shrink-0" />
+                )}
+                {message.text}
               </div>
-            </div>
+            )}
 
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email Address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors"
-                  style={{ 
-                    '--tw-ring-color': '#29add3',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = '#29add3';
-                    e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = '#d1d5db';
-                    e.target.style.boxShadow = 'none';
-                  }}
-                  placeholder="Enter email address"
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
-                Role
-              </label>
-              <div className="relative">
-                <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <select
-                  id="role"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors appearance-none"
-                  style={{ 
-                    '--tw-ring-color': '#29add3',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = '#29add3';
-                    e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = '#d1d5db';
-                    e.target.style.boxShadow = 'none';
-                  }}
-                >
-                  <option value="user">User</option>
-                  <option value="admin">Administrator</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4">
+            <form onSubmit={handleSubmit} className="space-y-3">
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                  Password
+                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
+                  Full Name
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   <input
-                    type={showPassword ? 'text' : 'password'}
-                    id="password"
-                    name="password"
-                    value={formData.password}
+                    type="text"
+                    id="fullName"
+                    name="fullName"
+                    value={formData.fullName}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-12 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors"
                     style={{ 
                       '--tw-ring-color': '#29add3',
                       outline: 'none'
@@ -217,33 +158,25 @@ const Register = ({ onClose }) => {
                       e.target.style.borderColor = '#d1d5db';
                       e.target.style.boxShadow = 'none';
                     }}
-                    placeholder="Min. 6 characters"
+                    placeholder="Enter full name"
                     required
-                    minLength="6"
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
                 </div>
               </div>
 
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                  Confirm Password
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                  Email Address
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   <input
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-12 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors"
                     style={{ 
                       '--tw-ring-color': '#29add3',
                       outline: 'none'
@@ -256,22 +189,128 @@ const Register = ({ onClose }) => {
                       e.target.style.borderColor = '#d1d5db';
                       e.target.style.boxShadow = 'none';
                     }}
-                    placeholder="Confirm password"
+                    placeholder="Enter email address"
                     required
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
-                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
                 </div>
               </div>
-            </div>
 
+              <div>
+                <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
+                  Role
+                </label>
+                <div className="relative">
+                  <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <select
+                    id="role"
+                    name="role"
+                    value={formData.role}
+                    onChange={handleChange}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors appearance-none"
+                    style={{ 
+                      '--tw-ring-color': '#29add3',
+                      outline: 'none'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#29add3';
+                      e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = '#d1d5db';
+                      e.target.style.boxShadow = 'none';
+                    }}
+                  >
+                    <option value="user">User</option>
+                    <option value="admin">Administrator</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      id="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors text-sm"
+                      style={{ 
+                        '--tw-ring-color': '#29add3',
+                        outline: 'none'
+                      }}
+                      onFocus={(e) => {
+                        e.target.style.borderColor = '#29add3';
+                        e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = '#d1d5db';
+                        e.target.style.boxShadow = 'none';
+                      }}
+                      placeholder="Min. 6 chars"
+                      required
+                      minLength="6"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      {showPassword ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                    Confirm
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    <input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors text-sm"
+                      style={{ 
+                        '--tw-ring-color': '#29add3',
+                        outline: 'none'
+                      }}
+                      onFocus={(e) => {
+                        e.target.style.borderColor = '#29add3';
+                        e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = '#d1d5db';
+                        e.target.style.boxShadow = 'none';
+                      }}
+                      placeholder="Confirm"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      {showConfirmPassword ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          {/* Footer */}
+          <div className="p-4 border-t border-gray-100">
             <button
-              type="submit"
+              onClick={handleSubmit}
               disabled={loading}
               className="w-full text-white py-2.5 px-4 rounded-lg hover:opacity-90 focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium"
               style={{ 
@@ -283,11 +322,14 @@ const Register = ({ onClose }) => {
             >
               {loading ? 'Creating Account...' : 'Create Account'}
             </button>
-          </form>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
+};
+
+export default Register;
 };
 
 export default Register;
