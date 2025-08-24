@@ -180,7 +180,8 @@ const UrgentCareAppointments = () => {
     }
   };
 
-  const toggleStatusMenu = (appointmentId) => {
+  const toggleStatusMenu = (appointmentId, event) => {
+    event.stopPropagation();
     setShowStatusMenu(prev => ({
       ...prev,
       [appointmentId]: !prev[appointmentId]
