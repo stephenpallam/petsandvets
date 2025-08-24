@@ -51,11 +51,12 @@ const UrgentCareAppointments = () => {
     if (!authLoading && isAdmin()) {
       fetchAppointments();
     }
-  }, [authLoading, isAdmin]);
+  }, [authLoading, isAdmin, currentPage, filterDays]);
 
   const fetchAppointments = async () => {
+    setLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/api/urgent-care-appointments`, {
+      const response = await fetch(`${API_BASE_URL}/api/urgent-care-appointments?filter_days=${filterDays}&page=${currentPage}&page_size=${pageSize}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -64,7 +65,9 @@ const UrgentCareAppointments = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setAppointments(data);
+        setAppointments(data.appointments);
+        setTotalCount(data.total_count);
+        setTotalPages(data.total_pages);
       } else {
         setMessage({ type: 'error', text: 'Failed to load appointments' });
       }
