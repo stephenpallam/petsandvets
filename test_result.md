@@ -495,11 +495,11 @@ test_plan:
     - "Create Dog & Cat Ultrasound Exams Page"
     - "Create Pet Vaccinations Page"
     - "Create Preventive Pet Care Page"
-    - "Online Booking System for Urgent Care"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
   backend_testing_complete: true
+  urgent_care_booking_testing_complete: true
 
 agent_communication:
   - agent: "main"
