@@ -127,38 +127,29 @@ const PreventivePetCare = () => {
         </div>
       </section>
 
-      {/* Introduction */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              Preventive Pet Care
-            </h1>
-            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
-              At Pets and Vets Animal Hospital & Urgent Care, we believe the best way to keep pets healthy is through 
-              proactive, preventive care. That's why we offer comprehensive preventive pet care exams in Chantilly, VA, 
-              while proudly serving families in South Riding, Aldie, Ashburn, Centreville, Reston, and Herndon. Our exams 
-              are designed to review every aspect of your pet's health—from nose to tail—so potential issues are detected 
-              early, before they become serious.
-            </p>
+      {/* Hero Section */}
+      <section className="bg-white">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
+            Preventive Pet Care
+          </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+              Comprehensive Wellness Exams
+            </span>
           </div>
-          
-          {/* Professional Image */}
-          <div className="mt-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.unsplash.com/photo-1733783489145-f3d3ee7a9ccf"
-                alt="Professional veterinary examination for preventive care"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
-          </div>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
+            At Pets and Vets Animal Hospital & Urgent Care, we believe the best way to keep pets healthy is through 
+            proactive, preventive care. That's why we offer comprehensive preventive pet care exams in Chantilly, VA, 
+            while proudly serving families in South Riding, Aldie, Ashburn, Centreville, Reston, and Herndon. Our exams 
+            are designed to review every aspect of your pet's health—from nose to tail—so potential issues are detected 
+            early, before they become serious.
+          </p>
         </div>
       </section>
 
       {/* What's Included in Our Preventive Care Exams */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '15px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             What's Included in Our Preventive Care Exams
@@ -198,7 +189,7 @@ const PreventivePetCare = () => {
       </section>
 
       {/* Why Preventive Care Matters */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white" style={{ paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Why Preventive Care Matters
@@ -236,7 +227,7 @@ const PreventivePetCare = () => {
       </section>
 
       {/* Second Opinions Welcome */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Second Opinions Welcome
@@ -245,18 +236,6 @@ const PreventivePetCare = () => {
             Concerned about your pet's health or unsure about a previous diagnosis? We're happy to provide a 
             judgment-free second opinion.
           </p>
-          
-          {/* Professional Image */}
-          <div className="mb-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.pexels.com/photos/6235650/pexels-photo-6235650.jpeg"
-                alt="Professional veterinary consultation and examination"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
-          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {secondOpinionFeatures.map((feature, index) => (
@@ -280,7 +259,7 @@ const PreventivePetCare = () => {
       </section>
 
       {/* Service Areas */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white" style={{ paddingTop: '15px', paddingBottom: '15px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             Serving Your Community
@@ -299,7 +278,7 @@ const PreventivePetCare = () => {
       </section>
 
       {/* The Bottom Line */}
-      <section className="bg-gray-50" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '15px', paddingBottom: '30px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             Schedule Your Pet's Exam Today
@@ -326,7 +305,7 @@ const PreventivePetCare = () => {
       {/* Contact CTA */}
       <section style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '30px', paddingBottom: '30px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
+          <h2 className="font-bold text-white mb-6" style={{ fontSize: '1rem' }}>
             Schedule Your Pet's Preventive Care Exam
           </h2>
           <p className="mb-8" style={{ color: 'white', fontSize: '1rem' }}>
@@ -335,7 +314,7 @@ const PreventivePetCare = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href={`tel:${hospitalInfo.phone}`}
-              className="inline-flex items-center justify-center bg-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              className="inline-flex items-center justify-center bg-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               style={{ color: primaryColor }}
               onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
@@ -345,7 +324,7 @@ const PreventivePetCare = () => {
             </a>
             <Link
               to="/contact"
-              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = 'white';
                 e.target.style.color = primaryColor;
