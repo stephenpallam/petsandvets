@@ -340,7 +340,7 @@ const DogVaccinations = () => {
             Simple, Safe, and Cost-Effective Protection
           </h2>
           <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+            <p className="text-gray-700 leading-relaxed mb-6" style={{ fontSize: '1rem' }}>
               Vaccines are a simple, safe, and cost-effective way to protect your dog from devastating diseases. 
               They not only safeguard your pet's health but also protect your family, other animals, and the community.
             </p>
