@@ -463,7 +463,7 @@ frontend:
   - task: "Online Booking System for Urgent Care"
     implemented: true
     working: true
-    file: "/app/frontend/src/pages/UrgentCareBooking.jsx, /app/backend/server.py"
+    file: "/app/frontend/src/pages/UrgentCareBooking.jsx, /app/backend/server.py, /app/frontend/src/pages/UrgentCareAppointments.jsx"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
@@ -474,6 +474,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "Comprehensive testing completed for Urgent Care Booking System APIs. All 10 urgent care specific tests passed: Time Slots API (GET /api/urgent-care-time-slots/{date}) working correctly for today, future dates, and closed days with proper 30-minute slot generation and current time + 30min logic. Appointment Creation API (POST /api/urgent-care-appointments) successfully validates all required fields (appointment_time, owner info, pet details, reason_for_visit, etc.) and creates appointments with unique IDs and timestamps. Admin Appointments API (GET /api/urgent-care-appointments and GET /api/urgent-care-appointments/{id}) properly restricts access to admin users only and returns sorted appointment lists. Integration testing confirmed time slots correctly exclude already booked appointments. Authentication working properly with admin@hospital.com/admin123. All backend APIs fully functional and ready for production use."
+      - working: true
+        agent: "main"
+        comment: "Enhanced UrgentCareAppointments admin page with all requested improvements: 1) Removed unwanted text labels ('Urgent Care Appointments', 'Admin Dashboard'), 2) Updated header to 'All Urgent Care Appointments', 3) Added delete functionality with confirmation modal that frees up time slots, 4) Implemented date filtering (Today default, Last 7/15/30 days, Last 3/6/12 months), 5) Added pagination (20 items per page) with proper backend support, 6) Added S.No column showing record numbers. Updated backend with new paginated endpoints, filtering logic, and delete API. System now provides comprehensive appointment management with efficient data loading and user-friendly interface."
 
 metadata:
   created_by: "main_agent"
