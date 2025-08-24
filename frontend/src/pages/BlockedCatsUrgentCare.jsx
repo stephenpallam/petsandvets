@@ -236,7 +236,7 @@ const BlockedCatsUrgentCare = () => {
   ];
 
   const serviceAreas = [
-    "South Riding", "Aldie", "Ashburn", "Chantilly", "Centreville", "Reston", "Herndon"
+    "Local Communities", "Surrounding Areas", "Regional Service Zone"
   ];
 
   return (
