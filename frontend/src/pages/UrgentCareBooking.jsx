@@ -761,21 +761,14 @@ const UrgentCareBooking = () => {
             {/* Tab 6: Success */}
             {currentTab === 6 && (
               <div className="text-center py-8">
-                {/* Success Message */}
-                <div className="mb-8">
-                  <h2 className="text-xl font-bold text-gray-900 mb-4">
-                    Appointment Booked Successfully!
-                  </h2>
-                  
-                  {/* Personalized Message Section */}
-                  <div className="bg-gray-50 rounded-lg p-6 mb-6">
-                    <p className="text-base text-gray-600 leading-relaxed">
-                      <span className="font-semibold text-gray-900">
-                        {capitalizeWords(formData.owner_first_name)} {capitalizeWords(formData.owner_last_name)}
-                      </span>, your urgent care appointment has been successfully booked. 
-                      We look forward to caring for <span className="font-semibold text-gray-900">{capitalizeWords(formData.pet_name)}</span>.
-                    </p>
-                  </div>
+                {/* Personalized Message Section */}
+                <div className="bg-gray-50 rounded-lg p-6 mb-6">
+                  <p className="text-base text-gray-600 leading-relaxed">
+                    <span className="font-semibold text-gray-900">
+                      {capitalizeWords(formData.owner_first_name)} {capitalizeWords(formData.owner_last_name)}
+                    </span>, your urgent care appointment has been successfully booked. 
+                    We look forward to caring for <span className="font-semibold text-gray-900">{capitalizeWords(formData.pet_name)}</span>.
+                  </p>
                 </div>
 
                 {/* Appointment Summary Card */}
