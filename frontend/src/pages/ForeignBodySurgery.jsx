@@ -242,11 +242,10 @@ const ForeignBodySurgery = () => {
             </span>
           </div>
           <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
-            At Pets and Vets Animal Hospital in South Riding, VA—also serving Aldie, Ashburn, Chantilly, 
-            Centreville, Reston, and Herndon—we know how curious pets can be. Sometimes that curiosity leads 
-            them to swallow objects like toys, bones, or household items. Unfortunately, these can cause 
-            dangerous gastrointestinal (GI) obstructions that require urgent veterinary attention. Our 
-            experienced team is here to provide advanced diagnostics and life-saving surgery when needed.
+            We know how curious pets can be. Sometimes that curiosity leads them to swallow objects like 
+            toys, bones, or household items. Unfortunately, these can cause dangerous gastrointestinal (GI) 
+            obstructions that require urgent veterinary attention. Our experienced team is here to provide 
+            advanced diagnostics and life-saving surgery when needed.
           </p>
         </div>
       </section>
