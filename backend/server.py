@@ -564,7 +564,7 @@ async def update_appointment_status(
 ):
     """Update appointment status (scheduled, completed, cancelled, no_show, abandoned)"""
     
-    valid_statuses = ["scheduled", "completed", "cancelled", "no_show", "abandoned"]
+    valid_statuses = ["scheduled", "completed", "cancelled", "no_show", "abandoned", "verified", "checked_in"]
     if status not in valid_statuses:
         raise HTTPException(status_code=400, detail=f"Invalid status. Must be one of: {valid_statuses}")
     
