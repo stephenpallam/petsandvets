@@ -350,17 +350,17 @@ const PetOcularServices = () => {
           <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
             Preventive Eye Care
           </h2>
-          <p className="text-center text-gray-600 mb-8">
+          <p className="text-center text-gray-600 mb-6 text-sm">
             Prevention is the best protection for your pet's vision:
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {preventiveCare.map((care, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4 bg-green-100">
-                  <care.icon className="h-8 w-8 text-green-600" />
+              <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3 bg-green-100">
+                  <care.icon className="h-6 w-6 text-green-600" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{care.care}</h3>
+                <h3 className="text-base font-semibold text-gray-900 mb-2">{care.care}</h3>
                 <p className="text-gray-600 text-sm">{care.description}</p>
               </div>
             ))}
