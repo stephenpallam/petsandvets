@@ -258,32 +258,23 @@ const PetBladderStoneRemoval = () => {
         </div>
       </section>
 
-      {/* Introduction */}
-      <section className="bg-white py-6">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
-              Professional Bladder Stone Removal for Pets
-            </h1>
-            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
-              At Pets and Vets Animal Hospital in South Riding, VA—serving Aldie, Ashburn, Chantilly, 
-              Centreville, Reston, and Herndon—we provide expert diagnosis and treatment for bladder 
-              stones in pets. Our advanced surgical techniques and comprehensive care approach ensure 
-              the best outcomes for your pet's urinary health.
-            </p>
+      {/* Hero Section */}
+      <section className="bg-white">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
+            Bladder Stone Removal
+          </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+              Expert Bladder Stone Removal & Prevention
+            </span>
           </div>
-          
-          {/* Professional Image */}
-          <div className="mt-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.pexels.com/photos/6235664/pexels-photo-6235664.jpeg"
-                alt="Professional veterinary surgical team performing bladder stone removal"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
-          </div>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
+            At Pets and Vets Animal Hospital in South Riding, VA—serving Aldie, Ashburn, Chantilly, 
+            Centreville, Reston, and Herndon—we provide expert diagnosis and treatment for bladder 
+            stones in pets. Our advanced surgical techniques and comprehensive care approach ensure 
+            the best outcomes for your pet's urinary health.
+          </p>
         </div>
       </section>
 
