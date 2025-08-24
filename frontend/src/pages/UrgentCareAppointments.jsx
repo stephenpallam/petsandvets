@@ -494,11 +494,8 @@ const UrgentCareAppointments = () => {
             <div className="flex-1 overflow-y-auto">
               {/* Appointment Time - White Background */}
               <div className="bg-white p-6">
-                <div className="text-center mb-4">
-                  <div className="flex items-center justify-center mb-2">
-                    <Clock className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
-                    <h4 className="font-semibold text-gray-900">Appointment Time</h4>
-                  </div>
+                <div className="text-left mb-4">
+                  <h4 className="font-semibold text-gray-900">Appointment Time</h4>
                 </div>
                 <div className="text-left">
                   <p className="text-gray-800">
@@ -509,11 +506,8 @@ const UrgentCareAppointments = () => {
 
               {/* Pet Owner Information - Light Grey Background */}
               <div className="bg-gray-50 p-6">
-                <div className="text-center mb-4">
-                  <div className="flex items-center justify-center mb-2">
-                    <User className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
-                    <h4 className="font-semibold text-gray-900">Pet Owner Information</h4>
-                  </div>
+                <div className="text-left mb-4">
+                  <h4 className="font-semibold text-gray-900">Pet Owner Information</h4>
                 </div>
                 <div className="text-left space-y-4">
                   <div>
@@ -539,11 +533,8 @@ const UrgentCareAppointments = () => {
 
               {/* Pet Information - White Background */}
               <div className="bg-white p-6">
-                <div className="text-center mb-4">
-                  <div className="flex items-center justify-center mb-2">
-                    <Heart className="h-5 w-5 text-red-500 mr-2" />
-                    <h4 className="font-semibold text-gray-900">Pet Information</h4>
-                  </div>
+                <div className="text-left mb-4">
+                  <h4 className="font-semibold text-gray-900">Pet Information</h4>
                 </div>
                 <div className="text-left space-y-4">
                   <div>
@@ -559,11 +550,8 @@ const UrgentCareAppointments = () => {
 
               {/* Medical Information - Light Grey Background */}
               <div className="bg-gray-50 p-6">
-                <div className="text-center mb-4">
-                  <div className="flex items-center justify-center mb-2">
-                    <Stethoscope className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
-                    <h4 className="font-semibold text-gray-900">Medical Information</h4>
-                  </div>
+                <div className="text-left mb-4">
+                  <h4 className="font-semibold text-gray-900">Medical Information</h4>
                 </div>
                 <div className="text-left space-y-4">
                   <div>
@@ -582,11 +570,8 @@ const UrgentCareAppointments = () => {
               {/* Additional Information - White Background */}
               {selectedAppointment.how_heard_about_us && (
                 <div className="bg-white p-6">
-                  <div className="text-center mb-4">
-                    <div className="flex items-center justify-center mb-2">
-                      <CheckCircle className="h-5 w-5 text-purple-600 mr-2" />
-                      <h4 className="font-semibold text-gray-900">Additional Information</h4>
-                    </div>
+                  <div className="text-left mb-4">
+                    <h4 className="font-semibold text-gray-900">Additional Information</h4>
                   </div>
                   <div className="text-left">
                     <div>
@@ -599,11 +584,8 @@ const UrgentCareAppointments = () => {
 
               {/* Booking Information - Light Grey Background */}
               <div className="bg-gray-50 p-6">
-                <div className="text-center mb-4">
-                  <div className="flex items-center justify-center mb-2">
-                    <Calendar className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
-                    <h4 className="font-semibold text-gray-900">Booking Information</h4>
-                  </div>
+                <div className="text-left mb-4">
+                  <h4 className="font-semibold text-gray-900">Booking Information</h4>
                 </div>
                 <div className="text-left">
                   <div>
