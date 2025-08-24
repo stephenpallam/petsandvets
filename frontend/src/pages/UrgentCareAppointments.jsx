@@ -494,22 +494,28 @@ const UrgentCareAppointments = () => {
             <div className="flex-1 overflow-y-auto">
               {/* Appointment Time - White Background */}
               <div className="bg-white p-6">
-                <div className="flex items-center mb-3">
-                  <Clock className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
-                  <h4 className="font-semibold text-gray-900">Appointment Time</h4>
+                <div className="text-center mb-4">
+                  <div className="flex items-center justify-center mb-2">
+                    <Clock className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
+                    <h4 className="font-semibold text-gray-900">Appointment Time</h4>
+                  </div>
                 </div>
-                <p className="text-gray-800">
-                  {formatDate(selectedAppointment.appointment_time)} at {formatTime(selectedAppointment.appointment_time)}
-                </p>
+                <div className="text-left">
+                  <p className="text-gray-800">
+                    {formatDate(selectedAppointment.appointment_time)} at {formatTime(selectedAppointment.appointment_time)}
+                  </p>
+                </div>
               </div>
 
               {/* Pet Owner Information - Light Grey Background */}
               <div className="bg-gray-50 p-6">
-                <div className="flex items-center mb-4">
-                  <User className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
-                  <h4 className="font-semibold text-gray-900">Pet Owner Information</h4>
+                <div className="text-center mb-4">
+                  <div className="flex items-center justify-center mb-2">
+                    <User className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
+                    <h4 className="font-semibold text-gray-900">Pet Owner Information</h4>
+                  </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="text-left space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-500 mb-1">Name</label>
                     <p className="text-gray-900">{selectedAppointment.owner_first_name} {selectedAppointment.owner_last_name}</p>
@@ -533,11 +539,13 @@ const UrgentCareAppointments = () => {
 
               {/* Pet Information - White Background */}
               <div className="bg-white p-6">
-                <div className="flex items-center mb-4">
-                  <Heart className="h-5 w-5 text-red-500 mr-2" />
-                  <h4 className="font-semibold text-gray-900">Pet Information</h4>
+                <div className="text-center mb-4">
+                  <div className="flex items-center justify-center mb-2">
+                    <Heart className="h-5 w-5 text-red-500 mr-2" />
+                    <h4 className="font-semibold text-gray-900">Pet Information</h4>
+                  </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="text-left space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-500 mb-1">Pet Name</label>
                     <p className="text-gray-900">{selectedAppointment.pet_name}</p>
@@ -551,53 +559,65 @@ const UrgentCareAppointments = () => {
 
               {/* Medical Information - Light Grey Background */}
               <div className="bg-gray-50 p-6">
-                <div className="flex items-center mb-4">
-                  <Stethoscope className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
-                  <h4 className="font-semibold text-gray-900">Medical Information</h4>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-500 mb-1">Reason for Visit</label>
-                  <p className="text-gray-900">{selectedAppointment.reason_for_visit}</p>
-                </div>
-                {selectedAppointment.primary_vet_hospital && (
-                  <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-500 mb-1">Primary Veterinary Hospital</label>
-                    <p className="text-gray-900">{selectedAppointment.primary_vet_hospital}</p>
+                <div className="text-center mb-4">
+                  <div className="flex items-center justify-center mb-2">
+                    <Stethoscope className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
+                    <h4 className="font-semibold text-gray-900">Medical Information</h4>
                   </div>
-                )}
+                </div>
+                <div className="text-left space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">Reason for Visit</label>
+                    <p className="text-gray-900">{selectedAppointment.reason_for_visit}</p>
+                  </div>
+                  {selectedAppointment.primary_vet_hospital && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-500 mb-1">Primary Veterinary Hospital</label>
+                      <p className="text-gray-900">{selectedAppointment.primary_vet_hospital}</p>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Additional Information - White Background */}
               {selectedAppointment.how_heard_about_us && (
                 <div className="bg-white p-6">
-                  <div className="flex items-center mb-4">
-                    <CheckCircle className="h-5 w-5 text-purple-600 mr-2" />
-                    <h4 className="font-semibold text-gray-900">Additional Information</h4>
+                  <div className="text-center mb-4">
+                    <div className="flex items-center justify-center mb-2">
+                      <CheckCircle className="h-5 w-5 text-purple-600 mr-2" />
+                      <h4 className="font-semibold text-gray-900">Additional Information</h4>
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-500 mb-1">How They Heard About Us</label>
-                    <p className="text-gray-900">{selectedAppointment.how_heard_about_us}</p>
+                  <div className="text-left">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-500 mb-1">How They Heard About Us</label>
+                      <p className="text-gray-900">{selectedAppointment.how_heard_about_us}</p>
+                    </div>
                   </div>
                 </div>
               )}
 
               {/* Booking Information - Light Grey Background */}
               <div className="bg-gray-50 p-6">
-                <div className="flex items-center mb-4">
-                  <Calendar className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
-                  <h4 className="font-semibold text-gray-900">Booking Information</h4>
+                <div className="text-center mb-4">
+                  <div className="flex items-center justify-center mb-2">
+                    <Calendar className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
+                    <h4 className="font-semibold text-gray-900">Booking Information</h4>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-500 mb-1">Booked On</label>
-                  <p className="text-gray-900">
-                    {new Date(selectedAppointment.created_at).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: 'numeric',
-                      minute: '2-digit'
-                    })}
-                  </p>
+                <div className="text-left">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">Booked On</label>
+                    <p className="text-gray-900">
+                      {new Date(selectedAppointment.created_at).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit'
+                      })}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
