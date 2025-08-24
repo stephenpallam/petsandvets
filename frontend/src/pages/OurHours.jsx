@@ -360,32 +360,40 @@ const OurHours = () => {
       <section style={{ backgroundColor: '#f8f9fa', paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white p-8 rounded-xl shadow-lg">
-            <h3 className="text-xl font-bold text-gray-900 mb-6 text-center">Weekly Schedule Overview</h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-6 text-center">
+              Weekly Schedule Overview
+              {loading && <span className="ml-2 text-sm text-gray-500">(Loading...)</span>}
+            </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-7 gap-4 text-center">
               {[
-                { day: 'Mon', general: '8AM-6PM', urgent: '3PM-10PM' },
-                { day: 'Tue', general: '8AM-7PM', urgent: '3PM-10PM' },
-                { day: 'Wed', general: '8AM-6PM', urgent: '3PM-10PM' },
-                { day: 'Thu', general: 'Closed', urgent: 'Closed' },
-                { day: 'Fri', general: '8AM-6PM', urgent: '3PM-10PM' },
-                { day: 'Sat', general: '8AM-4PM', urgent: '10AM-8PM' },
-                { day: 'Sun', general: 'Closed', urgent: '10AM-6PM' }
-              ].map((schedule, index) => (
-                <div key={index} className="p-4 rounded-lg bg-gray-50">
-                  <h4 className="font-bold text-gray-900 mb-2">{schedule.day}</h4>
-                  <div className="space-y-1 text-xs">
-                    <p className="text-gray-600">General:</p>
-                    <p className={`font-medium ${schedule.general === 'Closed' ? 'text-red-600' : 'text-gray-900'}`}>
-                      {schedule.general}
-                    </p>
-                    <p className="text-gray-600 mt-2">Urgent:</p>
-                    <p className={`font-medium ${schedule.urgent === 'Closed' ? 'text-red-600' : 'text-red-600'}`}>
-                      {schedule.urgent}
-                    </p>
+                { day: 'Mon', key: 'monday' },
+                { day: 'Tue', key: 'tuesday' },
+                { day: 'Wed', key: 'wednesday' },
+                { day: 'Thu', key: 'thursday' },
+                { day: 'Fri', key: 'friday' },
+                { day: 'Sat', key: 'saturday' },
+                { day: 'Sun', key: 'sunday' }
+              ].map((schedule, index) => {
+                const hospitalDay = hospitalHours?.[schedule.key] ?? defaultHours.hospital[schedule.key];
+                const urgentDay = urgentCareHours?.[schedule.key] ?? defaultHours.urgent[schedule.key];
+                
+                return (
+                  <div key={index} className="p-4 rounded-lg bg-gray-50">
+                    <h4 className="font-bold text-gray-900 mb-2">{schedule.day}</h4>
+                    <div className="space-y-1 text-xs">
+                      <p className="text-gray-600">General:</p>
+                      <p className={`font-medium ${!hospitalDay?.is_open ? 'text-red-600' : 'text-gray-900'}`}>
+                        {getShortTimeFormat(hospitalDay)}
+                      </p>
+                      <p className="text-gray-600 mt-2">Urgent:</p>
+                      <p className={`font-medium ${!urgentDay?.is_open ? 'text-red-600' : 'text-red-600'}`}>
+                        {getShortTimeFormat(urgentDay)}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
