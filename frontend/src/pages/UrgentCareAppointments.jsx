@@ -317,8 +317,14 @@ const UrgentCareAppointments = () => {
                   <select
                     value={filterDays}
                     onChange={(e) => handleFilterChange(e.target.value)}
-                    className="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white min-w-[160px]"
-                    style={{ borderColor: primaryColor }}
+                    className="px-4 py-2 pr-10 text-sm font-medium border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white min-w-[160px] appearance-none bg-no-repeat bg-left-[12px] bg-center"
+                    style={{ 
+                      borderColor: primaryColor,
+                      backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+                      backgroundSize: '16px',
+                      backgroundPosition: '12px center',
+                      paddingLeft: '36px'
+                    }}
                   >
                     {filterOptions.map((option) => (
                       <option key={option.value} value={option.value}>
