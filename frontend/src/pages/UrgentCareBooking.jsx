@@ -610,7 +610,7 @@ const UrgentCareBooking = () => {
               )}
               
               <div className="ml-auto">
-                {step < 5 ? (
+                {currentTab < 4 ? (
                   <button
                     onClick={nextStep}
                     disabled={!validateStep()}
