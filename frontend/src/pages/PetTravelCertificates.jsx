@@ -118,19 +118,19 @@ const PetTravelCertificates = () => {
       </section>
 
       {/* Travel Types */}
-      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {travelTypes.map((travel, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md">
-                <div className="flex items-center mb-4">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ backgroundColor: `${travel.color}15` }}>
-                    <travel.icon className="h-6 w-6" style={{ color: travel.color }} />
+              <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm">
+                <div className="flex items-center mb-3">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full mr-3" style={{ backgroundColor: `${travel.color}15` }}>
+                    <travel.icon className="h-5 w-5" style={{ color: travel.color }} />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900">{travel.type}</h3>
+                  <h3 className="text-base font-semibold text-gray-900">{travel.type}</h3>
                 </div>
-                <p className="text-gray-600 mb-4">{travel.description}</p>
-                <p className="text-sm text-gray-500">{travel.details}</p>
+                <p className="text-gray-600 mb-3 text-sm">{travel.description}</p>
+                <p className="text-xs text-gray-500">{travel.details}</p>
               </div>
             ))}
           </div>
