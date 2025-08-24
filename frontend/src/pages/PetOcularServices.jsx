@@ -217,32 +217,23 @@ const PetOcularServices = () => {
         </div>
       </section>
 
-      {/* Introduction */}
-      <section className="bg-white py-6">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
-              Professional Pet Eye Care & Ocular Services
-            </h1>
-            <p className="text-base text-gray-600 leading-relaxed max-w-4xl mx-auto">
-              At Pets and Vets Animal Hospital in South Riding, VA—serving Aldie, Ashburn, Chantilly, 
-              Centreville, Reston, and the surrounding areas—we understand how crucial your pet's vision 
-              is to their quality of life. Our comprehensive ocular services combine advanced diagnostic 
-              technology with specialized treatment options to preserve and protect your pet's eyesight.
-            </p>
+      {/* Hero Section */}
+      <section className="bg-white">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
+            Eye Care
+          </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+              Comprehensive Vision Care & Eye Health
+            </span>
           </div>
-          
-          {/* Professional Image */}
-          <div className="mt-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.pexels.com/photos/5794052/pexels-photo-5794052.jpeg"
-                alt="Professional veterinary eye examination with specialized equipment"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
-          </div>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
+            At Pets and Vets Animal Hospital in South Riding, VA—serving Aldie, Ashburn, Chantilly, 
+            Centreville, Reston, and the surrounding areas—we understand how crucial your pet's vision 
+            is to their quality of life. Our comprehensive ocular services combine advanced diagnostic 
+            technology with specialized treatment options to preserve and protect your pet's eyesight.
+          </p>
         </div>
       </section>
 
