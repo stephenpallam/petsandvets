@@ -568,7 +568,7 @@ const UrgentCareBooking = () => {
           )}
 
           {/* Step 6: Success */}
-          {step === 6 && (
+          {currentTab === 5 && (
             <div className="text-center py-8">
               <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-6" />
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
