@@ -195,6 +195,20 @@ const UrgentCareBooking = () => {
     return today.toLocaleDateString('en-US', options);
   };
 
+  const formatPhoneNumber = (phone) => {
+    // Remove all non-digits
+    const cleaned = phone.replace(/\D/g, '');
+    // Format as XXX-XXX-XXXX
+    if (cleaned.length === 10) {
+      return cleaned.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+    }
+    return phone; // Return original if not 10 digits
+  };
+
+  const capitalizeWords = (str) => {
+    return str.replace(/\b\w/g, l => l.toUpperCase());
+  };
+
   const submitAppointment = async () => {
     setLoading(true);
     try {
