@@ -14,6 +14,7 @@ import {
   Stethoscope,
   Check
 } from 'lucide-react';
+import { hospitalInfo } from '../mock';
 
 const UrgentCareBooking = () => {
   const [currentTab, setCurrentTab] = useState(0);
