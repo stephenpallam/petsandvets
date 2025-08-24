@@ -48,12 +48,17 @@ const ConfigureHours = () => {
   ];
 
   useEffect(() => {
+    // Wait for auth to finish loading
+    if (authLoading) {
+      return;
+    }
+    
     if (!isAdmin()) {
       setMessage({ type: 'error', text: 'Access denied. Admin privileges required.' });
       return;
     }
     fetchHours();
-  }, []);
+  }, [authLoading, isAdmin]);
 
   const fetchHours = async () => {
     try {
