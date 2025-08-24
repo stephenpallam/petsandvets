@@ -98,17 +98,17 @@ const PetTravelCertificates = () => {
       </section>
 
       {/* Why It Matters */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-[#f8f9fa] py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Why It Matters</h2>
           </div>
           
-          <div className="bg-gray-50 p-6 rounded-xl">
-            <div className="space-y-4">
+          <div className="bg-white p-4 rounded-lg">
+            <div className="space-y-3">
               {requirements.map((requirement, index) => (
-                <div key={index} className="flex items-start">
-                  <CheckCircle className="h-5 w-5 mr-3 flex-shrink-0 mt-0.5" style={{ color: '#10b981' }} />
+                <div key={index} className="flex items-start text-sm">
+                  <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0 mt-0.5" style={{ color: '#10b981' }} />
                   <span className="text-gray-700">{requirement}</span>
                 </div>
               ))}
