@@ -338,13 +338,22 @@ const UrgentCareAppointments = () => {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button
-                          onClick={() => fetchAppointmentDetails(appointment.id)}
-                          className="flex items-center text-indigo-600 hover:text-indigo-900"
-                        >
-                          <Eye className="h-4 w-4 mr-1" />
-                          View
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => fetchAppointmentDetails(appointment.id)}
+                            className="flex items-center text-indigo-600 hover:text-indigo-900 px-2 py-1 rounded"
+                          >
+                            <Eye className="h-4 w-4 mr-1" />
+                            View
+                          </button>
+                          <button
+                            onClick={() => confirmDelete(appointment)}
+                            className="flex items-center text-red-600 hover:text-red-900 px-2 py-1 rounded"
+                          >
+                            <Trash2 className="h-4 w-4 mr-1" />
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
