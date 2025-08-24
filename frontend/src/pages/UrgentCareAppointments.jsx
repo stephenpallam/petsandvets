@@ -11,7 +11,10 @@ import {
   X,
   Phone,
   Mail,
-  Stethoscope
+  Stethoscope,
+  Trash2,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 
 const UrgentCareAppointments = () => {
@@ -20,10 +23,29 @@ const UrgentCareAppointments = () => {
   const [loading, setLoading] = useState(true);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [appointmentToDelete, setAppointmentToDelete] = useState(null);
   const [message, setMessage] = useState({ type: '', text: '' });
+  
+  // Pagination and filtering states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [filterDays, setFilterDays] = useState('today');
+  const [pageSize] = useState(20);
 
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
   const primaryColor = '#29add3';
+
+  const filterOptions = [
+    { value: 'today', label: 'Today' },
+    { value: 'last_7_days', label: 'Last 7 Days' },
+    { value: 'last_15_days', label: 'Last 15 Days' },
+    { value: 'last_30_days', label: 'Last 30 Days' },
+    { value: 'last_3_months', label: 'Last 3 Months' },
+    { value: 'last_6_months', label: 'Last 6 Months' },
+    { value: 'last_1_year', label: 'Last 1 Year' }
+  ];
 
   useEffect(() => {
     if (!authLoading && isAdmin()) {
