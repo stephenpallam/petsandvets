@@ -221,25 +221,21 @@ const DentalCleanings = () => {
             Our comprehensive cleanings include:
           </p>
           
-          <div className="space-y-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
             {cleaningProcedures.map((procedure, index) => (
-              <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm">
-                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-4">
-                  <div className="flex items-center mb-3 lg:mb-0">
-                    <div className="flex items-center justify-center w-12 h-12 rounded-full mr-3" style={{ backgroundColor: `${procedure.color}15` }}>
-                      <procedure.icon className="h-6 w-6" style={{ color: procedure.color }} />
-                    </div>
-                    <div>
-                      <h3 className="text-base font-semibold text-gray-900">{procedure.procedure}</h3>
-                      <p className="text-gray-600 text-sm mt-1">{procedure.description}</p>
-                    </div>
+              <div key={index} className="bg-gray-50 p-3 rounded-lg shadow-sm">
+                <div className="flex items-start space-x-3">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0" style={{ backgroundColor: `${procedure.color}15` }}>
+                    <procedure.icon className="h-5 w-5" style={{ color: procedure.color }} />
                   </div>
                   <div className="flex-1">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-1">{procedure.procedure}</h3>
+                    <p className="text-gray-600 text-xs mb-2">{procedure.description}</p>
+                    <div className="grid grid-cols-1 gap-1">
                       {procedure.details.map((detail, detailIndex) => (
-                        <div key={detailIndex} className="flex items-center p-2 rounded border-l-4" style={{ borderColor: procedure.color, backgroundColor: `${procedure.color}05` }}>
-                          <CheckCircle className="h-3 w-3 mr-2 flex-shrink-0" style={{ color: procedure.color }} />
-                          <span className="text-xs text-gray-700">{detail}</span>
+                        <div key={detailIndex} className="flex items-center text-xs">
+                          <CheckCircle className="h-2 w-2 mr-1 flex-shrink-0" style={{ color: procedure.color }} />
+                          <span className="text-gray-600">{detail}</span>
                         </div>
                       ))}
                     </div>
