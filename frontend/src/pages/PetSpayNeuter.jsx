@@ -447,18 +447,18 @@ const PetSpayNeuter = () => {
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             Protecting Your Pet's Health & Well-being
           </h2>
-          <div className="p-8 rounded-xl" style={{ backgroundColor: primaryBg }}>
-            <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+          <div className="p-6 rounded-lg" style={{ backgroundColor: primaryBg }}>
+            <p className="text-gray-700 leading-relaxed mb-4" style={{ fontSize: '1rem' }}>
               Spaying and neutering are among the most important health decisions you can make for 
               your pet. Our experienced surgical team provides safe, compassionate care that 
               benefits your pet's long-term health and quality of life.
             </p>
-            <div className="bg-white p-6 rounded-lg">
-              <div className="flex items-center justify-center mb-4">
-                <Scissors className="h-8 w-8 mr-3" style={{ color: primaryColor }} />
-                <h3 className="text-xl font-semibold text-gray-900">Professional Surgical Excellence</h3>
+            <div className="bg-white p-4 rounded-lg">
+              <div className="flex items-center justify-center mb-3">
+                <Scissors className="h-6 w-6 mr-2" style={{ color: primaryColor }} />
+                <h3 className="text-base font-semibold text-gray-900">Professional Surgical Excellence</h3>
               </div>
-              <p className="text-gray-800 font-semibold">
+              <p className="text-gray-800 text-sm font-semibold">
                 From pre-surgical consultation through complete recovery—trust our dedicated 
                 team to provide the expert care your pet deserves.
               </p>
