@@ -216,18 +216,7 @@ const UltrasoundExams = () => {
             Comfort and Care for Your Pet
           </h2>
           
-          {/* Second Professional Image */}
-          <div className="mb-8 flex justify-center">
-            <div className="relative max-w-2xl">
-              <img 
-                src="https://images.pexels.com/photos/6235657/pexels-photo-6235657.jpeg"
-                alt="Veterinarian providing gentle care to a cat during examination"
-                className="w-full h-64 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-10 rounded-xl"></div>
-            </div>
-          </div>
-
+          
           <div className="space-y-6">
             {comfortFeatures.map((feature, index) => (
               <div key={index} className="bg-white p-6 rounded-xl shadow-md">
