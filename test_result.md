@@ -460,26 +460,17 @@ frontend:
         agent: "main"
         comment: "Verified page displays correctly with color-coded exam components, benefit highlights, AVMA recommendation, second opinions section, and compelling CTA section"
 
-  - task: "Online Booking System for Urgent Care"
+  - task: "Patient Registration PDF Form System"
     implemented: true
     working: true
-    file: "/app/frontend/src/pages/UrgentCareBooking.jsx, /app/backend/server.py, /app/frontend/src/pages/UrgentCareAppointments.jsx"
+    file: "/app/frontend/src/pages/forms/PatientRegistrationPDF.jsx, /app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: true
         agent: "main"
-        comment: "Discovered existing comprehensive booking system already implemented with multi-step form (time selection, owner info, pet info, visit reason, additional details), backend APIs for appointments and time slots, and admin appointments management page. Added missing routes to App.js for /urgent-care-booking and /urgent-care-appointments. System includes time slot availability checking based on urgent care hours, appointment creation, and admin dashboard."
-      - working: true
-        agent: "testing"
-        comment: "Comprehensive testing completed for Urgent Care Booking System APIs. All 10 urgent care specific tests passed: Time Slots API (GET /api/urgent-care-time-slots/{date}) working correctly for today, future dates, and closed days with proper 30-minute slot generation and current time + 30min logic. Appointment Creation API (POST /api/urgent-care-appointments) successfully validates all required fields (appointment_time, owner info, pet details, reason_for_visit, etc.) and creates appointments with unique IDs and timestamps. Admin Appointments API (GET /api/urgent-care-appointments and GET /api/urgent-care-appointments/{id}) properly restricts access to admin users only and returns sorted appointment lists. Integration testing confirmed time slots correctly exclude already booked appointments. Authentication working properly with admin@hospital.com/admin123. All backend APIs fully functional and ready for production use."
-      - working: true
-        agent: "main"
-        comment: "Enhanced UrgentCareAppointments admin page with all requested improvements: 1) Removed unwanted text labels ('Urgent Care Appointments', 'Admin Dashboard'), 2) Updated header to 'All Urgent Care Appointments', 3) Added delete functionality with confirmation modal that frees up time slots, 4) Implemented date filtering (Today default, Last 7/15/30 days, Last 3/6/12 months), 5) Added pagination (20 items per page) with proper backend support, 6) Added S.No column showing record numbers. Updated backend with new paginated endpoints, filtering logic, and delete API. System now provides comprehensive appointment management with efficient data loading and user-friendly interface."
-      - working: true
-        agent: "main"
-        comment: "Further enhanced UrgentCareAppointments page with advanced UI/UX improvements: 1) Moved filter dropdown to header right side with theme styling, 2) Removed top filter section, 3) Renamed title to 'Appointments', 4) Removed person profile icon from client name, 5) Renamed 'Time of Appointment' to 'Time' showing only time (no date/year), 6) Updated actions to show only icons without text, 7) Removed status column, 8) Added advanced status management with dropdown menu (No Show, Cancelled, Completed, Abandoned), 9) Implemented backend status update API with automatic time slot release for abandoned appointments. System now provides streamlined interface with professional appointment status workflow and intelligent slot management."
+        comment: "Successfully implemented complete Patient Registration PDF form system. Added route /forms/patient-registration-pdf to App.js making PatientRegistrationPDF.jsx accessible. Form includes comprehensive sections: Pet Owner Information (name, address, contact details), Pet Information (name, species, breed, gender, age, weight, color, spay/neuter status), Medical History (medications, allergies, previous vet, vaccination history, medical conditions), and Additional Information (referral source, appointment preferences, special instructions). Two submission options: Submit Registration (POST /api/patient-registration) and Submit & Download PDF (POST /api/patient-registration/pdf). Backend includes complete PDF generation using reportlab with professional styling, table layouts, and proper formatting. Form validation and error handling implemented. Ready for backend testing of PDF generation endpoints."
 
 metadata:
   created_by: "main_agent"
