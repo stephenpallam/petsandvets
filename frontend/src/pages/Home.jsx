@@ -207,14 +207,24 @@ const Home = () => {
                   </div>
                   <div className="flex-1 flex items-end">
                     <Link
-                      to="/urgent-care"
-                      className="inline-flex items-center justify-center text-white px-8 py-4 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl group w-full"
-                      style={{ backgroundColor: primaryColor, height: '56px' }}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
+                      to="/urgent-care-booking"
+                      className="inline-flex items-center justify-center border-2 px-8 py-4 rounded-lg font-semibold transition-all duration-200 w-full"
+                      style={{ 
+                        borderColor: primaryColor, 
+                        color: primaryColor,
+                        height: '56px'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = primaryColor;
+                        e.target.style.color = 'white';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = 'transparent';
+                        e.target.style.color = primaryColor;
+                      }}
                     >
-                      Urgent Care Now
-                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                      Check In Online
+                      <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
                   </div>
                 </div>
@@ -235,26 +245,16 @@ const Home = () => {
                     </div>
                   </div>
                   <div className="flex-1 flex items-end">
-                    <Link
-                      to="/urgent-care-booking"
-                      className="inline-flex items-center justify-center border-2 px-8 py-4 rounded-lg font-semibold transition-all duration-200 w-full"
-                      style={{ 
-                        borderColor: primaryColor, 
-                        color: primaryColor,
-                        height: '56px'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.backgroundColor = primaryColor;
-                        e.target.style.color = 'white';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.backgroundColor = 'transparent';
-                        e.target.style.color = primaryColor;
-                      }}
+                    <a
+                      href={`tel:${hospitalInfo.phone}`}
+                      className="inline-flex items-center justify-center text-white px-8 py-4 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl group w-full"
+                      style={{ backgroundColor: primaryColor, height: '56px' }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
                     >
-                      Check In Online
-                      <ArrowRight className="ml-2 h-5 w-5" />
-                    </Link>
+                      Call Now
+                      <Phone className="ml-2 h-5 w-5 group-hover:scale-110 transition-transform" />
+                    </a>
                   </div>
                 </div>
               </div>
