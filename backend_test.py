@@ -1473,6 +1473,398 @@ def test_deleted_appointments_removed_from_results():
         results.log_failure("Deleted Appointments Removed", str(e))
         return False
 
+# ============================================================================
+# PATIENT REGISTRATION PDF SYSTEM TESTS
+# ============================================================================
+
+# Global variables for patient registration testing
+created_registration_id = None
+
+def test_patient_registration_submit():
+    """Test POST /api/patient-registration - Submit patient registration form data"""
+    global created_registration_id
+    try:
+        # Complete form data with all required and optional fields
+        registration_data = {
+            # Owner Information (Required)
+            "owner_first_name": "Sarah",
+            "owner_last_name": "Johnson",
+            "address": "123 Maple Street",
+            "city": "Chantilly",
+            "state": "VA",
+            "zip_code": "20151",
+            "email": "sarah.johnson@email.com",
+            "phone": "(571) 555-0123",
+            
+            # Emergency Contact (Optional)
+            "emergency_contact_name": "Michael Johnson",
+            "emergency_contact_phone": "(571) 555-0124",
+            
+            # Pet Information (Required)
+            "pet_name": "Bella",
+            "pet_species": "Dog",
+            "pet_gender": "Female",
+            "pet_age": "3 years",
+            
+            # Pet Information (Optional)
+            "pet_breed": "Golden Retriever",
+            "pet_weight": "65 lbs",
+            "pet_color": "Golden",
+            "spayed_neutered": "Yes",
+            
+            # Medical History (Optional)
+            "current_medications": "None",
+            "allergies": "None known",
+            "previous_vet": "Chantilly Animal Hospital",
+            "previous_vet_phone": "(703) 555-0100",
+            "last_visit_date": "2024-06-15",
+            "vaccination_history": "Up to date on all core vaccines",
+            "medical_conditions": "None",
+            
+            # Additional Information (Optional)
+            "how_heard_about_us": "Google search",
+            "preferred_appointment_type": "In-person",
+            "special_instructions": "Bella is very friendly but gets nervous around other dogs"
+        }
+        
+        response = requests.post(f"{API_URL}/patient-registration", json=registration_data)
+        if response.status_code == 200:
+            data = response.json()
+            if ("message" in data and 
+                "registration_id" in data and 
+                "successfully" in data["message"].lower()):
+                created_registration_id = data["registration_id"]
+                results.log_success("Patient Registration Submit (Complete Data)")
+                return True
+        results.log_failure("Patient Registration Submit", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Patient Registration Submit", str(e))
+        return False
+
+def test_patient_registration_validation():
+    """Test POST /api/patient-registration with missing required fields"""
+    try:
+        # Missing required fields
+        incomplete_data = {
+            "owner_first_name": "John",
+            "pet_name": "Max",
+            # Missing other required fields like owner_last_name, address, etc.
+        }
+        
+        response = requests.post(f"{API_URL}/patient-registration", json=incomplete_data)
+        if response.status_code == 422:  # Validation error
+            results.log_success("Patient Registration Validation (Missing Required Fields)")
+            return True
+        results.log_failure("Patient Registration Validation", f"Expected 422, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Patient Registration Validation", str(e))
+        return False
+
+def test_patient_registration_minimal_data():
+    """Test POST /api/patient-registration with only required fields"""
+    try:
+        # Only required fields
+        minimal_data = {
+            "owner_first_name": "Emily",
+            "owner_last_name": "Davis",
+            "address": "456 Oak Avenue",
+            "city": "Ashburn",
+            "state": "VA",
+            "zip_code": "20147",
+            "email": "emily.davis@email.com",
+            "phone": "(571) 555-0200",
+            "pet_name": "Charlie",
+            "pet_species": "Cat",
+            "pet_gender": "Male",
+            "pet_age": "2 years"
+        }
+        
+        response = requests.post(f"{API_URL}/patient-registration", json=minimal_data)
+        if response.status_code == 200:
+            data = response.json()
+            if ("message" in data and 
+                "registration_id" in data and 
+                "successfully" in data["message"].lower()):
+                results.log_success("Patient Registration Submit (Minimal Required Data)")
+                return True
+        results.log_failure("Patient Registration Submit (Minimal)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Patient Registration Submit (Minimal)", str(e))
+        return False
+
+def test_patient_registration_pdf_generation():
+    """Test POST /api/patient-registration/pdf - Generate PDF and store data"""
+    try:
+        # Complete form data for PDF generation
+        pdf_registration_data = {
+            "owner_first_name": "Michael",
+            "owner_last_name": "Rodriguez",
+            "address": "789 Pine Street",
+            "city": "South Riding",
+            "state": "VA",
+            "zip_code": "20152",
+            "email": "michael.rodriguez@email.com",
+            "phone": "(571) 555-0300",
+            "emergency_contact_name": "Maria Rodriguez",
+            "emergency_contact_phone": "(571) 555-0301",
+            "pet_name": "Luna",
+            "pet_species": "Dog",
+            "pet_breed": "Border Collie",
+            "pet_gender": "Female",
+            "pet_age": "1.5 years",
+            "pet_weight": "45 lbs",
+            "pet_color": "Black and White",
+            "spayed_neutered": "No",
+            "current_medications": "Heartworm prevention",
+            "allergies": "Chicken",
+            "previous_vet": "Aldie Animal Hospital",
+            "previous_vet_phone": "(703) 555-0200",
+            "last_visit_date": "2024-08-20",
+            "vaccination_history": "Puppy series completed, due for annual boosters",
+            "medical_conditions": "Mild hip dysplasia",
+            "how_heard_about_us": "Veterinarian referral",
+            "preferred_appointment_type": "Urgent care",
+            "special_instructions": "Luna is very energetic and may need extra handling during examination"
+        }
+        
+        response = requests.post(f"{API_URL}/patient-registration/pdf", json=pdf_registration_data)
+        if response.status_code == 200:
+            # Check if response is PDF
+            content_type = response.headers.get('content-type', '')
+            content_disposition = response.headers.get('content-disposition', '')
+            
+            if ('application/pdf' in content_type and 
+                'attachment' in content_disposition and 
+                'patient_registration_' in content_disposition and
+                len(response.content) > 1000):  # PDF should be substantial size
+                results.log_success("Patient Registration PDF Generation (Complete)")
+                return True
+            else:
+                results.log_failure("Patient Registration PDF Generation", f"Invalid PDF response - Content-Type: {content_type}, Size: {len(response.content)}")
+                return False
+        results.log_failure("Patient Registration PDF Generation", f"Status: {response.status_code}, Response: {response.text[:200]}")
+        return False
+    except Exception as e:
+        results.log_failure("Patient Registration PDF Generation", str(e))
+        return False
+
+def test_patient_registration_pdf_minimal():
+    """Test POST /api/patient-registration/pdf with minimal required data"""
+    try:
+        minimal_pdf_data = {
+            "owner_first_name": "Jennifer",
+            "owner_last_name": "Wilson",
+            "address": "321 Cedar Lane",
+            "city": "Herndon",
+            "state": "VA",
+            "zip_code": "20170",
+            "email": "jennifer.wilson@email.com",
+            "phone": "(571) 555-0400",
+            "pet_name": "Whiskers",
+            "pet_species": "Cat",
+            "pet_gender": "Male",
+            "pet_age": "5 years"
+        }
+        
+        response = requests.post(f"{API_URL}/patient-registration/pdf", json=minimal_pdf_data)
+        if response.status_code == 200:
+            content_type = response.headers.get('content-type', '')
+            content_disposition = response.headers.get('content-disposition', '')
+            
+            if ('application/pdf' in content_type and 
+                'attachment' in content_disposition and
+                len(response.content) > 500):
+                results.log_success("Patient Registration PDF Generation (Minimal Data)")
+                return True
+        results.log_failure("Patient Registration PDF Generation (Minimal)", f"Status: {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Patient Registration PDF Generation (Minimal)", str(e))
+        return False
+
+def test_get_existing_registration_pdf():
+    """Test GET /api/patient-registration/{id}/pdf - Retrieve PDF for existing registration"""
+    if not created_registration_id:
+        results.log_failure("Get Existing Registration PDF", "No registration ID available from previous test")
+        return False
+    
+    try:
+        response = requests.get(f"{API_URL}/patient-registration/{created_registration_id}/pdf")
+        if response.status_code == 200:
+            content_type = response.headers.get('content-type', '')
+            content_disposition = response.headers.get('content-disposition', '')
+            
+            if ('application/pdf' in content_type and 
+                'attachment' in content_disposition and 
+                'patient_registration_' in content_disposition and
+                len(response.content) > 1000):
+                results.log_success("Get Existing Registration PDF")
+                return True
+        results.log_failure("Get Existing Registration PDF", f"Status: {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Existing Registration PDF", str(e))
+        return False
+
+def test_get_nonexistent_registration_pdf():
+    """Test GET /api/patient-registration/{id}/pdf with invalid registration ID"""
+    try:
+        fake_id = "non-existent-registration-id-12345"
+        response = requests.get(f"{API_URL}/patient-registration/{fake_id}/pdf")
+        if response.status_code == 404:
+            results.log_success("Get Nonexistent Registration PDF (404)")
+            return True
+        results.log_failure("Get Nonexistent Registration PDF", f"Expected 404, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Nonexistent Registration PDF", str(e))
+        return False
+
+def test_patient_registration_data_persistence():
+    """Test that patient registration data is properly stored in database"""
+    try:
+        # Create registration with specific data
+        test_data = {
+            "owner_first_name": "DataTest",
+            "owner_last_name": "Persistence",
+            "address": "999 Test Street",
+            "city": "Centreville",
+            "state": "VA",
+            "zip_code": "20121",
+            "email": "datatest@persistence.com",
+            "phone": "(571) 555-9999",
+            "pet_name": "TestPet",
+            "pet_species": "Dog",
+            "pet_gender": "Female",
+            "pet_age": "4 years",
+            "pet_breed": "Labrador",
+            "special_instructions": "This is a test for data persistence"
+        }
+        
+        # Submit registration
+        response = requests.post(f"{API_URL}/patient-registration", json=test_data)
+        if response.status_code == 200:
+            data = response.json()
+            registration_id = data.get("registration_id")
+            
+            if registration_id:
+                # Try to retrieve PDF (which reads from database)
+                pdf_response = requests.get(f"{API_URL}/patient-registration/{registration_id}/pdf")
+                if pdf_response.status_code == 200:
+                    content_type = pdf_response.headers.get('content-type', '')
+                    if 'application/pdf' in content_type:
+                        results.log_success("Patient Registration Data Persistence")
+                        return True
+        results.log_failure("Patient Registration Data Persistence", f"Status: {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Patient Registration Data Persistence", str(e))
+        return False
+
+def test_patient_registration_unique_ids():
+    """Test that each registration gets a unique ID"""
+    try:
+        registration_ids = []
+        
+        # Create multiple registrations
+        for i in range(3):
+            test_data = {
+                "owner_first_name": f"UniqueTest{i}",
+                "owner_last_name": "IDGeneration",
+                "address": f"{100 + i} Unique Street",
+                "city": "Reston",
+                "state": "VA",
+                "zip_code": "20190",
+                "email": f"unique{i}@idtest.com",
+                "phone": f"(571) 555-{1000 + i}",
+                "pet_name": f"UniquePet{i}",
+                "pet_species": "Cat",
+                "pet_gender": "Male",
+                "pet_age": f"{i + 1} years"
+            }
+            
+            response = requests.post(f"{API_URL}/patient-registration", json=test_data)
+            if response.status_code == 200:
+                data = response.json()
+                registration_id = data.get("registration_id")
+                if registration_id:
+                    registration_ids.append(registration_id)
+        
+        # Check that all IDs are unique
+        if len(registration_ids) == 3 and len(set(registration_ids)) == 3:
+            results.log_success("Patient Registration Unique IDs")
+            return True
+        results.log_failure("Patient Registration Unique IDs", f"Generated IDs: {registration_ids}")
+        return False
+    except Exception as e:
+        results.log_failure("Patient Registration Unique IDs", str(e))
+        return False
+
+def test_patient_registration_email_validation():
+    """Test patient registration with invalid email format"""
+    try:
+        invalid_email_data = {
+            "owner_first_name": "Invalid",
+            "owner_last_name": "Email",
+            "address": "123 Invalid Street",
+            "city": "Chantilly",
+            "state": "VA",
+            "zip_code": "20151",
+            "email": "invalid-email-format",  # Invalid email
+            "phone": "(571) 555-0500",
+            "pet_name": "InvalidEmailPet",
+            "pet_species": "Dog",
+            "pet_gender": "Male",
+            "pet_age": "2 years"
+        }
+        
+        response = requests.post(f"{API_URL}/patient-registration", json=invalid_email_data)
+        if response.status_code == 422:  # Validation error for invalid email
+            results.log_success("Patient Registration Email Validation (Invalid Email)")
+            return True
+        results.log_failure("Patient Registration Email Validation", f"Expected 422, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Patient Registration Email Validation", str(e))
+        return False
+
+def test_patient_registration_pdf_filename():
+    """Test that PDF filename includes pet name and registration ID"""
+    try:
+        filename_test_data = {
+            "owner_first_name": "Filename",
+            "owner_last_name": "Test",
+            "address": "123 Filename Street",
+            "city": "Ashburn",
+            "state": "VA",
+            "zip_code": "20147",
+            "email": "filename@test.com",
+            "phone": "(571) 555-0600",
+            "pet_name": "FilenameTestPet",
+            "pet_species": "Cat",
+            "pet_gender": "Female",
+            "pet_age": "3 years"
+        }
+        
+        response = requests.post(f"{API_URL}/patient-registration/pdf", json=filename_test_data)
+        if response.status_code == 200:
+            content_disposition = response.headers.get('content-disposition', '')
+            
+            if ('attachment' in content_disposition and 
+                'patient_registration_' in content_disposition and
+                'FilenameTestPet' in content_disposition and
+                '.pdf' in content_disposition):
+                results.log_success("Patient Registration PDF Filename Format")
+                return True
+        results.log_failure("Patient Registration PDF Filename", f"Content-Disposition: {content_disposition}")
+        return False
+    except Exception as e:
+        results.log_failure("Patient Registration PDF Filename", str(e))
+        return False
+
 def run_all_tests():
     """Run all backend API tests"""
     print("Starting Backend API Tests...")
