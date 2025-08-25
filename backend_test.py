@@ -1936,6 +1936,29 @@ def run_all_tests():
     test_data_consistency_filtering_pagination()
     test_deleted_appointments_removed_from_results()
     
+    print("\n" + "="*50)
+    print("PATIENT REGISTRATION PDF SYSTEM TESTS")
+    print("="*50)
+    
+    # Patient Registration Form Submission Tests
+    test_patient_registration_submit()
+    test_patient_registration_validation()
+    test_patient_registration_minimal_data()
+    test_patient_registration_email_validation()
+    
+    # Patient Registration PDF Generation Tests
+    test_patient_registration_pdf_generation()
+    test_patient_registration_pdf_minimal()
+    test_patient_registration_pdf_filename()
+    
+    # Patient Registration PDF Retrieval Tests
+    test_get_existing_registration_pdf()
+    test_get_nonexistent_registration_pdf()
+    
+    # Patient Registration Data Integrity Tests
+    test_patient_registration_data_persistence()
+    test_patient_registration_unique_ids()
+    
     # Print summary
     success = results.summary()
     return success
