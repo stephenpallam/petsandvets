@@ -191,8 +191,8 @@ const Home = () => {
               {/* Info and CTA Compartments */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {/* Left Compartment - Urgent Care */}
-                <div className="flex flex-col">
-                  <div className="flex items-start space-x-3 bg-white/60 backdrop-blur-sm py-4 pr-4 pl-0 rounded-lg h-20 mb-4">
+                <div className="flex flex-col h-full">
+                  <div className="flex items-start space-x-3 bg-white/60 backdrop-blur-sm py-4 pr-4 pl-0 rounded-lg h-20 mb-4 flex-shrink-0">
                     <Clock className="h-5 w-5 mt-1" style={{ color: primaryColor }} />
                     <div className="text-left flex-1">
                       <p className="font-semibold text-gray-900">Urgent Care</p>
@@ -205,21 +205,23 @@ const Home = () => {
                       </p>
                     </div>
                   </div>
-                  <Link
-                    to="/urgent-care"
-                    className="inline-flex items-center justify-center text-white px-8 py-4 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl group w-full"
-                    style={{ backgroundColor: primaryColor }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
-                  >
-                    Urgent Care Now
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                  </Link>
+                  <div className="flex-1 flex items-end">
+                    <Link
+                      to="/urgent-care"
+                      className="inline-flex items-center justify-center text-white px-8 py-4 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl group w-full"
+                      style={{ backgroundColor: primaryColor, height: '56px' }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
+                    >
+                      Urgent Care Now
+                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </div>
                 </div>
 
                 {/* Right Compartment - General Practice */}
-                <div className="flex flex-col">
-                  <div className="flex items-start space-x-3 bg-white/60 backdrop-blur-sm py-4 pr-4 pl-0 rounded-lg h-20 mb-4">
+                <div className="flex flex-col h-full">
+                  <div className="flex items-start space-x-3 bg-white/60 backdrop-blur-sm py-4 pr-4 pl-0 rounded-lg h-20 mb-4 flex-shrink-0">
                     <MapPin className="h-5 w-5 mt-1" style={{ color: primaryColor }} />
                     <div className="text-left flex-1">
                       <p className="font-semibold text-gray-900">General Practice</p>
@@ -232,25 +234,28 @@ const Home = () => {
                       </p>
                     </div>
                   </div>
-                  <Link
-                    to="/urgent-care-booking"
-                    className="inline-flex items-center justify-center border-2 px-8 py-4 rounded-lg font-semibold transition-all duration-200 w-full"
-                    style={{ 
-                      borderColor: primaryColor, 
-                      color: primaryColor 
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = primaryColor;
-                      e.target.style.color = 'white';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.backgroundColor = 'transparent';
-                      e.target.style.color = primaryColor;
-                    }}
-                  >
-                    Check In Online
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
+                  <div className="flex-1 flex items-end">
+                    <Link
+                      to="/urgent-care-booking"
+                      className="inline-flex items-center justify-center border-2 px-8 py-4 rounded-lg font-semibold transition-all duration-200 w-full"
+                      style={{ 
+                        borderColor: primaryColor, 
+                        color: primaryColor,
+                        height: '56px'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = primaryColor;
+                        e.target.style.color = 'white';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = 'transparent';
+                        e.target.style.color = primaryColor;
+                      }}
+                    >
+                      Check In Online
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
