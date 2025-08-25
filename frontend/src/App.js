@@ -58,6 +58,7 @@ import RequestPetRecords from "./pages/forms/RequestPetRecords";
 import FormsDownload from "./pages/forms/FormsDownload";
 import UrgentCareBooking from "./pages/UrgentCareBooking";
 import UrgentCareAppointments from "./pages/UrgentCareAppointments";
+import PatientRegistrationPDF from "./pages/forms/PatientRegistrationPDF";
 
 function App() {
   return (
