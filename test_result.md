@@ -480,23 +480,13 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Create Diet & Nutrition Page for Dog Services"
-    - "Create Urgent Care Page"
-    - "Create Soft Tissue Surgeries Page"
-    - "Create Foreign Body & GI Obstruction Surgery Page"
-    - "Create Blocked Cats Emergency Care Page"
-    - "Create Pet Bladder Stone Removal Page"
-    - "Create Pet Spay & Neuter Page"
-    - "Complete Cat Diagnostic Imaging Page"
-    - "Create Cat Vaccinations Page"
-    - "Create Dog & Cat Ultrasound Exams Page"
-    - "Create Pet Vaccinations Page"
-    - "Create Preventive Pet Care Page"
+    - "Patient Registration PDF Form System"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
-  backend_testing_complete: true
+  backend_testing_complete: false
   urgent_care_booking_testing_complete: true
+  patient_registration_testing_needed: true
 
 agent_communication:
   - agent: "main"
