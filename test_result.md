@@ -487,9 +487,9 @@ test_plan:
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
-  backend_testing_complete: false
+  backend_testing_complete: true
   urgent_care_booking_testing_complete: true
-  patient_registration_testing_needed: true
+  patient_registration_testing_needed: false
 
 agent_communication:
   - agent: "main"
