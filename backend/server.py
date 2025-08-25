@@ -711,6 +711,229 @@ async def get_available_time_slots(date: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+def generate_pdf(form_data: PatientRegistrationForm) -> bytes:
+    """Generate a PDF from the patient registration form data"""
+    buffer = io.BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+    styles = getSampleStyleSheet()
+    story = []
+    
+    # Custom styles
+    title_style = ParagraphStyle(
+        'CustomTitle',
+        parent=styles['Heading1'],
+        fontSize=18,
+        spaceAfter=30,
+        textColor=colors.HexColor('#29add3'),
+        alignment=1  # Center alignment
+    )
+    
+    section_style = ParagraphStyle(
+        'SectionHeader',
+        parent=styles['Heading2'],
+        fontSize=14,
+        spaceAfter=12,
+        textColor=colors.HexColor('#333333'),
+        borderWidth=1,
+        borderColor=colors.HexColor('#29add3'),
+        backColor=colors.HexColor('#f0f9ff'),
+        leftIndent=10,
+        spaceBefore=20
+    )
+    
+    # Title
+    story.append(Paragraph("New Patient Registration Form", title_style))
+    story.append(Spacer(1, 12))
+    
+    # Form submission info
+    story.append(Paragraph(f"Submitted on: {form_data.created_at.strftime('%B %d, %Y at %I:%M %p')}", styles['Normal']))
+    story.append(Paragraph(f"Registration ID: {form_data.id}", styles['Normal']))
+    story.append(Spacer(1, 20))
+    
+    # Owner Information Section
+    story.append(Paragraph("Pet Owner Information", section_style))
+    owner_data = [
+        ['Name:', f"{form_data.owner_first_name} {form_data.owner_last_name}"],
+        ['Address:', f"{form_data.address}"],
+        ['City, State, ZIP:', f"{form_data.city}, {form_data.state} {form_data.zip_code}"],
+        ['Email:', form_data.email],
+        ['Phone:', form_data.phone],
+        ['Emergency Contact:', form_data.emergency_contact_name or 'Not provided'],
+        ['Emergency Phone:', form_data.emergency_contact_phone or 'Not provided'],
+    ]
+    
+    owner_table = Table(owner_data, colWidths=[2*inch, 4*inch])
+    owner_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f8f9fa')),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+        ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#e5e7eb')),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('LEFTPADDING', (0, 0), (-1, -1), 8),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 8),
+        ('TOPPADDING', (0, 0), (-1, -1), 6),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+    ]))
+    story.append(owner_table)
+    story.append(Spacer(1, 20))
+    
+    # Pet Information Section
+    story.append(Paragraph("Pet Information", section_style))
+    pet_data = [
+        ['Pet Name:', form_data.pet_name],
+        ['Species:', form_data.pet_species],
+        ['Breed:', form_data.pet_breed or 'Not specified'],
+        ['Gender:', form_data.pet_gender],
+        ['Age:', form_data.pet_age],
+        ['Weight:', form_data.pet_weight or 'Not provided'],
+        ['Color:', form_data.pet_color or 'Not provided'],
+        ['Spayed/Neutered:', form_data.spayed_neutered or 'Unknown'],
+    ]
+    
+    pet_table = Table(pet_data, colWidths=[2*inch, 4*inch])
+    pet_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f8f9fa')),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+        ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#e5e7eb')),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('LEFTPADDING', (0, 0), (-1, -1), 8),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 8),
+        ('TOPPADDING', (0, 0), (-1, -1), 6),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+    ]))
+    story.append(pet_table)
+    story.append(Spacer(1, 20))
+    
+    # Medical History Section
+    story.append(Paragraph("Medical History", section_style))
+    medical_data = [
+        ['Current Medications:', form_data.current_medications or 'None reported'],
+        ['Allergies:', form_data.allergies or 'None reported'],
+        ['Previous Veterinarian:', form_data.previous_vet or 'Not provided'],
+        ['Previous Vet Phone:', form_data.previous_vet_phone or 'Not provided'],
+        ['Last Visit Date:', form_data.last_visit_date or 'Not provided'],
+        ['Vaccination History:', form_data.vaccination_history or 'Not provided'],
+        ['Medical Conditions:', form_data.medical_conditions or 'None reported'],
+    ]
+    
+    medical_table = Table(medical_data, colWidths=[2*inch, 4*inch])
+    medical_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f8f9fa')),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+        ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#e5e7eb')),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('LEFTPADDING', (0, 0), (-1, -1), 8),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 8),
+        ('TOPPADDING', (0, 0), (-1, -1), 6),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+    ]))
+    story.append(medical_table)
+    story.append(Spacer(1, 20))
+    
+    # Additional Information Section
+    if any([form_data.how_heard_about_us, form_data.preferred_appointment_type, form_data.special_instructions]):
+        story.append(Paragraph("Additional Information", section_style))
+        additional_data = []
+        
+        if form_data.how_heard_about_us:
+            additional_data.append(['How did you hear about us:', form_data.how_heard_about_us])
+        if form_data.preferred_appointment_type:
+            additional_data.append(['Preferred Appointment Type:', form_data.preferred_appointment_type])
+        if form_data.special_instructions:
+            additional_data.append(['Special Instructions:', form_data.special_instructions])
+            
+        if additional_data:
+            additional_table = Table(additional_data, colWidths=[2*inch, 4*inch])
+            additional_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f8f9fa')),
+                ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+                ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+                ('FONTSIZE', (0, 0), (-1, -1), 10),
+                ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#e5e7eb')),
+                ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                ('LEFTPADDING', (0, 0), (-1, -1), 8),
+                ('RIGHTPADDING', (0, 0), (-1, -1), 8),
+                ('TOPPADDING', (0, 0), (-1, -1), 6),
+                ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+            ]))
+            story.append(additional_table)
+    
+    # Footer
+    story.append(Spacer(1, 30))
+    story.append(Paragraph("Thank you for choosing our veterinary services!", styles['Normal']))
+    story.append(Paragraph("Please bring this form to your appointment.", styles['Normal']))
+    
+    # Build PDF
+    doc.build(story)
+    buffer.seek(0)
+    return buffer.getvalue()
+
+
+# Patient Registration Form Routes
+@api_router.post("/patient-registration")
+async def submit_patient_registration(form_data: PatientRegistrationRequest):
+    """Submit patient registration form and store in database"""
+    registration = PatientRegistrationForm(**form_data.dict())
+    await db.patient_registrations.insert_one(registration.dict())
+    return {
+        "message": "Registration submitted successfully",
+        "registration_id": registration.id
+    }
+
+
+@api_router.post("/patient-registration/pdf")
+async def generate_registration_pdf(form_data: PatientRegistrationRequest):
+    """Generate and return PDF for patient registration form"""
+    registration = PatientRegistrationForm(**form_data.dict())
+    
+    # Store in database
+    await db.patient_registrations.insert_one(registration.dict())
+    
+    # Generate PDF
+    pdf_bytes = generate_pdf(registration)
+    
+    # Create streaming response
+    return StreamingResponse(
+        io.BytesIO(pdf_bytes),
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f"attachment; filename=patient_registration_{registration.pet_name}_{registration.id[:8]}.pdf"
+        }
+    )
+
+
+@api_router.get("/patient-registration/{registration_id}/pdf")
+async def get_registration_pdf(registration_id: str):
+    """Get PDF for existing registration"""
+    registration_data = await db.patient_registrations.find_one({"id": registration_id})
+    if not registration_data:
+        raise HTTPException(status_code=404, detail="Registration not found")
+    
+    registration = PatientRegistrationForm(**registration_data)
+    pdf_bytes = generate_pdf(registration)
+    
+    return StreamingResponse(
+        io.BytesIO(pdf_bytes),
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f"attachment; filename=patient_registration_{registration.pet_name}_{registration.id[:8]}.pdf"
+        }
+    )
+
+
 # Combined Hours API for frontend consumption
 @api_router.get("/hours/current")
 async def get_current_hours():
