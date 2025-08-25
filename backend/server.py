@@ -205,6 +205,78 @@ class AppointmentListResponse(BaseModel):
     total_pages: int
 
 
+class PatientRegistrationForm(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    
+    # Owner Information
+    owner_first_name: str
+    owner_last_name: str
+    address: str
+    city: str
+    state: str
+    zip_code: str
+    email: str
+    phone: str
+    emergency_contact_name: Optional[str] = ""
+    emergency_contact_phone: Optional[str] = ""
+    
+    # Pet Information
+    pet_name: str
+    pet_species: str  # Dog, Cat, Other
+    pet_breed: Optional[str] = ""
+    pet_gender: str  # Male, Female
+    pet_age: str
+    pet_weight: Optional[str] = ""
+    pet_color: Optional[str] = ""
+    spayed_neutered: Optional[str] = ""  # Yes, No, Unknown
+    
+    # Medical History
+    current_medications: Optional[str] = ""
+    allergies: Optional[str] = ""
+    previous_vet: Optional[str] = ""
+    previous_vet_phone: Optional[str] = ""
+    last_visit_date: Optional[str] = ""
+    vaccination_history: Optional[str] = ""
+    medical_conditions: Optional[str] = ""
+    
+    # Additional Information
+    how_heard_about_us: Optional[str] = ""
+    preferred_appointment_type: Optional[str] = ""
+    special_instructions: Optional[str] = ""
+
+
+class PatientRegistrationRequest(BaseModel):
+    owner_first_name: str
+    owner_last_name: str
+    address: str
+    city: str
+    state: str
+    zip_code: str
+    email: str
+    phone: str
+    emergency_contact_name: Optional[str] = ""
+    emergency_contact_phone: Optional[str] = ""
+    pet_name: str
+    pet_species: str
+    pet_breed: Optional[str] = ""
+    pet_gender: str
+    pet_age: str
+    pet_weight: Optional[str] = ""
+    pet_color: Optional[str] = ""
+    spayed_neutered: Optional[str] = ""
+    current_medications: Optional[str] = ""
+    allergies: Optional[str] = ""
+    previous_vet: Optional[str] = ""
+    previous_vet_phone: Optional[str] = ""
+    last_visit_date: Optional[str] = ""
+    vaccination_history: Optional[str] = ""
+    medical_conditions: Optional[str] = ""
+    how_heard_about_us: Optional[str] = ""
+    preferred_appointment_type: Optional[str] = ""
+    special_instructions: Optional[str] = ""
+
+
 # Auth Utilities
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
