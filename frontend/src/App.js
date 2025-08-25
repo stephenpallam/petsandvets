@@ -121,6 +121,7 @@ function App() {
               <Route path="/forms-download" element={<FormsDownload />} />
               <Route path="/urgent-care-booking" element={<UrgentCareBooking />} />
               <Route path="/urgent-care-appointments" element={<UrgentCareAppointments />} />
+              <Route path="/forms/patient-registration-pdf" element={<PatientRegistrationPDF />} />
             </Routes>
           </main>
           <Footer />
