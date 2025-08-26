@@ -14,7 +14,9 @@ import {
   Loader,
   Plus,
   Minus,
-  PawPrint
+  PawPrint,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 
 const PatientRegistrationPDF = () => {
@@ -58,11 +60,27 @@ const PatientRegistrationPDF = () => {
     special_instructions: ''
   });
 
+  // Accordion state management
+  const [accordionState, setAccordionState] = useState({
+    ownerInfo: true,     // Start with first section open
+    petInfo: false,
+    vetHistory: false,
+    additionalInfo: false
+  });
+
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
 
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
   const primaryColor = '#29add3';
+
+  // Accordion toggle function
+  const toggleAccordion = (section) => {
+    setAccordionState(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -203,6 +221,48 @@ const PatientRegistrationPDF = () => {
     }
   };
 
+  // Accordion Section Component
+  const AccordionSection = ({ 
+    isOpen, 
+    onToggle, 
+    title, 
+    icon: Icon, 
+    iconColor = primaryColor, 
+    children, 
+    subtitle = null,
+    bgColor = "bg-white"
+  }) => (
+    <div className={`${bgColor} rounded-xl shadow-lg overflow-hidden border border-gray-200`}>
+      <button
+        type="button"
+        onClick={onToggle}
+        className="w-full p-6 flex items-center justify-between hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
+        style={{ '--tw-ring-color': primaryColor }}
+      >
+        <div className="flex items-center">
+          <Icon className="h-6 w-6 mr-3" style={{ color: iconColor }} />
+          <div className="text-left">
+            <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
+            {subtitle && <p className="text-sm text-gray-500 mt-1">{subtitle}</p>}
+          </div>
+        </div>
+        {isOpen ? (
+          <ChevronUp className="h-5 w-5 text-gray-500" />
+        ) : (
+          <ChevronDown className="h-5 w-5 text-gray-500" />
+        )}
+      </button>
+      
+      <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
+        isOpen ? 'max-h-none opacity-100' : 'max-h-0 opacity-0'
+      }`}>
+        <div className="p-6 pt-0 border-t border-gray-100">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -235,482 +295,490 @@ const PatientRegistrationPDF = () => {
           </div>
         )}
 
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <form onSubmit={(e) => e.preventDefault()}>
-            {/* Pet Owner Information */}
-            <div className="p-8 border-b border-gray-200">
-              <div className="flex items-center mb-6">
-                <User className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
-                <h2 className="text-xl font-semibold text-gray-900">Pet Owner Information</h2>
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
+          {/* Pet Owner Information Section */}
+          <AccordionSection
+            isOpen={accordionState.ownerInfo}
+            onToggle={() => toggleAccordion('ownerInfo')}
+            title="Pet Owner Information"
+            icon={User}
+            iconColor={primaryColor}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
+                <input
+                  type="text"
+                  value={formData.owner_first_name}
+                  onChange={(e) => handleInputChange('owner_first_name', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                  style={{ '--tw-ring-color': primaryColor }}
+                  required
+                />
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
-                  <input
-                    type="text"
-                    value={formData.owner_first_name}
-                    onChange={(e) => handleInputChange('owner_first_name', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                    style={{ '--tw-ring-color': primaryColor }}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
-                  <input
-                    type="text"
-                    value={formData.owner_last_name}
-                    onChange={(e) => handleInputChange('owner_last_name', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                    style={{ '--tw-ring-color': primaryColor }}
-                    required
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Address *</label>
-                  <input
-                    type="text"
-                    value={formData.address}
-                    onChange={(e) => handleInputChange('address', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                    style={{ '--tw-ring-color': primaryColor }}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">City *</label>
-                  <input
-                    type="text"
-                    value={formData.city}
-                    onChange={(e) => handleInputChange('city', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                    style={{ '--tw-ring-color': primaryColor }}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">State *</label>
-                  <input
-                    type="text"
-                    value={formData.state}
-                    onChange={(e) => handleInputChange('state', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                    style={{ '--tw-ring-color': primaryColor }}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">ZIP Code *</label>
-                  <input
-                    type="text"
-                    value={formData.zip_code}
-                    onChange={(e) => handleInputChange('zip_code', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                    style={{ '--tw-ring-color': primaryColor }}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email *</label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                    style={{ '--tw-ring-color': primaryColor }}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Phone *</label>
-                  <input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => handleInputChange('phone', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                    style={{ '--tw-ring-color': primaryColor }}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Emergency Contact Name</label>
-                  <input
-                    type="text"
-                    value={formData.emergency_contact_name}
-                    onChange={(e) => handleInputChange('emergency_contact_name', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                    style={{ '--tw-ring-color': primaryColor }}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Emergency Contact Phone</label>
-                  <input
-                    type="tel"
-                    value={formData.emergency_contact_phone}
-                    onChange={(e) => handleInputChange('emergency_contact_phone', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                    style={{ '--tw-ring-color': primaryColor }}
-                  />
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
+                <input
+                  type="text"
+                  value={formData.owner_last_name}
+                  onChange={(e) => handleInputChange('owner_last_name', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                  style={{ '--tw-ring-color': primaryColor }}
+                  required
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Address *</label>
+                <input
+                  type="text"
+                  value={formData.address}
+                  onChange={(e) => handleInputChange('address', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                  style={{ '--tw-ring-color': primaryColor }}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">City *</label>
+                <input
+                  type="text"
+                  value={formData.city}
+                  onChange={(e) => handleInputChange('city', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                  style={{ '--tw-ring-color': primaryColor }}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">State *</label>
+                <input
+                  type="text"
+                  value={formData.state}
+                  onChange={(e) => handleInputChange('state', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                  style={{ '--tw-ring-color': primaryColor }}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">ZIP Code *</label>
+                <input
+                  type="text"
+                  value={formData.zip_code}
+                  onChange={(e) => handleInputChange('zip_code', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                  style={{ '--tw-ring-color': primaryColor }}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                  style={{ '--tw-ring-color': primaryColor }}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Phone *</label>
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                  style={{ '--tw-ring-color': primaryColor }}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Emergency Contact Name</label>
+                <input
+                  type="text"
+                  value={formData.emergency_contact_name}
+                  onChange={(e) => handleInputChange('emergency_contact_name', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                  style={{ '--tw-ring-color': primaryColor }}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Emergency Contact Phone</label>
+                <input
+                  type="tel"
+                  value={formData.emergency_contact_phone}
+                  onChange={(e) => handleInputChange('emergency_contact_phone', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                  style={{ '--tw-ring-color': primaryColor }}
+                />
               </div>
             </div>
+          </AccordionSection>
 
-            {/* Multiple Pets Information */}
-            <div className="p-8 border-b border-gray-200 bg-gray-50">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center">
-                  <Heart className="h-6 w-6 mr-3 text-red-500" />
-                  <h2 className="text-xl font-semibold text-gray-900">Pet Information</h2>
-                  <span className="ml-3 text-sm text-gray-500">({formData.pets.length} of 4 pets)</span>
-                </div>
-                {formData.pets.length < 4 && (
-                  <button
-                    type="button"
-                    onClick={addPet}
-                    className="flex items-center px-4 py-2 border border-transparent rounded-lg font-medium text-white transition-all duration-200"
-                    style={{ backgroundColor: primaryColor }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Pet
-                  </button>
-                )}
+          {/* Multiple Pets Information Section */}
+          <AccordionSection
+            isOpen={accordionState.petInfo}
+            onToggle={() => toggleAccordion('petInfo')}
+            title="Pet Information"
+            icon={Heart}
+            iconColor="#ef4444"
+            subtitle={`${formData.pets.length} of 4 pets`}
+            bgColor="bg-gray-50"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center">
+                <span className="text-lg font-medium text-gray-900">Your Pets</span>
               </div>
-              
-              {formData.pets.map((pet, petIndex) => (
-                <div key={petIndex} className="mb-8 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center">
-                      <PawPrint className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
-                      <h3 className="text-lg font-medium text-gray-900">Pet {petIndex + 1}</h3>
-                      {pet.pet_name && <span className="ml-2 text-sm text-gray-600">- {pet.pet_name}</span>}
-                    </div>
-                    {formData.pets.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removePet(petIndex)}
-                        className="flex items-center px-3 py-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md transition-all duration-200"
-                      >
-                        <Minus className="h-4 w-4 mr-1" />
-                        Remove
-                      </button>
-                    )}
+              {formData.pets.length < 4 && (
+                <button
+                  type="button"
+                  onClick={addPet}
+                  className="flex items-center px-4 py-2 border border-transparent rounded-lg font-medium text-white transition-all duration-200"
+                  style={{ backgroundColor: primaryColor }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Pet
+                </button>
+              )}
+            </div>
+            
+            {formData.pets.map((pet, petIndex) => (
+              <div key={petIndex} className="mb-8 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center">
+                    <PawPrint className="h-5 w-5 mr-2" style={{ color: primaryColor }} />
+                    <h3 className="text-lg font-medium text-gray-900">Pet {petIndex + 1}</h3>
+                    {pet.pet_name && <span className="ml-2 text-sm text-gray-600">- {pet.pet_name}</span>}
+                  </div>
+                  {formData.pets.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removePet(petIndex)}
+                      className="flex items-center px-3 py-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md transition-all duration-200"
+                    >
+                      <Minus className="h-4 w-4 mr-1" />
+                      Remove
+                    </button>
+                  )}
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Pet Name *</label>
+                    <input
+                      type="text"
+                      value={pet.pet_name}
+                      onChange={(e) => handlePetChange(petIndex, 'pet_name', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                      style={{ '--tw-ring-color': primaryColor }}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Species *</label>
+                    <select
+                      value={pet.pet_species}
+                      onChange={(e) => handlePetChange(petIndex, 'pet_species', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                      style={{ '--tw-ring-color': primaryColor }}
+                      required
+                    >
+                      <option value="">Select species</option>
+                      <option value="Dog">Dog</option>
+                      <option value="Cat">Cat</option>
+                      <option value="Bird">Bird</option>
+                      <option value="Rabbit">Rabbit</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Breed</label>
+                    <input
+                      type="text"
+                      value={pet.pet_breed}
+                      onChange={(e) => handlePetChange(petIndex, 'pet_breed', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                      style={{ '--tw-ring-color': primaryColor }}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Gender *</label>
+                    <select
+                      value={pet.pet_gender}
+                      onChange={(e) => handlePetChange(petIndex, 'pet_gender', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                      style={{ '--tw-ring-color': primaryColor }}
+                      required
+                    >
+                      <option value="">Select gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Age *</label>
+                    <input
+                      type="text"
+                      value={pet.pet_age}
+                      onChange={(e) => handlePetChange(petIndex, 'pet_age', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                      style={{ '--tw-ring-color': primaryColor }}
+                      placeholder="e.g., 2 years, 6 months"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Weight</label>
+                    <input
+                      type="text"
+                      value={pet.pet_weight}
+                      onChange={(e) => handlePetChange(petIndex, 'pet_weight', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                      style={{ '--tw-ring-color': primaryColor }}
+                      placeholder="e.g., 25 lbs"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
+                    <input
+                      type="text"
+                      value={pet.pet_color}
+                      onChange={(e) => handlePetChange(petIndex, 'pet_color', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                      style={{ '--tw-ring-color': primaryColor }}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Spayed/Neutered</label>
+                    <select
+                      value={pet.spayed_neutered}
+                      onChange={(e) => handlePetChange(petIndex, 'spayed_neutered', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                      style={{ '--tw-ring-color': primaryColor }}
+                    >
+                      <option value="">Select option</option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                      <option value="Unknown">Unknown</option>
+                    </select>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Pet Name *</label>
-                      <input
-                        type="text"
-                        value={pet.pet_name}
-                        onChange={(e) => handlePetChange(petIndex, 'pet_name', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                        style={{ '--tw-ring-color': primaryColor }}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Species *</label>
-                      <select
-                        value={pet.pet_species}
-                        onChange={(e) => handlePetChange(petIndex, 'pet_species', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                        style={{ '--tw-ring-color': primaryColor }}
-                        required
-                      >
-                        <option value="">Select species</option>
-                        <option value="Dog">Dog</option>
-                        <option value="Cat">Cat</option>
-                        <option value="Bird">Bird</option>
-                        <option value="Rabbit">Rabbit</option>
-                        <option value="Other">Other</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Breed</label>
-                      <input
-                        type="text"
-                        value={pet.pet_breed}
-                        onChange={(e) => handlePetChange(petIndex, 'pet_breed', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                        style={{ '--tw-ring-color': primaryColor }}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Gender *</label>
-                      <select
-                        value={pet.pet_gender}
-                        onChange={(e) => handlePetChange(petIndex, 'pet_gender', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                        style={{ '--tw-ring-color': primaryColor }}
-                        required
-                      >
-                        <option value="">Select gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Age *</label>
-                      <input
-                        type="text"
-                        value={pet.pet_age}
-                        onChange={(e) => handlePetChange(petIndex, 'pet_age', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                        style={{ '--tw-ring-color': primaryColor }}
-                        placeholder="e.g., 2 years, 6 months"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Weight</label>
-                      <input
-                        type="text"
-                        value={pet.pet_weight}
-                        onChange={(e) => handlePetChange(petIndex, 'pet_weight', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                        style={{ '--tw-ring-color': primaryColor }}
-                        placeholder="e.g., 25 lbs"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
-                      <input
-                        type="text"
-                        value={pet.pet_color}
-                        onChange={(e) => handlePetChange(petIndex, 'pet_color', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                        style={{ '--tw-ring-color': primaryColor }}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Spayed/Neutered</label>
-                      <select
-                        value={pet.spayed_neutered}
-                        onChange={(e) => handlePetChange(petIndex, 'spayed_neutered', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                        style={{ '--tw-ring-color': primaryColor }}
-                      >
-                        <option value="">Select option</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                        <option value="Unknown">Unknown</option>
-                      </select>
-                    </div>
-                    
-                    {/* Pet-specific medical information */}
-                    <div className="md:col-span-2 mt-4">
-                      <h4 className="text-md font-medium text-gray-900 mb-3">Medical Information for {pet.pet_name || `Pet ${petIndex + 1}`}</h4>
-                    </div>
-                    <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Current Medications</label>
-                      <textarea
-                        value={pet.current_medications}
-                        onChange={(e) => handlePetChange(petIndex, 'current_medications', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                        style={{ '--tw-ring-color': primaryColor }}
-                        rows="2"
-                        placeholder="List any current medications..."
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Allergies</label>
-                      <textarea
-                        value={pet.allergies}
-                        onChange={(e) => handlePetChange(petIndex, 'allergies', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                        style={{ '--tw-ring-color': primaryColor }}
-                        rows="2"
-                        placeholder="List any known allergies..."
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Vaccination History</label>
-                      <input
-                        type="text"
-                        value={pet.vaccination_history}
-                        onChange={(e) => handlePetChange(petIndex, 'vaccination_history', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                        style={{ '--tw-ring-color': primaryColor }}
-                        placeholder="e.g., Up to date, Unknown"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Medical Conditions</label>
-                      <input
-                        type="text"
-                        value={pet.medical_conditions}
-                        onChange={(e) => handlePetChange(petIndex, 'medical_conditions', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                        style={{ '--tw-ring-color': primaryColor }}
-                        placeholder="List any known medical conditions..."
-                      />
-                    </div>
+                  {/* Pet-specific medical information */}
+                  <div className="md:col-span-2 mt-4">
+                    <h4 className="text-md font-medium text-gray-900 mb-3">Medical Information for {pet.pet_name || `Pet ${petIndex + 1}`}</h4>
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Current Medications</label>
+                    <textarea
+                      value={pet.current_medications}
+                      onChange={(e) => handlePetChange(petIndex, 'current_medications', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                      style={{ '--tw-ring-color': primaryColor }}
+                      rows="2"
+                      placeholder="List any current medications..."
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Allergies</label>
+                    <textarea
+                      value={pet.allergies}
+                      onChange={(e) => handlePetChange(petIndex, 'allergies', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                      style={{ '--tw-ring-color': primaryColor }}
+                      rows="2"
+                      placeholder="List any known allergies..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Vaccination History</label>
+                    <input
+                      type="text"
+                      value={pet.vaccination_history}
+                      onChange={(e) => handlePetChange(petIndex, 'vaccination_history', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                      style={{ '--tw-ring-color': primaryColor }}
+                      placeholder="e.g., Up to date, Unknown"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Medical Conditions</label>
+                    <input
+                      type="text"
+                      value={pet.medical_conditions}
+                      onChange={(e) => handlePetChange(petIndex, 'medical_conditions', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                      style={{ '--tw-ring-color': primaryColor }}
+                      placeholder="List any known medical conditions..."
+                    />
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
+          </AccordionSection>
 
-            {/* Veterinary History */}
-            <div className="p-8 border-b border-gray-200">
-              <div className="flex items-center mb-6">
-                <Stethoscope className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
-                <h2 className="text-xl font-semibold text-gray-900">Veterinary History</h2>
-                <span className="ml-3 text-sm text-gray-500">(Shared across all pets)</span>
+          {/* Veterinary History Section */}
+          <AccordionSection
+            isOpen={accordionState.vetHistory}
+            onToggle={() => toggleAccordion('vetHistory')}
+            title="Veterinary History"
+            icon={Stethoscope}
+            iconColor={primaryColor}
+            subtitle="Shared across all pets"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Previous Veterinarian</label>
+                <input
+                  type="text"
+                  value={formData.previous_vet}
+                  onChange={(e) => handleInputChange('previous_vet', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                  style={{ '--tw-ring-color': primaryColor }}
+                />
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Previous Veterinarian</label>
-                  <input
-                    type="text"
-                    value={formData.previous_vet}
-                    onChange={(e) => handleInputChange('previous_vet', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                    style={{ '--tw-ring-color': primaryColor }}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Previous Vet Phone</label>
-                  <input
-                    type="tel"
-                    value={formData.previous_vet_phone}
-                    onChange={(e) => handleInputChange('previous_vet_phone', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                    style={{ '--tw-ring-color': primaryColor }}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Last Visit Date</label>
-                  <input
-                    type="date"
-                    value={formData.last_visit_date}
-                    onChange={(e) => handleInputChange('last_visit_date', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                    style={{ '--tw-ring-color': primaryColor }}
-                  />
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Previous Vet Phone</label>
+                <input
+                  type="tel"
+                  value={formData.previous_vet_phone}
+                  onChange={(e) => handleInputChange('previous_vet_phone', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                  style={{ '--tw-ring-color': primaryColor }}
+                />
               </div>
-            </div>
-
-            {/* Additional Information */}
-            <div className="p-8 bg-gray-50">
-              <div className="flex items-center mb-6">
-                <FileText className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
-                <h2 className="text-xl font-semibold text-gray-900">Additional Information</h2>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">How did you hear about us?</label>
-                  <select
-                    value={formData.how_heard_about_us}
-                    onChange={(e) => handleInputChange('how_heard_about_us', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                    style={{ '--tw-ring-color': primaryColor }}
-                  >
-                    <option value="">Select option</option>
-                    <option value="Google Search">Google Search</option>
-                    <option value="Social Media">Social Media</option>
-                    <option value="Friend/Family">Friend/Family</option>
-                    <option value="Vet Referral">Vet Referral</option>
-                    <option value="Drive By">Drive By</option>
-                    <option value="Online Reviews">Online Reviews</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Preferred Appointment Type</label>
-                  <select
-                    value={formData.preferred_appointment_type}
-                    onChange={(e) => handleInputChange('preferred_appointment_type', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                    style={{ '--tw-ring-color': primaryColor }}
-                  >
-                    <option value="">Select option</option>
-                    <option value="Regular Appointment">Regular Appointment</option>
-                    <option value="Urgent Care">Urgent Care</option>
-                    <option value="Wellness Check">Wellness Check</option>
-                    <option value="Surgery Consultation">Surgery Consultation</option>
-                  </select>
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Special Instructions</label>
-                  <textarea
-                    value={formData.special_instructions}
-                    onChange={(e) => handleInputChange('special_instructions', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                    style={{ '--tw-ring-color': primaryColor }}
-                    rows="4"
-                    placeholder="Any special instructions or notes for our team..."
-                  />
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Last Visit Date</label>
+                <input
+                  type="date"
+                  value={formData.last_visit_date}
+                  onChange={(e) => handleInputChange('last_visit_date', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                  style={{ '--tw-ring-color': primaryColor }}
+                />
               </div>
             </div>
+          </AccordionSection>
 
-            {/* Submit Buttons */}
-            <div className="p-8 bg-white">
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button
-                  type="button"
-                  onClick={() => submitForm(false)}
-                  disabled={loading}
-                  className="flex items-center justify-center px-8 py-4 border-2 rounded-lg font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{ 
-                    borderColor: primaryColor, 
-                    color: primaryColor 
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.style.backgroundColor = primaryColor;
-                      e.target.style.color = 'white';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!loading) {
-                      e.target.style.backgroundColor = 'transparent';
-                      e.target.style.color = primaryColor;
-                    }
-                  }}
+          {/* Additional Information Section */}
+          <AccordionSection
+            isOpen={accordionState.additionalInfo}
+            onToggle={() => toggleAccordion('additionalInfo')}
+            title="Additional Information"
+            icon={FileText}
+            iconColor={primaryColor}
+            bgColor="bg-gray-50"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">How did you hear about us?</label>
+                <select
+                  value={formData.how_heard_about_us}
+                  onChange={(e) => handleInputChange('how_heard_about_us', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                  style={{ '--tw-ring-color': primaryColor }}
                 >
-                  {loading ? (
-                    <Loader className="h-5 w-5 mr-2 animate-spin" />
-                  ) : (
-                    <Send className="h-5 w-5 mr-2" />
-                  )}
-                  Submit Registration
-                </button>
-                
-                <button
-                  type="button"
-                  onClick={() => submitForm(true)}
-                  disabled={loading}
-                  className="flex items-center justify-center px-8 py-4 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{ backgroundColor: primaryColor }}
-                  onMouseEnter={(e) => {
-                    if (!loading) e.target.style.backgroundColor = '#2196c7';
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!loading) e.target.style.backgroundColor = primaryColor;
-                  }}
-                >
-                  {loading ? (
-                    <Loader className="h-5 w-5 mr-2 animate-spin" />
-                  ) : (
-                    <Download className="h-5 w-5 mr-2" />
-                  )}
-                  Submit & Download PDF
-                </button>
+                  <option value="">Select option</option>
+                  <option value="Google Search">Google Search</option>
+                  <option value="Social Media">Social Media</option>
+                  <option value="Friend/Family">Friend/Family</option>
+                  <option value="Vet Referral">Vet Referral</option>
+                  <option value="Drive By">Drive By</option>
+                  <option value="Online Reviews">Online Reviews</option>
+                  <option value="Other">Other</option>
+                </select>
               </div>
-              
-              <p className="text-center text-sm text-gray-500 mt-4">
-                * Required fields. Your information is secure and will be used only for veterinary care purposes.
-              </p>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Preferred Appointment Type</label>
+                <select
+                  value={formData.preferred_appointment_type}
+                  onChange={(e) => handleInputChange('preferred_appointment_type', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                  style={{ '--tw-ring-color': primaryColor }}
+                >
+                  <option value="">Select option</option>
+                  <option value="Regular Appointment">Regular Appointment</option>
+                  <option value="Urgent Care">Urgent Care</option>
+                  <option value="Wellness Check">Wellness Check</option>
+                  <option value="Surgery Consultation">Surgery Consultation</option>
+                </select>
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Special Instructions</label>
+                <textarea
+                  value={formData.special_instructions}
+                  onChange={(e) => handleInputChange('special_instructions', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                  style={{ '--tw-ring-color': primaryColor }}
+                  rows="4"
+                  placeholder="Any special instructions or notes for our team..."
+                />
+              </div>
             </div>
-          </form>
-        </div>
+          </AccordionSection>
+
+          {/* Submit Buttons */}
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                type="button"
+                onClick={() => submitForm(false)}
+                disabled={loading}
+                className="flex items-center justify-center px-8 py-4 border-2 rounded-lg font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ 
+                  borderColor: primaryColor, 
+                  color: primaryColor 
+                }}
+                onMouseEnter={(e) => {
+                  if (!loading) {
+                    e.target.style.backgroundColor = primaryColor;
+                    e.target.style.color = 'white';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!loading) {
+                    e.target.style.backgroundColor = 'transparent';
+                    e.target.style.color = primaryColor;
+                  }
+                }}
+              >
+                {loading ? (
+                  <Loader className="h-5 w-5 mr-2 animate-spin" />
+                ) : (
+                  <Send className="h-5 w-5 mr-2" />
+                )}
+                Submit Registration
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => submitForm(true)}
+                disabled={loading}
+                className="flex items-center justify-center px-8 py-4 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ backgroundColor: primaryColor }}
+                onMouseEnter={(e) => {
+                  if (!loading) e.target.style.backgroundColor = '#2196c7';
+                }}
+                onMouseLeave={(e) => {
+                  if (!loading) e.target.style.backgroundColor = primaryColor;
+                }}
+              >
+                {loading ? (
+                  <Loader className="h-5 w-5 mr-2 animate-spin" />
+                ) : (
+                  <Download className="h-5 w-5 mr-2" />
+                )}
+                Submit & Download PDF
+              </button>
+            </div>
+            
+            <p className="text-center text-sm text-gray-500 mt-4">
+              * Required fields. Your information is secure and will be used only for veterinary care purposes.
+            </p>
+          </div>
+        </form>
       </div>
     </div>
   );
