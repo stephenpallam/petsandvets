@@ -705,155 +705,103 @@ async def get_available_time_slots(date: str):
 
 
 def generate_pdf(form_data: PatientRegistrationForm) -> bytes:
-    """Generate a compact PDF matching the original form layout"""
+    """Generate a compact PDF matching the original form layout exactly"""
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(
         buffer, 
         pagesize=letter,
-        rightMargin=0.5*inch,
-        leftMargin=0.5*inch,
-        topMargin=0.5*inch,
-        bottomMargin=0.5*inch
+        rightMargin=0.75*inch,
+        leftMargin=0.75*inch,
+        topMargin=0.6*inch,
+        bottomMargin=0.6*inch
     )
     styles = getSampleStyleSheet()
     story = []
     
-    # Custom styles for compact layout
+    # Header Section - Phone and Fax
     header_style = ParagraphStyle(
         'HeaderStyle',
         parent=styles['Normal'],
-        fontSize=14,
-        textColor=colors.HexColor('#29add3'),
-        alignment=1,  # Center
-        spaceAfter=8
-    )
-    
-    contact_style = ParagraphStyle(
-        'ContactStyle',
-        parent=styles['Normal'],
-        fontSize=10,
-        alignment=1,  # Center
-        spaceAfter=12
-    )
-    
-    section_style = ParagraphStyle(
-        'SectionStyle',
-        parent=styles['Normal'],
-        fontSize=11,
-        textColor=colors.black,
+        fontSize=12,
         fontName='Helvetica-Bold',
-        spaceAfter=6,
-        spaceBefore=8
+        alignment=1,  # Center
+        spaceAfter=20
     )
     
-    # Header Section
-    story.append(Paragraph("New Patient Registration Form", header_style))
-    story.append(Paragraph("Phone: 703-957-3297 &nbsp;&nbsp;&nbsp; Fax: 703-957-3450", contact_style))
+    story.append(Paragraph("Phone: 703-957-3297 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Fax: 703-957-3450", header_style))
     
     # Client Information Section
-    story.append(Paragraph("Client Information", section_style))
+    client_section_style = ParagraphStyle(
+        'ClientSection',
+        parent=styles['Normal'],
+        fontSize=12,
+        fontName='Helvetica-Bold',
+        spaceAfter=8,
+        spaceBefore=10
+    )
     
-    # Create compact client info layout
+    story.append(Paragraph("Client Information", client_section_style))
+    
+    # Create client info table matching the original layout
     client_data = [
         [f"Name: {form_data.owner_first_name} {form_data.owner_last_name}", f"Cell: {form_data.phone}"],
         [f"Address: {form_data.address}", f"Email: {form_data.email}"],
-        [f"City: {form_data.city}", f"State: {form_data.state}"],
-        [f"Zip: {form_data.zip_code}", f"Emergency: {form_data.emergency_contact_name or 'N/A'}"],
-        [f"Emergency Phone: {form_data.emergency_contact_phone or 'N/A'}", ""],
+        [f"City: {form_data.city}", ""],
+        [f"State: {form_data.state}", f"Zip: {form_data.zip_code}"],
+        [f"Emergency Contact: {form_data.emergency_contact_name or ''}", f"Emergency Phone: {form_data.emergency_contact_phone or ''}"],
     ]
     
-    client_table = Table(client_data, colWidths=[3.5*inch, 3.5*inch])
+    # Only add emergency contact rows if data exists
+    if not form_data.emergency_contact_name and not form_data.emergency_contact_phone:
+        client_data = client_data[:-1]  # Remove the empty emergency contact row
+    
+    client_table = Table(client_data, colWidths=[4*inch, 3*inch])
     client_table.setStyle(TableStyle([
-        ('FONTSIZE', (0, 0), (-1, -1), 9),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
         ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-        ('LEFTPADDING', (0, 0), (-1, -1), 3),
-        ('RIGHTPADDING', (0, 0), (-1, -1), 3),
-        ('TOPPADDING', (0, 0), (-1, -1), 2),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 2),
-        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#cccccc')),
+        ('LEFTPADDING', (0, 0), (-1, -1), 2),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 2),
+        ('TOPPADDING', (0, 0), (-1, -1), 3),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
     ]))
     story.append(client_table)
     
+    story.append(Spacer(1, 15))
+    
     # Pet Information Section
-    story.append(Paragraph("Pet Information", section_style))
+    story.append(Paragraph("Pet Information", client_section_style))
     
-    # Create compact pet info layout (up to 4 pets in 2 columns)
-    pet_rows = []
-    for i in range(0, len(form_data.pets), 2):  # Process pets in pairs
-        left_pet = form_data.pets[i] if i < len(form_data.pets) else None
-        right_pet = form_data.pets[i + 1] if i + 1 < len(form_data.pets) else None
-        
-        if left_pet:
-            left_content = [
-                f"Pet {i + 1}",
-                f"Pet Name: {left_pet.pet_name}",
-                f"Species: {left_pet.pet_species} &nbsp;&nbsp; DOB/Age: {left_pet.pet_age}",
-                f"Breed: {left_pet.pet_breed or 'N/A'} &nbsp;&nbsp; Sex: {left_pet.pet_gender}",
-                f"Weight: {left_pet.pet_weight or 'N/A'} &nbsp;&nbsp; Color: {left_pet.pet_color or 'N/A'}",
-                f"Spayed/Neutered: {left_pet.spayed_neutered or 'Unknown'}",
-                f"Medications: {left_pet.current_medications or 'None'}",
-                f"Allergies: {left_pet.allergies or 'None'}",
-                f"Medical Conditions: {left_pet.medical_conditions or 'None'}"
-            ]
-        else:
-            left_content = [""] * 9
-            
-        if right_pet:
-            right_content = [
-                f"Pet {i + 2}",
-                f"Pet Name: {right_pet.pet_name}",
-                f"Species: {right_pet.pet_species} &nbsp;&nbsp; DOB/Age: {right_pet.pet_age}",
-                f"Breed: {right_pet.pet_breed or 'N/A'} &nbsp;&nbsp; Sex: {right_pet.pet_gender}",
-                f"Weight: {right_pet.pet_weight or 'N/A'} &nbsp;&nbsp; Color: {right_pet.pet_color or 'N/A'}",
-                f"Spayed/Neutered: {right_pet.spayed_neutered or 'Unknown'}",
-                f"Medications: {right_pet.current_medications or 'None'}",
-                f"Allergies: {right_pet.allergies or 'None'}",
-                f"Medical Conditions: {right_pet.medical_conditions or 'None'}"
-            ]
-        else:
-            right_content = [""] * 9
-        
-        # Add rows for this pet pair
-        for j in range(9):
-            pet_rows.append([left_content[j], right_content[j]])
-        
-        # Add separator if not last pair and we have more pets
-        if i + 2 < len(form_data.pets):
-            pet_rows.append(["", ""])
-    
-    if pet_rows:
-        pet_table = Table(pet_rows, colWidths=[3.5*inch, 3.5*inch])
-        pet_table.setStyle(TableStyle([
-            ('FONTSIZE', (0, 0), (-1, -1), 8),
-            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
-            ('FONTNAME', (0, 0), (1, 0), 'Helvetica-Bold'),  # Pet headers
-            ('FONTNAME', (0, 9), (1, 9), 'Helvetica-Bold'),  # Pet 2 header if exists
-            ('FONTNAME', (0, 18), (1, 18), 'Helvetica-Bold'),  # Pet 3 header if exists  
-            ('FONTNAME', (0, 27), (1, 27), 'Helvetica-Bold'),  # Pet 4 header if exists
+    # Create pet info table matching original format
+    # Process up to 4 pets, each pet gets its own table section
+    for i, pet in enumerate(form_data.pets[:4], 1):  # Limit to 4 pets
+        pet_header_data = [[f"Pet {i}"]]
+        pet_header_table = Table(pet_header_data, colWidths=[7*inch])
+        pet_header_table.setStyle(TableStyle([
+            ('FONTSIZE', (0, 0), (-1, -1), 11),
+            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
             ('VALIGN', (0, 0), (-1, -1), 'TOP'),
             ('LEFTPADDING', (0, 0), (-1, -1), 3),
-            ('RIGHTPADDING', (0, 0), (-1, -1), 3),
-            ('TOPPADDING', (0, 0), (-1, -1), 1),
-            ('BOTTOMPADDING', (0, 0), (-1, -1), 1),
-            ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#cccccc')),
+            ('TOPPADDING', (0, 0), (-1, -1), 4),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 2),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
         ]))
-        story.append(pet_table)
-    
-    # Veterinary History Section (if provided)
-    if form_data.previous_vet or form_data.previous_vet_phone or form_data.last_visit_date:
-        story.append(Paragraph("Veterinary History", section_style))
+        story.append(pet_header_table)
         
-        vet_data = [[
-            f"Previous Veterinarian: {form_data.previous_vet or 'N/A'}",
-            f"Phone: {form_data.previous_vet_phone or 'N/A'}"
-        ], [
-            f"Last Visit Date: {form_data.last_visit_date or 'N/A'}",
-            ""
-        ]]
+        # Pet details in the original compact format
+        pet_details_data = [
+            [f"Pet Name: {pet.pet_name}"],
+            [f"Species: {pet.pet_species} &nbsp;&nbsp;&nbsp; Age: {pet.pet_age}"],
+            [f"Breed: {pet.pet_breed or 'Not specified'} &nbsp;&nbsp;&nbsp; Sex: {pet.pet_gender}"],
+        ]
         
-        vet_table = Table(vet_data, colWidths=[3.5*inch, 3.5*inch])
-        vet_table.setStyle(TableStyle([
+        # Add spayed/neutered info if provided
+        if pet.spayed_neutered:
+            pet_details_data.append([f"Spayed/Neutered: {pet.spayed_neutered}"])
+        
+        pet_details_table = Table(pet_details_data, colWidths=[7*inch])
+        pet_details_table.setStyle(TableStyle([
             ('FONTSIZE', (0, 0), (-1, -1), 9),
             ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
             ('VALIGN', (0, 0), (-1, -1), 'TOP'),
@@ -861,54 +809,96 @@ def generate_pdf(form_data: PatientRegistrationForm) -> bytes:
             ('RIGHTPADDING', (0, 0), (-1, -1), 3),
             ('TOPPADDING', (0, 0), (-1, -1), 2),
             ('BOTTOMPADDING', (0, 0), (-1, -1), 2),
-            ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#cccccc')),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
+        ]))
+        story.append(pet_details_table)
+        
+        # Add small space between pets
+        if i < len(form_data.pets) and i < 4:
+            story.append(Spacer(1, 3))
+    
+    # Add empty pet slots if less than 4 pets (to match original form)
+    for i in range(len(form_data.pets) + 1, 5):  # Fill up to Pet 4
+        story.append(Spacer(1, 3))
+        
+        pet_header_data = [[f"Pet {i}"]]
+        pet_header_table = Table(pet_header_data, colWidths=[7*inch])
+        pet_header_table.setStyle(TableStyle([
+            ('FONTSIZE', (0, 0), (-1, -1), 11),
+            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+            ('LEFTPADDING', (0, 0), (-1, -1), 3),
+            ('TOPPADDING', (0, 0), (-1, -1), 4),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 2),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
+        ]))
+        story.append(pet_header_table)
+        
+        # Empty pet details
+        empty_pet_data = [
+            ["Pet Name:"],
+            ["Species: &nbsp;&nbsp;&nbsp; Age:"],
+            ["Breed: &nbsp;&nbsp;&nbsp; Sex:"],
+        ]
+        
+        empty_pet_table = Table(empty_pet_data, colWidths=[7*inch])
+        empty_pet_table.setStyle(TableStyle([
+            ('FONTSIZE', (0, 0), (-1, -1), 9),
+            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+            ('LEFTPADDING', (0, 0), (-1, -1), 3),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 3),
+            ('TOPPADDING', (0, 0), (-1, -1), 2),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 2),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
+        ]))
+        story.append(empty_pet_table)
+    
+    # Add veterinary history if provided
+    if form_data.previous_vet or form_data.previous_vet_phone:
+        story.append(Spacer(1, 15))
+        
+        vet_section_style = ParagraphStyle(
+            'VetSection',
+            parent=styles['Normal'],
+            fontSize=11,
+            fontName='Helvetica-Bold',
+            spaceAfter=8
+        )
+        
+        story.append(Paragraph("Veterinary History", vet_section_style))
+        
+        vet_data = [
+            [f"Previous Veterinarian: {form_data.previous_vet or ''}", f"Phone: {form_data.previous_vet_phone or ''}"],
+        ]
+        
+        vet_table = Table(vet_data, colWidths=[4*inch, 3*inch])
+        vet_table.setStyle(TableStyle([
+            ('FONTSIZE', (0, 0), (-1, -1), 9),
+            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+            ('LEFTPADDING', (0, 0), (-1, -1), 3),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 3),
+            ('TOPPADDING', (0, 0), (-1, -1), 3),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
         ]))
         story.append(vet_table)
     
-    # Additional Information (if provided)
-    if form_data.how_heard_about_us or form_data.preferred_appointment_type or form_data.special_instructions:
-        story.append(Paragraph("Additional Information", section_style))
-        
-        additional_data = []
-        if form_data.how_heard_about_us:
-            additional_data.append([f"How heard about us: {form_data.how_heard_about_us}", ""])
-        if form_data.preferred_appointment_type:
-            additional_data.append([f"Preferred appointment type: {form_data.preferred_appointment_type}", ""])
-        if form_data.special_instructions:
-            additional_data.append([f"Special instructions: {form_data.special_instructions[:100]}...", ""])
-        
-        if additional_data:
-            additional_table = Table(additional_data, colWidths=[7*inch])
-            additional_table.setStyle(TableStyle([
-                ('FONTSIZE', (0, 0), (-1, -1), 8),
-                ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
-                ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-                ('LEFTPADDING', (0, 0), (-1, -1), 3),
-                ('TOPPADDING', (0, 0), (-1, -1), 2),
-                ('BOTTOMPADDING', (0, 0), (-1, -1), 2),
-                ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#cccccc')),
-            ]))
-            story.append(additional_table)
-    
-    # Footer
-    story.append(Spacer(1, 12))
+    # Footer section - add space and payment policy
+    story.append(Spacer(1, 25))
     
     footer_style = ParagraphStyle(
         'FooterStyle',
         parent=styles['Normal'],
-        fontSize=9,
+        fontSize=10,
+        fontName='Helvetica',
         alignment=1,  # Center
-        textColor=colors.HexColor('#666666')
+        leading=12
     )
     
     story.append(Paragraph(
         "All payments are due at the time of service rendered. We accept cash, checks, all major credit cards & Care Credit which can be approved in as little as 10 minutes.",
-        footer_style
-    ))
-    
-    story.append(Spacer(1, 8))
-    story.append(Paragraph(
-        f"Form completed on: {form_data.created_at.strftime('%B %d, %Y')} &nbsp;&nbsp;&nbsp; Registration ID: {form_data.id[:8]}",
         footer_style
     ))
     
