@@ -225,8 +225,8 @@ const PatientRegistrationPDF = () => {
     }
   };
 
-  // Accordion Section Component
-  const AccordionSection = ({ 
+  // Accordion Section Component - Memoized to prevent unnecessary re-renders
+  const AccordionSection = React.memo(({ 
     isOpen, 
     onToggle, 
     title, 
@@ -237,7 +237,7 @@ const PatientRegistrationPDF = () => {
     bgColor = "bg-white"
   }) => {
     
-    const handleToggle = (e) => {
+    const handleToggle = useCallback((e) => {
       e.preventDefault();
       e.stopPropagation();
       
@@ -263,7 +263,7 @@ const PatientRegistrationPDF = () => {
           window.scrollTo(0, currentScrollY);
         }
       }, 0);
-    };
+    }, [onToggle, isOpen]);
 
     return (
       <div className={`${bgColor} rounded-xl shadow-lg overflow-hidden border border-gray-200`}>
@@ -296,7 +296,7 @@ const PatientRegistrationPDF = () => {
         </div>
       </div>
     );
-  };
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
