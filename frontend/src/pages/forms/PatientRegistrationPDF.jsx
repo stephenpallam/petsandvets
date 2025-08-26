@@ -346,6 +346,8 @@ const PatientRegistrationPDF = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
                 <input
+                  id="owner_first_name"
+                  name="owner_first_name"
                   type="text"
                   value={formData.owner_first_name}
                   onChange={(e) => handleInputChange('owner_first_name', e.target.value)}
