@@ -86,26 +86,18 @@ const PatientRegistrationPDF = () => {
     }));
   };
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = React.useCallback((field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    // Only clear messages if there was an error message
-    if (message.text && message.type === 'error') {
-      setMessage({ type: '', text: '' });
-    }
-  };
+  }, []);
 
-  const handlePetChange = (petIndex, field, value) => {
+  const handlePetChange = React.useCallback((petIndex, field, value) => {
     setFormData(prev => ({
       ...prev,
       pets: prev.pets.map((pet, index) => 
         index === petIndex ? { ...pet, [field]: value } : pet
       )
     }));
-    // Only clear messages if there was an error message
-    if (message.text && message.type === 'error') {
-      setMessage({ type: '', text: '' });
-    }
-  };
+  }, []);
 
   const addPet = () => {
     if (formData.pets.length < 4) {
