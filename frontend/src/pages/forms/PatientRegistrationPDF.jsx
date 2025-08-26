@@ -500,6 +500,8 @@ const PatientRegistrationPDF = () => {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Pet Name *</label>
                     <input
+                      id={`pet_${petIndex}_name`}
+                      name={`pet_${petIndex}_name`}
                       type="text"
                       value={pet.pet_name}
                       onChange={(e) => handlePetChange(petIndex, 'pet_name', e.target.value)}
