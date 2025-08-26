@@ -278,6 +278,36 @@ const PatientRegistrationPDF = () => {
                 />
               </div>
               <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">City *</label>
+                <input
+                  type="text"
+                  value={formData.city}
+                  onChange={(e) => handleInputChange('city', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">State *</label>
+                <input
+                  type="text"
+                  value={formData.state}
+                  onChange={(e) => handleInputChange('state', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">ZIP Code *</label>
+                <input
+                  type="text"
+                  value={formData.zip_code}
+                  onChange={(e) => handleInputChange('zip_code', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Email *</label>
                 <input
                   type="email"
