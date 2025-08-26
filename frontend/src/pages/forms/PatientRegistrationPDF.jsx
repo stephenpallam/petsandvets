@@ -679,6 +679,7 @@ const PatientRegistrationPDF = () => {
 
           {/* Additional Information Section */}
           <AccordionSection
+            key="additionalInfo"
             isOpen={accordionState.additionalInfo}
             onToggle={(e) => toggleAccordion('additionalInfo', e)}
             title="Additional Information"
