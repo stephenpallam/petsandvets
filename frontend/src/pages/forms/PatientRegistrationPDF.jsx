@@ -235,37 +235,56 @@ const PatientRegistrationPDF = () => {
     children, 
     subtitle = null,
     bgColor = "bg-white"
-  }) => (
-    <div className={`${bgColor} rounded-xl shadow-lg overflow-hidden border border-gray-200`}>
-      <button
-        type="button"
-        onClick={onToggle}
-        className="w-full p-6 flex items-center justify-between hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
-        style={{ '--tw-ring-color': primaryColor }}
-      >
-        <div className="flex items-center">
-          <Icon className="h-6 w-6 mr-3" style={{ color: iconColor }} />
-          <div className="text-left">
-            <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
-            {subtitle && <p className="text-sm text-gray-500 mt-1">{subtitle}</p>}
+  }) => {
+    
+    const handleToggle = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Store current scroll position
+      const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+      
+      // Call the toggle function
+      onToggle(e);
+      
+      // Restore scroll position after a brief delay to allow for any DOM updates
+      requestAnimationFrame(() => {
+        window.scrollTo(0, scrollPosition);
+      });
+    };
+
+    return (
+      <div className={`${bgColor} rounded-xl shadow-lg overflow-hidden border border-gray-200`}>
+        <button
+          type="button"
+          onClick={handleToggle}
+          className="w-full p-6 flex items-center justify-between hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
+          style={{ '--tw-ring-color': primaryColor }}
+        >
+          <div className="flex items-center">
+            <Icon className="h-6 w-6 mr-3" style={{ color: iconColor }} />
+            <div className="text-left">
+              <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
+              {subtitle && <p className="text-sm text-gray-500 mt-1">{subtitle}</p>}
+            </div>
+          </div>
+          {isOpen ? (
+            <ChevronUp className="h-5 w-5 text-gray-500" />
+          ) : (
+            <ChevronDown className="h-5 w-5 text-gray-500" />
+          )}
+        </button>
+        
+        <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
+          isOpen ? 'max-h-none opacity-100' : 'max-h-0 opacity-0'
+        }`}>
+          <div className="p-6 pt-0 border-t border-gray-100">
+            {children}
           </div>
         </div>
-        {isOpen ? (
-          <ChevronUp className="h-5 w-5 text-gray-500" />
-        ) : (
-          <ChevronDown className="h-5 w-5 text-gray-500" />
-        )}
-      </button>
-      
-      <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
-        isOpen ? 'max-h-none opacity-100' : 'max-h-0 opacity-0'
-      }`}>
-        <div className="p-6 pt-0 border-t border-gray-100">
-          {children}
-        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
