@@ -503,8 +503,7 @@ const PatientRegistrationPDF = () => {
                       type="text"
                       value={pet.pet_name}
                       onChange={(e) => handlePetChange(petIndex, 'pet_name', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                      style={{ '--tw-ring-color': primaryColor }}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
                       required
                     />
                   </div>
