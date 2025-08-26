@@ -288,7 +288,11 @@ const PatientRegistrationPDF = () => {
         <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
           isOpen ? 'max-h-none opacity-100' : 'max-h-0 opacity-0'
         }`}>
-          <div className="px-6 pb-6 pt-8 border-t border-gray-100">
+          <div 
+            className="px-6 pb-6 pt-8 border-t border-gray-100"
+            onClick={(e) => e.stopPropagation()}
+            onFocus={(e) => e.stopPropagation()}
+          >
             {children}
           </div>
         </div>
