@@ -688,7 +688,7 @@ const PatientRegistrationPDF = () => {
           {/* Additional Information Section */}
           <AccordionSection
             isOpen={accordionState.additionalInfo}
-            onToggle={() => toggleAccordion('additionalInfo')}
+            onToggle={(e) => toggleAccordion('additionalInfo', e)}
             title="Additional Information"
             icon={FileText}
             iconColor={primaryColor}
