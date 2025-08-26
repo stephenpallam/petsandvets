@@ -86,11 +86,11 @@ const PatientRegistrationPDF = () => {
     }));
   };
 
-  const handleInputChange = React.useCallback((field, value) => {
+  const handleInputChange = useCallback((field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   }, []);
 
-  const handlePetChange = React.useCallback((petIndex, field, value) => {
+  const handlePetChange = useCallback((petIndex, field, value) => {
     setFormData(prev => ({
       ...prev,
       pets: prev.pets.map((pet, index) => 
