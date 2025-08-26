@@ -353,12 +353,8 @@ const PatientRegistrationPDF = () => {
                 <input
                   type="text"
                   value={formData.owner_last_name}
-                  onChange={(e) => {
-                    console.log('Last name change:', e.target.value);
-                    handleInputChange('owner_last_name', e.target.value);
-                  }}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                  style={{ '--tw-ring-color': primaryColor }}
+                  onChange={(e) => handleInputChange('owner_last_name', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
                   required
                 />
               </div>
