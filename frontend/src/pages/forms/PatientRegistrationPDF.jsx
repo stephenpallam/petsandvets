@@ -90,14 +90,14 @@ const PatientRegistrationPDF = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handlePetChange = (petIndex, field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      pets: prev.pets.map((pet, index) => 
-        index === petIndex ? { ...pet, [field]: value } : pet
-      )
-    }));
-  };
+  const handlePetChange = useCallback((petIndex, field, value) => {
+    // Use functional update to prevent re-render issues
+    setFormData(prevData => {
+      const newPets = [...prevData.pets];
+      newPets[petIndex] = { ...newPets[petIndex], [field]: value };
+      return { ...prevData, pets: newPets };
+    });
+  }, []);
 
   const addPet = () => {
     if (formData.pets.length < 4) {
