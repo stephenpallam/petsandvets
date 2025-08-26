@@ -88,7 +88,10 @@ const PatientRegistrationPDF = () => {
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    setMessage({ type: '', text: '' });
+    // Only clear messages if there was an error message
+    if (message.text && message.type === 'error') {
+      setMessage({ type: '', text: '' });
+    }
   };
 
   const handlePetChange = (petIndex, field, value) => {
@@ -98,7 +101,10 @@ const PatientRegistrationPDF = () => {
         index === petIndex ? { ...pet, [field]: value } : pet
       )
     }));
-    setMessage({ type: '', text: '' });
+    // Only clear messages if there was an error message
+    if (message.text && message.type === 'error') {
+      setMessage({ type: '', text: '' });
+    }
   };
 
   const addPet = () => {
