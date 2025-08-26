@@ -572,8 +572,7 @@ const PatientRegistrationPDF = () => {
                     <select
                       value={pet.spayed_neutered}
                       onChange={(e) => handlePetChange(petIndex, 'spayed_neutered', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                      style={{ '--tw-ring-color': primaryColor }}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
                     >
                       <option value="">Select option</option>
                       <option value="Yes">Yes</option>
