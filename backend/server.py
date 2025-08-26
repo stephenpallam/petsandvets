@@ -205,6 +205,21 @@ class AppointmentListResponse(BaseModel):
     total_pages: int
 
 
+class PetInfo(BaseModel):
+    pet_name: str
+    pet_species: str  # Dog, Cat, Other
+    pet_breed: Optional[str] = ""
+    pet_gender: str  # Male, Female
+    pet_age: str
+    pet_weight: Optional[str] = ""
+    pet_color: Optional[str] = ""
+    spayed_neutered: Optional[str] = ""  # Yes, No, Unknown
+    current_medications: Optional[str] = ""
+    allergies: Optional[str] = ""
+    vaccination_history: Optional[str] = ""
+    medical_conditions: Optional[str] = ""
+
+
 class PatientRegistrationForm(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     created_at: datetime = Field(default_factory=datetime.utcnow)
@@ -221,24 +236,13 @@ class PatientRegistrationForm(BaseModel):
     emergency_contact_name: Optional[str] = ""
     emergency_contact_phone: Optional[str] = ""
     
-    # Pet Information
-    pet_name: str
-    pet_species: str  # Dog, Cat, Other
-    pet_breed: Optional[str] = ""
-    pet_gender: str  # Male, Female
-    pet_age: str
-    pet_weight: Optional[str] = ""
-    pet_color: Optional[str] = ""
-    spayed_neutered: Optional[str] = ""  # Yes, No, Unknown
+    # Multiple Pets Information (up to 4 pets)
+    pets: List[PetInfo] = Field(..., min_items=1, max_items=4)
     
-    # Medical History
-    current_medications: Optional[str] = ""
-    allergies: Optional[str] = ""
+    # Medical History (shared across pets or general)
     previous_vet: Optional[str] = ""
     previous_vet_phone: Optional[str] = ""
     last_visit_date: Optional[str] = ""
-    vaccination_history: Optional[str] = ""
-    medical_conditions: Optional[str] = ""
     
     # Additional Information
     how_heard_about_us: Optional[str] = ""
@@ -257,21 +261,10 @@ class PatientRegistrationRequest(BaseModel):
     phone: str
     emergency_contact_name: Optional[str] = ""
     emergency_contact_phone: Optional[str] = ""
-    pet_name: str
-    pet_species: str
-    pet_breed: Optional[str] = ""
-    pet_gender: str
-    pet_age: str
-    pet_weight: Optional[str] = ""
-    pet_color: Optional[str] = ""
-    spayed_neutered: Optional[str] = ""
-    current_medications: Optional[str] = ""
-    allergies: Optional[str] = ""
+    pets: List[PetInfo] = Field(..., min_items=1, max_items=4)
     previous_vet: Optional[str] = ""
     previous_vet_phone: Optional[str] = ""
     last_visit_date: Optional[str] = ""
-    vaccination_history: Optional[str] = ""
-    medical_conditions: Optional[str] = ""
     how_heard_about_us: Optional[str] = ""
     preferred_appointment_type: Optional[str] = ""
     special_instructions: Optional[str] = ""
