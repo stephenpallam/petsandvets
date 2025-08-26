@@ -74,8 +74,8 @@ const PatientRegistrationPDF = () => {
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
   const primaryColor = '#29add3';
 
-  // Accordion toggle function
-  const toggleAccordion = (section, event) => {
+  // Accordion toggle function - memoized to prevent re-renders
+  const toggleAccordion = useCallback((section, event) => {
     if (event) {
       event.preventDefault();
       event.stopPropagation();
@@ -84,7 +84,7 @@ const PatientRegistrationPDF = () => {
       ...prev,
       [section]: !prev[section]
     }));
-  };
+  }, []);
 
   const handleInputChange = useCallback((field, value) => {
     console.log(`Updating ${field} to:`, value); // Debug log
