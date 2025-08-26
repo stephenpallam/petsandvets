@@ -944,7 +944,7 @@ async def get_registration_pdf(registration_id: str):
         io.BytesIO(pdf_bytes),
         media_type="application/pdf",
         headers={
-            "Content-Disposition": f"attachment; filename=patient_registration_{registration.pet_name}_{registration.id[:8]}.pdf"
+            "Content-Disposition": f"attachment; filename=patient_registration_{registration.owner_last_name}_{registration.id[:8]}.pdf"
         }
     )
 
