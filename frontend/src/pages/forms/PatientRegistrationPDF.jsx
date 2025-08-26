@@ -241,15 +241,27 @@ const PatientRegistrationPDF = () => {
       e.preventDefault();
       e.stopPropagation();
       
-      // Store the current scroll position
+      // Store the current scroll position and button position
       const currentScrollY = window.scrollY;
+      const buttonRect = e.currentTarget.getBoundingClientRect();
+      const buttonTop = buttonRect.top + currentScrollY;
       
       // Call the toggle function
       onToggle(e);
       
-      // Use a timeout to restore scroll position after React re-render
+      // Use a timeout to adjust scroll position after React re-render
       setTimeout(() => {
-        window.scrollTo(0, currentScrollY);
+        // If we're expanding content above the current view, maintain relative position
+        if (buttonTop < currentScrollY && !isOpen) {
+          // Content is expanding above current view - don't adjust scroll
+          window.scrollTo(0, currentScrollY);
+        } else if (buttonTop < currentScrollY && isOpen) {
+          // Content is collapsing above current view - maintain position
+          window.scrollTo(0, currentScrollY);
+        } else {
+          // Content change is at or below current view - maintain exact position  
+          window.scrollTo(0, currentScrollY);
+        }
       }, 0);
     };
 
