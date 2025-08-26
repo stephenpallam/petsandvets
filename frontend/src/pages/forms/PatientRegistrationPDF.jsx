@@ -86,20 +86,18 @@ const PatientRegistrationPDF = () => {
     }));
   }, []);
 
-  const handleInputChange = useCallback((field, value) => {
-    console.log(`Updating ${field} to:`, value); // Debug log
+  const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-  }, []);
+  };
 
-  const handlePetChange = useCallback((petIndex, field, value) => {
-    console.log(`Updating pet ${petIndex} ${field} to:`, value); // Debug log
+  const handlePetChange = (petIndex, field, value) => {
     setFormData(prev => ({
       ...prev,
       pets: prev.pets.map((pet, index) => 
         index === petIndex ? { ...pet, [field]: value } : pet
       )
     }));
-  }, []);
+  };
 
   const addPet = () => {
     if (formData.pets.length < 4) {
