@@ -645,7 +645,7 @@ const PatientRegistrationPDF = () => {
           {/* Veterinary History Section */}
           <AccordionSection
             isOpen={accordionState.vetHistory}
-            onToggle={() => toggleAccordion('vetHistory')}
+            onToggle={(e) => toggleAccordion('vetHistory', e)}
             title="Veterinary History"
             icon={Stethoscope}
             iconColor={primaryColor}
