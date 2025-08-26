@@ -442,7 +442,7 @@ const PatientRegistrationPDF = () => {
           {/* Multiple Pets Information Section */}
           <AccordionSection
             isOpen={accordionState.petInfo}
-            onToggle={() => toggleAccordion('petInfo')}
+            onToggle={(e) => toggleAccordion('petInfo', e)}
             title="Pet Information"
             icon={Heart}
             iconColor="#ef4444"
