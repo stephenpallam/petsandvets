@@ -345,7 +345,10 @@ const PatientRegistrationPDF = () => {
                 <input
                   type="text"
                   value={formData.owner_first_name}
-                  onChange={(e) => handleInputChange('owner_first_name', e.target.value)}
+                  onChange={(e) => {
+                    console.log('First name change:', e.target.value);
+                    handleInputChange('owner_first_name', e.target.value);
+                  }}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
                   style={{ '--tw-ring-color': primaryColor }}
                   required
