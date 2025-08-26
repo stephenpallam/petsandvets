@@ -74,16 +74,11 @@ const PatientRegistrationPDF = () => {
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
   const primaryColor = '#29add3';
 
-  // Accordion toggle function - memoized and with better event handling
+  // Accordion toggle function - memoized to prevent re-renders
   const toggleAccordion = useCallback((section, event) => {
     if (event) {
       event.preventDefault();
       event.stopPropagation();
-    }
-    // Only toggle if this is actually an accordion click, not a form input event
-    if (event && event.target && (event.target.type === 'text' || event.target.type === 'email' || event.target.type === 'tel' || event.target.tagName === 'SELECT' || event.target.tagName === 'TEXTAREA')) {
-      // This is a form input, don't toggle accordion
-      return;
     }
     setAccordionState(prev => ({
       ...prev,
