@@ -773,51 +773,73 @@ def generate_pdf(form_data: PatientRegistrationForm) -> bytes:
     story.append(owner_table)
     story.append(Spacer(1, 20))
     
-    # Pet Information Section
+    # Pet Information Section - Multiple Pets
     story.append(Paragraph("Pet Information", section_style))
-    pet_data = [
-        ['Pet Name:', form_data.pet_name],
-        ['Species:', form_data.pet_species],
-        ['Breed:', form_data.pet_breed or 'Not specified'],
-        ['Gender:', form_data.pet_gender],
-        ['Age:', form_data.pet_age],
-        ['Weight:', form_data.pet_weight or 'Not provided'],
-        ['Color:', form_data.pet_color or 'Not provided'],
-        ['Spayed/Neutered:', form_data.spayed_neutered or 'Unknown'],
-    ]
     
-    pet_table = Table(pet_data, colWidths=[2*inch, 4*inch])
-    pet_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f8f9fa')),
-        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
-        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-        ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 0), (-1, -1), 10),
-        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#e5e7eb')),
-        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-        ('LEFTPADDING', (0, 0), (-1, -1), 8),
-        ('RIGHTPADDING', (0, 0), (-1, -1), 8),
-        ('TOPPADDING', (0, 0), (-1, -1), 6),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
-    ]))
-    story.append(pet_table)
+    for i, pet in enumerate(form_data.pets, 1):
+        # Pet header
+        pet_header_style = ParagraphStyle(
+            'PetHeader',
+            parent=styles['Heading3'],
+            fontSize=12,
+            spaceAfter=8,
+            textColor=colors.HexColor('#29add3'),
+            spaceBefore=10 if i > 1 else 0
+        )
+        story.append(Paragraph(f"Pet {i}: {pet.pet_name}", pet_header_style))
+        
+        pet_data = [
+            ['Species:', pet.pet_species],
+            ['Breed:', pet.pet_breed or 'Not specified'],
+            ['Gender:', pet.pet_gender],
+            ['Age:', pet.pet_age],
+            ['Weight:', pet.pet_weight or 'Not provided'],
+            ['Color:', pet.pet_color or 'Not provided'],
+            ['Spayed/Neutered:', pet.spayed_neutered or 'Unknown'],
+        ]
+        
+        # Add medical info if provided
+        if pet.current_medications:
+            pet_data.append(['Current Medications:', pet.current_medications])
+        if pet.allergies:
+            pet_data.append(['Allergies:', pet.allergies])
+        if pet.vaccination_history:
+            pet_data.append(['Vaccination History:', pet.vaccination_history])
+        if pet.medical_conditions:
+            pet_data.append(['Medical Conditions:', pet.medical_conditions])
+        
+        pet_table = Table(pet_data, colWidths=[2*inch, 4*inch])
+        pet_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f8f9fa')),
+            ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+            ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#e5e7eb')),
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+            ('LEFTPADDING', (0, 0), (-1, -1), 8),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 8),
+            ('TOPPADDING', (0, 0), (-1, -1), 6),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+        ]))
+        story.append(pet_table)
+        
+        if i < len(form_data.pets):
+            story.append(Spacer(1, 10))
+    
     story.append(Spacer(1, 20))
     
-    # Medical History Section
-    story.append(Paragraph("Medical History", section_style))
-    medical_data = [
-        ['Current Medications:', form_data.current_medications or 'None reported'],
-        ['Allergies:', form_data.allergies or 'None reported'],
+    # Veterinary History Section (shared)
+    story.append(Paragraph("Veterinary History", section_style))
+    vet_data = [
         ['Previous Veterinarian:', form_data.previous_vet or 'Not provided'],
         ['Previous Vet Phone:', form_data.previous_vet_phone or 'Not provided'],
         ['Last Visit Date:', form_data.last_visit_date or 'Not provided'],
-        ['Vaccination History:', form_data.vaccination_history or 'Not provided'],
-        ['Medical Conditions:', form_data.medical_conditions or 'None reported'],
     ]
     
-    medical_table = Table(medical_data, colWidths=[2*inch, 4*inch])
-    medical_table.setStyle(TableStyle([
+    vet_table = Table(vet_data, colWidths=[2*inch, 4*inch])
+    vet_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f8f9fa')),
         ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
@@ -831,7 +853,7 @@ def generate_pdf(form_data: PatientRegistrationForm) -> bytes:
         ('TOPPADDING', (0, 0), (-1, -1), 6),
         ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
     ]))
-    story.append(medical_table)
+    story.append(vet_table)
     story.append(Spacer(1, 20))
     
     # Additional Information Section
