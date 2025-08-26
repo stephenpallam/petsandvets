@@ -75,7 +75,11 @@ const PatientRegistrationPDF = () => {
   const primaryColor = '#29add3';
 
   // Accordion toggle function
-  const toggleAccordion = (section) => {
+  const toggleAccordion = (section, event) => {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
     setAccordionState(prev => ({
       ...prev,
       [section]: !prev[section]
