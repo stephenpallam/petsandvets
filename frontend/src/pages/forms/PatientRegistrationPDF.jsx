@@ -530,58 +530,6 @@ const PatientRegistrationPDF = () => {
             </div>
           </div>
 
-          {/* Additional Information Section */}
-          <div className="bg-gray-50 rounded-xl shadow-lg p-8">
-            <div className="flex items-center mb-6">
-              <FileText className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
-              <h2 className="text-xl font-semibold text-gray-900">Additional Information</h2>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">How did you hear about us?</label>
-                <select
-                  value={formData.how_heard_about_us}
-                  onChange={(e) => handleInputChange('how_heard_about_us', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
-                >
-                  <option value="">Select option</option>
-                  <option value="Google Search">Google Search</option>
-                  <option value="Social Media">Social Media</option>
-                  <option value="Friend/Family">Friend/Family</option>
-                  <option value="Vet Referral">Vet Referral</option>
-                  <option value="Drive By">Drive By</option>
-                  <option value="Online Reviews">Online Reviews</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Preferred Appointment Type</label>
-                <select
-                  value={formData.preferred_appointment_type}
-                  onChange={(e) => handleInputChange('preferred_appointment_type', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
-                >
-                  <option value="">Select option</option>
-                  <option value="Regular Appointment">Regular Appointment</option>
-                  <option value="Urgent Care">Urgent Care</option>
-                  <option value="Wellness Check">Wellness Check</option>
-                  <option value="Surgery Consultation">Surgery Consultation</option>
-                </select>
-              </div>
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Special Instructions</label>
-                <textarea
-                  value={formData.special_instructions}
-                  onChange={(e) => handleInputChange('special_instructions', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
-                  rows="4"
-                  placeholder="Any special instructions or notes for our team..."
-                />
-              </div>
-            </div>
-          </div>
-
           {/* Submit Buttons */}
           <div className="bg-white rounded-xl shadow-lg p-8">
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
