@@ -434,26 +434,6 @@ const PatientRegistrationPDF = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Weight</label>
-                    <input
-                      type="text"
-                      value={pet.pet_weight}
-                      onChange={(e) => handlePetChange(petIndex, 'pet_weight', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
-                      placeholder="e.g., 30 lbs"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
-                    <input
-                      type="text"
-                      value={pet.pet_color}
-                      onChange={(e) => handlePetChange(petIndex, 'pet_color', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
-                      placeholder="e.g., White, Brown, Black"
-                    />
-                  </div>
-                  <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Spayed/Neutered</label>
                     <select
                       value={pet.spayed_neutered}
@@ -465,54 +445,6 @@ const PatientRegistrationPDF = () => {
                       <option value="No">No</option>
                       <option value="Unknown">Unknown</option>
                     </select>
-                  </div>
-                  
-                  {/* Pet-specific medical information */}
-                  <div className="md:col-span-2 mt-6">
-                    <h4 className="text-md font-medium text-gray-900 mb-4 flex items-center">
-                      <Stethoscope className="h-5 w-5 mr-2 text-blue-600" />
-                      Medical Information for {pet.pet_name || `Pet ${petIndex + 1}`}
-                    </h4>
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Current Medications</label>
-                    <textarea
-                      value={pet.current_medications}
-                      onChange={(e) => handlePetChange(petIndex, 'current_medications', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
-                      rows="2"
-                      placeholder="List any current medications..."
-                    />
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Allergies</label>
-                    <textarea
-                      value={pet.allergies}
-                      onChange={(e) => handlePetChange(petIndex, 'allergies', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
-                      rows="2"
-                      placeholder="List any known allergies..."
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Vaccination History</label>
-                    <input
-                      type="text"
-                      value={pet.vaccination_history}
-                      onChange={(e) => handlePetChange(petIndex, 'vaccination_history', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
-                      placeholder="e.g., Up to date, Unknown"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Medical Conditions</label>
-                    <input
-                      type="text"
-                      value={pet.medical_conditions}
-                      onChange={(e) => handlePetChange(petIndex, 'medical_conditions', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
-                      placeholder="List any known medical conditions..."
-                    />
                   </div>
                 </div>
               </div>
