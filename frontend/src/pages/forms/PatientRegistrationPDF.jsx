@@ -241,28 +241,16 @@ const PatientRegistrationPDF = () => {
       e.preventDefault();
       e.stopPropagation();
       
-      // Store current scroll position and element position
-      const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-      const rect = e.currentTarget.getBoundingClientRect();
-      const elementTopRelativeToViewport = rect.top;
+      // Store the current scroll position
+      const currentScrollY = window.scrollY;
       
       // Call the toggle function
       onToggle(e);
       
-      // Use setTimeout to allow DOM to update after state change
+      // Use a timeout to restore scroll position after React re-render
       setTimeout(() => {
-        // Calculate new scroll position to maintain visual position
-        const newRect = e.currentTarget.getBoundingClientRect();
-        const newElementTop = newRect.top;
-        const heightDifference = newElementTop - elementTopRelativeToViewport;
-        const adjustedScrollPosition = scrollPosition - heightDifference;
-        
-        // Scroll to adjusted position
-        window.scrollTo({
-          top: Math.max(0, adjustedScrollPosition),
-          behavior: 'instant'
-        });
-      }, 50); // Small delay to allow for DOM updates
+        window.scrollTo(0, currentScrollY);
+      }, 0);
     };
 
     return (
