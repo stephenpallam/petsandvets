@@ -621,8 +621,7 @@ const PatientRegistrationPDF = () => {
                       type="text"
                       value={pet.medical_conditions}
                       onChange={(e) => handlePetChange(petIndex, 'medical_conditions', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                      style={{ '--tw-ring-color': primaryColor }}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
                       placeholder="List any known medical conditions..."
                     />
                   </div>
