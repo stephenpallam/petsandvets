@@ -335,6 +335,7 @@ const PatientRegistrationPDF = () => {
         <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
           {/* Pet Owner Information Section */}
           <AccordionSection
+            key="ownerInfo"
             isOpen={accordionState.ownerInfo}
             onToggle={(e) => toggleAccordion('ownerInfo', e)}
             title="Pet Owner Information"
