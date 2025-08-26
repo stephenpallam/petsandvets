@@ -916,46 +916,6 @@ def generate_pdf(form_data: PatientRegistrationForm) -> bytes:
     doc.build(story)
     buffer.seek(0)
     return buffer.getvalue()
-    
-    # Additional Information Section
-    if any([form_data.how_heard_about_us, form_data.preferred_appointment_type, form_data.special_instructions]):
-        story.append(Paragraph("Additional Information", section_style))
-        additional_data = []
-        
-        if form_data.how_heard_about_us:
-            additional_data.append(['How did you hear about us:', form_data.how_heard_about_us])
-        if form_data.preferred_appointment_type:
-            additional_data.append(['Preferred Appointment Type:', form_data.preferred_appointment_type])
-        if form_data.special_instructions:
-            additional_data.append(['Special Instructions:', form_data.special_instructions])
-            
-        if additional_data:
-            additional_table = Table(additional_data, colWidths=[2*inch, 4*inch])
-            additional_table.setStyle(TableStyle([
-                ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f8f9fa')),
-                ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
-                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-                ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
-                ('FONTSIZE', (0, 0), (-1, -1), 10),
-                ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#e5e7eb')),
-                ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-                ('LEFTPADDING', (0, 0), (-1, -1), 8),
-                ('RIGHTPADDING', (0, 0), (-1, -1), 8),
-                ('TOPPADDING', (0, 0), (-1, -1), 6),
-                ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
-            ]))
-            story.append(additional_table)
-    
-    # Footer
-    story.append(Spacer(1, 30))
-    story.append(Paragraph("Thank you for choosing our veterinary services!", styles['Normal']))
-    story.append(Paragraph("Please bring this form to your appointment.", styles['Normal']))
-    
-    # Build PDF
-    doc.build(story)
-    buffer.seek(0)
-    return buffer.getvalue()
 
 
 # Patient Registration Form Routes
