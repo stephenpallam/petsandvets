@@ -446,6 +446,7 @@ const PatientRegistrationPDF = () => {
 
           {/* Multiple Pets Information Section */}
           <AccordionSection
+            key="petInfo"
             isOpen={accordionState.petInfo}
             onToggle={(e) => toggleAccordion('petInfo', e)}
             title="Pet Information"
