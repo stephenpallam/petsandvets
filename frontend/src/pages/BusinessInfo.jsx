@@ -396,38 +396,6 @@ const BusinessInfo = () => {
               </div>
             </div>
 
-            {/* Photo Management Sections */}
-            <div className="space-y-8">
-              <h3 className="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">
-                <Image className="h-5 w-5 inline mr-2" />
-                Photo Management
-              </h3>
-              
-              {/* Homepage Slider Images */}
-              <FileUploadSection
-                category="homepageslider"
-                title="Homepage Slider Images"
-                description="Upload images for the home page hero carousel. Recommended: 1920x800px"
-                files={uploadedFiles.homepageslider}
-              />
-              
-              {/* Team Photos */}
-              <FileUploadSection
-                category="team"
-                title="Team Photos"
-                description="Upload photos of your team members and staff"
-                files={uploadedFiles.team}
-              />
-              
-              {/* Facility Photos */}
-              <FileUploadSection
-                category="facility"
-                title="Facility Photos"
-                description="Upload photos of your clinic, equipment, and facilities"
-                files={uploadedFiles.facility}
-              />
-            </div>
-
             {/* Submit Button */}
             <div className="flex justify-end pt-6 border-t border-gray-200">
               <button
