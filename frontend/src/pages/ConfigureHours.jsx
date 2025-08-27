@@ -328,520 +328,546 @@ const ConfigureHours = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section - Matching Urgent Care page styling */}
-      <div className="relative bg-white" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h1 className="text-xl font-bold text-gray-900 mb-6">
-            Configure Hospital Hours
-          </h1>
-          <div className="mb-6">
-            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: '#29add3' }}>
-              Manage general practice and urgent care operating hours
-            </span>
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center space-x-3 mb-4">
+            <div className="bg-blue-600 p-3 rounded-lg">
+              <Clock className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Configure Hospital Hours</h1>
+              <p className="text-gray-600">Manage general practice, urgent care, and special holiday hours</p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Message Display */}
         {message.text && (
-          <div className={`mb-6 p-4 rounded-lg flex items-center ${
-            message.type === 'success' 
-              ? 'bg-green-50 text-green-800 border border-green-200'
-              : 'bg-red-50 text-red-800 border border-red-200'
+          <div className={`mb-6 rounded-md p-4 ${
+            message.type === 'error' 
+              ? 'bg-red-50 border border-red-200' 
+              : 'bg-green-50 border border-green-200'
           }`}>
-            {message.type === 'success' ? (
-              <CheckCircle className="h-5 w-5 mr-3" />
-            ) : (
-              <AlertCircle className="h-5 w-5 mr-3" />
-            )}
-            {message.text}
+            <div className="flex">
+              <div className="flex-shrink-0">
+                {message.type === 'error' ? (
+                  <AlertCircle className="h-5 w-5 text-red-400" />
+                ) : (
+                  <CheckCircle className="h-5 w-5 text-green-400" />
+                )}
+              </div>
+              <div className="ml-3">
+                <p className={`text-sm font-medium ${
+                  message.type === 'error' ? 'text-red-800' : 'text-green-800'
+                }`}>
+                  {message.text}
+                </p>
+              </div>
+            </div>
           </div>
         )}
 
-        {/* General Practice Hours */}
-        <div className="bg-white rounded-lg shadow-md mb-8">
-          <div className="p-6 border-b border-gray-200">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-gray-900 flex items-center">
-                <Clock className="h-5 w-5 mr-2" style={{ color: '#29add3' }} />
-                General Practice Hours
-              </h2>
-              
-              <div className="flex items-center space-x-3">
-                {/* Google Sync Button */}
-                {googleConnected ? (
+        {/* Tab Navigation */}
+        <div className="bg-white rounded-lg shadow-sm mb-6">
+          <div className="border-b border-gray-200">
+            <nav className="flex space-x-8 px-6" aria-label="Tabs">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
                   <button
-                    onClick={() => handleGoogleSync('general_practice')}
-                    disabled={syncing || loading}
-                    className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 flex items-center font-medium"
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                      isActive
+                        ? 'border-blue-500 text-blue-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
                   >
-                    {syncing ? (
-                      <>
-                        <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                        Syncing...
-                      </>
-                    ) : (
-                      <>
-                        <ExternalLink className="h-4 w-4 mr-2" />
-                        Sync to Google
-                      </>
-                    )}
+                    <div className="flex items-center space-x-2">
+                      <Icon className="h-4 w-4" style={{ color: isActive ? tab.color : undefined }} />
+                      <span>{tab.label}</span>
+                    </div>
                   </button>
-                ) : (
-                  <div className="text-xs text-gray-500">
-                    <a 
-                      href="/google-integration" 
-                      className="text-blue-600 hover:text-blue-500 underline"
-                    >
-                      Connect Google
-                    </a>
-                  </div>
-                )}
-
-                {/* Save Button */}
-                <button
-                  onClick={() => saveHours('hospital')}
-                  disabled={loading}
-                  className="text-white px-4 py-2 rounded-lg hover:opacity-90 transition-colors disabled:opacity-50 flex items-center font-medium"
-                  style={{ backgroundColor: '#29add3' }}
-                >
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Changes
-                </button>
-              </div>
-            </div>
+                );
+              })}
+            </nav>
           </div>
+
+          {/* Tab Content */}
           <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {days.map(day => (
-                <div key={day.key} className="border border-gray-200 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-medium text-gray-900">{day.label}</h3>
-                    <label className="flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={hospitalHours[day.key]?.is_open || false}
-                        onChange={(e) => handleDayChange('hospital', day.key, 'is_open', e.target.checked)}
-                        className="rounded border-gray-300 focus:ring-2 disabled:opacity-50"
-                        style={{ 
-                          accentColor: '#29add3',
-                          '--tw-ring-color': '#29add3'
-                        }}
-                      />
-                      <span className="ml-2 text-sm text-gray-600">Open</span>
-                    </label>
+            {/* General Practice Hours Tab */}
+            {activeTab === 'general' && (
+              <div className="space-y-6">
+                <div className="flex justify-between items-center mb-6">
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+                      <Clock className="h-5 w-5 mr-2" style={{ color: '#29add3' }} />
+                      General Practice Hours
+                    </h2>
+                    <p className="text-gray-600 text-sm mt-1">Set your regular hospital operating hours</p>
                   </div>
-                  {hospitalHours[day.key]?.is_open && (
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs text-gray-600 mb-1">Open Time</label>
-                        <input
-                          type="time"
-                          value={hospitalHours[day.key]?.open_time || ''}
-                          onChange={(e) => handleDayChange('hospital', day.key, 'open_time', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:border-transparent"
-                          style={{ 
-                            '--tw-ring-color': '#29add3',
-                            outline: 'none'
-                          }}
-                          onFocus={(e) => {
-                            e.target.style.borderColor = '#29add3';
-                            e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
-                          }}
-                          onBlur={(e) => {
-                            e.target.style.borderColor = '#d1d5db';
-                            e.target.style.boxShadow = 'none';
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs text-gray-600 mb-1">Close Time</label>
-                        <input
-                          type="time"
-                          value={hospitalHours[day.key]?.close_time || ''}
-                          onChange={(e) => handleDayChange('hospital', day.key, 'close_time', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:border-transparent"
-                          style={{ 
-                            '--tw-ring-color': '#29add3',
-                            outline: 'none'
-                          }}
-                          onFocus={(e) => {
-                            e.target.style.borderColor = '#29add3';
-                            e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
-                          }}
-                          onBlur={(e) => {
-                            e.target.style.borderColor = '#d1d5db';
-                            e.target.style.boxShadow = 'none';
-                          }}
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Urgent Care Hours */}
-        <div className="bg-white rounded-lg shadow-md mb-8">
-          <div className="p-6 border-b border-gray-200">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-gray-900 flex items-center">
-                <Clock className="h-5 w-5 mr-2" style={{ color: '#dc2626' }} />
-                Urgent Care Hours
-              </h2>
-              
-              <div className="flex items-center space-x-3">
-                {/* Google Sync Button */}
-                {googleConnected ? (
-                  <button
-                    onClick={() => handleGoogleSync('urgent_care')}
-                    disabled={syncing || loading}
-                    className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 flex items-center font-medium"
-                  >
-                    {syncing ? (
-                      <>
-                        <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                        Syncing...
-                      </>
-                    ) : (
-                      <>
-                        <ExternalLink className="h-4 w-4 mr-2" />
-                        Sync to Google
-                      </>
-                    )}
-                  </button>
-                ) : (
-                  <div className="text-xs text-gray-500">
-                    <a 
-                      href="/google-integration" 
-                      className="text-blue-600 hover:text-blue-500 underline"
-                    >
-                      Connect Google
-                    </a>
-                  </div>
-                )}
-
-                {/* Save Button */}
-                <button
-                  onClick={() => saveHours('urgent')}
-                  disabled={loading}
-                  className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center font-medium"
-                >
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Changes
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {days.map(day => (
-                <div key={day.key} className="border border-gray-200 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-medium text-gray-900">{day.label}</h3>
-                    <label className="flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={urgentCareHours[day.key]?.is_open || false}
-                        onChange={(e) => handleDayChange('urgent', day.key, 'is_open', e.target.checked)}
-                        className="rounded border-gray-300 focus:ring-2 disabled:opacity-50"
-                        style={{ 
-                          accentColor: '#dc2626',
-                          '--tw-ring-color': '#dc2626'
-                        }}
-                      />
-                      <span className="ml-2 text-sm text-gray-600">Open</span>
-                    </label>
-                  </div>
-                  {urgentCareHours[day.key]?.is_open && (
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs text-gray-600 mb-1">Open Time</label>
-                        <input
-                          type="time"
-                          value={urgentCareHours[day.key]?.open_time || ''}
-                          onChange={(e) => handleDayChange('urgent', day.key, 'open_time', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:border-transparent"
-                          style={{ 
-                            '--tw-ring-color': '#dc2626',
-                            outline: 'none'
-                          }}
-                          onFocus={(e) => {
-                            e.target.style.borderColor = '#dc2626';
-                            e.target.style.boxShadow = '0 0 0 2px rgba(220, 38, 38, 0.2)';
-                          }}
-                          onBlur={(e) => {
-                            e.target.style.borderColor = '#d1d5db';
-                            e.target.style.boxShadow = 'none';
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs text-gray-600 mb-1">Close Time</label>
-                        <input
-                          type="time"
-                          value={urgentCareHours[day.key]?.close_time || ''}
-                          onChange={(e) => handleDayChange('urgent', day.key, 'close_time', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:border-transparent"
-                          style={{ 
-                            '--tw-ring-color': '#dc2626',
-                            outline: 'none'
-                          }}
-                          onFocus={(e) => {
-                            e.target.style.borderColor = '#dc2626';
-                            e.target.style.boxShadow = '0 0 0 2px rgba(220, 38, 38, 0.2)';
-                          }}
-                          onBlur={(e) => {
-                            e.target.style.borderColor = '#d1d5db';
-                            e.target.style.boxShadow = 'none';
-                          }}
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Special Hours/Holidays */}
-        <div className="bg-white rounded-lg shadow-md">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900 flex items-center">
-              <Calendar className="h-5 w-5 mr-2" style={{ color: '#16a34a' }} />
-              Special Hours & Holidays
-            </h2>
-          </div>
-          <div className="p-6">
-            {/* Add New Special Hour */}
-            <div className="border border-gray-200 rounded-lg p-4 mb-6">
-              <h3 className="font-medium text-gray-900 mb-4">Add Special Hours</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                  <label className="block text-sm text-gray-600 mb-1">Date</label>
-                  <input
-                    type="date"
-                    value={newSpecialHour.date}
-                    onChange={(e) => setNewSpecialHour({...newSpecialHour, date: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:border-transparent"
-                    style={{ 
-                      '--tw-ring-color': '#16a34a',
-                      outline: 'none'
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = '#16a34a';
-                      e.target.style.boxShadow = '0 0 0 2px rgba(22, 163, 74, 0.2)';
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = '#d1d5db';
-                      e.target.style.boxShadow = 'none';
-                    }}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-gray-600 mb-1">Holiday Name</label>
-                  <input
-                    type="text"
-                    value={newSpecialHour.name}
-                    onChange={(e) => setNewSpecialHour({...newSpecialHour, name: e.target.value})}
-                    placeholder="e.g., Christmas Day"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:border-transparent"
-                    style={{ 
-                      '--tw-ring-color': '#16a34a',
-                      outline: 'none'
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = '#16a34a';
-                      e.target.style.boxShadow = '0 0 0 2px rgba(22, 163, 74, 0.2)';
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = '#d1d5db';
-                      e.target.style.boxShadow = 'none';
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-                {/* General Practice Special Hours */}
-                <div className="border border-gray-200 rounded p-3">
-                  <h4 className="font-medium text-gray-700 mb-2">General Practice</h4>
-                  <label className="flex items-center mb-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={newSpecialHour.general_practice.is_open}
-                      onChange={(e) => setNewSpecialHour({
-                        ...newSpecialHour,
-                        general_practice: { ...newSpecialHour.general_practice, is_open: e.target.checked }
-                      })}
-                      className="rounded border-gray-300 focus:ring-2"
-                      style={{ 
-                        accentColor: '#29add3',
-                        '--tw-ring-color': '#29add3'
-                      }}
-                    />
-                    <span className="ml-2 text-sm">Open</span>
-                  </label>
-                  {newSpecialHour.general_practice.is_open && (
-                    <div className="grid grid-cols-2 gap-2">
-                      <input
-                        type="time"
-                        value={newSpecialHour.general_practice.open_time}
-                        onChange={(e) => setNewSpecialHour({
-                          ...newSpecialHour,
-                          general_practice: { ...newSpecialHour.general_practice, open_time: e.target.value }
-                        })}
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:border-transparent"
-                        style={{ 
-                          '--tw-ring-color': '#29add3',
-                          outline: 'none'
-                        }}
-                        onFocus={(e) => {
-                          e.target.style.borderColor = '#29add3';
-                          e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
-                        }}
-                        onBlur={(e) => {
-                          e.target.style.borderColor = '#d1d5db';
-                          e.target.style.boxShadow = 'none';
-                        }}
-                      />
-                      <input
-                        type="time"
-                        value={newSpecialHour.general_practice.close_time}
-                        onChange={(e) => setNewSpecialHour({
-                          ...newSpecialHour,
-                          general_practice: { ...newSpecialHour.general_practice, close_time: e.target.value }
-                        })}
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:border-transparent"
-                        style={{ 
-                          '--tw-ring-color': '#29add3',
-                          outline: 'none'
-                        }}
-                        onFocus={(e) => {
-                          e.target.style.borderColor = '#29add3';
-                          e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
-                        }}
-                        onBlur={(e) => {
-                          e.target.style.borderColor = '#d1d5db';
-                          e.target.style.boxShadow = 'none';
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-                {/* Urgent Care Special Hours */}
-                <div className="border border-gray-200 rounded p-3">
-                  <h4 className="font-medium text-gray-700 mb-2">Urgent Care</h4>
-                  <label className="flex items-center mb-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={newSpecialHour.urgent_care.is_open}
-                      onChange={(e) => setNewSpecialHour({
-                        ...newSpecialHour,
-                        urgent_care: { ...newSpecialHour.urgent_care, is_open: e.target.checked }
-                      })}
-                      className="rounded border-gray-300 focus:ring-2"
-                      style={{ 
-                        accentColor: '#dc2626',
-                        '--tw-ring-color': '#dc2626'
-                      }}
-                    />
-                    <span className="ml-2 text-sm">Open</span>
-                  </label>
-                  {newSpecialHour.urgent_care.is_open && (
-                    <div className="grid grid-cols-2 gap-2">
-                      <input
-                        type="time"
-                        value={newSpecialHour.urgent_care.open_time}
-                        onChange={(e) => setNewSpecialHour({
-                          ...newSpecialHour,
-                          urgent_care: { ...newSpecialHour.urgent_care, open_time: e.target.value }
-                        })}
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:border-transparent"
-                        style={{ 
-                          '--tw-ring-color': '#dc2626',
-                          outline: 'none'
-                        }}
-                        onFocus={(e) => {
-                          e.target.style.borderColor = '#dc2626';
-                          e.target.style.boxShadow = '0 0 0 2px rgba(220, 38, 38, 0.2)';
-                        }}
-                        onBlur={(e) => {
-                          e.target.style.borderColor = '#d1d5db';
-                          e.target.style.boxShadow = 'none';
-                        }}
-                      />
-                      <input
-                        type="time"
-                        value={newSpecialHour.urgent_care.close_time}
-                        onChange={(e) => setNewSpecialHour({
-                          ...newSpecialHour,
-                          urgent_care: { ...newSpecialHour.urgent_care, close_time: e.target.value }
-                        })}
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:border-transparent"
-                        style={{ 
-                          '--tw-ring-color': '#dc2626',
-                          outline: 'none'
-                        }}
-                        onFocus={(e) => {
-                          e.target.style.borderColor = '#dc2626';
-                          e.target.style.boxShadow = '0 0 0 2px rgba(220, 38, 38, 0.2)';
-                        }}
-                        onBlur={(e) => {
-                          e.target.style.borderColor = '#d1d5db';
-                          e.target.style.boxShadow = 'none';
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-              <button
-                onClick={addSpecialHour}
-                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center font-medium"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Special Hours
-              </button>
-            </div>
-
-            {/* Existing Special Hours */}
-            {specialHours.length > 0 && (
-              <div>
-                <h3 className="font-medium text-gray-900 mb-4">Existing Special Hours</h3>
-                <div className="space-y-3">
-                  {specialHours.map(hour => (
-                    <div key={hour.id} className="border border-gray-200 rounded-lg p-4 flex justify-between items-center">
-                      <div>
-                        <h4 className="font-medium text-gray-900">{hour.name}</h4>
-                        <p className="text-sm text-gray-600">{hour.date}</p>
-                        <div className="mt-2 text-xs text-gray-500">
-                          <span className="mr-4">
-                            General: {hour.general_practice.is_open ? 
-                              `${hour.general_practice.open_time} - ${hour.general_practice.close_time}` : 
-                              'Closed'
-                            }
-                          </span>
-                          <span>
-                            Urgent: {hour.urgent_care.is_open ? 
-                              `${hour.urgent_care.open_time} - ${hour.urgent_care.close_time}` : 
-                              'Closed'
-                            }
-                          </span>
-                        </div>
-                      </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    {/* Google Sync Button */}
+                    {googleConnected ? (
                       <button
-                        onClick={() => deleteSpecialHour(hour.id)}
-                        className="text-red-600 hover:text-red-800 p-2 rounded-lg hover:bg-red-50 transition-colors"
+                        onClick={() => handleGoogleSync('general_practice')}
+                        disabled={syncing || loading}
+                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 flex items-center font-medium"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        {syncing ? (
+                          <>
+                            <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                            Syncing...
+                          </>
+                        ) : (
+                          <>
+                            <ExternalLink className="h-4 w-4 mr-2" />
+                            Sync to Google
+                          </>
+                        )}
                       </button>
+                    ) : (
+                      <div className="text-xs text-gray-500">
+                        <a 
+                          href="/google-integration" 
+                          className="text-blue-600 hover:text-blue-500 underline"
+                        >
+                          Connect Google
+                        </a>
+                      </div>
+                    )}
+
+                    {/* Save Button */}
+                    <button
+                      onClick={() => saveHours('hospital')}
+                      disabled={loading}
+                      className="text-white px-6 py-2 rounded-lg hover:opacity-90 transition-colors disabled:opacity-50 flex items-center font-medium"
+                      style={{ backgroundColor: '#29add3' }}
+                    >
+                      <Save className="h-4 w-4 mr-2" />
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {days.map(day => (
+                    <div key={day.key} className="border border-gray-200 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="font-medium text-gray-900">{day.label}</h3>
+                        <label className="flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={hospitalHours[day.key]?.is_open || false}
+                            onChange={(e) => updateHospitalHours(day.key, 'is_open', e.target.checked)}
+                            className="sr-only"
+                          />
+                          <div className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors ${
+                            hospitalHours[day.key]?.is_open ? 'bg-blue-600' : 'bg-gray-200'
+                          }`}>
+                            <span className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${
+                              hospitalHours[day.key]?.is_open ? 'translate-x-6' : 'translate-x-1'
+                            }`} />
+                          </div>
+                          <span className="ml-2 text-sm text-gray-600">
+                            {hospitalHours[day.key]?.is_open ? 'Open' : 'Closed'}
+                          </span>
+                        </label>
+                      </div>
+                      
+                      {hospitalHours[day.key]?.is_open && (
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Open Time</label>
+                            <input
+                              type="time"
+                              value={hospitalHours[day.key]?.open_time || ''}
+                              onChange={(e) => updateHospitalHours(day.key, 'open_time', e.target.value)}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Close Time</label>
+                            <input
+                              type="time"
+                              value={hospitalHours[day.key]?.close_time || ''}
+                              onChange={(e) => updateHospitalHours(day.key, 'close_time', e.target.value)}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
+              </div>
+            )}
+
+            {/* Urgent Care Hours Tab */}
+            {activeTab === 'urgent' && (
+              <div className="space-y-6">
+                <div className="flex justify-between items-center mb-6">
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+                      <Clock className="h-5 w-5 mr-2" style={{ color: '#dc2626' }} />
+                      Urgent Care Hours
+                    </h2>
+                    <p className="text-gray-600 text-sm mt-1">Set your after-hours urgent care availability</p>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    {/* Google Sync Button */}
+                    {googleConnected ? (
+                      <button
+                        onClick={() => handleGoogleSync('urgent_care')}
+                        disabled={syncing || loading}
+                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 flex items-center font-medium"
+                      >
+                        {syncing ? (
+                          <>
+                            <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                            Syncing...
+                          </>
+                        ) : (
+                          <>
+                            <ExternalLink className="h-4 w-4 mr-2" />
+                            Sync to Google
+                          </>
+                        )}
+                      </button>
+                    ) : (
+                      <div className="text-xs text-gray-500">
+                        <a 
+                          href="/google-integration" 
+                          className="text-blue-600 hover:text-blue-500 underline"
+                        >
+                          Connect Google
+                        </a>
+                      </div>
+                    )}
+
+                    {/* Save Button */}
+                    <button
+                      onClick={() => saveHours('urgent')}
+                      disabled={loading}
+                      className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center font-medium"
+                    >
+                      <Save className="h-4 w-4 mr-2" />
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {days.map(day => (
+                    <div key={day.key} className="border border-gray-200 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="font-medium text-gray-900">{day.label}</h3>
+                        <label className="flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={urgentCareHours[day.key]?.is_open || false}
+                            onChange={(e) => updateUrgentCareHours(day.key, 'is_open', e.target.checked)}
+                            className="sr-only"
+                          />
+                          <div className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors ${
+                            urgentCareHours[day.key]?.is_open ? 'bg-red-600' : 'bg-gray-200'
+                          }`}>
+                            <span className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${
+                              urgentCareHours[day.key]?.is_open ? 'translate-x-6' : 'translate-x-1'
+                            }`} />
+                          </div>
+                          <span className="ml-2 text-sm text-gray-600">
+                            {urgentCareHours[day.key]?.is_open ? 'Open' : 'Closed'}
+                          </span>
+                        </label>
+                      </div>
+                      
+                      {urgentCareHours[day.key]?.is_open && (
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Open Time</label>
+                            <input
+                              type="time"
+                              value={urgentCareHours[day.key]?.open_time || ''}
+                              onChange={(e) => updateUrgentCareHours(day.key, 'open_time', e.target.value)}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Close Time</label>
+                            <input
+                              type="time"
+                              value={urgentCareHours[day.key]?.close_time || ''}
+                              onChange={(e) => updateUrgentCareHours(day.key, 'close_time', e.target.value)}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Special Holidays Tab */}
+            {activeTab === 'special' && (
+              <div className="space-y-6">
+                <div className="flex justify-between items-center mb-6">
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+                      <CalendarDays className="h-5 w-5 mr-2" style={{ color: '#7c3aed' }} />
+                      Special Holiday Hours
+                    </h2>
+                    <p className="text-gray-600 text-sm mt-1">Set special hours for holidays and events</p>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    {/* Google Sync Button */}
+                    {googleConnected ? (
+                      <button
+                        onClick={() => handleGoogleSync('special_hours')}
+                        disabled={syncing || loading}
+                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 flex items-center font-medium"
+                      >
+                        {syncing ? (
+                          <>
+                            <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                            Syncing...
+                          </>
+                        ) : (
+                          <>
+                            <ExternalLink className="h-4 w-4 mr-2" />
+                            Sync to Google
+                          </>
+                        )}
+                      </button>
+                    ) : (
+                      <div className="text-xs text-gray-500">
+                        <a 
+                          href="/google-integration" 
+                          className="text-blue-600 hover:text-blue-500 underline"
+                        >
+                          Connect Google
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Add New Special Hour Form */}
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
+                  <h3 className="text-lg font-medium text-purple-900 mb-4">Add Special Holiday Hours</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                      <input
+                        type="date"
+                        value={newSpecialHour.date}
+                        onChange={(e) => setNewSpecialHour(prev => ({ ...prev, date: e.target.value }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Holiday Name</label>
+                      <input
+                        type="text"
+                        value={newSpecialHour.name}
+                        onChange={(e) => setNewSpecialHour(prev => ({ ...prev, name: e.target.value }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        placeholder="e.g., Christmas Day, Thanksgiving"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                    {/* General Practice Special Hours */}
+                    <div className="border border-gray-200 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-medium text-gray-900">General Practice</h4>
+                        <label className="flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={newSpecialHour.general_practice.is_open}
+                            onChange={(e) => setNewSpecialHour(prev => ({
+                              ...prev,
+                              general_practice: { ...prev.general_practice, is_open: e.target.checked }
+                            }))}
+                            className="sr-only"
+                          />
+                          <div className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors ${
+                            newSpecialHour.general_practice.is_open ? 'bg-blue-600' : 'bg-gray-200'
+                          }`}>
+                            <span className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${
+                              newSpecialHour.general_practice.is_open ? 'translate-x-6' : 'translate-x-1'
+                            }`} />
+                          </div>
+                          <span className="ml-2 text-sm text-gray-600">
+                            {newSpecialHour.general_practice.is_open ? 'Open' : 'Closed'}
+                          </span>
+                        </label>
+                      </div>
+                      
+                      {newSpecialHour.general_practice.is_open && (
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Open</label>
+                            <input
+                              type="time"
+                              value={newSpecialHour.general_practice.open_time}
+                              onChange={(e) => setNewSpecialHour(prev => ({
+                                ...prev,
+                                general_practice: { ...prev.general_practice, open_time: e.target.value }
+                              }))}
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Close</label>
+                            <input
+                              type="time"
+                              value={newSpecialHour.general_practice.close_time}
+                              onChange={(e) => setNewSpecialHour(prev => ({
+                                ...prev,
+                                general_practice: { ...prev.general_practice, close_time: e.target.value }
+                              }))}
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Urgent Care Special Hours */}
+                    <div className="border border-gray-200 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-medium text-gray-900">Urgent Care</h4>
+                        <label className="flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={newSpecialHour.urgent_care.is_open}
+                            onChange={(e) => setNewSpecialHour(prev => ({
+                              ...prev,
+                              urgent_care: { ...prev.urgent_care, is_open: e.target.checked }
+                            }))}
+                            className="sr-only"
+                          />
+                          <div className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors ${
+                            newSpecialHour.urgent_care.is_open ? 'bg-red-600' : 'bg-gray-200'
+                          }`}>
+                            <span className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${
+                              newSpecialHour.urgent_care.is_open ? 'translate-x-6' : 'translate-x-1'
+                            }`} />
+                          </div>
+                          <span className="ml-2 text-sm text-gray-600">
+                            {newSpecialHour.urgent_care.is_open ? 'Open' : 'Closed'}
+                          </span>
+                        </label>
+                      </div>
+                      
+                      {newSpecialHour.urgent_care.is_open && (
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Open</label>
+                            <input
+                              type="time"
+                              value={newSpecialHour.urgent_care.open_time}
+                              onChange={(e) => setNewSpecialHour(prev => ({
+                                ...prev,
+                                urgent_care: { ...prev.urgent_care, open_time: e.target.value }
+                              }))}
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Close</label>
+                            <input
+                              type="time"
+                              value={newSpecialHour.urgent_care.close_time}
+                              onChange={(e) => setNewSpecialHour(prev => ({
+                                ...prev,
+                                urgent_care: { ...prev.urgent_care, close_time: e.target.value }
+                              }))}
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end">
+                    <button
+                      onClick={addSpecialHour}
+                      disabled={loading || !newSpecialHour.date || !newSpecialHour.name}
+                      className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 flex items-center font-medium"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Special Hours
+                    </button>
+                  </div>
+                </div>
+
+                {/* Existing Special Hours List */}
+                {specialHours.length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900 mb-4">Existing Special Hours</h3>
+                    <div className="space-y-4">
+                      {specialHours.map((specialHour) => (
+                        <div key={specialHour.id} className="border border-gray-200 rounded-lg p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <div>
+                              <h4 className="font-medium text-gray-900">{specialHour.name}</h4>
+                              <p className="text-sm text-gray-600">{new Date(specialHour.date).toLocaleDateString()}</p>
+                            </div>
+                            <button
+                              onClick={() => deleteSpecialHour(specialHour.id)}
+                              className="text-red-600 hover:text-red-700 p-1"
+                              title="Delete Special Hours"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                              <span className="font-medium text-blue-600">General Practice:</span>
+                              <span className="ml-2">
+                                {specialHour.general_practice.is_open 
+                                  ? `${specialHour.general_practice.open_time} - ${specialHour.general_practice.close_time}`
+                                  : 'Closed'
+                                }
+                              </span>
+                            </div>
+                            <div>
+                              <span className="font-medium text-red-600">Urgent Care:</span>
+                              <span className="ml-2">
+                                {specialHour.urgent_care.is_open 
+                                  ? `${specialHour.urgent_care.open_time} - ${specialHour.urgent_care.close_time}`
+                                  : 'Closed'
+                                }
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {specialHours.length === 0 && (
+                  <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <CalendarDays className="h-16 w-16 mx-auto text-gray-300 mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">No special hours set yet</h3>
+                    <p className="text-gray-600">Add special holiday hours using the form above</p>
+                  </div>
+                )}
               </div>
             )}
           </div>
