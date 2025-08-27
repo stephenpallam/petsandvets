@@ -74,7 +74,19 @@ const PhotoManagement = () => {
     }
     
     setUploadedFiles(files);
-    setLoading(false);
+  };
+
+  const fetchTeamMembers = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/team-members`);
+      if (response.ok) {
+        const data = await response.json();
+        setTeamMembers(data.team_members || []);
+      }
+    } catch (err) {
+      console.error('Error fetching team members:', err);
+      setTeamMembers([]);
+    }
   };
 
   useEffect(() => {
