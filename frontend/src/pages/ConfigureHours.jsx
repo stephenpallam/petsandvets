@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Clock, Calendar, Plus, Edit2, Trash2, Save, AlertCircle, CheckCircle, ExternalLink, RefreshCw } from 'lucide-react';
+import { Clock, Calendar, Plus, Edit2, Trash2, Save, AlertCircle, CheckCircle, ExternalLink, RefreshCw, CalendarDays } from 'lucide-react';
 import axios from 'axios';
 
 const ConfigureHours = () => {
   const { user, token, isAdmin, loading: authLoading } = useAuth();
+  const [activeTab, setActiveTab] = useState('general');
   const [hospitalHours, setHospitalHours] = useState({
     monday: { is_open: true, open_time: '09:00', close_time: '18:00' },
     tuesday: { is_open: true, open_time: '09:00', close_time: '18:00' },
@@ -48,6 +49,27 @@ const ConfigureHours = () => {
     { key: 'friday', label: 'Friday' },
     { key: 'saturday', label: 'Saturday' },
     { key: 'sunday', label: 'Sunday' }
+  ];
+
+  const tabs = [
+    { 
+      id: 'general', 
+      label: 'General Practice Hours', 
+      icon: Clock,
+      color: '#29add3'
+    },
+    { 
+      id: 'urgent', 
+      label: 'Urgent Care Hours', 
+      icon: Clock,
+      color: '#dc2626'
+    },
+    { 
+      id: 'special', 
+      label: 'Special Holidays', 
+      icon: CalendarDays,
+      color: '#7c3aed'
+    }
   ];
 
   useEffect(() => {
