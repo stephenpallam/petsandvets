@@ -59,6 +59,7 @@ import FormsDownload from "./pages/forms/FormsDownload";
 import UrgentCareBooking from "./pages/UrgentCareBooking";
 import UrgentCareAppointments from "./pages/UrgentCareAppointments";
 import PatientRegistrationPDF from "./pages/forms/PatientRegistrationPDF";
+import Reviews from "./pages/Reviews";
 
 function App() {
   return (
