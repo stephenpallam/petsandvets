@@ -114,6 +114,7 @@ const Header = () => {
         { name: 'Download Forms', href: '/forms-download' },
         ...(isAdmin() ? [{ name: 'Urgent Care Appointments', href: '/urgent-care-appointments' }] : []),
         ...(isAdmin() ? [{ name: 'Configure Hours', href: '/configure-hours' }] : []),
+        ...(isAdmin() ? [{ name: 'Reviews', href: '/reviews' }] : []),
         ...(user ? [{ name: 'Register User', href: '/register-user' }] : [])
       ]
     },
