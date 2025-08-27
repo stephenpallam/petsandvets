@@ -14,6 +14,12 @@ const BusinessInfo = () => {
     twitter_link: '',
     hero_images: []
   });
+  const [uploadedFiles, setUploadedFiles] = useState({
+    homepageslider: [],
+    team: [],
+    facility: []
+  });
+  const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
