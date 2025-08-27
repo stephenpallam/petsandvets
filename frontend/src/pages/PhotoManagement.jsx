@@ -349,7 +349,7 @@ const TeamMemberSection = ({
                 className="hidden"
               />
             </label>
-            <p className="text-xs text-blue-600 mt-1">Fill all fields above first</p>
+            <p className="text-xs text-blue-600 mt-1">Fill all fields above first, then upload photo to create team member</p>
           </div>
         </div>
       )}
