@@ -62,6 +62,7 @@ import PatientRegistrationPDF from "./pages/forms/PatientRegistrationPDF";
 import Reviews from "./pages/Reviews";
 import BusinessInfo from "./pages/BusinessInfo";
 import PhotoManagement from "./pages/PhotoManagement";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   return (
