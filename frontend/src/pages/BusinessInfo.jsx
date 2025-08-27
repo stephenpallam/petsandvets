@@ -60,6 +60,27 @@ const BusinessInfo = () => {
     }));
   };
 
+  const handleAddHeroImage = () => {
+    setBusinessInfo(prev => ({
+      ...prev,
+      hero_images: [...prev.hero_images, '']
+    }));
+  };
+
+  const handleHeroImageChange = (index, value) => {
+    setBusinessInfo(prev => ({
+      ...prev,
+      hero_images: prev.hero_images.map((img, i) => i === index ? value : img)
+    }));
+  };
+
+  const handleRemoveHeroImage = (index) => {
+    setBusinessInfo(prev => ({
+      ...prev,
+      hero_images: prev.hero_images.filter((_, i) => i !== index)
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
