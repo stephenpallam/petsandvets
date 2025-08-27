@@ -311,42 +311,28 @@ const Header = () => {
 
           {/* Mobile Layout */}
           <div className="md:hidden">
-            {/* First Row: Phone and Urgent Care */}
+            {/* First Row: Phone and Hours Status */}
             <div className="flex justify-between items-center text-xs mb-1">
               <div className="flex items-center space-x-1">
                 <Phone className="h-3 w-3" />
-                <span>{hospitalInfo.phone}</span>
+                <span>{businessInfo?.phone || "(703) 957-3297"}</span>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-1">
                   <Clock className="h-3 w-3" />
-                  <span>Urgent Care: {getUrgentCareStatus()}</span>
+                  <span>GP: {getGeneralPracticeStatus()}</span>
                 </div>
-                {/* Auth Button in Top Bar */}
-                {user ? (
-                  <button
-                    onClick={logout}
-                    className="flex items-center text-white hover:text-gray-200 transition-colors"
-                    title={`Logout ${user.full_name}`}
-                  >
-                    <LogOut className="h-3 w-3" />
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => setShowLogin(true)}
-                    className="flex items-center text-white hover:text-gray-200 transition-colors"
-                    title="Login"
-                  >
-                    <LogIn className="h-3 w-3" />
-                  </button>
-                )}
+                <div className="flex items-center space-x-1">
+                  <Clock className="h-3 w-3" />
+                  <span>UC: {getUrgentCareStatus()}</span>
+                </div>
               </div>
             </div>
             
             {/* Second Row: Address */}
             <div className="flex items-center space-x-1 text-xs">
               <MapPin className="h-3 w-3 flex-shrink-0" />
-              <span className="truncate text-xs">{hospitalInfo.address}</span>
+              <span className="truncate text-xs">{getShortAddress()}</span>
             </div>
           </div>
         </div>
