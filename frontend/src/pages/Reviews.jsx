@@ -91,7 +91,7 @@ const Reviews = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user?.token}`
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(formData)
       });
