@@ -1181,6 +1181,23 @@ const PhotoManagement = () => {
                     setError={setError}
                     API_BASE_URL={API_BASE_URL}
                   />
+                ) : tab.id === 'facility' ? (
+                  <FacilitySection 
+                    facilityPhotos={facilityPhotos}
+                    showFacilityForm={showFacilityForm}
+                    setShowFacilityForm={setShowFacilityForm}
+                    editingFacility={editingFacility}
+                    setEditingFacility={setEditingFacility}
+                    facilityForm={facilityForm}
+                    handleFacilityFormChange={handleFacilityFormChange}
+                    handleFacilityUpload={handleFacilityUpload}
+                    handleUpdateFacility={handleUpdateFacility}
+                    handleDeleteFacility={handleDeleteFacility}
+                    startEditFacility={startEditFacility}
+                    error={error}
+                    setError={setError}
+                    API_BASE_URL={API_BASE_URL}
+                  />
                 ) : (
                   <FileUploadSection 
                     category={tab.id} 
