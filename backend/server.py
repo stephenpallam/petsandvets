@@ -15,6 +15,7 @@ import uuid
 from datetime import datetime, timedelta
 import bcrypt
 import jwt
+import secrets
 from enum import Enum
 from fastapi.responses import StreamingResponse
 import io
