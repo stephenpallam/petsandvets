@@ -360,6 +360,34 @@ class TeamMembersResponse(BaseModel):
     team_members: List[TeamMember]
 
 
+class FacilityPhoto(BaseModel):
+    id: str
+    title: str
+    description: str  
+    photo_url: str
+    order: Optional[int] = 0  # For ordering facility photos
+    created_at: datetime
+    updated_at: datetime
+
+
+class FacilityPhotoCreate(BaseModel):
+    title: str
+    description: str
+    photo_url: str
+    order: Optional[int] = 0
+
+
+class FacilityPhotoUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    photo_url: Optional[str] = None
+    order: Optional[int] = None
+
+
+class FacilityPhotosResponse(BaseModel):
+    facility_photos: List[FacilityPhoto]
+
+
 # Auth Utilities
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
