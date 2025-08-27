@@ -568,23 +568,45 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial) => (
-              <div
-                key={testimonial.id}
-                className="bg-gray-50 p-6 rounded-xl"
-              >
-                <div className="flex items-center mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
-                  ))}
+            {testimonialsLoading ? (
+              // Loading state
+              [...Array(3)].map((_, i) => (
+                <div key={i} className="bg-gray-50 p-6 rounded-xl animate-pulse">
+                  <div className="flex items-center mb-4">
+                    {[...Array(5)].map((_, j) => (
+                      <div key={j} className="h-5 w-5 bg-gray-300 rounded mr-1"></div>
+                    ))}
+                  </div>
+                  <div className="h-4 bg-gray-300 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-300 rounded mb-4"></div>
+                  <div className="h-4 bg-gray-300 rounded w-1/2"></div>
                 </div>
-                <p className="text-gray-700 mb-4 italic">"{testimonial.text}"</p>
-                <div>
-                  <p className="font-semibold text-gray-900">{testimonial.name}</p>
-                  <p className="text-sm text-gray-600">Pet parent to {testimonial.petName}</p>
+              ))
+            ) : testimonials.length > 0 ? (
+              // Display testimonials
+              testimonials.map((testimonial) => (
+                <div
+                  key={testimonial.id}
+                  className="bg-gray-50 p-6 rounded-xl"
+                >
+                  <div className="flex items-center mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                    ))}
+                  </div>
+                  <p className="text-gray-700 mb-4 italic">"{testimonial.text}"</p>
+                  <div>
+                    <p className="font-semibold text-gray-900">{testimonial.owner_name}</p>
+                    <p className="text-sm text-gray-600">Pet parent to {testimonial.pet_name}</p>
+                  </div>
                 </div>
+              ))
+            ) : (
+              // No testimonials available
+              <div className="col-span-full text-center py-8">
+                <p className="text-gray-500">No customer reviews available yet.</p>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </section>
