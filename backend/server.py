@@ -1173,6 +1173,10 @@ async def get_business_info():
             facebook_link="",
             instagram_link="",
             twitter_link="",
+            hero_images=[
+                "https://customer-assets.emergentagent.com/job_peacock-pet-care/artifacts/ulwulpak_emilee.png",
+                "https://customer-assets.emergentagent.com/job_peacock-pet-care/artifacts/ej59vv47_vanama.png"
+            ],
             created_at=now,
             updated_at=now
         )
