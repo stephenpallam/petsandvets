@@ -450,14 +450,48 @@ const ConfigureHours = () => {
                 <Clock className="h-5 w-5 mr-2" style={{ color: '#dc2626' }} />
                 Urgent Care Hours
               </h2>
-              <button
-                onClick={() => saveHours('urgent')}
-                disabled={loading}
-                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center font-medium"
-              >
-                <Save className="h-4 w-4 mr-2" />
-                Save Changes
-              </button>
+              
+              <div className="flex items-center space-x-3">
+                {/* Google Sync Button */}
+                {googleConnected ? (
+                  <button
+                    onClick={() => handleGoogleSync('urgent_care')}
+                    disabled={syncing || loading}
+                    className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 flex items-center font-medium"
+                  >
+                    {syncing ? (
+                      <>
+                        <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                        Syncing...
+                      </>
+                    ) : (
+                      <>
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        Sync to Google
+                      </>
+                    )}
+                  </button>
+                ) : (
+                  <div className="text-xs text-gray-500">
+                    <a 
+                      href="/google-integration" 
+                      className="text-blue-600 hover:text-blue-500 underline"
+                    >
+                      Connect Google
+                    </a>
+                  </div>
+                )}
+
+                {/* Save Button */}
+                <button
+                  onClick={() => saveHours('urgent')}
+                  disabled={loading}
+                  className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center font-medium"
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  Save Changes
+                </button>
+              </div>
             </div>
           </div>
           <div className="p-6">
