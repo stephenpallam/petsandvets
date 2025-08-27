@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Building, Save, RefreshCw, Globe, Phone, Mail, MapPin, Facebook, Instagram, Twitter, Image, Plus, X, Upload, Trash2, Eye } from 'lucide-react';
+import { Building, Save, RefreshCw, Globe, Phone, Mail, MapPin, Facebook, Instagram, Twitter } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 const BusinessInfo = () => {
