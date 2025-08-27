@@ -349,28 +349,28 @@ const Header = () => {
 
           {/* Mobile Layout */}
           <div className="md:hidden">
-            {/* Row 1: Phone Number */}
-            <div className="flex items-center space-x-1 text-xs mb-0.5">
-              <Phone className="h-3 w-3" />
-              <span>{businessInfo?.phone || "(703) 957-3297"}</span>
-            </div>
-            
-            {/* Row 2: Both Status Items Side by Side */}
-            <div className="flex items-center justify-between text-xs mb-0.5">
+            {/* Row 1: Phone (left) and GP Status (right) */}
+            <div className="flex justify-between items-center text-xs mb-0.5">
+              <div className="flex items-center space-x-1">
+                <Phone className="h-3 w-3" />
+                <span>{businessInfo?.phone || "(703) 957-3297"}</span>
+              </div>
               <div className="flex items-center space-x-1">
                 <Clock className="h-3 w-3" />
                 <span>GP: {getGeneralPracticeStatus()}</span>
+              </div>
+            </div>
+            
+            {/* Row 2: Address (left) and UC Status (right) */}
+            <div className="flex justify-between items-center text-xs">
+              <div className="flex items-center space-x-1">
+                <MapPin className="h-3 w-3 flex-shrink-0" />
+                <span className="truncate text-xs">{getShortAddress()}</span>
               </div>
               <div className="flex items-center space-x-1">
                 <Clock className="h-3 w-3" />
                 <span>UC: {getUrgentCareStatus()}</span>
               </div>
-            </div>
-            
-            {/* Row 3: Address */}
-            <div className="flex items-center space-x-1 text-xs">
-              <MapPin className="h-3 w-3 flex-shrink-0" />
-              <span className="truncate text-xs">{getShortAddress()}</span>
             </div>
           </div>
         </div>
