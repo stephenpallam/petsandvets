@@ -22,101 +22,6 @@ const BusinessInfo = () => {
   const { user, token, isAdmin } = useAuth();
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
 
-  // FileUploadSection component
-  const FileUploadSection = ({ category, title, description, files }) => (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h4 className="text-md font-medium text-gray-900">{title}</h4>
-          <p className="text-sm text-gray-600">{description}</p>
-        </div>
-        <label className="inline-flex items-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm cursor-pointer">
-          <Upload className="h-4 w-4 mr-2" />
-          Upload Image
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              if (e.target.files[0]) {
-                handleFileUpload(category, e.target.files[0]);
-                e.target.value = ''; // Reset input
-              }
-            }}
-            className="hidden"
-          />
-        </label>
-      </div>
-      
-      {files && files.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {files.map((file, index) => (
-            <div key={index} className="relative bg-gray-50 rounded-lg border border-gray-200 p-3">
-              <div className="aspect-video bg-gray-100 rounded-md mb-2 overflow-hidden">
-                <img
-                  src={`${API_BASE_URL}${file.url}`}
-                  alt={file.filename}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'flex';
-                  }}
-                />
-                <div className="hidden w-full h-full items-center justify-center bg-gray-100">
-                  <Image className="h-8 w-8 text-gray-400" />
-                </div>
-              </div>
-              <p className="text-xs text-gray-600 truncate mb-2">{file.filename}</p>
-              <div className="flex justify-between items-center">
-                <span className="text-xs text-gray-500">
-                  {(file.size / 1024).toFixed(1)} KB
-                </span>
-                <div className="flex space-x-1">
-                  <a
-                    href={`${API_BASE_URL}${file.url}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-1 text-blue-600 hover:text-blue-700 transition-colors"
-                    title="View image"
-                  >
-                    <Eye className="h-4 w-4" />
-                  </a>
-                  <button
-                    type="button"
-                    onClick={() => handleFileDelete(category, file.filename)}
-                    className="p-1 text-red-600 hover:text-red-700 transition-colors"
-                    title="Delete image"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-8 bg-gray-50 rounded-md border-2 border-dashed border-gray-300">
-          <Image className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-          <p className="text-gray-500 mb-4">No images uploaded yet</p>
-          <label className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors cursor-pointer">
-            <Upload className="h-4 w-4 mr-2" />
-            Upload Your First Image
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                if (e.target.files[0]) {
-                  handleFileUpload(category, e.target.files[0]);
-                  e.target.value = ''; // Reset input
-                }
-              }}
-              className="hidden"
-            />
-          </label>
-        </div>
-      )}
-    </div>
-  );
-
   const fetchBusinessInfo = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/business-info`);
@@ -136,7 +41,6 @@ const BusinessInfo = () => {
   };
 
   useEffect(() => {
-    // Only fetch if user is logged in and has admin privileges
     if (user && isAdmin()) {
       fetchBusinessInfo();
     } else if (user && !isAdmin()) {
@@ -435,8 +339,7 @@ const BusinessInfo = () => {
                   <li>The hospital name and tagline appear in the header and footer</li>
                   <li>Contact information is displayed in multiple locations</li>
                   <li>Social media links will be shown in the footer (leave blank to hide)</li>
-                  <li>Hero images will rotate automatically on the home page slider</li>
-                  <li>Recommended image size: 1920x800 pixels for best quality</li>
+                  <li>For photo management, use the dedicated Photo Management page</li>
                 </ul>
               </div>
             </div>
