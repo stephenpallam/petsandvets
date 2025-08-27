@@ -736,10 +736,14 @@ const PhotoManagement = () => {
                   <h2 className="text-lg font-medium text-gray-900 mb-2">{tab.name}</h2>
                   <p className="text-gray-600">{tab.description}</p>
                 </div>
-                <FileUploadSection 
-                  category={tab.id} 
-                  files={uploadedFiles[tab.id]} 
-                />
+                {tab.id === 'team' ? (
+                  <TeamMemberSection />
+                ) : (
+                  <FileUploadSection 
+                    category={tab.id} 
+                    files={uploadedFiles[tab.id]} 
+                  />
+                )}
               </div>
             ))}
           </div>
