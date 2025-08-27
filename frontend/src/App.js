@@ -60,6 +60,7 @@ import UrgentCareBooking from "./pages/UrgentCareBooking";
 import UrgentCareAppointments from "./pages/UrgentCareAppointments";
 import PatientRegistrationPDF from "./pages/forms/PatientRegistrationPDF";
 import Reviews from "./pages/Reviews";
+import BusinessInfo from "./pages/BusinessInfo";
 
 function App() {
   return (
