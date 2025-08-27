@@ -17,8 +17,10 @@ const BusinessInfo = () => {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [googleConnected, setGoogleConnected] = useState(false);
 
   const { user, token, isAdmin } = useAuth();
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
