@@ -1426,6 +1426,86 @@ async def delete_file(
         raise HTTPException(status_code=500, detail=f"Delete failed: {str(e)}")
 
 
+# Team Member API endpoints
+@api_router.get("/team-members", response_model=TeamMembersResponse)
+async def get_team_members():
+    """Get all team members (public endpoint)"""
+    team_members = await db.team_members.find().sort("order", 1).to_list(100)
+    return TeamMembersResponse(team_members=[TeamMember(**member) for member in team_members])
+
+
+@api_router.post("/team-members", response_model=TeamMember)
+async def create_team_member(
+    team_data: TeamMemberCreate, 
+    current_user: User = Depends(get_admin_user)
+):
+    """Create a new team member (admin only)"""
+    now = datetime.utcnow()
+    team_member = TeamMember(
+        id=str(uuid.uuid4()),
+        name=team_data.name,
+        title=team_data.title,
+        bio=team_data.bio,
+        credentials=team_data.credentials,
+        photo_url=team_data.photo_url,
+        order=team_data.order,
+        created_at=now,
+        updated_at=now
+    )
+    
+    await db.team_members.insert_one(team_member.dict())
+    return team_member
+
+
+@api_router.put("/team-members/{member_id}", response_model=TeamMember)
+async def update_team_member(
+    member_id: str,
+    team_data: TeamMemberUpdate,
+    current_user: User = Depends(get_admin_user)
+):
+    """Update a team member (admin only)"""
+    existing_member = await db.team_members.find_one({"id": member_id})
+    if not existing_member:
+        raise HTTPException(status_code=404, detail="Team member not found")
+    
+    update_data = {}
+    if team_data.name is not None:
+        update_data["name"] = team_data.name
+    if team_data.title is not None:
+        update_data["title"] = team_data.title
+    if team_data.bio is not None:
+        update_data["bio"] = team_data.bio
+    if team_data.credentials is not None:
+        update_data["credentials"] = team_data.credentials
+    if team_data.photo_url is not None:
+        update_data["photo_url"] = team_data.photo_url
+    if team_data.order is not None:
+        update_data["order"] = team_data.order
+    
+    if update_data:
+        update_data["updated_at"] = datetime.utcnow()
+        await db.team_members.update_one({"id": member_id}, {"$set": update_data})
+        
+        # Get updated team member
+        updated_member = await db.team_members.find_one({"id": member_id})
+        return TeamMember(**updated_member)
+    
+    return TeamMember(**existing_member)
+
+
+@api_router.delete("/team-members/{member_id}")
+async def delete_team_member(
+    member_id: str, 
+    current_user: User = Depends(get_admin_user)
+):
+    """Delete a team member (admin only)"""
+    result = await db.team_members.delete_one({"id": member_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Team member not found")
+    
+    return {"message": "Team member deleted successfully"}
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
