@@ -158,7 +158,7 @@ const Reviews = () => {
     );
   }
 
-  if (user.role !== 'admin') {
+  if (user && !isAdmin()) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center bg-white p-8 rounded-lg shadow-sm border border-gray-200">
