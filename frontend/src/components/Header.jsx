@@ -639,15 +639,6 @@ const Header = () => {
           </div>
         </div>
       )}
-
-      {/* Auth Modals */}
-      {showLogin && (
-        <Login onClose={() => setShowLogin(false)} />
-      )}
-      
-      {showRegister && user && (
-        <Register onClose={() => setShowRegister(false)} />
-      )}
     </header>
   );
 };
