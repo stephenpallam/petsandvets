@@ -63,6 +63,7 @@ import Reviews from "./pages/Reviews";
 import BusinessInfo from "./pages/BusinessInfo";
 import PhotoManagement from "./pages/PhotoManagement";
 import LoginPage from "./pages/LoginPage";
+import GoogleIntegration from "./pages/GoogleIntegration";
 
 function App() {
   return (
