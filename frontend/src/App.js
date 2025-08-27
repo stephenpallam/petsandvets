@@ -133,6 +133,7 @@ function App() {
               <Route path="/photo-management" element={<PhotoManagement />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/google-integration" element={<GoogleIntegration />} />
+              <Route path="/google-integration/callback" element={<GoogleCallback />} />
             </Routes>
           </main>
           <Footer />
