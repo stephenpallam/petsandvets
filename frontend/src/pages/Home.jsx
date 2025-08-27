@@ -330,30 +330,64 @@ const Home = () => {
 
             {/* Right Content - Hero Image */}
             <div className="relative">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                <img
-                  src={heroImages[currentHeroImage]}
-                  alt="Veterinary Care"
-                  className="w-full object-cover transition-opacity duration-1000"
-                  style={{ height: '25rem' }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-              </div>
-              
-              {/* Image indicators */}
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                {heroImages.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentHeroImage(index)}
-                    className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                      currentHeroImage === index 
-                        ? 'bg-white' 
-                        : 'bg-white/50 hover:bg-white/75'
-                    }`}
-                  />
-                ))}
-              </div>
+              {heroImagesLoading ? (
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-gray-100 flex items-center justify-center" style={{ height: '25rem' }}>
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                </div>
+              ) : heroImages.length > 0 ? (
+                <>
+                  <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                    <img
+                      src={heroImages[currentHeroImage].image_url}
+                      alt={heroImages[currentHeroImage].title}
+                      className="w-full object-cover transition-opacity duration-1000"
+                      style={{ height: '25rem' }}
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                    <div className="hidden w-full h-full items-center justify-center bg-gray-100 absolute inset-0" style={{ height: '25rem' }}>
+                      <div className="text-center text-gray-500">
+                        <Users className="h-16 w-16 mx-auto mb-2" />
+                        <p>Image not available</p>
+                      </div>
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                    
+                    {/* Image title and description overlay */}
+                    <div className="absolute bottom-6 left-6 right-6 text-white">
+                      <h3 className="text-xl font-bold mb-2">{heroImages[currentHeroImage].title}</h3>
+                      <p className="text-sm opacity-90">{heroImages[currentHeroImage].description}</p>
+                    </div>
+                  </div>
+                  
+                  {/* Image indicators */}
+                  {heroImages.length > 1 && (
+                    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                      {heroImages.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setCurrentHeroImage(index)}
+                          className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                            currentHeroImage === index 
+                              ? 'bg-white' 
+                              : 'bg-white/50 hover:bg-white/75'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center" style={{ height: '25rem' }}>
+                  <div className="text-center text-blue-600">
+                    <Users className="h-16 w-16 mx-auto mb-4" />
+                    <h3 className="text-xl font-bold mb-2">Professional Veterinary Care</h3>
+                    <p className="text-sm opacity-75">Compassionate care for your beloved pets</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
