@@ -46,6 +46,7 @@ const BusinessInfo = () => {
   useEffect(() => {
     if (user && isAdmin()) {
       fetchBusinessInfo();
+      checkGoogleConnection();
     } else if (user && !isAdmin()) {
       setError('Access denied. Admin privileges required.');
       setLoading(false);
@@ -54,6 +55,49 @@ const BusinessInfo = () => {
       setLoading(false);
     }
   }, [user]);
+
+  const checkGoogleConnection = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/google-business/settings`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      setGoogleConnected(response.data.is_connected || false);
+    } catch (err) {
+      console.error('Error checking Google connection:', err);
+    }
+  };
+
+  const handleGoogleSync = async () => {
+    setSyncing(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/google-business/sync`, 
+        { sync_type: 'business_info' },
+        {
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (response.data.success) {
+        setSuccess('Business information synced to Google Business Profile successfully!');
+      } else {
+        setError(response.data.message || 'Sync failed');
+      }
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to sync to Google Business Profile');
+    } finally {
+      setSyncing(false);
+      setTimeout(() => {
+        setSuccess(null);
+        setError(null);
+      }, 5000);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
