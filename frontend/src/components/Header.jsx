@@ -290,37 +290,22 @@ const Header = () => {
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-1">
                 <Phone className="h-4 w-4" />
-                <span>{hospitalInfo.phone}</span>
+                <span>{businessInfo?.phone || "(703) 957-3297"}</span>
               </div>
               <div className="flex items-center space-x-1">
                 <MapPin className="h-4 w-4" />
-                <span className="truncate">{hospitalInfo.address}</span>
+                <span className="truncate">{getShortAddress()}</span>
               </div>
             </div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-1">
                 <Clock className="h-4 w-4" />
+                <span>General Practice: {getGeneralPracticeStatus()}</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <Clock className="h-4 w-4" />
                 <span>Urgent Care: {getUrgentCareStatus()}</span>
               </div>
-              
-              {/* Auth Button in Top Bar */}
-              {user ? (
-                <button
-                  onClick={logout}
-                  className="flex items-center text-white hover:text-gray-200 transition-colors"
-                  title={`Logout ${user.full_name}`}
-                >
-                  <LogOut className="h-4 w-4" />
-                </button>
-              ) : (
-                <button
-                  onClick={() => setShowLogin(true)}
-                  className="flex items-center text-white hover:text-gray-200 transition-colors"
-                  title="Login"
-                >
-                  <LogIn className="h-4 w-4" />
-                </button>
-              )}
             </div>
           </div>
 
