@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Building, Save, RefreshCw, Globe, Phone, Mail, MapPin, Facebook, Instagram, Twitter } from 'lucide-react';
+import { Building, Save, RefreshCw, Globe, Phone, Mail, MapPin, Facebook, Instagram, Twitter, ExternalLink } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import axios from 'axios';
 
 const BusinessInfo = () => {
   const [businessInfo, setBusinessInfo] = useState({
