@@ -129,6 +129,7 @@ function App() {
               <Route path="/reviews" element={<Reviews />} />
               <Route path="/business-info" element={<BusinessInfo />} />
               <Route path="/photo-management" element={<PhotoManagement />} />
+              <Route path="/login" element={<LoginPage />} />
             </Routes>
           </main>
           <Footer />
