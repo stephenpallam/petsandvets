@@ -1156,6 +1156,163 @@ const PhotoManagement = () => {
     }
   };
 
+  // Slider Image Management Functions
+  const fetchSliderImages = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/slider-images`);
+      if (response.ok) {
+        const data = await response.json();
+        setSliderImages(data.slider_images || []);
+      }
+    } catch (err) {
+      console.error('Error fetching slider images:', err);
+      setSliderImages([]);
+    }
+  };
+
+  const handleCreateSliderImage = async (imageUrl) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/slider-images`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...sliderForm,
+          image_url: imageUrl
+        })
+      });
+
+      if (response.ok) {
+        await fetchSliderImages();
+        setSliderForm({
+          title: '',
+          description: '',
+          image_url: '',
+          order: 0
+        });
+        setShowSliderForm(false);
+        setSuccess('Slider image created successfully!');
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to create slider image');
+      }
+    } catch (err) {
+      setError(`Failed to create slider image: ${err.message}`);
+    }
+  };
+
+  const handleUpdateSlider = async (imageId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/slider-images/${imageId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(sliderForm)
+      });
+
+      if (response.ok) {
+        await fetchSliderImages();
+        setEditingSlider(null);
+        setSliderForm({
+          title: '',
+          description: '',
+          image_url: '',
+          order: 0
+        });
+        setSuccess('Slider image updated successfully!');
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        throw new Error('Failed to update slider image');
+      }
+    } catch (err) {
+      setError(`Failed to update slider image: ${err.message}`);
+    }
+  };
+
+  const handleDeleteSlider = async (imageId) => {
+    if (!window.confirm('Are you sure you want to delete this slider image?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/slider-images/${imageId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        await fetchSliderImages();
+        setSuccess('Slider image deleted successfully!');
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        throw new Error('Failed to delete slider image');
+      }
+    } catch (err) {
+      setError(`Failed to delete slider image: ${err.message}`);
+    }
+  };
+
+  const startEditSlider = (image) => {
+    setEditingSlider(image.id);
+    setSliderForm({
+      title: image.title,
+      description: image.description,
+      image_url: image.image_url,
+      order: image.order
+    });
+  };
+
+  const handleSliderUpload = async (file, createSliderImage = false) => {
+    setUploading(true);
+    setError(null);
+    
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch(`${API_BASE_URL}/api/upload/homepageslider`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        
+        // Update the uploaded files list
+        setUploadedFiles(prev => ({
+          ...prev,
+          homepageslider: [...prev.homepageslider, result]
+        }));
+        
+        // If this is for a slider image with metadata, create the slider image record
+        if (createSliderImage) {
+          const imageUrl = `${API_BASE_URL}${result.url}`;
+          await handleCreateSliderImage(imageUrl);
+        } else {
+          setSuccess(`Image uploaded successfully to slider!`);
+          setTimeout(() => setSuccess(null), 3000);
+        }
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Upload failed');
+      }
+    } catch (err) {
+      setError(`Upload failed: ${err.message}`);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleFileUpload = async (category, file, createTeamMember = false) => {
     setUploading(true);
     setError(null);
