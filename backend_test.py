@@ -2628,6 +2628,472 @@ def test_business_info_timestamps():
         results.log_failure("Business Info Timestamps", str(e))
         return False
 
+# ============================================================================
+# TEAM MEMBER MANAGEMENT API TESTS - NEW IMPLEMENTATION
+# ============================================================================
+
+# Global variables for team member testing
+created_team_member_ids = []
+
+def test_get_team_members_public():
+    """Test GET /api/team-members (public endpoint)"""
+    try:
+        response = requests.get(f"{API_URL}/team-members")
+        if response.status_code == 200:
+            data = response.json()
+            if ("team_members" in data and 
+                isinstance(data["team_members"], list)):
+                results.log_success("Get Team Members (Public Endpoint)")
+                return True
+        results.log_failure("Get Team Members (Public)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Team Members (Public)", str(e))
+        return False
+
+def test_create_team_member_admin():
+    """Test POST /api/team-members (admin-only endpoint)"""
+    global created_team_member_ids
+    if not admin_token:
+        results.log_failure("Create Team Member (Admin)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        team_member_data = {
+            "name": "Dr. Jennifer Smith",
+            "title": "Lead Veterinarian",
+            "bio": "Dr. Smith has over 15 years of experience in veterinary medicine, specializing in small animal care and emergency medicine. She graduated from Virginia Tech College of Veterinary Medicine and is passionate about providing compassionate care to pets and their families.",
+            "credentials": "DVM, Virginia Tech College of Veterinary Medicine",
+            "photo_url": "https://example.com/photos/dr-jennifer-smith.jpg",
+            "order": 1
+        }
+        
+        response = requests.post(f"{API_URL}/team-members", json=team_member_data, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("name") == team_member_data["name"] and
+                data.get("title") == team_member_data["title"] and
+                data.get("bio") == team_member_data["bio"] and
+                data.get("credentials") == team_member_data["credentials"] and
+                data.get("photo_url") == team_member_data["photo_url"] and
+                data.get("order") == team_member_data["order"] and
+                "id" in data and
+                "created_at" in data and
+                "updated_at" in data):
+                created_team_member_ids.append(data["id"])
+                results.log_success("Create Team Member (Admin)")
+                return True
+        results.log_failure("Create Team Member (Admin)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Create Team Member (Admin)", str(e))
+        return False
+
+def test_create_team_member_regular_user():
+    """Test POST /api/team-members with regular user (should fail)"""
+    if not user_token:
+        results.log_failure("Create Team Member (Regular User - Should Fail)", "No user token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {user_token}"}
+        team_member_data = {
+            "name": "Dr. Test User",
+            "title": "Test Veterinarian",
+            "bio": "This should fail",
+            "credentials": "Test Credentials",
+            "photo_url": "https://example.com/test.jpg",
+            "order": 99
+        }
+        
+        response = requests.post(f"{API_URL}/team-members", json=team_member_data, headers=headers)
+        if response.status_code == 403:
+            results.log_success("Create Team Member (Regular User - Correctly Forbidden)")
+            return True
+        results.log_failure("Create Team Member (Regular User)", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Create Team Member (Regular User)", str(e))
+        return False
+
+def test_create_team_member_no_auth():
+    """Test POST /api/team-members without authentication (should fail)"""
+    try:
+        team_member_data = {
+            "name": "Dr. No Auth",
+            "title": "Unauthorized Veterinarian",
+            "bio": "This should fail",
+            "credentials": "No Auth Credentials",
+            "photo_url": "https://example.com/noauth.jpg",
+            "order": 99
+        }
+        
+        response = requests.post(f"{API_URL}/team-members", json=team_member_data)
+        if response.status_code == 401:
+            results.log_success("Create Team Member (No Auth - Correctly Unauthorized)")
+            return True
+        results.log_failure("Create Team Member (No Auth)", f"Expected 401, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Create Team Member (No Auth)", str(e))
+        return False
+
+def test_create_multiple_team_members():
+    """Test creating multiple team members with different order values"""
+    global created_team_member_ids
+    if not admin_token:
+        results.log_failure("Create Multiple Team Members", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        
+        # Create second team member
+        team_member_data_2 = {
+            "name": "Dr. Michael Carter",
+            "title": "Emergency Veterinarian",
+            "bio": "Dr. Carter specializes in emergency and critical care medicine. He has extensive experience in trauma surgery and intensive care management for critically ill pets.",
+            "credentials": "DVM, Emergency and Critical Care Certification",
+            "photo_url": "https://example.com/photos/dr-michael-carter.jpg",
+            "order": 2
+        }
+        
+        response = requests.post(f"{API_URL}/team-members", json=team_member_data_2, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if "id" in data:
+                created_team_member_ids.append(data["id"])
+        
+        # Create third team member
+        team_member_data_3 = {
+            "name": "Sarah Thompson",
+            "title": "Veterinary Technician",
+            "bio": "Sarah is a certified veterinary technician with 8 years of experience. She assists with surgical procedures, patient care, and client education.",
+            "credentials": "CVT, Certified Veterinary Technician",
+            "photo_url": "https://example.com/photos/sarah-thompson.jpg",
+            "order": 3
+        }
+        
+        response = requests.post(f"{API_URL}/team-members", json=team_member_data_3, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if "id" in data:
+                created_team_member_ids.append(data["id"])
+                results.log_success("Create Multiple Team Members (3 Total)")
+                return True
+        results.log_failure("Create Multiple Team Members", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Create Multiple Team Members", str(e))
+        return False
+
+def test_get_team_members_ordered():
+    """Test that GET /api/team-members returns team members ordered by 'order' field"""
+    try:
+        response = requests.get(f"{API_URL}/team-members")
+        if response.status_code == 200:
+            data = response.json()
+            if ("team_members" in data and 
+                isinstance(data["team_members"], list) and
+                len(data["team_members"]) >= 2):
+                
+                team_members = data["team_members"]
+                # Check if they are ordered by the 'order' field
+                orders = [member.get("order", 0) for member in team_members]
+                if orders == sorted(orders):
+                    results.log_success("Get Team Members (Ordered by Order Field)")
+                    return True
+                else:
+                    results.log_failure("Get Team Members (Ordering)", f"Not properly ordered: {orders}")
+                    return False
+            else:
+                results.log_success("Get Team Members (Ordered - No Members to Check)")
+                return True
+        results.log_failure("Get Team Members (Ordered)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Team Members (Ordered)", str(e))
+        return False
+
+def test_update_team_member_admin():
+    """Test PUT /api/team-members/{member_id} (admin-only endpoint)"""
+    if not admin_token or not created_team_member_ids:
+        results.log_failure("Update Team Member (Admin)", "No admin token or team member ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        member_id = created_team_member_ids[0]
+        
+        update_data = {
+            "name": "Dr. Jennifer Smith (Updated)",
+            "title": "Senior Lead Veterinarian",
+            "bio": "Updated bio: Dr. Smith has over 20 years of experience in veterinary medicine, specializing in small animal care, emergency medicine, and surgical procedures.",
+            "credentials": "DVM, Virginia Tech College of Veterinary Medicine, Board Certified",
+            "photo_url": "https://example.com/photos/dr-jennifer-smith-updated.jpg",
+            "order": 1
+        }
+        
+        response = requests.put(f"{API_URL}/team-members/{member_id}", json=update_data, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("name") == update_data["name"] and
+                data.get("title") == update_data["title"] and
+                data.get("bio") == update_data["bio"] and
+                data.get("credentials") == update_data["credentials"] and
+                data.get("photo_url") == update_data["photo_url"] and
+                data.get("order") == update_data["order"] and
+                data.get("id") == member_id):
+                results.log_success("Update Team Member (Admin)")
+                return True
+        results.log_failure("Update Team Member (Admin)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Team Member (Admin)", str(e))
+        return False
+
+def test_update_team_member_partial():
+    """Test PUT /api/team-members/{member_id} with partial update"""
+    if not admin_token or not created_team_member_ids:
+        results.log_failure("Update Team Member (Partial)", "No admin token or team member ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        member_id = created_team_member_ids[0]
+        
+        # Only update name and title, leave other fields unchanged
+        partial_update = {
+            "name": "Dr. Jennifer Smith (Partially Updated)",
+            "title": "Chief Veterinarian"
+        }
+        
+        response = requests.put(f"{API_URL}/team-members/{member_id}", json=partial_update, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("name") == partial_update["name"] and
+                data.get("title") == partial_update["title"] and
+                data.get("id") == member_id and
+                "bio" in data and  # Should retain existing values
+                "credentials" in data and
+                "photo_url" in data):
+                results.log_success("Update Team Member (Partial Update)")
+                return True
+        results.log_failure("Update Team Member (Partial)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Team Member (Partial)", str(e))
+        return False
+
+def test_update_team_member_regular_user():
+    """Test PUT /api/team-members/{member_id} with regular user (should fail)"""
+    if not user_token or not created_team_member_ids:
+        results.log_failure("Update Team Member (Regular User - Should Fail)", "No user token or team member ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {user_token}"}
+        member_id = created_team_member_ids[0]
+        
+        update_data = {
+            "name": "This update should fail"
+        }
+        
+        response = requests.put(f"{API_URL}/team-members/{member_id}", json=update_data, headers=headers)
+        if response.status_code == 403:
+            results.log_success("Update Team Member (Regular User - Correctly Forbidden)")
+            return True
+        results.log_failure("Update Team Member (Regular User)", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Team Member (Regular User)", str(e))
+        return False
+
+def test_update_team_member_not_found():
+    """Test PUT /api/team-members/{member_id} with invalid member ID"""
+    if not admin_token:
+        results.log_failure("Update Team Member (Not Found)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        fake_member_id = "non-existent-team-member-id-12345"
+        
+        update_data = {
+            "name": "This should fail"
+        }
+        
+        response = requests.put(f"{API_URL}/team-members/{fake_member_id}", json=update_data, headers=headers)
+        if response.status_code == 404:
+            results.log_success("Update Team Member (Not Found - 404)")
+            return True
+        results.log_failure("Update Team Member (Not Found)", f"Expected 404, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Team Member (Not Found)", str(e))
+        return False
+
+def test_delete_team_member_admin():
+    """Test DELETE /api/team-members/{member_id} (admin-only endpoint)"""
+    if not admin_token or not created_team_member_ids:
+        results.log_failure("Delete Team Member (Admin)", "No admin token or team member ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        # Delete the last created team member
+        member_id = created_team_member_ids[-1]
+        
+        response = requests.delete(f"{API_URL}/team-members/{member_id}", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if "message" in data and "deleted successfully" in data["message"]:
+                created_team_member_ids.remove(member_id)  # Remove from our tracking
+                results.log_success("Delete Team Member (Admin)")
+                return True
+        results.log_failure("Delete Team Member (Admin)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Delete Team Member (Admin)", str(e))
+        return False
+
+def test_delete_team_member_regular_user():
+    """Test DELETE /api/team-members/{member_id} with regular user (should fail)"""
+    if not user_token or not created_team_member_ids:
+        results.log_failure("Delete Team Member (Regular User - Should Fail)", "No user token or team member ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {user_token}"}
+        member_id = created_team_member_ids[0]
+        
+        response = requests.delete(f"{API_URL}/team-members/{member_id}", headers=headers)
+        if response.status_code == 403:
+            results.log_success("Delete Team Member (Regular User - Correctly Forbidden)")
+            return True
+        results.log_failure("Delete Team Member (Regular User)", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Delete Team Member (Regular User)", str(e))
+        return False
+
+def test_delete_team_member_not_found():
+    """Test DELETE /api/team-members/{member_id} with invalid member ID"""
+    if not admin_token:
+        results.log_failure("Delete Team Member (Not Found)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        fake_member_id = "non-existent-team-member-id-67890"
+        
+        response = requests.delete(f"{API_URL}/team-members/{fake_member_id}", headers=headers)
+        if response.status_code == 404:
+            results.log_success("Delete Team Member (Not Found - 404)")
+            return True
+        results.log_failure("Delete Team Member (Not Found)", f"Expected 404, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Delete Team Member (Not Found)", str(e))
+        return False
+
+def test_team_member_validation():
+    """Test team member creation with missing required fields"""
+    if not admin_token:
+        results.log_failure("Team Member Validation", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        
+        # Test with missing required fields
+        incomplete_team_member = {
+            "name": "Dr. Incomplete",
+            # Missing title, bio, credentials, photo_url
+        }
+        
+        response = requests.post(f"{API_URL}/team-members", json=incomplete_team_member, headers=headers)
+        if response.status_code == 422:  # Validation error
+            results.log_success("Team Member Validation (Missing Required Fields)")
+            return True
+        results.log_failure("Team Member Validation", f"Expected 422, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Team Member Validation", str(e))
+        return False
+
+def test_team_member_database_storage():
+    """Test that team members are properly stored in MongoDB with all fields"""
+    if not admin_token or not created_team_member_ids:
+        results.log_failure("Team Member Database Storage", "No admin token or team member ID available")
+        return False
+    
+    try:
+        # Get team members and verify all fields are stored correctly
+        response = requests.get(f"{API_URL}/team-members")
+        if response.status_code == 200:
+            data = response.json()
+            if "team_members" in data and len(data["team_members"]) > 0:
+                team_member = data["team_members"][0]
+                required_fields = ["id", "name", "title", "bio", "credentials", "photo_url", "order", "created_at", "updated_at"]
+                
+                if all(field in team_member for field in required_fields):
+                    if (isinstance(team_member["name"], str) and
+                        isinstance(team_member["title"], str) and
+                        isinstance(team_member["bio"], str) and
+                        isinstance(team_member["credentials"], str) and
+                        isinstance(team_member["photo_url"], str) and
+                        isinstance(team_member["order"], int)):
+                        results.log_success("Team Member Database Storage (Correct Fields)")
+                        return True
+        results.log_failure("Team Member Database Storage", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Team Member Database Storage", str(e))
+        return False
+
+def test_team_member_order_functionality():
+    """Test that team members are returned in correct order and order field works"""
+    if not admin_token:
+        results.log_failure("Team Member Order Functionality", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        
+        # Create a team member with a specific order
+        team_member_data = {
+            "name": "Dr. Order Test",
+            "title": "Order Test Veterinarian",
+            "bio": "Testing order functionality",
+            "credentials": "Test Credentials",
+            "photo_url": "https://example.com/order-test.jpg",
+            "order": 0  # Should appear first
+        }
+        
+        response = requests.post(f"{API_URL}/team-members", json=team_member_data, headers=headers)
+        if response.status_code == 200:
+            order_test_id = response.json()["id"]
+            
+            # Get all team members
+            response = requests.get(f"{API_URL}/team-members")
+            if response.status_code == 200:
+                data = response.json()
+                if "team_members" in data and len(data["team_members"]) > 0:
+                    # The team member with order=0 should be first
+                    first_member = data["team_members"][0]
+                    if first_member.get("id") == order_test_id and first_member.get("order") == 0:
+                        # Clean up
+                        requests.delete(f"{API_URL}/team-members/{order_test_id}", headers=headers)
+                        results.log_success("Team Member Order Functionality (Correct Ordering)")
+                        return True
+        results.log_failure("Team Member Order Functionality", f"Status: {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Team Member Order Functionality", str(e))
+        return False
+
 def run_all_tests():
     """Run all backend API tests"""
     print("Starting Backend API Tests...")
