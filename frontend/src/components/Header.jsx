@@ -357,7 +357,7 @@ const Header = () => {
               </div>
               <div className="flex items-center space-x-1">
                 <Clock className="h-3 w-3" />
-                <span>GP: {getGeneralPracticeStatus()}</span>
+                <span>General Practice: {getGeneralPracticeStatus()}</span>
               </div>
             </div>
             
@@ -369,7 +369,7 @@ const Header = () => {
               </div>
               <div className="flex items-center space-x-1">
                 <Clock className="h-3 w-3" />
-                <span>UC: {getUrgentCareStatus()}</span>
+                <span>Urgent Care: {getUrgentCareStatus()}</span>
               </div>
             </div>
           </div>
