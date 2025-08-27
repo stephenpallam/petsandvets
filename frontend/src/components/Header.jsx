@@ -115,6 +115,7 @@ const Header = () => {
         ...(isAdmin() ? [{ name: 'Urgent Care Appointments', href: '/urgent-care-appointments' }] : []),
         ...(isAdmin() ? [{ name: 'Configure Hours', href: '/configure-hours' }] : []),
         ...(isAdmin() ? [{ name: 'Reviews', href: '/reviews' }] : []),
+        ...(isAdmin() ? [{ name: 'Business Info', href: '/business-info' }] : []),
         ...(user ? [{ name: 'Register User', href: '/register-user' }] : [])
       ]
     },
