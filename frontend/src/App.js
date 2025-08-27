@@ -123,6 +123,7 @@ function App() {
               <Route path="/urgent-care-booking" element={<UrgentCareBooking />} />
               <Route path="/urgent-care-appointments" element={<UrgentCareAppointments />} />
               <Route path="/forms/patient-registration-pdf" element={<PatientRegistrationPDF />} />
+              <Route path="/reviews" element={<Reviews />} />
             </Routes>
           </main>
           <Footer />
