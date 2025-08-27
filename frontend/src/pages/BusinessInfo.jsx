@@ -427,6 +427,8 @@ const BusinessInfo = () => {
                   <li>The hospital name and tagline appear in the header and footer</li>
                   <li>Contact information is displayed in multiple locations</li>
                   <li>Social media links will be shown in the footer (leave blank to hide)</li>
+                  <li>Hero images will rotate automatically on the home page slider</li>
+                  <li>Recommended image size: 1920x800 pixels for best quality</li>
                 </ul>
               </div>
             </div>
