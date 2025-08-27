@@ -19,10 +19,13 @@ import {
   Stethoscope,
   Plane
 } from 'lucide-react';
-import { hospitalInfo, services, specialOffers, heroImages } from '../mock';
+import { hospitalInfo, services, specialOffers } from '../mock';
+import axios from 'axios';
 
 const Home = () => {
   const [currentHeroImage, setCurrentHeroImage] = useState(0);
+  const [heroImages, setHeroImages] = useState([]);
+  const [heroImagesLoading, setHeroImagesLoading] = useState(true);
   const [hospitalHours, setHospitalHours] = useState(null);
   const [urgentCareHours, setUrgentCareHours] = useState(null);
   const [hoursLoading, setHoursLoading] = useState(true);
@@ -31,13 +34,52 @@ const Home = () => {
 
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
 
+  // Fetch slider images from API
+  useEffect(() => {
+    const fetchSliderImages = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/slider-images`);
+        if (response.data && response.data.slider_images) {
+          // Sort by order field (ascending) to display in proper order
+          const sortedImages = response.data.slider_images.sort((a, b) => (a.order || 0) - (b.order || 0));
+          setHeroImages(sortedImages);
+        }
+        setHeroImagesLoading(false);
+      } catch (err) {
+        console.error('Error fetching slider images:', err);
+        // Fallback to static images if API fails
+        setHeroImages([
+          {
+            id: 1,
+            title: "Professional Veterinary Care",
+            description: "Compassionate care for your beloved pets",
+            image_url: "https://customer-assets.emergentagent.com/job_peacock-pet-care/artifacts/ulwulpak_emilee.png",
+            order: 0
+          },
+          {
+            id: 2,
+            title: "State-of-the-Art Facility",
+            description: "Modern equipment and comfortable environment",
+            image_url: "https://customer-assets.emergentagent.com/job_peacock-pet-care/artifacts/ej59vv47_vanama.png",
+            order: 1
+          }
+        ]);
+        setHeroImagesLoading(false);
+      }
+    };
+
+    fetchSliderImages();
+  }, []);
+
   // Auto-rotate hero images
   React.useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentHeroImage((prev) => (prev + 1) % heroImages.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
+    if (heroImages.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentHeroImage((prev) => (prev + 1) % heroImages.length);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [heroImages]);
 
   // Fetch hours from database
   useEffect(() => {
