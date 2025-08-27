@@ -219,7 +219,7 @@ const PhotoManagement = () => {
     });
   };
 
-  const handleFileUpload = async (category, file) => {
+  const handleFileUpload = async (category, file, createTeamMember = false) => {
     setUploading(true);
     setError(null);
     
@@ -244,8 +244,14 @@ const PhotoManagement = () => {
           [category]: [...prev[category], result]
         }));
         
-        setSuccess(`Photo uploaded successfully to ${category}!`);
-        setTimeout(() => setSuccess(null), 3000);
+        // If this is for a team member, create the team member with the photo
+        if (createTeamMember && category === 'team') {
+          const photoUrl = `${API_BASE_URL}${result.url}`;
+          await handleCreateTeamMember(photoUrl);
+        } else {
+          setSuccess(`Photo uploaded successfully to ${category}!`);
+          setTimeout(() => setSuccess(null), 3000);
+        }
       } else {
         const errorData = await response.json();
         throw new Error(errorData.detail || 'Upload failed');
