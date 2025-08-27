@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Clock, Calendar, Plus, Edit2, Trash2, Save, AlertCircle, CheckCircle } from 'lucide-react';
+import { Clock, Calendar, Plus, Edit2, Trash2, Save, AlertCircle, CheckCircle, ExternalLink, RefreshCw } from 'lucide-react';
+import axios from 'axios';
 
 const ConfigureHours = () => {
   const { user, token, isAdmin, loading: authLoading } = useAuth();
