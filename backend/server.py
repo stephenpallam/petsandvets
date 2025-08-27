@@ -1534,6 +1534,80 @@ async def delete_team_member(
     return {"message": "Team member deleted successfully"}
 
 
+# Facility Photo API endpoints
+@api_router.get("/facility-photos", response_model=FacilityPhotosResponse)
+async def get_facility_photos():
+    """Get all facility photos (public endpoint)"""
+    facility_photos = await db.facility_photos.find().sort("order", 1).to_list(100)
+    return FacilityPhotosResponse(facility_photos=[FacilityPhoto(**photo) for photo in facility_photos])
+
+
+@api_router.post("/facility-photos", response_model=FacilityPhoto)
+async def create_facility_photo(
+    photo_data: FacilityPhotoCreate, 
+    current_user: User = Depends(get_admin_user)
+):
+    """Create a new facility photo (admin only)"""
+    now = datetime.utcnow()
+    facility_photo = FacilityPhoto(
+        id=str(uuid.uuid4()),
+        title=photo_data.title,
+        description=photo_data.description,
+        photo_url=photo_data.photo_url,
+        order=photo_data.order,
+        created_at=now,
+        updated_at=now
+    )
+    
+    await db.facility_photos.insert_one(facility_photo.dict())
+    return facility_photo
+
+
+@api_router.put("/facility-photos/{photo_id}", response_model=FacilityPhoto)
+async def update_facility_photo(
+    photo_id: str,
+    photo_data: FacilityPhotoUpdate,
+    current_user: User = Depends(get_admin_user)
+):
+    """Update a facility photo (admin only)"""
+    existing_photo = await db.facility_photos.find_one({"id": photo_id})
+    if not existing_photo:
+        raise HTTPException(status_code=404, detail="Facility photo not found")
+    
+    update_data = {}
+    if photo_data.title is not None:
+        update_data["title"] = photo_data.title
+    if photo_data.description is not None:
+        update_data["description"] = photo_data.description
+    if photo_data.photo_url is not None:
+        update_data["photo_url"] = photo_data.photo_url
+    if photo_data.order is not None:
+        update_data["order"] = photo_data.order
+    
+    if update_data:
+        update_data["updated_at"] = datetime.utcnow()
+        await db.facility_photos.update_one({"id": photo_id}, {"$set": update_data})
+        
+        # Get updated facility photo
+        updated_photo = await db.facility_photos.find_one({"id": photo_id})
+        return FacilityPhoto(**updated_photo)
+    
+    return FacilityPhoto(**existing_photo)
+
+
+@api_router.delete("/facility-photos/{photo_id}")
+async def delete_facility_photo(
+    photo_id: str, 
+    current_user: User = Depends(get_admin_user)
+):
+    """Delete a facility photo (admin only)"""
+    result = await db.facility_photos.delete_one({"id": photo_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Facility photo not found")
+    
+    return {"message": "Facility photo deleted successfully"}
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
