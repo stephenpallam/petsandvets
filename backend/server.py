@@ -270,6 +270,32 @@ class PatientRegistrationRequest(BaseModel):
     special_instructions: Optional[str] = ""
 
 
+class Review(BaseModel):
+    id: str
+    text: str
+    pet_name: str
+    owner_name: str
+    rating: int = 5  # Always 5 stars as per requirement
+    created_at: datetime
+    updated_at: datetime
+
+
+class ReviewCreate(BaseModel):
+    text: str
+    pet_name: str
+    owner_name: str
+
+
+class ReviewUpdate(BaseModel):
+    text: Optional[str] = None
+    pet_name: Optional[str] = None
+    owner_name: Optional[str] = None
+
+
+class ReviewsResponse(BaseModel):
+    reviews: List[Review]
+
+
 # Auth Utilities
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
