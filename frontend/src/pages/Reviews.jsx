@@ -41,16 +41,16 @@ const Reviews = () => {
 
   useEffect(() => {
     // Only fetch if user is logged in and has admin privileges
-    if (user?.token && user?.role === 'admin') {
+    if (user && isAdmin()) {
       fetchReviews();
-    } else if (user && user.role !== 'admin') {
+    } else if (user && !isAdmin()) {
       setError('Access denied. Admin privileges required.');
       setLoading(false);
     } else {
       setError('Please log in as an admin to manage reviews.');
       setLoading(false);
     }
-  }, [user]);
+  }, [user, isAdmin]);
 
   const handleInputChange = (e) => {
     setFormData({
