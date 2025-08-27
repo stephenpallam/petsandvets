@@ -91,7 +91,12 @@ const PhotoManagement = () => {
 
   useEffect(() => {
     if (user && isAdmin()) {
-      fetchUploadedFiles();
+      const loadData = async () => {
+        await fetchUploadedFiles();
+        await fetchTeamMembers();
+        setLoading(false);
+      };
+      loadData();
     } else if (user && !isAdmin()) {
       setError('Access denied. Admin privileges required.');
       setLoading(false);
@@ -100,6 +105,119 @@ const PhotoManagement = () => {
       setLoading(false);
     }
   }, [user]);
+
+  const handleTeamMemberFormChange = (e) => {
+    const { name, value } = e.target;
+    setTeamMemberForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleCreateTeamMember = async (photoUrl) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/team-members`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...teamMemberForm,
+          photo_url: photoUrl
+        })
+      });
+
+      if (response.ok) {
+        await fetchTeamMembers();
+        setTeamMemberForm({
+          name: '',
+          title: '',
+          bio: '',
+          credentials: '',
+          photo_url: '',
+          order: 0
+        });
+        setShowTeamMemberForm(false);
+        setSuccess('Team member created successfully!');
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to create team member');
+      }
+    } catch (err) {
+      setError(`Failed to create team member: ${err.message}`);
+    }
+  };
+
+  const handleUpdateTeamMember = async (memberId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/team-members/${memberId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(teamMemberForm)
+      });
+
+      if (response.ok) {
+        await fetchTeamMembers();
+        setEditingTeamMember(null);
+        setTeamMemberForm({
+          name: '',
+          title: '',
+          bio: '',
+          credentials: '',
+          photo_url: '',
+          order: 0
+        });
+        setSuccess('Team member updated successfully!');
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        throw new Error('Failed to update team member');
+      }
+    } catch (err) {
+      setError(`Failed to update team member: ${err.message}`);
+    }
+  };
+
+  const handleDeleteTeamMember = async (memberId) => {
+    if (!window.confirm('Are you sure you want to delete this team member?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/team-members/${memberId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        await fetchTeamMembers();
+        setSuccess('Team member deleted successfully!');
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        throw new Error('Failed to delete team member');
+      }
+    } catch (err) {
+      setError(`Failed to delete team member: ${err.message}`);
+    }
+  };
+
+  const startEditTeamMember = (member) => {
+    setEditingTeamMember(member.id);
+    setTeamMemberForm({
+      name: member.name,
+      title: member.title,
+      bio: member.bio,
+      credentials: member.credentials,
+      photo_url: member.photo_url,
+      order: member.order
+    });
+  };
 
   const handleFileUpload = async (category, file) => {
     setUploading(true);
