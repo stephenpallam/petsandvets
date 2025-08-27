@@ -66,6 +66,30 @@ const Home = () => {
     fetchHours();
   }, []);
 
+  // Fetch reviews from database
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/reviews`);
+        if (response.ok) {
+          const data = await response.json();
+          setTestimonials(data.reviews || []);
+        } else {
+          // Fallback to empty array if API fails
+          setTestimonials([]);
+        }
+      } catch (error) {
+        console.error('Error fetching reviews:', error);
+        // Fallback to empty array if API fails
+        setTestimonials([]);
+      } finally {
+        setTestimonialsLoading(false);
+      }
+    };
+
+    fetchReviews();
+  }, []);
+
   // Helper function to get current day of week
   const getCurrentDay = () => {
     const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
