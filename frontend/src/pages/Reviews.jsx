@@ -15,11 +15,6 @@ const Reviews = () => {
   });
 
   const { user, token, isAdmin } = useAuth();
-
-  // Debug logging
-  console.log('Reviews component - user:', user);
-  console.log('Reviews component - token:', token);
-  console.log('Reviews component - isAdmin():', isAdmin());
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
 
   const fetchReviews = async () => {
