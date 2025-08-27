@@ -348,7 +348,41 @@ const BusinessInfo = () => {
             </div>
 
             {/* Submit Button */}
-            <div className="flex justify-end pt-6 border-t border-gray-200">
+            <div className="flex justify-between items-center pt-6 border-t border-gray-200">
+              {/* Google Sync Section */}
+              <div className="flex items-center space-x-4">
+                {googleConnected ? (
+                  <button
+                    type="button"
+                    onClick={handleGoogleSync}
+                    disabled={syncing}
+                    className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {syncing ? (
+                      <>
+                        <RefreshCw className="animate-spin h-4 w-4 mr-2" />
+                        Syncing to Google...
+                      </>
+                    ) : (
+                      <>
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        Sync to Google Business
+                      </>
+                    )}
+                  </button>
+                ) : (
+                  <div className="text-sm text-gray-500">
+                    <a 
+                      href="/google-integration" 
+                      className="text-blue-600 hover:text-blue-500 underline"
+                    >
+                      Connect Google Business Profile
+                    </a> to sync automatically
+                  </div>
+                )}
+              </div>
+
+              {/* Save Button */}
               <button
                 type="submit"
                 disabled={saving}
