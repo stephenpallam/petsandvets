@@ -349,20 +349,20 @@ const Header = () => {
 
           {/* Mobile Layout */}
           <div className="md:hidden">
-            {/* First Row: Phone and Hours Status */}
-            <div className="flex justify-between items-center text-xs mb-1">
+            {/* First Row: Phone */}
+            <div className="flex justify-between items-start text-xs mb-1">
               <div className="flex items-center space-x-1">
                 <Phone className="h-3 w-3" />
                 <span>{businessInfo?.phone || "(703) 957-3297"}</span>
               </div>
-              <div className="flex items-center space-x-3">
+              <div className="flex flex-col items-end space-y-1">
                 <div className="flex items-center space-x-1">
                   <Clock className="h-3 w-3" />
-                  <span>GP: {getGeneralPracticeStatus()}</span>
+                  <span>General Practice: {getGeneralPracticeStatus()}</span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <Clock className="h-3 w-3" />
-                  <span>UC: {getUrgentCareStatus()}</span>
+                  <span>Urgent Care: {getUrgentCareStatus()}</span>
                 </div>
               </div>
             </div>
