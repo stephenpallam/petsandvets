@@ -717,6 +717,163 @@ const PhotoManagement = () => {
     });
   };
 
+  // Facility Photo Management Functions
+  const fetchFacilityPhotos = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/facility-photos`);
+      if (response.ok) {
+        const data = await response.json();
+        setFacilityPhotos(data.facility_photos || []);
+      }
+    } catch (err) {
+      console.error('Error fetching facility photos:', err);
+      setFacilityPhotos([]);
+    }
+  };
+
+  const handleCreateFacilityPhoto = async (photoUrl) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/facility-photos`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...facilityForm,
+          photo_url: photoUrl
+        })
+      });
+
+      if (response.ok) {
+        await fetchFacilityPhotos();
+        setFacilityForm({
+          title: '',
+          description: '',
+          photo_url: '',
+          order: 0
+        });
+        setShowFacilityForm(false);
+        setSuccess('Facility photo created successfully!');
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to create facility photo');
+      }
+    } catch (err) {
+      setError(`Failed to create facility photo: ${err.message}`);
+    }
+  };
+
+  const handleUpdateFacility = async (photoId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/facility-photos/${photoId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(facilityForm)
+      });
+
+      if (response.ok) {
+        await fetchFacilityPhotos();
+        setEditingFacility(null);
+        setFacilityForm({
+          title: '',
+          description: '',
+          photo_url: '',
+          order: 0
+        });
+        setSuccess('Facility photo updated successfully!');
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        throw new Error('Failed to update facility photo');
+      }
+    } catch (err) {
+      setError(`Failed to update facility photo: ${err.message}`);
+    }
+  };
+
+  const handleDeleteFacility = async (photoId) => {
+    if (!window.confirm('Are you sure you want to delete this facility photo?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/facility-photos/${photoId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        await fetchFacilityPhotos();
+        setSuccess('Facility photo deleted successfully!');
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        throw new Error('Failed to delete facility photo');
+      }
+    } catch (err) {
+      setError(`Failed to delete facility photo: ${err.message}`);
+    }
+  };
+
+  const startEditFacility = (photo) => {
+    setEditingFacility(photo.id);
+    setFacilityForm({
+      title: photo.title,
+      description: photo.description,
+      photo_url: photo.photo_url,
+      order: photo.order
+    });
+  };
+
+  const handleFacilityUpload = async (file, createFacilityPhoto = false) => {
+    setUploading(true);
+    setError(null);
+    
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch(`${API_BASE_URL}/api/upload/facility`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        
+        // Update the uploaded files list
+        setUploadedFiles(prev => ({
+          ...prev,
+          facility: [...prev.facility, result]
+        }));
+        
+        // If this is for a facility photo with metadata, create the facility photo record
+        if (createFacilityPhoto) {
+          const photoUrl = `${API_BASE_URL}${result.url}`;
+          await handleCreateFacilityPhoto(photoUrl);
+        } else {
+          setSuccess(`Photo uploaded successfully to facility!`);
+          setTimeout(() => setSuccess(null), 3000);
+        }
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Upload failed');
+      }
+    } catch (err) {
+      setError(`Upload failed: ${err.message}`);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleFileUpload = async (category, file, createTeamMember = false) => {
     setUploading(true);
     setError(null);
