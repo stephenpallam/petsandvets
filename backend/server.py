@@ -416,6 +416,68 @@ class SliderImagesResponse(BaseModel):
     slider_images: List[SliderImage]
 
 
+# Google Business Profile Integration Models
+class GoogleBusinessSettings(BaseModel):
+    id: str
+    client_id: str
+    client_secret: str
+    refresh_token: Optional[str] = None
+    access_token: Optional[str] = None
+    token_expiry: Optional[datetime] = None
+    account_id: Optional[str] = None
+    location_id: Optional[str] = None
+    is_connected: bool = False
+    auto_sync_enabled: bool = True
+    last_sync_at: Optional[datetime] = None
+    created_at: datetime
+    updated_at: datetime
+
+
+class GoogleBusinessSettingsCreate(BaseModel):
+    client_id: str
+    client_secret: str
+    auto_sync_enabled: Optional[bool] = True
+
+
+class GoogleBusinessSettingsUpdate(BaseModel):
+    client_id: Optional[str] = None
+    client_secret: Optional[str] = None  
+    auto_sync_enabled: Optional[bool] = None
+
+
+class GoogleSyncLog(BaseModel):
+    id: str
+    sync_type: str  # "hours", "business_info", "manual", "auto"
+    status: str     # "success", "failed", "partial"
+    message: str
+    details: Optional[dict] = None
+    synced_at: datetime
+
+
+class GoogleSyncLogsResponse(BaseModel):
+    sync_logs: List[GoogleSyncLog]
+
+
+class GoogleAuthUrl(BaseModel):
+    auth_url: str
+    state: str
+
+
+class GoogleAuthCallback(BaseModel):
+    code: str
+    state: str
+
+
+class GoogleSyncRequest(BaseModel):
+    sync_type: str  # "general_practice", "urgent_care", "special_hours", "business_info"
+
+
+class GoogleSyncResponse(BaseModel):
+    success: bool
+    message: str
+    details: Optional[dict] = None
+
+
 # Auth Utilities
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
