@@ -1615,7 +1615,25 @@ const PhotoManagement = () => {
                   <h2 className="text-lg font-medium text-gray-900 mb-2">{tab.name}</h2>
                   <p className="text-gray-600">{tab.description}</p>
                 </div>
-                {tab.id === 'team' ? (
+                {tab.id === 'homepageslider' ? (
+                  <SliderSection 
+                    sliderImages={sliderImages}
+                    showSliderForm={showSliderForm}
+                    setShowSliderForm={setShowSliderForm}
+                    editingSlider={editingSlider}
+                    setEditingSlider={setEditingSlider}
+                    sliderForm={sliderForm}
+                    handleSliderFormChange={handleSliderFormChange}
+                    handleSliderUpload={handleSliderUpload}
+                    handleUpdateSlider={handleUpdateSlider}
+                    handleDeleteSlider={handleDeleteSlider}
+                    startEditSlider={startEditSlider}
+                    uploading={uploading}
+                    error={error}
+                    setError={setError}
+                    API_BASE_URL={API_BASE_URL}
+                  />
+                ) : tab.id === 'team' ? (
                   <TeamMemberSection 
                     teamMembers={teamMembers}
                     showTeamMemberForm={showTeamMemberForm}
