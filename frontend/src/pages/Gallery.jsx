@@ -238,7 +238,7 @@ const Gallery = () => {
             </button>
             
             <img
-              src={selectedImage.url}
+              src={selectedImage.photo_url}
               alt={selectedImage.title}
               className="max-w-full max-h-full object-contain rounded-lg"
               onClick={(e) => e.stopPropagation()}
