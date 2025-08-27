@@ -769,7 +769,22 @@ const PhotoManagement = () => {
                   <p className="text-gray-600">{tab.description}</p>
                 </div>
                 {tab.id === 'team' ? (
-                  <TeamMemberSection />
+                  <TeamMemberSection 
+                    teamMembers={teamMembers}
+                    showTeamMemberForm={showTeamMemberForm}
+                    setShowTeamMemberForm={setShowTeamMemberForm}
+                    editingTeamMember={editingTeamMember}
+                    setEditingTeamMember={setEditingTeamMember}
+                    teamMemberForm={teamMemberForm}
+                    handleTeamMemberFormChange={handleTeamMemberFormChange}
+                    handleFileUpload={handleFileUpload}
+                    handleUpdateTeamMember={handleUpdateTeamMember}
+                    handleDeleteTeamMember={handleDeleteTeamMember}
+                    startEditTeamMember={startEditTeamMember}
+                    error={error}
+                    setError={setError}
+                    API_BASE_URL={API_BASE_URL}
+                  />
                 ) : (
                   <FileUploadSection 
                     category={tab.id} 
