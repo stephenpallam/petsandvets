@@ -41,6 +41,7 @@ const BusinessInfo = () => {
   };
 
   useEffect(() => {
+    // Only fetch if user is logged in and has admin privileges
     if (user && isAdmin()) {
       fetchBusinessInfo();
     } else if (user && !isAdmin()) {
@@ -50,7 +51,7 @@ const BusinessInfo = () => {
       setError('Please log in as an admin to manage business information.');
       setLoading(false);
     }
-  }, [user, isAdmin]);
+  }, [user]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
