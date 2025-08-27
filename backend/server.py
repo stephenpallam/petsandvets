@@ -1152,6 +1152,94 @@ async def delete_review(review_id: str, current_user: User = Depends(get_admin_u
     return {"message": "Review deleted successfully"}
 
 
+# Business Information API endpoints
+@api_router.get("/business-info", response_model=BusinessInfo)
+async def get_business_info():
+    """Get business information (public endpoint)"""
+    business_info = await db.business_info.find_one()
+    
+    if not business_info:
+        # Return default values if no business info exists
+        now = datetime.utcnow()
+        default_info = BusinessInfo(
+            id=str(uuid.uuid4()),
+            hospital_name="Pets and Vets Animal Hospital & Urgent Care",
+            tagline="Compassionate Care for Your Beloved Pets", 
+            phone="(703) 957-3297",
+            email="vet@petsandvetsanimalhospital.com",
+            address="43114 Peacock Market Plaza, Suite F110, South Riding, VA 20152",
+            facebook_link="",
+            instagram_link="",
+            twitter_link="",
+            created_at=now,
+            updated_at=now
+        )
+        # Save default to database
+        await db.business_info.insert_one(default_info.dict())
+        return default_info
+    
+    return BusinessInfo(**business_info)
+
+
+@api_router.put("/business-info", response_model=BusinessInfo)
+async def update_business_info(
+    business_data: BusinessInfoUpdate, 
+    current_user: User = Depends(get_admin_user)
+):
+    """Update business information (admin only)"""
+    
+    # Get existing business info
+    existing_info = await db.business_info.find_one()
+    
+    if not existing_info:
+        # Create new business info if doesn't exist
+        now = datetime.utcnow()
+        new_info = BusinessInfo(
+            id=str(uuid.uuid4()),
+            hospital_name=business_data.hospital_name or "Pets and Vets Animal Hospital & Urgent Care",
+            tagline=business_data.tagline or "Compassionate Care for Your Beloved Pets",
+            phone=business_data.phone or "(703) 957-3297", 
+            email=business_data.email or "vet@petsandvetsanimalhospital.com",
+            address=business_data.address or "43114 Peacock Market Plaza, Suite F110, South Riding, VA 20152",
+            facebook_link=business_data.facebook_link or "",
+            instagram_link=business_data.instagram_link or "",
+            twitter_link=business_data.twitter_link or "",
+            created_at=now,
+            updated_at=now
+        )
+        await db.business_info.insert_one(new_info.dict())
+        return new_info
+    
+    # Update existing business info
+    update_data = {}
+    if business_data.hospital_name is not None:
+        update_data["hospital_name"] = business_data.hospital_name
+    if business_data.tagline is not None:
+        update_data["tagline"] = business_data.tagline
+    if business_data.phone is not None:
+        update_data["phone"] = business_data.phone
+    if business_data.email is not None:
+        update_data["email"] = business_data.email
+    if business_data.address is not None:
+        update_data["address"] = business_data.address
+    if business_data.facebook_link is not None:
+        update_data["facebook_link"] = business_data.facebook_link
+    if business_data.instagram_link is not None:
+        update_data["instagram_link"] = business_data.instagram_link
+    if business_data.twitter_link is not None:
+        update_data["twitter_link"] = business_data.twitter_link
+    
+    if update_data:
+        update_data["updated_at"] = datetime.utcnow()
+        await db.business_info.update_one({}, {"$set": update_data})
+        
+        # Get updated business info
+        updated_info = await db.business_info.find_one()
+        return BusinessInfo(**updated_info)
+    
+    return BusinessInfo(**existing_info)
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
