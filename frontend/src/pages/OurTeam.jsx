@@ -96,26 +96,56 @@ const OurTeam = () => {
             Meet Our Veterinary Professionals
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {team.map((member) => (
-              <div key={member.id} className="bg-white rounded-xl shadow-md overflow-hidden">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">{member.name}</h3>
-                  <p className="font-semibold mb-3 text-sm" style={{ color: primaryColor }}>{member.role}</p>
-                  <p className="text-gray-600 mb-4 text-sm leading-relaxed">{member.bio}</p>
-                  <div className="flex items-center">
-                    <GraduationCap className="h-4 w-4 mr-2" style={{ color: primaryColor }} />
-                    <p className="text-xs text-gray-500 font-medium">{member.education}</p>
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              <span className="ml-4 text-gray-600">Loading our team...</span>
+            </div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <Users className="h-16 w-16 mx-auto text-gray-300 mb-4" />
+              <p className="text-gray-600 mb-4">{error}</p>
+              <p className="text-gray-500 text-sm">Please try refreshing the page or contact us if the problem persists.</p>
+            </div>
+          ) : teamMembers.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {teamMembers.map((member) => (
+                <div key={member.id} className="bg-white rounded-xl shadow-md overflow-hidden">
+                  <div className="w-full h-48 bg-gray-100 overflow-hidden">
+                    <img
+                      src={member.photo_url}
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                    <div className="hidden w-full h-full items-center justify-center bg-gray-100">
+                      <Users className="h-12 w-12 text-gray-400" />
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">{member.name}</h3>
+                    <p className="font-semibold mb-3 text-sm" style={{ color: primaryColor }}>{member.title}</p>
+                    <p className="text-gray-600 mb-4 text-sm leading-relaxed">{member.bio}</p>
+                    {member.credentials && (
+                      <div className="flex items-center">
+                        <GraduationCap className="h-4 w-4 mr-2" style={{ color: primaryColor }} />
+                        <p className="text-xs text-gray-500 font-medium">{member.credentials}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <Users className="h-16 w-16 mx-auto text-gray-300 mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Meet Our Team Coming Soon</h3>
+              <p className="text-gray-600">We're updating our team profiles. Please check back soon or contact us to learn more about our veterinary professionals.</p>
+            </div>
+          )}
         </div>
       </section>
 
