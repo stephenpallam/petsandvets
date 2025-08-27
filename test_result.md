@@ -516,7 +516,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Reviews API System"
+    - "Business Information API System"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -524,6 +524,7 @@ test_plan:
   urgent_care_booking_testing_complete: true
   patient_registration_testing_needed: false
   reviews_api_testing_complete: true
+  business_info_api_testing_complete: true
 
 agent_communication:
   - agent: "main"
