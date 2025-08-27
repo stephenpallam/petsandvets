@@ -584,6 +584,7 @@ const PhotoManagement = () => {
       const loadData = async () => {
         await fetchUploadedFiles();
         await fetchTeamMembers();
+        await fetchFacilityPhotos();
         setLoading(false);
       };
       loadData();
