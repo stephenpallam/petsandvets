@@ -1636,6 +1636,80 @@ async def delete_facility_photo(
     return {"message": "Facility photo deleted successfully"}
 
 
+# Slider Image API endpoints  
+@api_router.get("/slider-images", response_model=SliderImagesResponse)
+async def get_slider_images():
+    """Get all slider images (public endpoint)"""
+    slider_images = await db.slider_images.find().sort("order", 1).to_list(100)
+    return SliderImagesResponse(slider_images=[SliderImage(**image) for image in slider_images])
+
+
+@api_router.post("/slider-images", response_model=SliderImage)
+async def create_slider_image(
+    image_data: SliderImageCreate, 
+    current_user: User = Depends(get_admin_user)
+):
+    """Create a new slider image (admin only)"""
+    now = datetime.utcnow()
+    slider_image = SliderImage(
+        id=str(uuid.uuid4()),
+        title=image_data.title,
+        description=image_data.description,
+        image_url=image_data.image_url,
+        order=image_data.order,
+        created_at=now,
+        updated_at=now
+    )
+    
+    await db.slider_images.insert_one(slider_image.dict())
+    return slider_image
+
+
+@api_router.put("/slider-images/{image_id}", response_model=SliderImage)
+async def update_slider_image(
+    image_id: str,
+    image_data: SliderImageUpdate,
+    current_user: User = Depends(get_admin_user)
+):
+    """Update a slider image (admin only)"""
+    existing_image = await db.slider_images.find_one({"id": image_id})
+    if not existing_image:
+        raise HTTPException(status_code=404, detail="Slider image not found")
+    
+    update_data = {}
+    if image_data.title is not None:
+        update_data["title"] = image_data.title
+    if image_data.description is not None:
+        update_data["description"] = image_data.description
+    if image_data.image_url is not None:
+        update_data["image_url"] = image_data.image_url
+    if image_data.order is not None:
+        update_data["order"] = image_data.order
+    
+    if update_data:
+        update_data["updated_at"] = datetime.utcnow()
+        await db.slider_images.update_one({"id": image_id}, {"$set": update_data})
+        
+        # Get updated slider image
+        updated_image = await db.slider_images.find_one({"id": image_id})
+        return SliderImage(**updated_image)
+    
+    return SliderImage(**existing_image)
+
+
+@api_router.delete("/slider-images/{image_id}")
+async def delete_slider_image(
+    image_id: str, 
+    current_user: User = Depends(get_admin_user)
+):
+    """Delete a slider image (admin only)"""
+    result = await db.slider_images.delete_one({"id": image_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Slider image not found")
+    
+    return {"message": "Slider image deleted successfully"}
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
