@@ -2746,6 +2746,21 @@ def run_all_tests():
     test_reviews_public_endpoint_limit()
     test_review_validation()
     
+    print("\n" + "="*50)
+    print("BUSINESS INFORMATION API TESTS")
+    print("="*50)
+    
+    # Business Information API Tests - NEW
+    test_get_business_info_public()
+    test_get_business_info_creates_default()
+    test_update_business_info_admin()
+    test_update_business_info_partial()
+    test_update_business_info_no_auth()
+    test_update_business_info_regular_user()
+    test_business_info_social_media_optional()
+    test_business_info_database_storage()
+    test_business_info_timestamps()
+    
     # Print summary
     success = results.summary()
     return success
