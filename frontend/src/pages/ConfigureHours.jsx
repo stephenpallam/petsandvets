@@ -61,7 +61,47 @@ const ConfigureHours = () => {
       return;
     }
     fetchHours();
+    checkGoogleConnection();
   }, [authLoading, isAdmin]);
+
+  const checkGoogleConnection = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/google-business/settings`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      setGoogleConnected(response.data.is_connected || false);
+    } catch (err) {
+      console.error('Error checking Google connection:', err);
+    }
+  };
+
+  const handleGoogleSync = async (syncType) => {
+    setSyncing(true);
+    setMessage({ type: '', text: '' });
+
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/google-business/sync`, 
+        { sync_type: syncType },
+        {
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (response.data.success) {
+        setMessage({ type: 'success', text: `${syncType === 'general_practice' ? 'General Practice' : 'Urgent Care'} hours synced to Google Business Profile successfully!` });
+      } else {
+        setMessage({ type: 'error', text: response.data.message || 'Sync failed' });
+      }
+    } catch (err) {
+      setMessage({ type: 'error', text: err.response?.data?.detail || 'Failed to sync to Google Business Profile' });
+    } finally {
+      setSyncing(false);
+      setTimeout(() => setMessage({ type: '', text: '' }), 5000);
+    }
+  };
 
   const fetchHours = async () => {
     try {
