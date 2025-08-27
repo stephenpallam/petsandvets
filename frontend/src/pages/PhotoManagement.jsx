@@ -604,6 +604,14 @@ const PhotoManagement = () => {
     }));
   }, []);
 
+  const handleFacilityFormChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setFacilityForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  }, []);
+
   const handleCreateTeamMember = async (photoUrl) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/team-members`, {
