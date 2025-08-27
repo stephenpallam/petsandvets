@@ -528,6 +528,9 @@ const PhotoManagement = () => {
       )}
     </div>
   );
+
+  // FileUploadSection component  
+  const FileUploadSection = ({ category, files }) => (
     <div className="space-y-6">
       {/* Upload Area */}
       <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50 hover:bg-gray-100 transition-colors">
