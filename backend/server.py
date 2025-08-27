@@ -296,6 +296,31 @@ class ReviewsResponse(BaseModel):
     reviews: List[Review]
 
 
+class BusinessInfo(BaseModel):
+    id: str
+    hospital_name: str
+    tagline: str
+    phone: str
+    email: str
+    address: str
+    facebook_link: Optional[str] = ""
+    instagram_link: Optional[str] = ""
+    twitter_link: Optional[str] = ""
+    created_at: datetime
+    updated_at: datetime
+
+
+class BusinessInfoUpdate(BaseModel):
+    hospital_name: Optional[str] = None
+    tagline: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    address: Optional[str] = None
+    facebook_link: Optional[str] = None
+    instagram_link: Optional[str] = None
+    twitter_link: Optional[str] = None
+
+
 # Auth Utilities
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
