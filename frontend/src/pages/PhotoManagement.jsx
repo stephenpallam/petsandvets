@@ -1576,7 +1576,13 @@ const PhotoManagement = () => {
                   >
                     <Icon className="h-5 w-5 mr-2" />
                     {tab.name}
-                    {tab.id === 'team' ? (
+                    {tab.id === 'homepageslider' ? (
+                      sliderImages && sliderImages.length > 0 && (
+                        <span className="ml-2 bg-blue-100 text-blue-600 text-xs px-2 py-0.5 rounded-full">
+                          {sliderImages.length}
+                        </span>
+                      )
+                    ) : tab.id === 'team' ? (
                       teamMembers && teamMembers.length > 0 && (
                         <span className="ml-2 bg-blue-100 text-blue-600 text-xs px-2 py-0.5 rounded-full">
                           {teamMembers.length}
