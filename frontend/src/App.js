@@ -131,6 +131,7 @@ function App() {
               <Route path="/business-info" element={<BusinessInfo />} />
               <Route path="/photo-management" element={<PhotoManagement />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/google-integration" element={<GoogleIntegration />} />
             </Routes>
           </main>
           <Footer />
