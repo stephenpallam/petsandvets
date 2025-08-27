@@ -60,27 +60,53 @@ const Header = () => {
     
     const gpHours = currentHours.general_practice;
     
-    // Check if it's closed for the day
-    if (gpHours.toLowerCase().includes('closed')) {
-      return "Closed";
-    }
-    
-    // Parse hours like "9:00 AM - 6:00 PM"
-    try {
-      const timeRange = gpHours.split(' - ');
-      if (timeRange.length !== 2) return "Closed";
-      
-      const startTime = parseTimeString(timeRange[0].trim());
-      const endTime = parseTimeString(timeRange[1].trim());
-      
-      if (currentTime >= startTime && currentTime < endTime) {
-        return "Open";
-      } else {
+    // Handle case where gpHours is an object with open_time and close_time
+    if (typeof gpHours === 'object' && gpHours.open_time && gpHours.close_time) {
+      // Check if it's closed for the day
+      if (gpHours.open_time.toLowerCase().includes('closed') || gpHours.close_time.toLowerCase().includes('closed')) {
         return "Closed";
       }
-    } catch (error) {
-      return "Closed";
+      
+      try {
+        const startTime = parseTimeString(gpHours.open_time);
+        const endTime = parseTimeString(gpHours.close_time);
+        
+        if (currentTime >= startTime && currentTime < endTime) {
+          return "Open";
+        } else {
+          return "Closed";
+        }
+      } catch (error) {
+        return "Closed";
+      }
     }
+    
+    // Handle case where gpHours is a string like "9:00 AM - 6:00 PM"
+    if (typeof gpHours === 'string') {
+      // Check if it's closed for the day
+      if (gpHours.toLowerCase().includes('closed')) {
+        return "Closed";
+      }
+      
+      // Parse hours like "9:00 AM - 6:00 PM"
+      try {
+        const timeRange = gpHours.split(' - ');
+        if (timeRange.length !== 2) return "Closed";
+        
+        const startTime = parseTimeString(timeRange[0].trim());
+        const endTime = parseTimeString(timeRange[1].trim());
+        
+        if (currentTime >= startTime && currentTime < endTime) {
+          return "Open";
+        } else {
+          return "Closed";
+        }
+      } catch (error) {
+        return "Closed";
+      }
+    }
+    
+    return "Closed";
   };
 
   // Helper function to parse time strings like "9:00 AM" to HHMM format
