@@ -19,13 +19,15 @@ import {
   Stethoscope,
   Plane
 } from 'lucide-react';
-import { hospitalInfo, services, specialOffers, testimonials, heroImages } from '../mock';
+import { hospitalInfo, services, specialOffers, heroImages } from '../mock';
 
 const Home = () => {
   const [currentHeroImage, setCurrentHeroImage] = useState(0);
   const [hospitalHours, setHospitalHours] = useState(null);
   const [urgentCareHours, setUrgentCareHours] = useState(null);
   const [hoursLoading, setHoursLoading] = useState(true);
+  const [testimonials, setTestimonials] = useState([]);
+  const [testimonialsLoading, setTestimonialsLoading] = useState(true);
 
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
 
