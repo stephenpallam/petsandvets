@@ -208,26 +208,6 @@ const ConfigureHours = () => {
     });
   };
 
-  const updateHospitalHours = (day, field, value) => {
-    setHospitalHours({
-      ...hospitalHours,
-      [day]: {
-        ...hospitalHours[day],
-        [field]: value
-      }
-    });
-  };
-
-  const updateUrgentCareHours = (day, field, value) => {
-    setUrgentCareHours({
-      ...urgentCareHours,
-      [day]: {
-        ...urgentCareHours[day],
-        [field]: value
-      }
-    });
-  };
-
   const saveHours = async (type) => {
     setLoading(true);
     setMessage({ type: '', text: '' });
