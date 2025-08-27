@@ -11,7 +11,8 @@ const BusinessInfo = () => {
     address: '',
     facebook_link: '',
     instagram_link: '',
-    twitter_link: ''
+    twitter_link: '',
+    hero_images: []
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
