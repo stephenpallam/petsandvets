@@ -7,12 +7,10 @@ import axios from 'axios';
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const [showLogin, setShowLogin] = useState(false);
-  const [showRegister, setShowRegister] = useState(false);
   const [businessInfo, setBusinessInfo] = useState(null);
   const [currentHours, setCurrentHours] = useState(null);
   const location = useLocation();
-  const { user, logout, isAdmin } = useAuth();
+  const { user, isAdmin } = useAuth();
 
   // Fetch business information and current hours
   useEffect(() => {
