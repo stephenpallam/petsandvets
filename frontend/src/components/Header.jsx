@@ -177,7 +177,8 @@ const Header = () => {
       {/* Top Bar */}
       <div className="text-white py-2" style={{ backgroundColor: '#29add3' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center text-sm">
+          {/* Desktop Layout */}
+          <div className="hidden md:flex justify-between items-center text-sm">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-1">
                 <Phone className="h-4 w-4" />
@@ -212,6 +213,47 @@ const Header = () => {
                   <LogIn className="h-4 w-4" />
                 </button>
               )}
+            </div>
+          </div>
+
+          {/* Mobile Layout */}
+          <div className="md:hidden">
+            {/* First Row: Phone and Urgent Care */}
+            <div className="flex justify-between items-center text-xs mb-1">
+              <div className="flex items-center space-x-1">
+                <Phone className="h-3 w-3" />
+                <span>{hospitalInfo.phone}</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-1">
+                  <Clock className="h-3 w-3" />
+                  <span>Urgent Care: {getUrgentCareStatus()}</span>
+                </div>
+                {/* Auth Button in Top Bar */}
+                {user ? (
+                  <button
+                    onClick={logout}
+                    className="flex items-center text-white hover:text-gray-200 transition-colors"
+                    title={`Logout ${user.full_name}`}
+                  >
+                    <LogOut className="h-3 w-3" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setShowLogin(true)}
+                    className="flex items-center text-white hover:text-gray-200 transition-colors"
+                    title="Login"
+                  >
+                    <LogIn className="h-3 w-3" />
+                  </button>
+                )}
+              </div>
+            </div>
+            
+            {/* Second Row: Address */}
+            <div className="flex items-center space-x-1 text-xs">
+              <MapPin className="h-3 w-3 flex-shrink-0" />
+              <span className="truncate text-xs">{hospitalInfo.address}</span>
             </div>
           </div>
         </div>
