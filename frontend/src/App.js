@@ -127,6 +127,7 @@ function App() {
               <Route path="/forms/patient-registration-pdf" element={<PatientRegistrationPDF />} />
               <Route path="/reviews" element={<Reviews />} />
               <Route path="/business-info" element={<BusinessInfo />} />
+              <Route path="/photo-management" element={<PhotoManagement />} />
             </Routes>
           </main>
           <Footer />
