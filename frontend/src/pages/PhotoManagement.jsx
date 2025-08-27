@@ -366,13 +366,13 @@ const PhotoManagement = () => {
     }
   }, [user]);
 
-  const handleTeamMemberFormChange = (e) => {
+  const handleTeamMemberFormChange = useCallback((e) => {
     const { name, value } = e.target;
     setTeamMemberForm(prev => ({
       ...prev,
       [name]: value
     }));
-  };
+  }, []);
 
   const handleCreateTeamMember = async (photoUrl) => {
     try {
