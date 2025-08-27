@@ -14,6 +14,19 @@ const Header = () => {
   const location = useLocation();
   const { user, logout, isAdmin } = useAuth();
 
+  // Function to determine if urgent care is currently open
+  const getUrgentCareStatus = () => {
+    const now = new Date();
+    const currentHour = now.getHours();
+    
+    // Urgent Care hours: 3 PM - 10 PM Daily (15:00 - 22:00)
+    if (currentHour >= 15 && currentHour < 22) {
+      return "Open";
+    } else {
+      return "Closed";
+    }
+  };
+
   const navigation = [
     { name: 'Home', href: '/' },
     { 
