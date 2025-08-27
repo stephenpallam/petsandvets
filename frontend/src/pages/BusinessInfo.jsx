@@ -20,6 +20,11 @@ const BusinessInfo = () => {
   const [success, setSuccess] = useState(null);
 
   const { user, token, isAdmin } = useAuth();
+  
+  // Debug logging (temporary)
+  console.log('BusinessInfo - user:', user);
+  console.log('BusinessInfo - token:', token);
+  console.log('BusinessInfo - isAdmin():', isAdmin());
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
 
   const fetchBusinessInfo = async () => {
