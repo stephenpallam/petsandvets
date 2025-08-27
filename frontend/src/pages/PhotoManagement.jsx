@@ -236,6 +236,7 @@ const TeamMemberSection = ({
   handleUpdateTeamMember,
   handleDeleteTeamMember,
   startEditTeamMember,
+  uploading,
   error,
   setError,
   API_BASE_URL
