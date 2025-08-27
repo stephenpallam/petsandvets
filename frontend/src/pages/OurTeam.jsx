@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Users,
@@ -10,12 +10,38 @@ import {
   GraduationCap,
   Stethoscope
 } from 'lucide-react';
-import { hospitalInfo, team } from '../mock';
+import { hospitalInfo } from '../mock';
+import axios from 'axios';
 
 const OurTeam = () => {
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
   const primaryColor = '#29add3';
   const primaryLight = '#5bc0db';
   const primaryBg = '#e6f7fb';
+
+  // Fetch team members from API
+  useEffect(() => {
+    const fetchTeamMembers = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/team-members`);
+        if (response.data && response.data.team_members) {
+          // Sort by order field (ascending) to display in proper order
+          const sortedTeamMembers = response.data.team_members.sort((a, b) => (a.order || 0) - (b.order || 0));
+          setTeamMembers(sortedTeamMembers);
+        }
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching team members:', err);
+        setError('Failed to load team members');
+        setLoading(false);
+      }
+    };
+
+    fetchTeamMembers();
+  }, []);
 
   const teamHighlights = [
     {
