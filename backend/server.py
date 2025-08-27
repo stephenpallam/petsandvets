@@ -388,6 +388,34 @@ class FacilityPhotosResponse(BaseModel):
     facility_photos: List[FacilityPhoto]
 
 
+class SliderImage(BaseModel):
+    id: str
+    title: str
+    description: str  
+    image_url: str
+    order: Optional[int] = 0  # For ordering slider images
+    created_at: datetime
+    updated_at: datetime
+
+
+class SliderImageCreate(BaseModel):
+    title: str
+    description: str
+    image_url: str
+    order: Optional[int] = 0
+
+
+class SliderImageUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    image_url: Optional[str] = None
+    order: Optional[int] = None
+
+
+class SliderImagesResponse(BaseModel):
+    slider_images: List[SliderImage]
+
+
 # Auth Utilities
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
