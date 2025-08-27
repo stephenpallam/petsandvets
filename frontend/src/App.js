@@ -64,6 +64,7 @@ import BusinessInfo from "./pages/BusinessInfo";
 import PhotoManagement from "./pages/PhotoManagement";
 import LoginPage from "./pages/LoginPage";
 import GoogleIntegration from "./pages/GoogleIntegration";
+import GoogleCallback from "./pages/GoogleCallback";
 
 function App() {
   return (
