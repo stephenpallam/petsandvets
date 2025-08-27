@@ -1210,6 +1210,10 @@ async def update_business_info(
             facebook_link=business_data.facebook_link or "",
             instagram_link=business_data.instagram_link or "",
             twitter_link=business_data.twitter_link or "",
+            hero_images=business_data.hero_images or [
+                "https://customer-assets.emergentagent.com/job_peacock-pet-care/artifacts/ulwulpak_emilee.png",
+                "https://customer-assets.emergentagent.com/job_peacock-pet-care/artifacts/ej59vv47_vanama.png"
+            ],
             created_at=now,
             updated_at=now
         )
