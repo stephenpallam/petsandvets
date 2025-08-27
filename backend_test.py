@@ -2331,6 +2331,303 @@ def test_review_validation():
         results.log_failure("Review Validation", str(e))
         return False
 
+# ============================================================================
+# BUSINESS INFORMATION API TESTS - NEW IMPLEMENTATION
+# ============================================================================
+
+def test_get_business_info_public():
+    """Test GET /api/business-info (public endpoint)"""
+    try:
+        response = requests.get(f"{API_URL}/business-info")
+        if response.status_code == 200:
+            data = response.json()
+            required_fields = ["id", "hospital_name", "tagline", "phone", "email", "address", "created_at", "updated_at"]
+            optional_fields = ["facebook_link", "instagram_link", "twitter_link"]
+            
+            if all(field in data for field in required_fields):
+                # Check that default values are created if no data exists
+                if (data.get("hospital_name") == "Pets and Vets Animal Hospital & Urgent Care" and
+                    data.get("tagline") == "Compassionate Care for Your Beloved Pets" and
+                    data.get("phone") == "(703) 957-3297" and
+                    data.get("email") == "vet@petsandvetsanimalhospital.com"):
+                    results.log_success("Get Business Info (Public - Default Values)")
+                    return True
+                else:
+                    results.log_success("Get Business Info (Public - Existing Data)")
+                    return True
+        results.log_failure("Get Business Info (Public)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Business Info (Public)", str(e))
+        return False
+
+def test_get_business_info_creates_default():
+    """Test that GET /api/business-info creates default values if none exist"""
+    try:
+        # First call should create default values
+        response = requests.get(f"{API_URL}/business-info")
+        if response.status_code == 200:
+            data = response.json()
+            
+            # Verify default values are present
+            if (data.get("hospital_name") and
+                data.get("tagline") and
+                data.get("phone") and
+                data.get("email") and
+                data.get("address") and
+                "id" in data and
+                "created_at" in data and
+                "updated_at" in data):
+                
+                # Second call should return the same data
+                response2 = requests.get(f"{API_URL}/business-info")
+                if response2.status_code == 200:
+                    data2 = response2.json()
+                    if data["id"] == data2["id"]:
+                        results.log_success("Get Business Info (Creates Default Values)")
+                        return True
+        results.log_failure("Get Business Info (Creates Default)", f"Status: {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Business Info (Creates Default)", str(e))
+        return False
+
+def test_update_business_info_admin():
+    """Test PUT /api/business-info with admin authentication (full update)"""
+    if not admin_token:
+        results.log_failure("Update Business Info (Admin)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        update_data = {
+            "hospital_name": "Updated Pets and Vets Animal Hospital",
+            "tagline": "Updated Compassionate Care for Your Beloved Pets",
+            "phone": "(703) 957-3298",
+            "email": "updated@petsandvetsanimalhospital.com",
+            "address": "Updated 43114 Peacock Market Plaza, Suite F110, South Riding, VA 20152",
+            "facebook_link": "https://facebook.com/petsandvets",
+            "instagram_link": "https://instagram.com/petsandvets",
+            "twitter_link": "https://twitter.com/petsandvets"
+        }
+        
+        response = requests.put(f"{API_URL}/business-info", json=update_data, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("hospital_name") == update_data["hospital_name"] and
+                data.get("tagline") == update_data["tagline"] and
+                data.get("phone") == update_data["phone"] and
+                data.get("email") == update_data["email"] and
+                data.get("address") == update_data["address"] and
+                data.get("facebook_link") == update_data["facebook_link"] and
+                data.get("instagram_link") == update_data["instagram_link"] and
+                data.get("twitter_link") == update_data["twitter_link"] and
+                "id" in data and
+                "created_at" in data and
+                "updated_at" in data):
+                results.log_success("Update Business Info (Admin - Full Update)")
+                return True
+        results.log_failure("Update Business Info (Admin)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Business Info (Admin)", str(e))
+        return False
+
+def test_update_business_info_partial():
+    """Test PUT /api/business-info with partial updates"""
+    if not admin_token:
+        results.log_failure("Update Business Info (Partial)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        
+        # Only update hospital name and tagline
+        partial_update = {
+            "hospital_name": "Partially Updated Hospital Name",
+            "tagline": "Partially Updated Tagline"
+        }
+        
+        response = requests.put(f"{API_URL}/business-info", json=partial_update, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("hospital_name") == partial_update["hospital_name"] and
+                data.get("tagline") == partial_update["tagline"] and
+                "phone" in data and  # Should retain existing values
+                "email" in data and
+                "address" in data and
+                "id" in data):
+                results.log_success("Update Business Info (Partial Update)")
+                return True
+        results.log_failure("Update Business Info (Partial)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Business Info (Partial)", str(e))
+        return False
+
+def test_update_business_info_no_auth():
+    """Test PUT /api/business-info without authentication (should fail)"""
+    try:
+        update_data = {
+            "hospital_name": "Unauthorized Update Attempt"
+        }
+        
+        response = requests.put(f"{API_URL}/business-info", json=update_data)
+        if response.status_code == 401:
+            results.log_success("Update Business Info (No Auth - Correctly Unauthorized)")
+            return True
+        results.log_failure("Update Business Info (No Auth)", f"Expected 401, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Business Info (No Auth)", str(e))
+        return False
+
+def test_update_business_info_regular_user():
+    """Test PUT /api/business-info with regular user (should fail with 403)"""
+    if not user_token:
+        results.log_failure("Update Business Info (Regular User - Should Fail)", "No user token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {user_token}"}
+        update_data = {
+            "hospital_name": "Regular User Update Attempt"
+        }
+        
+        response = requests.put(f"{API_URL}/business-info", json=update_data, headers=headers)
+        if response.status_code == 403:
+            results.log_success("Update Business Info (Regular User - Correctly Forbidden)")
+            return True
+        results.log_failure("Update Business Info (Regular User)", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Business Info (Regular User)", str(e))
+        return False
+
+def test_business_info_social_media_optional():
+    """Test that social media fields are optional and handle empty strings"""
+    if not admin_token:
+        results.log_failure("Business Info Social Media Optional", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        
+        # Update with empty social media links
+        update_data = {
+            "hospital_name": "Test Hospital for Social Media",
+            "facebook_link": "",
+            "instagram_link": "",
+            "twitter_link": ""
+        }
+        
+        response = requests.put(f"{API_URL}/business-info", json=update_data, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("hospital_name") == update_data["hospital_name"] and
+                data.get("facebook_link") == "" and
+                data.get("instagram_link") == "" and
+                data.get("twitter_link") == ""):
+                results.log_success("Business Info Social Media Optional (Empty Strings)")
+                return True
+        results.log_failure("Business Info Social Media Optional", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Business Info Social Media Optional", str(e))
+        return False
+
+def test_business_info_database_storage():
+    """Test that business info is properly stored in MongoDB with all fields"""
+    if not admin_token:
+        results.log_failure("Business Info Database Storage", "No admin token available")
+        return False
+    
+    try:
+        # First, update with known data
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        test_data = {
+            "hospital_name": "Database Storage Test Hospital",
+            "tagline": "Testing Database Storage",
+            "phone": "(703) 999-0001",
+            "email": "dbtest@hospital.com",
+            "address": "123 Database Test Street, Test City, VA 20000",
+            "facebook_link": "https://facebook.com/dbtest",
+            "instagram_link": "https://instagram.com/dbtest",
+            "twitter_link": "https://twitter.com/dbtest"
+        }
+        
+        response = requests.put(f"{API_URL}/business-info", json=test_data, headers=headers)
+        if response.status_code != 200:
+            results.log_failure("Business Info Database Storage (Setup)", f"Failed to update: {response.status_code}")
+            return False
+        
+        # Now retrieve and verify all fields are stored correctly
+        response = requests.get(f"{API_URL}/business-info")
+        if response.status_code == 200:
+            data = response.json()
+            required_fields = ["id", "hospital_name", "tagline", "phone", "email", "address", "facebook_link", "instagram_link", "twitter_link", "created_at", "updated_at"]
+            
+            if (all(field in data for field in required_fields) and
+                data.get("hospital_name") == test_data["hospital_name"] and
+                data.get("tagline") == test_data["tagline"] and
+                data.get("phone") == test_data["phone"] and
+                data.get("email") == test_data["email"] and
+                data.get("address") == test_data["address"] and
+                data.get("facebook_link") == test_data["facebook_link"] and
+                data.get("instagram_link") == test_data["instagram_link"] and
+                data.get("twitter_link") == test_data["twitter_link"]):
+                results.log_success("Business Info Database Storage (All Fields)")
+                return True
+        results.log_failure("Business Info Database Storage", f"Status: {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Business Info Database Storage", str(e))
+        return False
+
+def test_business_info_timestamps():
+    """Test that created_at and updated_at timestamps are properly managed"""
+    if not admin_token:
+        results.log_failure("Business Info Timestamps", "No admin token available")
+        return False
+    
+    try:
+        # Get initial business info
+        response1 = requests.get(f"{API_URL}/business-info")
+        if response1.status_code != 200:
+            results.log_failure("Business Info Timestamps (Initial Get)", f"Status: {response1.status_code}")
+            return False
+        
+        data1 = response1.json()
+        initial_created_at = data1.get("created_at")
+        initial_updated_at = data1.get("updated_at")
+        
+        # Wait a moment and update
+        import time
+        time.sleep(1)
+        
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        update_data = {
+            "hospital_name": "Timestamp Test Hospital"
+        }
+        
+        response2 = requests.put(f"{API_URL}/business-info", json=update_data, headers=headers)
+        if response2.status_code == 200:
+            data2 = response2.json()
+            new_created_at = data2.get("created_at")
+            new_updated_at = data2.get("updated_at")
+            
+            # created_at should remain the same, updated_at should be different
+            if (new_created_at == initial_created_at and
+                new_updated_at != initial_updated_at and
+                new_updated_at > initial_updated_at):
+                results.log_success("Business Info Timestamps (Proper Management)")
+                return True
+        results.log_failure("Business Info Timestamps", f"Status: {response2.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Business Info Timestamps", str(e))
+        return False
+
 def run_all_tests():
     """Run all backend API tests"""
     print("Starting Backend API Tests...")
