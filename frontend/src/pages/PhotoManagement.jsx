@@ -886,6 +886,14 @@ const PhotoManagement = () => {
     }));
   }, []);
 
+  const handleSliderFormChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setSliderForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  }, []);
+
   const handleCreateTeamMember = async (photoUrl) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/team-members`, {
