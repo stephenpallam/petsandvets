@@ -1203,6 +1203,7 @@ const PhotoManagement = () => {
                     handleUpdateTeamMember={handleUpdateTeamMember}
                     handleDeleteTeamMember={handleDeleteTeamMember}
                     startEditTeamMember={startEditTeamMember}
+                    uploading={uploading}
                     error={error}
                     setError={setError}
                     API_BASE_URL={API_BASE_URL}
