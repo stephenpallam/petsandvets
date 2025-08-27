@@ -124,9 +124,6 @@ const BusinessInfo = () => {
       if (response.ok) {
         const data = await response.json();
         setBusinessInfo(data);
-        
-        // Fetch uploaded files for each category
-        await fetchUploadedFiles();
       } else {
         throw new Error('Failed to fetch business information');
       }
@@ -136,33 +133,6 @@ const BusinessInfo = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const fetchUploadedFiles = async () => {
-    const categories = ['homepageslider', 'team', 'facility'];
-    const files = {};
-    
-    for (const category of categories) {
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/files/${category}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          files[category] = data.files || [];
-        } else {
-          files[category] = [];
-        }
-      } catch (err) {
-        console.error(`Error fetching ${category} files:`, err);
-        files[category] = [];
-      }
-    }
-    
-    setUploadedFiles(files);
   };
 
   useEffect(() => {
