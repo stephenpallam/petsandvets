@@ -326,6 +326,40 @@ class BusinessInfoUpdate(BaseModel):
     hero_images: Optional[List[str]] = None
 
 
+class TeamMember(BaseModel):
+    id: str
+    name: str
+    title: str
+    bio: str
+    credentials: str
+    photo_url: str
+    order: Optional[int] = 0  # For ordering team members
+    created_at: datetime
+    updated_at: datetime
+
+
+class TeamMemberCreate(BaseModel):
+    name: str
+    title: str
+    bio: str
+    credentials: str
+    photo_url: str
+    order: Optional[int] = 0
+
+
+class TeamMemberUpdate(BaseModel):
+    name: Optional[str] = None
+    title: Optional[str] = None
+    bio: Optional[str] = None
+    credentials: Optional[str] = None
+    photo_url: Optional[str] = None
+    order: Optional[int] = None
+
+
+class TeamMembersResponse(BaseModel):
+    team_members: List[TeamMember]
+
+
 # Auth Utilities
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
