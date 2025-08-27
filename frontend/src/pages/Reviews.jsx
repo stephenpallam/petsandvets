@@ -21,7 +21,7 @@ const Reviews = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/reviews/manage`, {
         headers: {
-          'Authorization': `Bearer ${user?.token}`
+          'Authorization': `Bearer ${token}`
         }
       });
       
