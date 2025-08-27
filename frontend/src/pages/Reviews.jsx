@@ -14,7 +14,7 @@ const Reviews = () => {
     owner_name: ''
   });
 
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
 
   const fetchReviews = async () => {
