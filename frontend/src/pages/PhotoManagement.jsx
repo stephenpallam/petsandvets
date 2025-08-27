@@ -756,10 +756,13 @@ const PhotoManagement = () => {
   });
   const [teamMembers, setTeamMembers] = useState([]);
   const [facilityPhotos, setFacilityPhotos] = useState([]);
+  const [sliderImages, setSliderImages] = useState([]);
   const [showTeamMemberForm, setShowTeamMemberForm] = useState(false);
   const [showFacilityForm, setShowFacilityForm] = useState(false);
+  const [showSliderForm, setShowSliderForm] = useState(false);
   const [editingTeamMember, setEditingTeamMember] = useState(null);
   const [editingFacility, setEditingFacility] = useState(null);
+  const [editingSlider, setEditingSlider] = useState(null);
   const [teamMemberForm, setTeamMemberForm] = useState({
     name: '',
     title: '',
@@ -772,6 +775,12 @@ const PhotoManagement = () => {
     title: '',
     description: '',
     photo_url: '',
+    order: 0
+  });
+  const [sliderForm, setSliderForm] = useState({
+    title: '',
+    description: '',
+    image_url: '',
     order: 0
   });
   const [loading, setLoading] = useState(true);
