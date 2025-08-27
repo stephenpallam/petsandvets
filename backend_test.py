@@ -2425,6 +2425,30 @@ def run_all_tests():
     test_patient_registration_data_persistence()
     test_patient_registration_unique_ids()
     
+    print("\n" + "="*50)
+    print("REVIEWS API TESTS")
+    print("="*50)
+    
+    # Reviews API Tests - NEW
+    test_get_reviews_public()
+    test_get_reviews_manage_admin()
+    test_get_reviews_manage_regular_user()
+    test_create_review_admin()
+    test_create_review_regular_user()
+    test_create_multiple_reviews()
+    test_create_review_limit_enforcement()
+    test_update_review_admin()
+    test_update_review_partial()
+    test_update_review_regular_user()
+    test_update_review_not_found()
+    test_delete_review_admin()
+    test_delete_review_regular_user()
+    test_delete_review_not_found()
+    test_create_review_after_deletion()
+    test_reviews_database_storage()
+    test_reviews_public_endpoint_limit()
+    test_review_validation()
+    
     # Print summary
     success = results.summary()
     return success
