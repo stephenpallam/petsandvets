@@ -9,6 +9,17 @@ const PhotoManagement = () => {
     team: [],
     facility: []
   });
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [showTeamMemberForm, setShowTeamMemberForm] = useState(false);
+  const [editingTeamMember, setEditingTeamMember] = useState(null);
+  const [teamMemberForm, setTeamMemberForm] = useState({
+    name: '',
+    title: '',
+    bio: '',
+    credentials: '',
+    photo_url: '',
+    order: 0
+  });
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
