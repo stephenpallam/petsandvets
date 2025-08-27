@@ -11,8 +11,34 @@ const Header = () => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const [businessInfo, setBusinessInfo] = useState(null);
+  const [currentHours, setCurrentHours] = useState(null);
   const location = useLocation();
   const { user, logout, isAdmin } = useAuth();
+
+  // Fetch business information and current hours
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [businessResponse, hoursResponse] = await Promise.all([
+          axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/business-info`),
+          axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/hours/current`)
+        ]);
+        setBusinessInfo(businessResponse.data);
+        setCurrentHours(hoursResponse.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        // Fallback to default values
+        setBusinessInfo({
+          hospital_name: "Pets & Vets",
+          address: "South Riding, VA 20152",
+          phone: "(703) 957-3297"
+        });
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Function to determine if urgent care is currently open
   const getUrgentCareStatus = () => {
@@ -25,6 +51,85 @@ const Header = () => {
     } else {
       return "Closed";
     }
+  };
+
+  // Function to determine if general practice is currently open
+  const getGeneralPracticeStatus = () => {
+    if (!currentHours || !currentHours.general_practice) {
+      return "Closed";
+    }
+
+    const now = new Date();
+    const currentTime = now.getHours() * 100 + now.getMinutes(); // Convert to HHMM format
+    
+    const gpHours = currentHours.general_practice;
+    
+    // Check if it's closed for the day
+    if (gpHours.toLowerCase().includes('closed')) {
+      return "Closed";
+    }
+    
+    // Parse hours like "9:00 AM - 6:00 PM"
+    try {
+      const timeRange = gpHours.split(' - ');
+      if (timeRange.length !== 2) return "Closed";
+      
+      const startTime = parseTimeString(timeRange[0].trim());
+      const endTime = parseTimeString(timeRange[1].trim());
+      
+      if (currentTime >= startTime && currentTime < endTime) {
+        return "Open";
+      } else {
+        return "Closed";
+      }
+    } catch (error) {
+      return "Closed";
+    }
+  };
+
+  // Helper function to parse time strings like "9:00 AM" to HHMM format
+  const parseTimeString = (timeStr) => {
+    const [time, period] = timeStr.split(' ');
+    const [hours, minutes] = time.split(':').map(Number);
+    
+    let hour24 = hours;
+    if (period.toLowerCase() === 'pm' && hours !== 12) {
+      hour24 += 12;
+    } else if (period.toLowerCase() === 'am' && hours === 12) {
+      hour24 = 0;
+    }
+    
+    return hour24 * 100 + minutes;
+  };
+
+  // Get short address from business info
+  const getShortAddress = () => {
+    if (!businessInfo || !businessInfo.address) {
+      return "South Riding, VA 20152";
+    }
+    
+    // Extract city, state, zip from full address
+    const address = businessInfo.address;
+    const parts = address.split(',').map(part => part.trim());
+    
+    // Look for VA and zip code pattern
+    for (let i = 0; i < parts.length; i++) {
+      if (parts[i].includes('VA') || parts[i].includes('Virginia')) {
+        // Return this part and potentially the next part (zip code)
+        if (i + 1 < parts.length) {
+          return `${parts[i]}, ${parts[i + 1]}`;
+        } else {
+          return parts[i];
+        }
+      }
+    }
+    
+    // Fallback: return last two parts if available
+    if (parts.length >= 2) {
+      return `${parts[parts.length - 2]}, ${parts[parts.length - 1]}`;
+    }
+    
+    return "South Riding, VA 20152";
   };
 
   const navigation = [
