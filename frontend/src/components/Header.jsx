@@ -348,14 +348,14 @@ const Header = () => {
           </div>
 
           {/* Mobile Layout */}
-          <div className="md:hidden space-y-1">
+          <div className="md:hidden">
             {/* First Row: Phone and Hours Status */}
             <div className="flex justify-between items-start text-xs">
               <div className="flex items-center space-x-1">
                 <Phone className="h-3 w-3" />
                 <span>{businessInfo?.phone || "(703) 957-3297"}</span>
               </div>
-              <div className="flex flex-col items-end space-y-0.5">
+              <div className="flex flex-col items-end space-y-0">
                 <div className="flex items-center space-x-1">
                   <Clock className="h-3 w-3" />
                   <span>General Practice: {getGeneralPracticeStatus()}</span>
@@ -367,8 +367,8 @@ const Header = () => {
               </div>
             </div>
             
-            {/* Second Row: Address */}
-            <div className="flex items-center space-x-1 text-xs">
+            {/* Second Row: Address - positioned directly below with minimal spacing */}
+            <div className="flex items-center space-x-1 text-xs -mt-0.5">
               <MapPin className="h-3 w-3 flex-shrink-0" />
               <span className="truncate text-xs">{getShortAddress()}</span>
             </div>
