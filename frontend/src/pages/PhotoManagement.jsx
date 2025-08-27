@@ -2,6 +2,249 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Image, Upload, Trash2, Eye, Camera, Users, Building2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
+// Slider Image Management Section Component
+const SliderSection = ({ 
+  sliderImages, 
+  showSliderForm, 
+  setShowSliderForm,
+  editingSlider,
+  setEditingSlider,
+  sliderForm,
+  handleSliderFormChange,
+  handleSliderUpload,
+  handleUpdateSlider,
+  handleDeleteSlider,
+  startEditSlider,
+  uploading,
+  error,
+  setError,
+  API_BASE_URL
+}) => (
+  <div className="space-y-6">
+    {/* Add New Slider Image */}
+    <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h3 className="text-lg font-medium text-blue-900">Add New Slider Image</h3>
+          <p className="text-sm text-blue-700">Upload an image for the home page hero carousel with title and description</p>
+        </div>
+        <button
+          onClick={() => setShowSliderForm(!showSliderForm)}
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+        >
+          {showSliderForm ? 'Cancel' : 'Add Slider Image'}
+        </button>
+      </div>
+
+      {showSliderForm && (
+        <div className="mt-4 bg-white rounded-lg p-4 border border-blue-200">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Title *</label>
+              <input
+                key="slider-title-input"
+                type="text"
+                name="title"
+                value={sliderForm.title}
+                onChange={handleSliderFormChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Professional Veterinary Care"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Display Order</label>
+              <input
+                key="slider-order-input"
+                type="number"
+                name="order"
+                value={sliderForm.order}
+                onChange={handleSliderFormChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="0"
+                min="0"
+              />
+            </div>
+          </div>
+          
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+            <textarea
+              key="slider-description-input"
+              name="description"
+              value={sliderForm.description}
+              onChange={handleSliderFormChange}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Compassionate veterinary care for your beloved pets with state-of-the-art facilities"
+              required
+            />
+          </div>
+
+          <div className="border-2 border-dashed border-blue-300 rounded-lg p-4 text-center">
+            <Image className="h-8 w-8 mx-auto text-blue-400 mb-2" />
+            <p className="text-sm text-blue-700 mb-2">Upload Slider Image</p>
+            <p className="text-xs text-blue-600 mb-3">Recommended size: 1920x800px for best results</p>
+            
+            {/* Check if all required fields are filled */}
+            {sliderForm.title && sliderForm.description ? (
+              <label className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors cursor-pointer">
+                <Upload className="h-4 w-4 mr-2" />
+                {uploading ? 'Creating Slider Image...' : 'Choose Image & Create'}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    if (e.target.files[0]) {
+                      handleSliderUpload(e.target.files[0], true);
+                      e.target.value = '';
+                    }
+                  }}
+                  disabled={uploading}
+                  className="hidden"
+                />
+              </label>
+            ) : (
+              <div>
+                <button
+                  disabled
+                  className="inline-flex items-center px-4 py-2 bg-gray-300 text-gray-500 rounded-md cursor-not-allowed"
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  Choose Image & Create
+                </button>
+                <p className="text-xs text-red-600 mt-2">Please fill in title and description first</p>
+              </div>
+            )}
+            
+            {uploading && (
+              <div className="mt-2 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                <span className="text-xs text-blue-600">Uploading and creating slider image...</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+
+    {/* Existing Slider Images */}
+    {sliderImages && sliderImages.length > 0 ? (
+      <div>
+        <h3 className="text-lg font-medium text-gray-900 mb-4">
+          Slider Images ({sliderImages.length})
+        </h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {sliderImages.map((image) => (
+            <div key={`slider-image-${image.id}`} className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+              {editingSlider === image.id ? (
+                /* Edit Form */
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                      <input
+                        key={`edit-slider-title-${image.id}`}
+                        type="text"
+                        name="title"
+                        value={sliderForm.title}
+                        onChange={handleSliderFormChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Order</label>
+                      <input
+                        key={`edit-slider-order-${image.id}`}
+                        type="number"
+                        name="order"
+                        value={sliderForm.order}
+                        onChange={handleSliderFormChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        min="0"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea
+                      key={`edit-slider-description-${image.id}`}
+                      name="description"
+                      value={sliderForm.description}
+                      onChange={handleSliderFormChange}
+                      rows={3}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div className="flex justify-end space-x-2">
+                    <button
+                      onClick={() => setEditingSlider(null)}
+                      className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => handleUpdateSlider(image.id)}
+                      className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                /* Display Mode */
+                <div className="flex items-start space-x-4">
+                  <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                    <img
+                      src={image.image_url}
+                      alt={image.title}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                    <div className="hidden w-full h-full items-center justify-center bg-gray-100">
+                      <Image className="h-8 w-8 text-gray-400" />
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-lg font-medium text-gray-900">{image.title}</h4>
+                    <p className="text-gray-600 text-sm mb-2 line-clamp-3">{image.description}</p>
+                    <p className="text-gray-500 text-xs">Order: {image.order || 0}</p>
+                  </div>
+                  <div className="flex flex-col space-y-1">
+                    <button
+                      onClick={() => startEditSlider(image)}
+                      className="p-1 text-blue-600 hover:text-blue-700 transition-colors"
+                      title="Edit"
+                    >
+                      <Eye className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteSlider(image.id)}
+                      className="p-1 text-red-600 hover:text-red-700 transition-colors"
+                      title="Delete"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    ) : (
+      <div className="text-center py-12 bg-gray-50 rounded-lg">
+        <Image className="h-16 w-16 mx-auto text-gray-300 mb-4" />
+        <h3 className="text-lg font-medium text-gray-900 mb-2">No slider images added yet</h3>
+        <p className="text-gray-600">Add your first slider image to get started</p>
+      </div>
+    )}
+  </div>
+);
+
 // Facility Photo Management Section Component
 const FacilitySection = ({ 
   facilityPhotos, 
