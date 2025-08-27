@@ -440,72 +440,99 @@ const BusinessInfo = () => {
               </div>
             </div>
 
-            {/* Home Page Slider Images */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2 flex-1">
-                  <Image className="h-5 w-5 inline mr-2" />
-                  Home Page Slider Images
-                </h3>
-                <button
-                  type="button"
-                  onClick={handleAddHeroImage}
-                  className="ml-4 inline-flex items-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Image
-                </button>
-              </div>
-              
-              {businessInfo.hero_images && businessInfo.hero_images.length > 0 ? (
-                <div className="space-y-3">
-                  {businessInfo.hero_images.map((imageUrl, index) => (
-                    <div key={index} className="flex items-center space-x-3 bg-gray-50 p-3 rounded-md">
-                      <div className="flex-1">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Hero Image {index + 1} URL
-                        </label>
-                        <input
-                          type="url"
-                          value={imageUrl}
-                          onChange={(e) => handleHeroImageChange(index, e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="https://example.com/image.jpg"
-                        />
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveHeroImage(index)}
-                        className="p-2 text-red-600 hover:text-red-700 transition-colors"
-                        title="Remove image"
-                      >
-                        <X className="h-5 w-5" />
-                      </button>
-                    </div>
-                  ))}
+  const FileUploadSection = ({ category, title, description, files }) => (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h4 className="text-md font-medium text-gray-900">{title}</h4>
+          <p className="text-sm text-gray-600">{description}</p>
+        </div>
+        <label className="inline-flex items-center px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm cursor-pointer">
+          <Upload className="h-4 w-4 mr-2" />
+          Upload Image
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              if (e.target.files[0]) {
+                handleFileUpload(category, e.target.files[0]);
+                e.target.value = ''; // Reset input
+              }
+            }}
+            className="hidden"
+          />
+        </label>
+      </div>
+      
+      {files && files.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {files.map((file, index) => (
+            <div key={index} className="relative bg-gray-50 rounded-lg border border-gray-200 p-3">
+              <div className="aspect-video bg-gray-100 rounded-md mb-2 overflow-hidden">
+                <img
+                  src={`${API_BASE_URL}${file.url}`}
+                  alt={file.filename}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'flex';
+                  }}
+                />
+                <div className="hidden w-full h-full items-center justify-center bg-gray-100">
+                  <Image className="h-8 w-8 text-gray-400" />
                 </div>
-              ) : (
-                <div className="text-center py-8 bg-gray-50 rounded-md border-2 border-dashed border-gray-300">
-                  <Image className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                  <p className="text-gray-500 mb-4">No slider images added yet</p>
+              </div>
+              <p className="text-xs text-gray-600 truncate mb-2">{file.filename}</p>
+              <div className="flex justify-between items-center">
+                <span className="text-xs text-gray-500">
+                  {(file.size / 1024).toFixed(1)} KB
+                </span>
+                <div className="flex space-x-1">
+                  <a
+                    href={`${API_BASE_URL}${file.url}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-1 text-blue-600 hover:text-blue-700 transition-colors"
+                    title="View image"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </a>
                   <button
                     type="button"
-                    onClick={handleAddHeroImage}
-                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                    onClick={() => handleFileDelete(category, file.filename)}
+                    className="p-1 text-red-600 hover:text-red-700 transition-colors"
+                    title="Delete image"
                   >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Your First Image
+                    <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
-              )}
-              
-              <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
-                <p className="text-sm text-blue-700">
-                  <strong>Tip:</strong> For best results, use high-quality images with dimensions of 1920x800 pixels or similar aspect ratio. 
-                  Images will be displayed as a rotating carousel on the home page hero section.
-                </p>
               </div>
             </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-8 bg-gray-50 rounded-md border-2 border-dashed border-gray-300">
+          <Image className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+          <p className="text-gray-500 mb-4">No images uploaded yet</p>
+          <label className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors cursor-pointer">
+            <Upload className="h-4 w-4 mr-2" />
+            Upload Your First Image
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                if (e.target.files[0]) {
+                  handleFileUpload(category, e.target.files[0]);
+                  e.target.value = ''; // Reset input
+                }
+              }}
+              className="hidden"
+            />
+          </label>
+        </div>
+      )}
+    </div>
+  );
 
             {/* Submit Button */}
             <div className="flex justify-end pt-6 border-t border-gray-200">
