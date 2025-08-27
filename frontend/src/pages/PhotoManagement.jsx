@@ -491,13 +491,22 @@ const PhotoManagement = () => {
     facility: []
   });
   const [teamMembers, setTeamMembers] = useState([]);
+  const [facilityPhotos, setFacilityPhotos] = useState([]);
   const [showTeamMemberForm, setShowTeamMemberForm] = useState(false);
+  const [showFacilityForm, setShowFacilityForm] = useState(false);
   const [editingTeamMember, setEditingTeamMember] = useState(null);
+  const [editingFacility, setEditingFacility] = useState(null);
   const [teamMemberForm, setTeamMemberForm] = useState({
     name: '',
     title: '',
     bio: '',
     credentials: '',
+    photo_url: '',
+    order: 0
+  });
+  const [facilityForm, setFacilityForm] = useState({
+    title: '',
+    description: '',
     photo_url: '',
     order: 0
   });
