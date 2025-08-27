@@ -1255,6 +1255,143 @@ async def update_business_info(
     return BusinessInfo(**existing_info)
 
 
+# File Upload API endpoints
+UPLOAD_DIR = Path("/app/data/upload/photos")
+ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
+MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
+
+def validate_file(file: UploadFile, category: str) -> str:
+    """Validate uploaded file and return the save path"""
+    # Check file extension
+    file_ext = Path(file.filename).suffix.lower()
+    if file_ext not in ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Invalid file type. Allowed: {', '.join(ALLOWED_EXTENSIONS)}"
+        )
+    
+    # Check file size
+    if file.size and file.size > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=400,
+            detail=f"File too large. Maximum size: {MAX_FILE_SIZE // (1024*1024)}MB"
+        )
+    
+    # Validate category
+    valid_categories = ["homepageslider", "team", "facility"]
+    if category not in valid_categories:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid category. Allowed: {', '.join(valid_categories)}"
+        )
+    
+    # Generate safe filename
+    import time
+    timestamp = int(time.time())
+    safe_filename = f"{timestamp}_{file.filename}"
+    
+    return str(UPLOAD_DIR / category / safe_filename)
+
+
+@api_router.post("/upload/{category}")
+async def upload_file(
+    category: str,
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_admin_user)
+):
+    """Upload a file to specified category folder (admin only)"""
+    
+    # Validate file and get save path
+    file_path = validate_file(file, category)
+    
+    # Create directory if it doesn't exist
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    
+    try:
+        # Save file
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        
+        # Return file info including URL
+        filename = os.path.basename(file_path)
+        file_url = f"/api/files/{category}/{filename}"
+        
+        return {
+            "filename": filename,
+            "category": category,
+            "url": file_url,
+            "size": os.path.getsize(file_path),
+            "message": "File uploaded successfully"
+        }
+        
+    except Exception as e:
+        # Clean up file if something went wrong
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
+
+
+@api_router.get("/files/{category}/{filename}")
+async def get_file(category: str, filename: str):
+    """Serve uploaded files (public endpoint)"""
+    valid_categories = ["homepageslider", "team", "facility"]
+    if category not in valid_categories:
+        raise HTTPException(status_code=404, detail="Category not found")
+    
+    file_path = UPLOAD_DIR / category / filename
+    
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="File not found")
+    
+    return FileResponse(file_path)
+
+
+@api_router.get("/files/{category}")
+async def list_files(category: str, current_user: User = Depends(get_admin_user)):
+    """List all files in a category (admin only)"""
+    valid_categories = ["homepageslider", "team", "facility"]
+    if category not in valid_categories:
+        raise HTTPException(status_code=404, detail="Category not found")
+    
+    category_path = UPLOAD_DIR / category
+    files = []
+    
+    if category_path.exists():
+        for file_path in category_path.glob("*"):
+            if file_path.is_file() and file_path.suffix.lower() in ALLOWED_EXTENSIONS:
+                files.append({
+                    "filename": file_path.name,
+                    "url": f"/api/files/{category}/{file_path.name}",
+                    "size": file_path.stat().st_size,
+                    "category": category
+                })
+    
+    return {"files": files, "category": category}
+
+
+@api_router.delete("/files/{category}/{filename}")
+async def delete_file(
+    category: str, 
+    filename: str, 
+    current_user: User = Depends(get_admin_user)
+):
+    """Delete a file from specified category (admin only)"""
+    valid_categories = ["homepageslider", "team", "facility"]
+    if category not in valid_categories:
+        raise HTTPException(status_code=404, detail="Category not found")
+    
+    file_path = UPLOAD_DIR / category / filename
+    
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="File not found")
+    
+    try:
+        os.remove(file_path)
+        return {"message": "File deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Delete failed: {str(e)}")
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
