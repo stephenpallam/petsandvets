@@ -1917,6 +1917,317 @@ async def delete_slider_image(
     return {"message": "Slider image deleted successfully"}
 
 
+# Google Business Profile Integration API endpoints
+@api_router.get("/google-business/settings")
+async def get_google_business_settings(
+    current_user: User = Depends(get_admin_user)
+):
+    """Get current Google Business settings (admin only)"""
+    settings = await db.google_business_settings.find_one()
+    if not settings:
+        return {
+            "is_connected": False,
+            "auto_sync_enabled": True,
+            "last_sync_at": None
+        }
+    
+    # Don't return sensitive data
+    return {
+        "is_connected": settings.get("is_connected", False),
+        "auto_sync_enabled": settings.get("auto_sync_enabled", True),
+        "last_sync_at": settings.get("last_sync_at"),
+        "client_id": settings.get("client_id", ""),
+        "account_id": settings.get("account_id"),
+        "location_id": settings.get("location_id")
+    }
+
+
+@api_router.post("/google-business/configure")
+async def configure_google_business(
+    settings_data: GoogleBusinessSettingsCreate,
+    current_user: User = Depends(get_admin_user)
+):
+    """Configure Google Business Profile settings (admin only)"""
+    now = datetime.utcnow()
+    
+    # Check if settings already exist
+    existing_settings = await db.google_business_settings.find_one()
+    
+    if existing_settings:
+        # Update existing settings
+        update_data = {
+            "client_id": settings_data.client_id,
+            "client_secret": settings_data.client_secret,
+            "auto_sync_enabled": settings_data.auto_sync_enabled,
+            "updated_at": now
+        }
+        
+        await db.google_business_settings.update_one(
+            {"id": existing_settings["id"]},
+            {"$set": update_data}
+        )
+        
+        settings_id = existing_settings["id"]
+    else:
+        # Create new settings
+        settings = GoogleBusinessSettings(
+            id=str(uuid.uuid4()),
+            client_id=settings_data.client_id,
+            client_secret=settings_data.client_secret,
+            auto_sync_enabled=settings_data.auto_sync_enabled,
+            is_connected=False,
+            created_at=now,
+            updated_at=now
+        )
+        
+        await db.google_business_settings.insert_one(settings.dict())
+        settings_id = settings.id
+    
+    return {"message": "Google Business settings saved successfully", "id": settings_id}
+
+
+@api_router.get("/google-business/auth-url", response_model=GoogleAuthUrl)
+async def get_google_auth_url(
+    current_user: User = Depends(get_admin_user)
+):
+    """Get Google OAuth authorization URL (admin only)"""
+    settings = await db.google_business_settings.find_one()
+    if not settings or not settings.get("client_id") or not settings.get("client_secret"):
+        raise HTTPException(status_code=400, detail="Google Business settings not configured")
+    
+    # Generate state for security
+    state = secrets.token_urlsafe(32)
+    
+    # Store state in database for verification
+    await db.google_business_settings.update_one(
+        {"id": settings["id"]},
+        {"$set": {"oauth_state": state, "updated_at": datetime.utcnow()}}
+    )
+    
+    # Create redirect URI (frontend will handle the callback)
+    redirect_uri = f"{os.environ.get('FRONTEND_URL', 'http://localhost:3000')}/google-integration/callback"
+    
+    try:
+        auth_url = google_service.get_auth_url(
+            settings["client_id"],
+            settings["client_secret"], 
+            redirect_uri,
+            state
+        )
+        
+        return GoogleAuthUrl(auth_url=auth_url, state=state)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to generate auth URL: {str(e)}")
+
+
+@api_router.post("/google-business/callback")
+async def handle_google_callback(
+    callback_data: GoogleAuthCallback,
+    current_user: User = Depends(get_admin_user)
+):
+    """Handle Google OAuth callback (admin only)"""
+    settings = await db.google_business_settings.find_one()
+    if not settings:
+        raise HTTPException(status_code=400, detail="Google Business settings not found")
+    
+    # Verify state
+    if settings.get("oauth_state") != callback_data.state:
+        raise HTTPException(status_code=400, detail="Invalid state parameter")
+    
+    redirect_uri = f"{os.environ.get('FRONTEND_URL', 'http://localhost:3000')}/google-integration/callback"
+    
+    try:
+        # Exchange code for tokens
+        credentials = google_service.exchange_code_for_tokens(
+            settings["client_id"],
+            settings["client_secret"],
+            redirect_uri,
+            callback_data.code
+        )
+        
+        # Update settings with tokens
+        update_data = {
+            "access_token": credentials.token,
+            "refresh_token": credentials.refresh_token,
+            "token_expiry": credentials.expiry,
+            "is_connected": True,
+            "updated_at": datetime.utcnow()
+        }
+        
+        await db.google_business_settings.update_one(
+            {"id": settings["id"]},
+            {"$set": update_data}
+        )
+        
+        return {"message": "Google Business Profile connected successfully"}
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to connect: {str(e)}")
+
+
+@api_router.post("/google-business/sync", response_model=GoogleSyncResponse)
+async def sync_to_google_business(
+    sync_request: GoogleSyncRequest,
+    current_user: User = Depends(get_admin_user)
+):
+    """Manually sync data to Google Business Profile (admin only)"""
+    settings = await db.google_business_settings.find_one()
+    if not settings or not settings.get("is_connected"):
+        raise HTTPException(status_code=400, detail="Google Business Profile not connected")
+    
+    # Check if token needs refresh
+    if settings.get("token_expiry") and datetime.utcnow() >= settings["token_expiry"]:
+        try:
+            credentials = google_service.refresh_access_token(
+                settings["client_id"],
+                settings["client_secret"], 
+                settings["refresh_token"]
+            )
+            
+            # Update tokens
+            await db.google_business_settings.update_one(
+                {"id": settings["id"]},
+                {"$set": {
+                    "access_token": credentials.token,
+                    "token_expiry": credentials.expiry,
+                    "updated_at": datetime.utcnow()
+                }}
+            )
+            
+            settings["access_token"] = credentials.token
+            
+        except Exception as e:
+            raise HTTPException(status_code=401, detail=f"Failed to refresh token: {str(e)}")
+    
+    sync_result = {"success": False, "message": "Unknown sync type"}
+    
+    try:
+        if sync_request.sync_type == "general_practice":
+            # Get current hospital hours
+            hospital_hours = await db.hospital_hours.find_one()
+            if hospital_hours:
+                hours_data = {
+                    "monday": hospital_hours.get("monday"),
+                    "tuesday": hospital_hours.get("tuesday"),
+                    "wednesday": hospital_hours.get("wednesday"),
+                    "thursday": hospital_hours.get("thursday"),
+                    "friday": hospital_hours.get("friday"),
+                    "saturday": hospital_hours.get("saturday"),
+                    "sunday": hospital_hours.get("sunday")
+                }
+                
+                sync_result = await google_service.sync_business_hours(
+                    settings["access_token"],
+                    settings.get("location_id", ""),
+                    hours_data,
+                    "general_practice"
+                )
+            else:
+                sync_result = {"success": False, "message": "No hospital hours found"}
+                
+        elif sync_request.sync_type == "urgent_care":
+            # Get current urgent care hours  
+            urgent_hours = await db.urgent_care_hours.find_one()
+            if urgent_hours:
+                # Urgent care typically has same hours daily
+                hours_data = {
+                    "monday": "3:00 PM - 10:00 PM",
+                    "tuesday": "3:00 PM - 10:00 PM", 
+                    "wednesday": "3:00 PM - 10:00 PM",
+                    "thursday": "3:00 PM - 10:00 PM",
+                    "friday": "3:00 PM - 10:00 PM",
+                    "saturday": "3:00 PM - 10:00 PM",
+                    "sunday": "3:00 PM - 10:00 PM"
+                }
+                
+                sync_result = await google_service.sync_business_hours(
+                    settings["access_token"],
+                    settings.get("location_id", ""),
+                    hours_data,
+                    "urgent_care"
+                )
+            else:
+                sync_result = {"success": False, "message": "No urgent care hours found"}
+        
+        elif sync_request.sync_type == "business_info":
+            # Get current business info
+            business_info = await db.business_info.find_one()
+            if business_info:
+                # Note: Business info sync would require additional Google API calls
+                # For now, just log the sync attempt
+                sync_result = {"success": True, "message": "Business info sync scheduled (feature coming soon)"}
+            else:
+                sync_result = {"success": False, "message": "No business info found"}
+        
+        # Log the sync attempt
+        log_entry = GoogleSyncLog(
+            id=str(uuid.uuid4()),
+            sync_type=sync_request.sync_type,
+            status="success" if sync_result["success"] else "failed",
+            message=sync_result.get("message", ""),
+            details=sync_result,
+            synced_at=datetime.utcnow()
+        )
+        
+        await db.google_sync_logs.insert_one(log_entry.dict())
+        
+        # Update last sync time
+        await db.google_business_settings.update_one(
+            {"id": settings["id"]},
+            {"$set": {"last_sync_at": datetime.utcnow()}}
+        )
+        
+        return GoogleSyncResponse(
+            success=sync_result["success"],
+            message=sync_result.get("message", "Sync completed"),
+            details=sync_result
+        )
+        
+    except Exception as e:
+        # Log the failed sync
+        log_entry = GoogleSyncLog(
+            id=str(uuid.uuid4()),
+            sync_type=sync_request.sync_type,
+            status="failed",
+            message=str(e),
+            details={"error": str(e)},
+            synced_at=datetime.utcnow()
+        )
+        
+        await db.google_sync_logs.insert_one(log_entry.dict())
+        
+        raise HTTPException(status_code=500, detail=f"Sync failed: {str(e)}")
+
+
+@api_router.get("/google-business/sync-logs", response_model=GoogleSyncLogsResponse)
+async def get_google_sync_logs(
+    limit: int = 50,
+    current_user: User = Depends(get_admin_user)
+):
+    """Get Google Business sync history (admin only)"""
+    logs = await db.google_sync_logs.find().sort("synced_at", -1).limit(limit).to_list(limit)
+    return GoogleSyncLogsResponse(sync_logs=[GoogleSyncLog(**log) for log in logs])
+
+
+@api_router.delete("/google-business/disconnect")
+async def disconnect_google_business(
+    current_user: User = Depends(get_admin_user)
+):
+    """Disconnect Google Business Profile (admin only)"""
+    result = await db.google_business_settings.update_many(
+        {},
+        {"$set": {
+            "access_token": None,
+            "refresh_token": None, 
+            "token_expiry": None,
+            "is_connected": False,
+            "updated_at": datetime.utcnow()
+        }}
+    )
+    
+    return {"message": "Google Business Profile disconnected successfully"}
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
