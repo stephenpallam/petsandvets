@@ -1043,6 +1043,90 @@ async def get_status_checks():
     return [StatusCheck(**status_check) for status_check in status_checks]
 
 
+# Reviews API endpoints
+@api_router.get("/reviews", response_model=ReviewsResponse)
+async def get_reviews():
+    """Get all reviews (public endpoint for home page)"""
+    reviews_data = await db.reviews.find().sort("created_at", -1).to_list(3)  # Only return 3 reviews
+    reviews = [Review(**review) for review in reviews_data]
+    return ReviewsResponse(reviews=reviews)
+
+
+@api_router.get("/reviews/manage", response_model=ReviewsResponse)
+async def get_reviews_for_management(current_user: User = Depends(get_admin_user)):
+    """Get all reviews for admin management"""
+    reviews_data = await db.reviews.find().sort("created_at", -1).to_list(10)
+    reviews = [Review(**review) for review in reviews_data]
+    return ReviewsResponse(reviews=reviews)
+
+
+@api_router.post("/reviews", response_model=Review)
+async def create_review(review_data: ReviewCreate, current_user: User = Depends(get_admin_user)):
+    """Create a new review (admin only)"""
+    
+    # Check if we already have 3 reviews
+    existing_count = await db.reviews.count_documents({})
+    if existing_count >= 3:
+        raise HTTPException(
+            status_code=400, 
+            detail="Maximum of 3 reviews allowed. Please delete an existing review first."
+        )
+    
+    now = datetime.utcnow()
+    review = Review(
+        id=str(uuid.uuid4()),
+        text=review_data.text,
+        pet_name=review_data.pet_name,
+        owner_name=review_data.owner_name,
+        rating=5,  # Always 5 stars
+        created_at=now,
+        updated_at=now
+    )
+    
+    await db.reviews.insert_one(review.dict())
+    return review
+
+
+@api_router.put("/reviews/{review_id}", response_model=Review)
+async def update_review(
+    review_id: str, 
+    review_data: ReviewUpdate, 
+    current_user: User = Depends(get_admin_user)
+):
+    """Update a review (admin only)"""
+    existing_review = await db.reviews.find_one({"id": review_id})
+    if not existing_review:
+        raise HTTPException(status_code=404, detail="Review not found")
+    
+    update_data = {}
+    if review_data.text is not None:
+        update_data["text"] = review_data.text
+    if review_data.pet_name is not None:
+        update_data["pet_name"] = review_data.pet_name
+    if review_data.owner_name is not None:
+        update_data["owner_name"] = review_data.owner_name
+    
+    if update_data:
+        update_data["updated_at"] = datetime.utcnow()
+        await db.reviews.update_one({"id": review_id}, {"$set": update_data})
+        
+        # Get updated review
+        updated_review_data = await db.reviews.find_one({"id": review_id})
+        return Review(**updated_review_data)
+    
+    return Review(**existing_review)
+
+
+@api_router.delete("/reviews/{review_id}")
+async def delete_review(review_id: str, current_user: User = Depends(get_admin_user)):
+    """Delete a review (admin only)"""
+    result = await db.reviews.delete_one({"id": review_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Review not found")
+    
+    return {"message": "Review deleted successfully"}
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
