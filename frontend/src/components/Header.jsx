@@ -134,20 +134,36 @@ const Header = () => {
     const address = businessInfo.address;
     const parts = address.split(',').map(part => part.trim());
     
-    // Look for VA and zip code pattern
+    // Look for VA and zip code pattern and include the city before it
     for (let i = 0; i < parts.length; i++) {
       if (parts[i].includes('VA') || parts[i].includes('Virginia')) {
-        // Return this part and potentially the next part (zip code)
-        if (i + 1 < parts.length) {
-          return `${parts[i]}, ${parts[i + 1]}`;
-        } else {
-          return parts[i];
+        // Get the city name (previous part) + state + zip
+        let result = '';
+        if (i > 0) {
+          // Include city name from previous part
+          result = parts[i - 1];
         }
+        
+        // Add state
+        if (result) {
+          result += `, ${parts[i]}`;
+        } else {
+          result = parts[i];
+        }
+        
+        // Add zip code if available
+        if (i + 1 < parts.length) {
+          result += `, ${parts[i + 1]}`;
+        }
+        
+        return result;
       }
     }
     
-    // Fallback: return last two parts if available
-    if (parts.length >= 2) {
+    // Fallback: return last three parts if available (city, state, zip)
+    if (parts.length >= 3) {
+      return `${parts[parts.length - 3]}, ${parts[parts.length - 2]}, ${parts[parts.length - 1]}`;
+    } else if (parts.length >= 2) {
       return `${parts[parts.length - 2]}, ${parts[parts.length - 1]}`;
     }
     
