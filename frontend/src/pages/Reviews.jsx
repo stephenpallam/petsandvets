@@ -146,6 +146,30 @@ const Reviews = () => {
     setFormData({ text: '', pet_name: '', owner_name: '' });
   };
 
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center bg-white p-8 rounded-lg shadow-sm border border-gray-200">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Authentication Required</h1>
+          <p className="text-gray-600 mb-4">You must be logged in as an admin to manage reviews.</p>
+          <p className="text-sm text-gray-500">Please log in using the login button in the top navigation bar.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (user.role !== 'admin') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center bg-white p-8 rounded-lg shadow-sm border border-gray-200">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h1>
+          <p className="text-gray-600 mb-4">Admin privileges are required to manage reviews.</p>
+          <p className="text-sm text-gray-500">Please contact an administrator if you need access.</p>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
