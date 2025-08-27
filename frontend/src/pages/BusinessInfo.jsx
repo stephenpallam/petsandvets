@@ -251,7 +251,7 @@ const BusinessInfo = () => {
                 Social Media Links
               </h3>
               
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     <Facebook className="h-4 w-4 inline mr-2 text-blue-600" />
