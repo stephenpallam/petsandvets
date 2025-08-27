@@ -717,10 +717,18 @@ const PhotoManagement = () => {
                   >
                     <Icon className="h-5 w-5 mr-2" />
                     {tab.name}
-                    {uploadedFiles[tab.id] && uploadedFiles[tab.id].length > 0 && (
-                      <span className="ml-2 bg-blue-100 text-blue-600 text-xs px-2 py-0.5 rounded-full">
-                        {uploadedFiles[tab.id].length}
-                      </span>
+                    {tab.id === 'team' ? (
+                      teamMembers && teamMembers.length > 0 && (
+                        <span className="ml-2 bg-blue-100 text-blue-600 text-xs px-2 py-0.5 rounded-full">
+                          {teamMembers.length}
+                        </span>
+                      )
+                    ) : (
+                      uploadedFiles[tab.id] && uploadedFiles[tab.id].length > 0 && (
+                        <span className="ml-2 bg-blue-100 text-blue-600 text-xs px-2 py-0.5 rounded-full">
+                          {uploadedFiles[tab.id].length}
+                        </span>
+                      )
                     )}
                   </button>
                 );
