@@ -35,6 +35,144 @@ import logging
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
+# Google Business Profile Service
+class GoogleBusinessService:
+    def __init__(self):
+        self.scopes = ['https://www.googleapis.com/auth/business.manage']
+        self.redirect_uri = None  # Will be set dynamically
+        
+    def create_oauth_flow(self, client_id: str, client_secret: str, redirect_uri: str):
+        """Create OAuth flow for Google Business Profile API"""
+        flow = Flow.from_client_config(
+            {
+                "web": {
+                    "client_id": client_id,
+                    "client_secret": client_secret,
+                    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                    "token_uri": "https://oauth2.googleapis.com/token",
+                    "redirect_uris": [redirect_uri]
+                }
+            },
+            scopes=self.scopes
+        )
+        flow.redirect_uri = redirect_uri
+        return flow
+    
+    def get_auth_url(self, client_id: str, client_secret: str, redirect_uri: str, state: str):
+        """Get authorization URL for OAuth flow"""
+        flow = self.create_oauth_flow(client_id, client_secret, redirect_uri)
+        auth_url, _ = flow.authorization_url(
+            access_type='offline',
+            include_granted_scopes='true',
+            state=state
+        )
+        return auth_url
+    
+    def exchange_code_for_tokens(self, client_id: str, client_secret: str, 
+                               redirect_uri: str, code: str):
+        """Exchange authorization code for access and refresh tokens"""
+        flow = self.create_oauth_flow(client_id, client_secret, redirect_uri)
+        flow.fetch_token(code=code)
+        return flow.credentials
+    
+    def refresh_access_token(self, client_id: str, client_secret: str, refresh_token: str):
+        """Refresh expired access token"""
+        credentials = Credentials(
+            token=None,
+            refresh_token=refresh_token,
+            client_id=client_id,
+            client_secret=client_secret,
+            token_uri="https://oauth2.googleapis.com/token"
+        )
+        credentials.refresh(Request())
+        return credentials
+    
+    def get_business_service(self, access_token: str):
+        """Get authenticated Google Business Profile service"""
+        credentials = Credentials(token=access_token)
+        return build('mybusinessbusinessinformation', 'v1', credentials=credentials)
+    
+    async def sync_business_hours(self, access_token: str, location_id: str, 
+                                hours_data: dict, sync_type: str):
+        """Sync business hours to Google Business Profile"""
+        try:
+            service = self.get_business_service(access_token)
+            
+            # Convert hours data to Google format
+            google_hours = self.convert_to_google_hours_format(hours_data, sync_type)
+            
+            # Update location hours
+            location_name = f"locations/{location_id}"
+            request_body = {
+                "regularHours": google_hours
+            }
+            
+            result = service.locations().patch(
+                name=location_name,
+                body=request_body,
+                updateMask="regularHours"
+            ).execute()
+            
+            return {"success": True, "result": result}
+            
+        except HttpError as e:
+            return {"success": False, "error": str(e)}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+    
+    def convert_to_google_hours_format(self, hours_data: dict, sync_type: str):
+        """Convert internal hours format to Google Business hours format"""
+        google_hours = {
+            "periods": []
+        }
+        
+        # Days mapping
+        day_mapping = {
+            "monday": "MONDAY",
+            "tuesday": "TUESDAY", 
+            "wednesday": "WEDNESDAY",
+            "thursday": "THURSDAY",
+            "friday": "FRIDAY",
+            "saturday": "SATURDAY",
+            "sunday": "SUNDAY"
+        }
+        
+        for day, hours in hours_data.items():
+            if day in day_mapping and hours and not hours.lower().strip() in ['closed', '']:
+                try:
+                    # Parse hours like "9:00 AM - 6:00 PM"
+                    if ' - ' in hours:
+                        open_time, close_time = hours.split(' - ')
+                        open_time = self.parse_time_to_google_format(open_time.strip())
+                        close_time = self.parse_time_to_google_format(close_time.strip())
+                        
+                        google_hours["periods"].append({
+                            "openDay": day_mapping[day],
+                            "openTime": open_time,
+                            "closeDay": day_mapping[day], 
+                            "closeTime": close_time
+                        })
+                except Exception as e:
+                    logging.error(f"Error parsing hours for {day}: {e}")
+                    continue
+        
+        return google_hours
+    
+    def parse_time_to_google_format(self, time_str: str):
+        """Parse time string like '9:00 AM' to Google format like '09:00'"""
+        try:
+            from datetime import datetime
+            # Parse the time string
+            time_obj = datetime.strptime(time_str, '%I:%M %p')
+            # Return in 24-hour format
+            return time_obj.strftime('%H:%M')
+        except:
+            # Fallback for different formats
+            return time_str.replace(' ', '')
+
+google_service = GoogleBusinessService()
+
+
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
