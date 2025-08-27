@@ -260,7 +260,7 @@ const TeamMemberSection = ({
         <div className="mt-4 bg-white rounded-lg p-4 border border-blue-200">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Name *</label>
               <input
                 key="name-input"
                 type="text"
@@ -273,7 +273,7 @@ const TeamMemberSection = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Title *</label>
               <input
                 key="title-input"
                 type="text"
@@ -288,7 +288,7 @@ const TeamMemberSection = ({
           </div>
           
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Bio</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Bio *</label>
             <textarea
               key="bio-input"
               name="bio"
@@ -302,7 +302,7 @@ const TeamMemberSection = ({
           </div>
           
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Credentials</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Credentials *</label>
             <input
               key="credentials-input"
               type="text"
@@ -332,24 +332,44 @@ const TeamMemberSection = ({
           <div className="border-2 border-dashed border-blue-300 rounded-lg p-4 text-center">
             <Users className="h-8 w-8 mx-auto text-blue-400 mb-2" />
             <p className="text-sm text-blue-700 mb-2">Upload Team Member Photo</p>
-            <label className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors cursor-pointer">
-              <Upload className="h-4 w-4 mr-2" />
-              Choose Photo & Create
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  if (e.target.files[0] && teamMemberForm.name && teamMemberForm.title && teamMemberForm.bio && teamMemberForm.credentials) {
-                    handleFileUpload('team', e.target.files[0], true);
-                    e.target.value = '';
-                  } else {
-                    setError('Please fill in all team member details before uploading photo');
-                  }
-                }}
-                className="hidden"
-              />
-            </label>
-            <p className="text-xs text-blue-600 mt-1">Fill all fields above first, then upload photo to create team member</p>
+            
+            {/* Check if all required fields are filled */}
+            {teamMemberForm.name && teamMemberForm.title && teamMemberForm.bio && teamMemberForm.credentials ? (
+              <label className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors cursor-pointer">
+                <Upload className="h-4 w-4 mr-2" />
+                {uploading ? 'Creating Team Member...' : 'Choose Photo & Create Team Member'}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    if (e.target.files[0]) {
+                      handleFileUpload('team', e.target.files[0], true);
+                      e.target.value = '';
+                    }
+                  }}
+                  disabled={uploading}
+                  className="hidden"
+                />
+              </label>
+            ) : (
+              <div>
+                <button
+                  disabled
+                  className="inline-flex items-center px-4 py-2 bg-gray-300 text-gray-500 rounded-md cursor-not-allowed"
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  Choose Photo & Create Team Member
+                </button>
+                <p className="text-xs text-red-600 mt-2">Please fill in all required fields (*) above first</p>
+              </div>
+            )}
+            
+            {uploading && (
+              <div className="mt-2 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                <span className="text-xs text-blue-600">Uploading and creating team member...</span>
+              </div>
+            )}
           </div>
         </div>
       )}
