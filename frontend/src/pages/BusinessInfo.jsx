@@ -118,6 +118,88 @@ const BusinessInfo = () => {
     }));
   };
 
+  const handleFileUpload = async (category, file) => {
+    setUploading(true);
+    setError(null);
+    
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch(`${API_BASE_URL}/api/upload/${category}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        
+        // Update the uploaded files list
+        setUploadedFiles(prev => ({
+          ...prev,
+          [category]: [...prev[category], result]
+        }));
+        
+        // If uploading homepage slider image, also update business info hero_images
+        if (category === 'homepageslider') {
+          const fullUrl = `${API_BASE_URL}${result.url}`;
+          setBusinessInfo(prev => ({
+            ...prev,
+            hero_images: [...prev.hero_images, fullUrl]
+          }));
+        }
+        
+        setSuccess(`File uploaded successfully to ${category}!`);
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Upload failed');
+      }
+    } catch (err) {
+      setError(`Upload failed: ${err.message}`);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleFileDelete = async (category, filename) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/files/${category}/${filename}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (response.ok) {
+        // Remove from uploaded files
+        setUploadedFiles(prev => ({
+          ...prev,
+          [category]: prev[category].filter(file => file.filename !== filename)
+        }));
+        
+        // If deleting homepage slider image, also update business info hero_images
+        if (category === 'homepageslider') {
+          const fileUrl = `${API_BASE_URL}/api/files/${category}/${filename}`;
+          setBusinessInfo(prev => ({
+            ...prev,
+            hero_images: prev.hero_images.filter(url => !url.includes(filename))
+          }));
+        }
+        
+        setSuccess('File deleted successfully!');
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        throw new Error('Failed to delete file');
+      }
+    } catch (err) {
+      setError(`Delete failed: ${err.message}`);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
