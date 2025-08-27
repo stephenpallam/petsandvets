@@ -1865,6 +1865,472 @@ def test_patient_registration_pdf_filename():
         results.log_failure("Patient Registration PDF Filename", str(e))
         return False
 
+# ============================================================================
+# REVIEWS API TESTS - NEW IMPLEMENTATION
+# ============================================================================
+
+# Global variables for reviews testing
+created_review_ids = []
+
+def test_get_reviews_public():
+    """Test GET /api/reviews (public endpoint for home page)"""
+    try:
+        response = requests.get(f"{API_URL}/reviews")
+        if response.status_code == 200:
+            data = response.json()
+            if ("reviews" in data and 
+                isinstance(data["reviews"], list) and
+                len(data["reviews"]) <= 3):  # Max 3 reviews
+                results.log_success("Get Reviews (Public Endpoint)")
+                return True
+        results.log_failure("Get Reviews (Public)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Reviews (Public)", str(e))
+        return False
+
+def test_get_reviews_manage_admin():
+    """Test GET /api/reviews/manage (admin-only endpoint)"""
+    if not admin_token:
+        results.log_failure("Get Reviews Manage (Admin)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.get(f"{API_URL}/reviews/manage", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if ("reviews" in data and 
+                isinstance(data["reviews"], list)):
+                results.log_success("Get Reviews Manage (Admin)")
+                return True
+        results.log_failure("Get Reviews Manage (Admin)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Reviews Manage (Admin)", str(e))
+        return False
+
+def test_get_reviews_manage_regular_user():
+    """Test GET /api/reviews/manage with regular user (should fail)"""
+    if not user_token:
+        results.log_failure("Get Reviews Manage (Regular User - Should Fail)", "No user token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {user_token}"}
+        response = requests.get(f"{API_URL}/reviews/manage", headers=headers)
+        if response.status_code == 403:
+            results.log_success("Get Reviews Manage (Regular User - Correctly Forbidden)")
+            return True
+        results.log_failure("Get Reviews Manage (Regular User)", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Reviews Manage (Regular User)", str(e))
+        return False
+
+def test_create_review_admin():
+    """Test POST /api/reviews (admin-only endpoint)"""
+    global created_review_ids
+    if not admin_token:
+        results.log_failure("Create Review (Admin)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        review_data = {
+            "text": "Dr. Johnson and her team provided exceptional care for my golden retriever Max. The staff was professional, compassionate, and took the time to explain everything thoroughly.",
+            "pet_name": "Max",
+            "owner_name": "Sarah Thompson"
+        }
+        
+        response = requests.post(f"{API_URL}/reviews", json=review_data, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("text") == review_data["text"] and
+                data.get("pet_name") == review_data["pet_name"] and
+                data.get("owner_name") == review_data["owner_name"] and
+                data.get("rating") == 5 and  # Always 5 stars
+                "id" in data and
+                "created_at" in data and
+                "updated_at" in data):
+                created_review_ids.append(data["id"])
+                results.log_success("Create Review (Admin)")
+                return True
+        results.log_failure("Create Review (Admin)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Create Review (Admin)", str(e))
+        return False
+
+def test_create_review_regular_user():
+    """Test POST /api/reviews with regular user (should fail)"""
+    if not user_token:
+        results.log_failure("Create Review (Regular User - Should Fail)", "No user token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {user_token}"}
+        review_data = {
+            "text": "Great service for my cat Whiskers!",
+            "pet_name": "Whiskers",
+            "owner_name": "John Doe"
+        }
+        
+        response = requests.post(f"{API_URL}/reviews", json=review_data, headers=headers)
+        if response.status_code == 403:
+            results.log_success("Create Review (Regular User - Correctly Forbidden)")
+            return True
+        results.log_failure("Create Review (Regular User)", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Create Review (Regular User)", str(e))
+        return False
+
+def test_create_multiple_reviews():
+    """Test creating multiple reviews to test the 3-review limit"""
+    global created_review_ids
+    if not admin_token:
+        results.log_failure("Create Multiple Reviews", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        
+        # Create second review
+        review_data_2 = {
+            "text": "Outstanding emergency care for my cat Luna. The veterinary team was quick to diagnose and treat her condition. Highly recommend this clinic!",
+            "pet_name": "Luna",
+            "owner_name": "Michael Rodriguez"
+        }
+        
+        response = requests.post(f"{API_URL}/reviews", json=review_data_2, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if "id" in data:
+                created_review_ids.append(data["id"])
+        
+        # Create third review
+        review_data_3 = {
+            "text": "The preventive care program has kept my dog Bella healthy for years. The staff remembers us every visit and provides personalized attention.",
+            "pet_name": "Bella",
+            "owner_name": "Emily Chen"
+        }
+        
+        response = requests.post(f"{API_URL}/reviews", json=review_data_3, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if "id" in data:
+                created_review_ids.append(data["id"])
+                results.log_success("Create Multiple Reviews (Up to 3)")
+                return True
+        results.log_failure("Create Multiple Reviews", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Create Multiple Reviews", str(e))
+        return False
+
+def test_create_review_limit_enforcement():
+    """Test that creating a 4th review fails (3-review limit)"""
+    if not admin_token:
+        results.log_failure("Create Review Limit Enforcement", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        review_data_4 = {
+            "text": "This should fail due to 3-review limit.",
+            "pet_name": "TestPet",
+            "owner_name": "Test Owner"
+        }
+        
+        response = requests.post(f"{API_URL}/reviews", json=review_data_4, headers=headers)
+        if response.status_code == 400:
+            data = response.json()
+            if "Maximum of 3 reviews allowed" in data.get("detail", ""):
+                results.log_success("Create Review Limit Enforcement (3-Review Limit)")
+                return True
+        results.log_failure("Create Review Limit Enforcement", f"Expected 400 with limit message, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Create Review Limit Enforcement", str(e))
+        return False
+
+def test_update_review_admin():
+    """Test PUT /api/reviews/{review_id} (admin-only endpoint)"""
+    if not admin_token or not created_review_ids:
+        results.log_failure("Update Review (Admin)", "No admin token or review ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        review_id = created_review_ids[0]
+        
+        update_data = {
+            "text": "Updated review text: Dr. Johnson and her team provided absolutely exceptional care for my golden retriever Max. The entire experience was outstanding!",
+            "pet_name": "Max (Updated)",
+            "owner_name": "Sarah Thompson-Updated"
+        }
+        
+        response = requests.put(f"{API_URL}/reviews/{review_id}", json=update_data, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("text") == update_data["text"] and
+                data.get("pet_name") == update_data["pet_name"] and
+                data.get("owner_name") == update_data["owner_name"] and
+                data.get("rating") == 5 and  # Should remain 5
+                data.get("id") == review_id):
+                results.log_success("Update Review (Admin)")
+                return True
+        results.log_failure("Update Review (Admin)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Review (Admin)", str(e))
+        return False
+
+def test_update_review_partial():
+    """Test PUT /api/reviews/{review_id} with partial update"""
+    if not admin_token or not created_review_ids:
+        results.log_failure("Update Review (Partial)", "No admin token or review ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        review_id = created_review_ids[0]
+        
+        # Only update text, leave other fields unchanged
+        update_data = {
+            "text": "Partially updated review text with new content."
+        }
+        
+        response = requests.put(f"{API_URL}/reviews/{review_id}", json=update_data, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("text") == update_data["text"] and
+                data.get("rating") == 5 and
+                data.get("id") == review_id):
+                results.log_success("Update Review (Partial Update)")
+                return True
+        results.log_failure("Update Review (Partial)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Review (Partial)", str(e))
+        return False
+
+def test_update_review_regular_user():
+    """Test PUT /api/reviews/{review_id} with regular user (should fail)"""
+    if not user_token or not created_review_ids:
+        results.log_failure("Update Review (Regular User - Should Fail)", "No user token or review ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {user_token}"}
+        review_id = created_review_ids[0]
+        
+        update_data = {
+            "text": "This update should fail."
+        }
+        
+        response = requests.put(f"{API_URL}/reviews/{review_id}", json=update_data, headers=headers)
+        if response.status_code == 403:
+            results.log_success("Update Review (Regular User - Correctly Forbidden)")
+            return True
+        results.log_failure("Update Review (Regular User)", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Review (Regular User)", str(e))
+        return False
+
+def test_update_review_not_found():
+    """Test PUT /api/reviews/{review_id} with invalid review ID"""
+    if not admin_token:
+        results.log_failure("Update Review (Not Found)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        fake_review_id = "non-existent-review-id-12345"
+        
+        update_data = {
+            "text": "This should fail."
+        }
+        
+        response = requests.put(f"{API_URL}/reviews/{fake_review_id}", json=update_data, headers=headers)
+        if response.status_code == 404:
+            results.log_success("Update Review (Not Found - 404)")
+            return True
+        results.log_failure("Update Review (Not Found)", f"Expected 404, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Review (Not Found)", str(e))
+        return False
+
+def test_delete_review_admin():
+    """Test DELETE /api/reviews/{review_id} (admin-only endpoint)"""
+    if not admin_token or not created_review_ids:
+        results.log_failure("Delete Review (Admin)", "No admin token or review ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        # Delete the last created review
+        review_id = created_review_ids[-1]
+        
+        response = requests.delete(f"{API_URL}/reviews/{review_id}", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if "message" in data and "deleted successfully" in data["message"]:
+                created_review_ids.remove(review_id)  # Remove from our tracking
+                results.log_success("Delete Review (Admin)")
+                return True
+        results.log_failure("Delete Review (Admin)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Delete Review (Admin)", str(e))
+        return False
+
+def test_delete_review_regular_user():
+    """Test DELETE /api/reviews/{review_id} with regular user (should fail)"""
+    if not user_token or not created_review_ids:
+        results.log_failure("Delete Review (Regular User - Should Fail)", "No user token or review ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {user_token}"}
+        review_id = created_review_ids[0]
+        
+        response = requests.delete(f"{API_URL}/reviews/{review_id}", headers=headers)
+        if response.status_code == 403:
+            results.log_success("Delete Review (Regular User - Correctly Forbidden)")
+            return True
+        results.log_failure("Delete Review (Regular User)", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Delete Review (Regular User)", str(e))
+        return False
+
+def test_delete_review_not_found():
+    """Test DELETE /api/reviews/{review_id} with invalid review ID"""
+    if not admin_token:
+        results.log_failure("Delete Review (Not Found)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        fake_review_id = "non-existent-review-id-67890"
+        
+        response = requests.delete(f"{API_URL}/reviews/{fake_review_id}", headers=headers)
+        if response.status_code == 404:
+            results.log_success("Delete Review (Not Found - 404)")
+            return True
+        results.log_failure("Delete Review (Not Found)", f"Expected 404, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Delete Review (Not Found)", str(e))
+        return False
+
+def test_create_review_after_deletion():
+    """Test creating a new review after deletion (should work within 3-review limit)"""
+    if not admin_token:
+        results.log_failure("Create Review After Deletion", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        review_data = {
+            "text": "New review created after deletion. The surgical team did an amazing job with my dog's procedure.",
+            "pet_name": "Rocky",
+            "owner_name": "David Wilson"
+        }
+        
+        response = requests.post(f"{API_URL}/reviews", json=review_data, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("text") == review_data["text"] and
+                data.get("pet_name") == review_data["pet_name"] and
+                data.get("owner_name") == review_data["owner_name"] and
+                data.get("rating") == 5 and
+                "id" in data):
+                created_review_ids.append(data["id"])
+                results.log_success("Create Review After Deletion")
+                return True
+        results.log_failure("Create Review After Deletion", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Create Review After Deletion", str(e))
+        return False
+
+def test_reviews_database_storage():
+    """Test that reviews are properly stored in MongoDB with correct fields"""
+    if not admin_token:
+        results.log_failure("Reviews Database Storage", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        
+        # Get all reviews via management endpoint
+        response = requests.get(f"{API_URL}/reviews/manage", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if "reviews" in data and len(data["reviews"]) > 0:
+                review = data["reviews"][0]
+                required_fields = ["id", "text", "pet_name", "owner_name", "rating", "created_at", "updated_at"]
+                
+                if all(field in review for field in required_fields):
+                    if (review["rating"] == 5 and  # Always 5 stars
+                        isinstance(review["text"], str) and
+                        isinstance(review["pet_name"], str) and
+                        isinstance(review["owner_name"], str)):
+                        results.log_success("Reviews Database Storage (Correct Fields)")
+                        return True
+        results.log_failure("Reviews Database Storage", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Reviews Database Storage", str(e))
+        return False
+
+def test_reviews_public_endpoint_limit():
+    """Test that public endpoint returns maximum 3 reviews"""
+    try:
+        response = requests.get(f"{API_URL}/reviews")
+        if response.status_code == 200:
+            data = response.json()
+            if ("reviews" in data and 
+                isinstance(data["reviews"], list) and
+                len(data["reviews"]) <= 3):
+                results.log_success("Reviews Public Endpoint (Max 3 Reviews)")
+                return True
+        results.log_failure("Reviews Public Endpoint Limit", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Reviews Public Endpoint Limit", str(e))
+        return False
+
+def test_review_validation():
+    """Test review creation with missing required fields"""
+    if not admin_token:
+        results.log_failure("Review Validation", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        
+        # Test with missing required fields
+        incomplete_review = {
+            "text": "This review is missing pet_name and owner_name"
+            # Missing pet_name and owner_name
+        }
+        
+        response = requests.post(f"{API_URL}/reviews", json=incomplete_review, headers=headers)
+        if response.status_code == 422:  # Validation error
+            results.log_success("Review Validation (Missing Required Fields)")
+            return True
+        results.log_failure("Review Validation", f"Expected 422, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Review Validation", str(e))
+        return False
+
 def run_all_tests():
     """Run all backend API tests"""
     print("Starting Backend API Tests...")
