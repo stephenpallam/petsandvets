@@ -1,14 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { X, Camera, MapPin, Clock, Phone } from 'lucide-react';
-import { facilityImages, hospitalInfo } from '../mock';
+import { hospitalInfo } from '../mock';
+import axios from 'axios';
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [facilityPhotos, setFacilityPhotos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const primaryColor = '#29add3';
   const primaryLight = '#5bc0db';
   const primaryBg = '#e6f7fb';
+
+  // Fetch facility photos from API
+  useEffect(() => {
+    const fetchFacilityPhotos = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/facility-photos`);
+        if (response.data && response.data.facility_photos) {
+          // Sort by order field (ascending) to display in proper order
+          const sortedPhotos = response.data.facility_photos.sort((a, b) => (a.order || 0) - (b.order || 0));
+          setFacilityPhotos(sortedPhotos);
+        }
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching facility photos:', err);
+        setError('Failed to load facility photos');
+        setLoading(false);
+      }
+    };
+
+    fetchFacilityPhotos();
+  }, []);
 
   const openLightbox = (image) => {
     setSelectedImage(image);
