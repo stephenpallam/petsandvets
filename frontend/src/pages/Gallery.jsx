@@ -80,25 +80,41 @@ const Gallery = () => {
           <h2 className="text-xl font-bold text-gray-900 mb-8 text-center">
             Facility Gallery
           </h2>
-          {facilityImages.length === 0 ? (
+          
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              <span className="ml-4 text-gray-600">Loading facility photos...</span>
+            </div>
+          ) : error ? (
             <div className="text-center py-12">
               <Camera className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-              <p className="text-xl text-gray-600">No images found.</p>
+              <p className="text-xl text-gray-600 mb-4">{error}</p>
+              <p className="text-gray-500 text-sm">Please try refreshing the page or contact us if the problem persists.</p>
             </div>
-          ) : (
+          ) : facilityPhotos.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {facilityImages.map((image) => (
+              {facilityPhotos.map((photo) => (
                 <div
-                  key={image.id}
+                  key={photo.id}
                   className="group relative bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer"
-                  onClick={() => openLightbox(image)}
+                  onClick={() => openLightbox(photo)}
                 >
                   <div className="relative overflow-hidden">
-                    <img
-                      src={image.url}
-                      alt={image.title}
-                      className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
-                    />
+                    <div className="w-full h-48 bg-gray-100 overflow-hidden">
+                      <img
+                        src={photo.photo_url}
+                        alt={photo.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                      <div className="hidden w-full h-full items-center justify-center bg-gray-100">
+                        <Camera className="h-12 w-12 text-gray-400" />
+                      </div>
+                    </div>
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                       <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
                         <Camera className="h-6 w-6 text-white" />
@@ -108,14 +124,20 @@ const Gallery = () => {
                   
                   <div className="p-4">
                     <h3 className="text-lg font-bold text-gray-900 mb-2">
-                      {image.title}
+                      {photo.title}
                     </h3>
                     <p className="text-gray-600 text-sm">
-                      {image.description}
+                      {photo.description}
                     </p>
                   </div>
                 </div>
               ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <Camera className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Facility Photos Coming Soon</h3>
+              <p className="text-gray-600">We're updating our facility gallery. Please check back soon to see our modern veterinary facility.</p>
             </div>
           )}
         </div>
