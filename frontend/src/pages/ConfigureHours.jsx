@@ -654,8 +654,8 @@ const ConfigureHours = () => {
                 </div>
 
                 {/* Add New Special Hour Form */}
-                <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
-                  <h3 className="text-lg font-medium text-purple-900 mb-4">Add Special Holiday Hours</h3>
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Add Special Holiday Hours</h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
