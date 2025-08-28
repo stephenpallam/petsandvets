@@ -62,7 +62,7 @@ const ConfigureHours = () => {
       id: 'urgent', 
       label: 'Urgent Care Hours', 
       icon: Clock,
-      color: '#dc2626'  // Keep red for urgent care
+      color: '#374151'  // Changed from red to dark grey
     },
     { 
       id: 'special', 
