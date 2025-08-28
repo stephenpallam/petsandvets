@@ -433,7 +433,7 @@ const ConfigureHours = () => {
                     ) : (
                       <a
                         href="/google-integration"
-                        className="bg-gray-600 text-white px-3 py-2 rounded-md hover:bg-gray-700 transition-colors text-sm font-medium no-underline"
+                        className="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors font-medium no-underline flex items-center"
                       >
                         Connect Google
                       </a>
