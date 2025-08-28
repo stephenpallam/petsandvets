@@ -333,8 +333,8 @@ const ConfigureHours = () => {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center space-x-3 mb-4">
-            <div className="bg-blue-600 p-3 rounded-lg">
-              <Clock className="h-6 w-6 text-white" style={{ color: '#29add3' }} />
+            <div className="border-2 border-gray-600 p-3 rounded-lg">
+              <Clock className="h-6 w-6" style={{ color: '#29add3' }} />
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Configure Hospital Hours</h1>
