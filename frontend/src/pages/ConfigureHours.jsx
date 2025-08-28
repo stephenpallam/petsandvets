@@ -537,14 +537,12 @@ const ConfigureHours = () => {
                         )}
                       </button>
                     ) : (
-                      <div className="text-xs text-gray-500">
-                        <a 
-                          href="/google-integration" 
-                          className="text-blue-600 hover:text-blue-500 underline"
-                        >
-                          Connect Google
-                        </a>
-                      </div>
+                      <a
+                        href="/google-integration"
+                        className="bg-gray-600 text-white px-3 py-2 rounded-md hover:bg-gray-700 transition-colors text-sm font-medium no-underline"
+                      >
+                        Connect Google
+                      </a>
                     )}
 
                     {/* Save Button */}
