@@ -570,7 +570,7 @@ const ConfigureHours = () => {
                             className="sr-only"
                           />
                           <div className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors ${
-                            urgentCareHours[day.key]?.is_open ? 'bg-red-600' : 'bg-gray-200'
+                            urgentCareHours[day.key]?.is_open ? 'bg-gray-600' : 'bg-gray-200'
                           }`}>
                             <span className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${
                               urgentCareHours[day.key]?.is_open ? 'translate-x-6' : 'translate-x-1'
