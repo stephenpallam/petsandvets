@@ -56,19 +56,19 @@ const ConfigureHours = () => {
       id: 'general', 
       label: 'General Practice Hours', 
       icon: Clock,
-      color: '#29add3'
+      color: '#374151'  // Dark grey
     },
     { 
       id: 'urgent', 
       label: 'Urgent Care Hours', 
       icon: Clock,
-      color: '#dc2626'
+      color: '#dc2626'  // Keep red for urgent care
     },
     { 
       id: 'special', 
       label: 'Special Holidays', 
       icon: CalendarDays,
-      color: '#7c3aed'
+      color: '#7c3aed'  // Keep purple for special
     }
   ];
 
