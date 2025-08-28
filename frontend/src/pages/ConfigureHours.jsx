@@ -404,7 +404,7 @@ const ConfigureHours = () => {
                 <div className="flex justify-between items-center mb-6">
                   <div>
                     <h2 className="text-xl font-semibold text-gray-900 flex items-center">
-                      <Clock className="h-5 w-5 mr-2" style={{ color: '#29add3' }} />
+                      <Clock className="h-5 w-5 mr-2" style={{ color: '#374151' }} />
                       General Practice Hours
                     </h2>
                     <p className="text-gray-600 text-sm mt-1">Set your regular hospital operating hours</p>
@@ -431,22 +431,19 @@ const ConfigureHours = () => {
                         )}
                       </button>
                     ) : (
-                      <div className="text-xs text-gray-500">
-                        <a 
-                          href="/google-integration" 
-                          className="text-blue-600 hover:text-blue-500 underline"
-                        >
-                          Connect Google
-                        </a>
-                      </div>
+                      <a
+                        href="/google-integration"
+                        className="bg-gray-600 text-white px-3 py-2 rounded-md hover:bg-gray-700 transition-colors text-sm font-medium no-underline"
+                      >
+                        Connect Google
+                      </a>
                     )}
 
                     {/* Save Button */}
                     <button
                       onClick={() => saveHours('hospital')}
                       disabled={loading}
-                      className="text-white px-6 py-2 rounded-lg hover:opacity-90 transition-colors disabled:opacity-50 flex items-center font-medium"
-                      style={{ backgroundColor: '#29add3' }}
+                      className="text-white px-6 py-2 rounded-lg hover:opacity-90 transition-colors disabled:opacity-50 flex items-center font-medium bg-gray-700 hover:bg-gray-800"
                     >
                       <Save className="h-4 w-4 mr-2" />
                       Save Changes
