@@ -799,7 +799,7 @@ const ConfigureHours = () => {
                     <button
                       onClick={addSpecialHour}
                       disabled={loading || !newSpecialHour.date || !newSpecialHour.name}
-                      className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 flex items-center font-medium"
+                      className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50 flex items-center font-medium"
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Add Special Hours
