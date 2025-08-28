@@ -775,7 +775,7 @@ const ConfigureHours = () => {
                                 ...prev,
                                 urgent_care: { ...prev.urgent_care, open_time: e.target.value }
                               }))}
-                              className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
                             />
                           </div>
                           <div>
@@ -787,7 +787,7 @@ const ConfigureHours = () => {
                                 ...prev,
                                 urgent_care: { ...prev.urgent_care, close_time: e.target.value }
                               }))}
-                              className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
                             />
                           </div>
                         </div>
