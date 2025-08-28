@@ -484,7 +484,7 @@ const ConfigureHours = () => {
                               type="time"
                               value={hospitalHours[day.key]?.open_time || ''}
                               onChange={(e) => updateHospitalHours(day.key, 'open_time', e.target.value)}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
                             />
                           </div>
                           <div>
@@ -493,7 +493,7 @@ const ConfigureHours = () => {
                               type="time"
                               value={hospitalHours[day.key]?.close_time || ''}
                               onChange={(e) => updateHospitalHours(day.key, 'close_time', e.target.value)}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
                             />
                           </div>
                         </div>
