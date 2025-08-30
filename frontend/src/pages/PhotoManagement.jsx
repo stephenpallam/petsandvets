@@ -575,6 +575,7 @@ const TeamMemberSection = ({
   teamMemberForm,
   handleTeamMemberFormChange,
   handleFileUpload,
+  handleTeamImageReplace,
   handleUpdateTeamMember,
   handleDeleteTeamMember,
   startEditTeamMember,
