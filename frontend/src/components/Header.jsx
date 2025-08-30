@@ -366,6 +366,9 @@ const Header = () => {
 
   const isNavItemActive = (itemName) => {
     switch (itemName) {
+      case 'Home':
+        return location.pathname === '/';
+        
       case 'Services':
         return location.pathname.includes('/services') || 
                (location.pathname.includes('/urgent-care') && !location.pathname.includes('/urgent-care-appointments')) || 
