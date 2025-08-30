@@ -170,114 +170,137 @@ const Header = () => {
     return "South Riding, VA 20152";
   };
 
-  const navigation = [
-    { name: 'Home', href: '/' },
-    { 
-      name: 'About Us',
-      dropdown: [
-        { name: 'Our Mission', href: '/our-mission' },
-        { name: 'Our Values', href: '/our-core-values' },
-        { name: 'Our Team', href: '/our-team' },
-        { name: 'Our Facility', href: '/gallery' }
-      ]
-    },
-    { 
-      name: 'Services',
-      dropdown: [
-        { name: 'Urgent Care', href: '/urgent-care' },
-        {
-          name: 'Dog Services',
-          submenu: [
-            { name: 'Dog Dental Care', href: '/dog-dental-care' },
-            { name: 'Dog Dermatology', href: '/dog-skin-care' },
-            { name: 'Dog Vaccinations', href: '/dog-vaccinations' },
-            { name: 'Dog Wellness', href: '/dog-wellness-exams' },
-            { name: 'Dog Eye Care', href: '/dog-eye-care' },
-            { name: 'Dog Surgeries', href: '/dog-surgeries' }
-          ]
-        },
-        {
-          name: 'Cat Services',
-          submenu: [
-            { name: 'Cat Dental Care', href: '/cat-dental-care' },
-            { name: 'Cat Diagnostic Imaging', href: '/cat-diagnostic-imaging' },
-            { name: 'Cat Vaccinations', href: '/cat-vaccinations' }
-          ]
-        },
-        {
-          name: 'General Services',
-          submenu: [
-            { name: 'Vaccinations', href: '/pet-vaccinations' },
-            { name: 'Wellness Exams', href: '/preventive-pet-care' },
-            { name: 'Ultrasounds', href: '/ultrasound-exams' },
-            { name: 'Diagnostic Laboratory', href: '/veterinary-diagnostic-services' },
-            { name: 'Dermatology & Allergy Care', href: '/pet-dermatology-allergy-care' },
-            { name: 'Digital Radiology', href: '/digital-veterinary-x-rays' },
-            { name: 'Microchipping', href: '/pet-microchipping' },
-            { name: 'End of Life Care', href: '/end-of-life-care' },
-            { name: 'On Site Pharmacy', href: '/on-site-pharmacy' },
-            { name: 'Travel Certificates', href: '/pet-travel-certificates' },
-            { name: 'Diet & Nutrition', href: '/dog-diet-nutrition' }
-          ]
-        },
-        {
-          name: 'Dental Services',
-          submenu: [
-            { name: 'Dental Cleaning', href: '/dental-cleanings' },
-            { name: 'Tooth Extractions', href: '/pet-tooth-extraction' }
-          ]
-        },
-        { name: 'Eye Care', href: '/pet-ocular-services' },
-        {
-          name: 'Surgical Services',
-          submenu: [
-            { name: 'Spay & Neuter', href: '/pet-spay-neuter' },
-            { name: 'Bladder Stone Removal', href: '/pet-bladder-stone-removal' },
-            { name: 'Blocked Cat / PU Surgery', href: '/blocked-cats-urgent-care' },
-            { name: 'Foreign Body / Obstruction Surgery', href: '/foreign-body-surgery' }
-          ]
-        }
-      ]
-    },
-    { 
-      name: 'Patient Resources',
-      dropdown: [
-        { name: 'Your First Visit', href: '/your-first-visit' },
-        { name: 'Insurance & Payments', href: '/pet-insurance-payments' },
-        { 
-          name: 'Online Forms', 
-          submenu: [
-            { name: 'New Patient Registration', href: '/forms/new-patient-registration' },
-            { name: 'Patient Drop-Off', href: '/forms/patient-drop-off' },
-            { name: 'Surgery & Anesthesia Consent', href: '/forms/surgery-anesthesia-consent' },
-            { name: 'Dental Consent', href: '/forms/dental-consent' },
-            { name: 'Request Pet Records', href: '/forms/request-pet-records' }
-          ]
-        },
-        { name: 'Download Forms', href: '/forms-download' }
-      ]
-    },
-    ...(user ? [{
-      name: 'Manager',
-      dropdown: [
-        ...(isAdmin() ? [{ name: 'Urgent Care Appointments', href: '/urgent-care-appointments' }] : []),
-        ...(isAdmin() ? [{ name: 'Configure Hours', href: '/configure-hours' }] : []),
-        ...(isAdmin() ? [{ name: 'Reviews', href: '/reviews' }] : []),
-        ...(isAdmin() ? [{ name: 'Business Info', href: '/business-info' }] : []),
-        ...(isAdmin() ? [{ name: 'Photo Management', href: '/photo-management' }] : []),
-        ...(user ? [{ name: 'Register User', href: '/register-user' }] : []),
-        { name: 'Logout', action: 'logout', className: 'border-t border-gray-200 pt-2' }
-      ]
-    }] : []),
-    { 
+  const getNavigation = () => {
+    const baseNavigation = [
+      { name: 'Home', href: '/' },
+      { 
+        name: 'About Us',
+        dropdown: [
+          { name: 'Our Mission', href: '/our-mission' },
+          { name: 'Our Values', href: '/our-core-values' },
+          { name: 'Our Team', href: '/our-team' },
+          { name: 'Our Facility', href: '/gallery' }
+        ]
+      },
+      { 
+        name: 'Services',
+        dropdown: [
+          { name: 'Urgent Care', href: '/urgent-care' },
+          {
+            name: 'Dog Services',
+            submenu: [
+              { name: 'Dog Dental Care', href: '/dog-dental-care' },
+              { name: 'Dog Dermatology', href: '/dog-skin-care' },
+              { name: 'Dog Vaccinations', href: '/dog-vaccinations' },
+              { name: 'Dog Wellness', href: '/dog-wellness-exams' },
+              { name: 'Dog Eye Care', href: '/dog-eye-care' },
+              { name: 'Dog Surgeries', href: '/dog-surgeries' }
+            ]
+          },
+          {
+            name: 'Cat Services',
+            submenu: [
+              { name: 'Cat Dental Care', href: '/cat-dental-care' },
+              { name: 'Cat Diagnostic Imaging', href: '/cat-diagnostic-imaging' },
+              { name: 'Cat Vaccinations', href: '/cat-vaccinations' }
+            ]
+          },
+          {
+            name: 'General Services',
+            submenu: [
+              { name: 'Vaccinations', href: '/pet-vaccinations' },
+              { name: 'Wellness Exams', href: '/preventive-pet-care' },
+              { name: 'Ultrasounds', href: '/ultrasound-exams' },
+              { name: 'Diagnostic Laboratory', href: '/veterinary-diagnostic-services' },
+              { name: 'Dermatology & Allergy Care', href: '/pet-dermatology-allergy-care' },
+              { name: 'Digital Radiology', href: '/digital-veterinary-x-rays' },
+              { name: 'Microchipping', href: '/pet-microchipping' },
+              { name: 'End of Life Care', href: '/end-of-life-care' },
+              { name: 'On Site Pharmacy', href: '/on-site-pharmacy' },
+              { name: 'Travel Certificates', href: '/pet-travel-certificates' },
+              { name: 'Diet & Nutrition', href: '/dog-diet-nutrition' }
+            ]
+          },
+          {
+            name: 'Dental Services',
+            submenu: [
+              { name: 'Dental Cleaning', href: '/dental-cleanings' },
+              { name: 'Tooth Extractions', href: '/pet-tooth-extraction' }
+            ]
+          },
+          { name: 'Eye Care', href: '/pet-ocular-services' },
+          {
+            name: 'Surgical Services',
+            submenu: [
+              { name: 'Spay & Neuter', href: '/pet-spay-neuter' },
+              { name: 'Bladder Stone Removal', href: '/pet-bladder-stone-removal' },
+              { name: 'Blocked Cat / PU Surgery', href: '/blocked-cats-urgent-care' },
+              { name: 'Foreign Body / Obstruction Surgery', href: '/foreign-body-surgery' }
+            ]
+          }
+        ]
+      },
+      { 
+        name: 'Patient Resources',
+        dropdown: [
+          { name: 'Your First Visit', href: '/your-first-visit' },
+          { name: 'Insurance & Payments', href: '/pet-insurance-payments' },
+          { 
+            name: 'Online Forms', 
+            submenu: [
+              { name: 'New Patient Registration', href: '/forms/new-patient-registration' },
+              { name: 'Patient Drop-Off', href: '/forms/patient-drop-off' },
+              { name: 'Surgery & Anesthesia Consent', href: '/forms/surgery-anesthesia-consent' },
+              { name: 'Dental Consent', href: '/forms/dental-consent' },
+              { name: 'Request Pet Records', href: '/forms/request-pet-records' }
+            ]
+          },
+          { name: 'Download Forms', href: '/forms-download' }
+        ]
+      }
+    ];
+
+    // Add Manager menu only if user is logged in
+    if (user) {
+      const managerDropdown = [];
+      
+      if (isAdmin()) {
+        managerDropdown.push(
+          { name: 'Urgent Care Appointments', href: '/urgent-care-appointments' },
+          { name: 'Configure Hours', href: '/configure-hours' },
+          { name: 'Reviews', href: '/reviews' },
+          { name: 'Business Info', href: '/business-info' },
+          { name: 'Photo Management', href: '/photo-management' }
+        );
+      }
+      
+      if (user) {
+        managerDropdown.push({ name: 'Register User', href: '/register-user' });
+      }
+      
+      // Always add logout for logged-in users
+      managerDropdown.push({ name: 'Logout', action: 'logout', className: 'border-t border-gray-200 pt-2' });
+      
+      baseNavigation.push({
+        name: 'Manager',
+        dropdown: managerDropdown
+      });
+    }
+
+    // Add Contact Us
+    baseNavigation.push({
       name: 'Contact Us',
       dropdown: [
         { name: 'Reach Us', href: '/reach-us' },
         { name: 'Our Hours', href: '/our-hours' },
         { name: 'Message Us', href: '/message-us' }
       ]
-    }
-  ];
+    });
+
+    return baseNavigation;
+  };
+
+  const navigation = getNavigation();
 
   const isActive = (href) => location.pathname === href;
 
