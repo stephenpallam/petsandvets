@@ -327,7 +327,22 @@ const ConfigureHours = () => {
     );
   }
 
-  if (!isAdmin()) {
+  // If there's a token but no user yet, wait for user profile to load
+  if (token && !user) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm mx-4">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-3"></div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Loading</h3>
+            <p className="text-sm text-gray-600">Loading your profile...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user || !isAdmin()) {
     return (
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
