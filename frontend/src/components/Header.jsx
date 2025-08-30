@@ -391,7 +391,10 @@ const Header = () => {
                location.pathname.includes('/your-first-visit') ||
                location.pathname.includes('/pet-insurance-payments');
       
+      case 'Admin':
       case 'Manager':
+      case 'Technician':
+      case 'User':
         return location.pathname.includes('/urgent-care-appointments') ||
                location.pathname.includes('/configure-hours') ||
                location.pathname.includes('/reviews') ||
