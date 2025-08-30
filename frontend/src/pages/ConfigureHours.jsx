@@ -328,8 +328,8 @@ const ConfigureHours = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
+      <div className="max-w-6xl mx-auto px-2 sm:px-4 lg:px-8">
 
 
         {/* Message Display */}
