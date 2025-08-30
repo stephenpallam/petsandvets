@@ -10,7 +10,14 @@ const Header = () => {
   const [businessInfo, setBusinessInfo] = useState(null);
   const [currentHours, setCurrentHours] = useState(null);
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, isAdmin, logout } = useAuth();
+
+  // Handle logout with redirect to home page
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   // Fetch business information and current hours
   useEffect(() => {
