@@ -829,7 +829,7 @@ const ConfigureHours = () => {
                     </div>
                   </div>
 
-                  <div className="flex justify-end">
+                  <div className="flex justify-stretch sm:justify-end">
                     <button
                       onClick={addSpecialHour}
                       disabled={loading || !newSpecialHour.date || !newSpecialHour.name}
