@@ -2000,16 +2000,16 @@ const PhotoManagement = () => {
             </div>
 
             {/* Information Note */}
-            <div className="mt-6 sm:mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="mt-6 sm:mt-8 bg-gray-100 border border-gray-200 rounded-lg p-4">
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <Camera className="h-5 w-5 text-blue-400" />
+                  <Camera className="h-5 w-5 text-gray-600" />
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-blue-800">
+                  <h3 className="text-sm font-medium text-gray-800">
                     Photo Management Tips
                   </h3>
-                  <div className="mt-2 text-sm text-blue-700">
+                  <div className="mt-2 text-sm text-gray-700">
                     <ul className="list-disc list-inside space-y-1 text-xs sm:text-sm">
                       <li><strong>Home Page Slider:</strong> Use high-quality images (1920x800px recommended) for best results</li>
                       <li><strong>Team Photos:</strong> Professional headshots work best, consistent lighting and backgrounds preferred</li>
