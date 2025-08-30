@@ -111,7 +111,7 @@ const OurTeam = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {teamMembers.map((member) => (
                 <div key={member.id} className="bg-white rounded-xl shadow-md overflow-hidden">
-                  <div className="w-full h-48 bg-gray-100 overflow-hidden">
+                  <div className="w-full h-64 bg-gray-100 overflow-hidden">
                     <img
                       src={member.photo_url}
                       alt={member.name}
