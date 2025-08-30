@@ -685,10 +685,10 @@ const TeamMemberSection = ({
             />
           </div>
 
-          <div className="border-2 border-dashed border-blue-300 rounded-lg p-4 text-center">
-            <Users className="h-8 w-8 mx-auto text-blue-400 mb-2" />
-            <p className="text-sm text-blue-700 mb-2">Upload Team Member Photo</p>
-            <p className="text-xs text-blue-600 mb-3">Recommended size: 400x300px (4:3 aspect ratio) for best results</p>
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center bg-gray-50">
+            <Users className="h-8 w-8 mx-auto text-gray-400 mb-2" />
+            <p className="text-sm text-gray-700 mb-2">Upload Team Member Photo</p>
+            <p className="text-xs text-gray-600 mb-3">Recommended size: 400x300px (4:3 aspect ratio) for best results</p>
             
             {/* Check if all required fields are filled */}
             {teamMemberForm.name && teamMemberForm.title && teamMemberForm.bio && teamMemberForm.credentials ? (
