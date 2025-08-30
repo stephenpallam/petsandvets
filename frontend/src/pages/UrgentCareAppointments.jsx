@@ -443,7 +443,8 @@ const UrgentCareAppointments = () => {
                     <button
                       onClick={() => handlePageChange(currentPage - 1)}
                       disabled={currentPage === 1}
-                      className="flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex items-center px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{ color: currentPage === 1 ? '#9ca3af' : '#29add3' }}
                     >
                       <ChevronLeft className="h-4 w-4 mr-1" />
                       Previous
