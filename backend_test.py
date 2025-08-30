@@ -75,9 +75,34 @@ regular_user_login = {
     "password": "testpass123"
 }
 
+# Role-based test users
+technician_user_data = {
+    "email": "technician@veterinary.com",
+    "password": "tech123",
+    "full_name": "Alex Thompson",
+    "role": "technician"
+}
+
+manager_user_data = {
+    "email": "manager@veterinary.com", 
+    "password": "manager123",
+    "full_name": "Dr. Maria Garcia",
+    "role": "manager"
+}
+
+admin_user_data = {
+    "email": "newadmin@veterinary.com",
+    "password": "newadmin123", 
+    "full_name": "Dr. John Smith",
+    "role": "admin"
+}
+
 # Global variables for tokens
 admin_token = None
 user_token = None
+technician_token = None
+manager_token = None
+new_admin_token = None
 
 def test_api_root():
     """Test API root endpoint"""
