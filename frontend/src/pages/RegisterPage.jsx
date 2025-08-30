@@ -315,15 +315,6 @@ const RegisterPage = () => {
                   </button>
                 </div>
               )}
-              <div>
-                <button
-                  type="button"
-                  onClick={() => navigate('/')}
-                  className="text-sm text-gray-600 hover:text-gray-900 focus:outline-none focus:underline transition-colors"
-                >
-                  ← Back to Website
-                </button>
-              </div>
             </div>
           </div>
         </div>
