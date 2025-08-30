@@ -2348,9 +2348,9 @@ async def update_user(
         # Build update query
         update_data = {}
         if user_update.fullName is not None:
-            update_data["fullName"] = user_update.fullName
+            update_data["full_name"] = user_update.fullName  # Convert camelCase to snake_case for database
         if user_update.password is not None:
-            update_data["password"] = hash_password(user_update.password)
+            update_data["password_hash"] = hash_password(user_update.password)  # Use correct field name
         if user_update.role is not None and current_user.role == UserRole.ADMIN:
             # Only admins can change roles
             update_data["role"] = user_update.role
