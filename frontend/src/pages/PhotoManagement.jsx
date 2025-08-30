@@ -1182,10 +1182,17 @@ const PhotoManagement = () => {
     }
   };
 
+  const confirmDeleteTeamMember = (memberId) => {
+    const member = teamMembers.find(m => m.id === memberId);
+    setDeleteData({
+      type: 'team',
+      id: memberId,
+      name: member ? member.name : 'Team Member'
+    });
+    setShowDeleteConfirm(true);
+  };
+
   const handleDeleteTeamMember = async (memberId) => {
-    if (!window.confirm('Are you sure you want to delete this team member?')) {
-      return;
-    }
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/team-members/${memberId}`, {
