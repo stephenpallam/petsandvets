@@ -623,22 +623,22 @@ const Header = () => {
                     <Link
                       to={item.href}
                       className={`flex items-center px-2 py-1 text-sm font-medium rounded-lg transition-all duration-200 ${
-                        isActive(item.href)
+                        isNavItemActive(item.name)
                           ? 'text-gray-900' 
                           : 'text-gray-700 hover:text-gray-900'
                       }`}
                       style={{
-                        backgroundColor: isActive(item.href) ? '#e6f7fb' : 'transparent',
-                        color: isActive(item.href) ? '#29add3' : undefined
+                        backgroundColor: isNavItemActive(item.name) ? '#e6f7fb' : 'transparent',
+                        color: isNavItemActive(item.name) ? '#29add3' : undefined
                       }}
                       onMouseEnter={(e) => {
-                        if (!isActive(item.href)) {
+                        if (!isNavItemActive(item.name)) {
                           e.target.style.color = '#29add3';
                           e.target.style.backgroundColor = '#f0fdff';
                         }
                       }}
                       onMouseLeave={(e) => {
-                        if (!isActive(item.href)) {
+                        if (!isNavItemActive(item.name)) {
                           e.target.style.color = '#374151';
                           e.target.style.backgroundColor = 'transparent';
                         }
