@@ -281,13 +281,13 @@ const Reviews = () => {
                 </button>
               </div>
             </form>
-          </div>
-        )}
+              </div>
+            )}
 
-        {/* Reviews List */}
-        <div className="space-y-6">
-          {reviews.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+            {/* Reviews List */}
+            <div className={`space-y-6 ${showAddForm ? 'border-t border-gray-200 pt-6 mt-6' : ''}`}>
+              {reviews.length === 0 ? (
+                <div className="p-8 text-center">
               <p className="text-gray-500">No reviews yet. Add your first review!</p>
             </div>
           ) : (
