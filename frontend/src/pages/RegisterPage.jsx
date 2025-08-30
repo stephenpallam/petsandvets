@@ -91,13 +91,8 @@ const RegisterPage = () => {
         
         // Redirect after success
         setTimeout(() => {
-          if (user) {
-            // Admin/Manager creating users - redirect to appropriate page
-            navigate('/');
-          } else {
-            // Public registration - redirect to login
-            navigate('/login');
-          }
+          // Always redirect to home page after successful registration
+          navigate('/');
         }, 2000);
       } else {
         setMessage({ text: result.error, type: 'error' });
