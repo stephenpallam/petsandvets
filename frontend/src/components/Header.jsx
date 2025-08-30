@@ -7,6 +7,7 @@ import axios from 'axios';
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [openMobileSubmenu, setOpenMobileSubmenu] = useState(null); // New state for mobile submenu
   const [businessInfo, setBusinessInfo] = useState(null);
   const [currentHours, setCurrentHours] = useState(null);
   const location = useLocation();
@@ -17,6 +18,11 @@ const Header = () => {
   const handleLogout = () => {
     logout();
     navigate('/');
+  };
+
+  // Toggle mobile submenu
+  const toggleMobileSubmenu = (itemName) => {
+    setOpenMobileSubmenu(openMobileSubmenu === itemName ? null : itemName);
   };
 
   // Fetch business information and current hours
