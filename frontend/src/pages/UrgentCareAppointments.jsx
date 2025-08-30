@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 
 const UrgentCareAppointments = () => {
-  const { user, token, isAdmin, loading: authLoading } = useAuth();
+  const { user, token, isAdmin, canAccessTechnician, loading: authLoading } = useAuth();
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
