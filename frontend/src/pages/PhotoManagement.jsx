@@ -770,7 +770,7 @@ const TeamMemberSection = ({
             {uploading && (
               <div className="mt-2 flex items-center justify-center">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
-                <span className="text-xs text-blue-600">Uploading and creating team member...</span>
+                <span className="text-xs text-gray-600">Uploading and creating team member...</span>
               </div>
             )}
           </div>
