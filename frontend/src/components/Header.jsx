@@ -678,7 +678,7 @@ const Header = () => {
       {/* Mobile Navigation */}
       {isMenuOpen && (
         <div className="lg:hidden bg-white border-t border-gray-200 shadow-lg">
-          <div className="px-4 py-3 space-y-3 max-h-96 overflow-y-auto">
+          <div className="px-4 py-3 space-y-2 max-h-96 overflow-y-auto">
             {navigation.map((item) => {
               // Hide Home link when on home page
               if (item.name === 'Home' && location.pathname === '/') {
@@ -689,88 +689,116 @@ const Header = () => {
                 <div key={item.name}>
                   {item.dropdown ? (
                     <div>
-                      <Link
-                        to={item.href}
-                        onClick={() => setIsMenuOpen(false)}
-                        className={`flex items-center justify-between px-3 py-2 text-base font-medium rounded-lg transition-all duration-200 ${
-                          isActive(item.href) || location.pathname.includes('/services') || location.pathname.includes('/urgent-care') || location.pathname.includes('/dog-') || location.pathname.includes('/cat-') || location.pathname.includes('/pet-') || location.pathname.includes('/dental-') || location.pathname.includes('/ultrasound-') || location.pathname.includes('/veterinary-') || location.pathname.includes('/digital-') || location.pathname.includes('/preventive-') || location.pathname.includes('/blocked-') || location.pathname.includes('/foreign-') || location.pathname.includes('/our-') || location.pathname.includes('/about') || location.pathname.includes('/gallery')
+                      <button
+                        onClick={() => toggleMobileSubmenu(item.name)}
+                        className={`flex items-center justify-between w-full px-3 py-2 text-base font-medium rounded-lg transition-all duration-200 ${
+                          isNavItemActive(item.name) || openMobileSubmenu === item.name
                             ? 'text-gray-900'
                             : 'text-gray-700 hover:text-gray-900'
                         }`}
                         style={{
-                          backgroundColor: (isActive(item.href) || location.pathname.includes('/services') || location.pathname.includes('/urgent-care') || location.pathname.includes('/dog-') || location.pathname.includes('/cat-') || location.pathname.includes('/pet-') || location.pathname.includes('/dental-') || location.pathname.includes('/ultrasound-') || location.pathname.includes('/veterinary-') || location.pathname.includes('/digital-') || location.pathname.includes('/preventive-') || location.pathname.includes('/blocked-') || location.pathname.includes('/foreign-') || location.pathname.includes('/our-') || location.pathname.includes('/about') || location.pathname.includes('/gallery')) ? '#e6f7fb' : undefined,
-                          color: (isActive(item.href) || location.pathname.includes('/services') || location.pathname.includes('/urgent-care') || location.pathname.includes('/dog-') || location.pathname.includes('/cat-') || location.pathname.includes('/pet-') || location.pathname.includes('/dental-') || location.pathname.includes('/ultrasound-') || location.pathname.includes('/veterinary-') || location.pathname.includes('/digital-') || location.pathname.includes('/preventive-') || location.pathname.includes('/blocked-') || location.pathname.includes('/foreign-') || location.pathname.includes('/our-') || location.pathname.includes('/about') || location.pathname.includes('/gallery')) ? '#29add3' : undefined
+                          backgroundColor: (isNavItemActive(item.name) || openMobileSubmenu === item.name) ? '#e6f7fb' : undefined,
+                          color: (isNavItemActive(item.name) || openMobileSubmenu === item.name) ? '#29add3' : undefined
                         }}
                       >
-                        {item.name}
-                      </Link>
+                        <span>{item.name}</span>
+                        {openMobileSubmenu === item.name ? (
+                          <ChevronUp className="h-4 w-4" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4" />
+                        )}
+                      </button>
                       
-                      {/* Mobile Dropdown Items */}
-                      <div className="ml-4 mt-2 space-y-2">
-                        {item.dropdown.map((dropdownItem, index) => (
-                          <div key={index}>
-                            {dropdownItem.submenu ? (
-                              <div>
-                                <div className="px-3 py-1 text-sm font-medium text-gray-600 bg-gray-50 rounded">
+                      {/* Mobile Dropdown Items with Slide Animation */}
+                      <div 
+                        className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                          openMobileSubmenu === item.name ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                        }`}
+                      >
+                        <div className="ml-4 mt-2 space-y-2 pb-2">
+                          {item.dropdown.map((dropdownItem, index) => (
+                            <div key={index}>
+                              {dropdownItem.submenu ? (
+                                <div>
+                                  <div className="px-3 py-2 text-sm font-medium text-gray-600 bg-gray-50 rounded-md">
+                                    {dropdownItem.name}
+                                  </div>
+                                  <div className="ml-4 mt-1 space-y-1">
+                                    {dropdownItem.submenu.map((subItem, subIndex) => (
+                                      <Link
+                                        key={subIndex}
+                                        to={subItem.href}
+                                        onClick={() => {
+                                          setIsMenuOpen(false);
+                                          setOpenMobileSubmenu(null);
+                                        }}
+                                        className="block px-3 py-2 text-sm text-gray-700 hover:text-white hover:bg-blue-600 rounded-md transition-all duration-200"
+                                        style={{
+                                          backgroundColor: location.pathname === subItem.href ? '#29add3' : undefined,
+                                          color: location.pathname === subItem.href ? 'white' : undefined
+                                        }}
+                                      >
+                                        {subItem.name}
+                                      </Link>
+                                    ))}
+                                  </div>
+                                </div>
+                              ) : dropdownItem.action === 'logout' ? (
+                                <button
+                                  onClick={() => {
+                                    handleLogout();
+                                    setIsMenuOpen(false);
+                                    setOpenMobileSubmenu(null);
+                                  }}
+                                  className={`block w-full text-left px-3 py-2 text-sm text-gray-700 hover:text-red-600 rounded-md transition-colors duration-200 ${dropdownItem.className || ''}`}
+                                >
                                   {dropdownItem.name}
-                                </div>
-                                <div className="ml-4 mt-1 space-y-1">
-                                  {dropdownItem.submenu.map((subItem, subIndex) => (
-                                    <Link
-                                      key={subIndex}
-                                      to={subItem.href}
-                                      onClick={() => setIsMenuOpen(false)}
-                                      className="block px-3 py-1 text-sm text-gray-700 hover:text-blue-600 rounded transition-colors duration-200"
-                                    >
-                                      {subItem.name}
-                                    </Link>
-                                  ))}
-                                </div>
-                              </div>
-                            ) : dropdownItem.action === 'logout' ? (
-                              <button
-                                onClick={() => {
-                                  handleLogout();
-                                  setIsMenuOpen(false);
-                                }}
-                                className={`block w-full text-left px-3 py-2 text-sm text-gray-700 hover:text-red-600 rounded transition-colors duration-200 ${dropdownItem.className || ''}`}
-                              >
-                                {dropdownItem.name}
-                              </button>
-                            ) : (
-                              <Link
-                                to={dropdownItem.href}
-                                onClick={() => setIsMenuOpen(false)}
-                                className="block px-3 py-2 text-sm text-gray-700 hover:text-blue-600 rounded transition-colors duration-200"
-                              >
-                                {dropdownItem.name}
-                              </Link>
-                            )}
-                          </div>
-                        ))}
+                                </button>
+                              ) : (
+                                <Link
+                                  to={dropdownItem.href}
+                                  onClick={() => {
+                                    setIsMenuOpen(false);
+                                    setOpenMobileSubmenu(null);
+                                  }}
+                                  className="block px-3 py-2 text-sm text-gray-700 hover:text-white hover:bg-blue-600 rounded-md transition-all duration-200"
+                                  style={{
+                                    backgroundColor: location.pathname === dropdownItem.href ? '#29add3' : undefined,
+                                    color: location.pathname === dropdownItem.href ? 'white' : undefined
+                                  }}
+                                >
+                                  {dropdownItem.name}
+                                </Link>
+                              )}
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   ) : (
                     <Link
                       to={item.href}
-                      onClick={() => setIsMenuOpen(false)}
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        setOpenMobileSubmenu(null);
+                      }}
                       className={`block px-3 py-2 text-base font-medium rounded-lg transition-all duration-200 ${
-                        isActive(item.href)
+                        isNavItemActive(item.name)
                           ? 'text-gray-900'
                           : 'text-gray-700 hover:text-gray-900'
                       }`}
                       style={{
-                        backgroundColor: isActive(item.href) ? '#e6f7fb' : undefined,
-                        color: isActive(item.href) ? '#29add3' : undefined
+                        backgroundColor: isNavItemActive(item.name) ? '#e6f7fb' : undefined,
+                        color: isNavItemActive(item.name) ? '#29add3' : undefined
                       }}
                       onMouseEnter={(e) => {
-                        if (!isActive(item.href)) {
+                        if (!isNavItemActive(item.name)) {
                           e.target.style.color = '#29add3';
                           e.target.style.backgroundColor = '#f9fafb';
                         }
                       }}
                       onMouseLeave={(e) => {
-                        if (!isActive(item.href)) {
+                        if (!isNavItemActive(item.name)) {
                           e.target.style.color = '#374151';
                           e.target.style.backgroundColor = 'transparent';
                         }
