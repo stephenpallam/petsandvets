@@ -119,6 +119,7 @@ function App() {
               <Route path="/our-hours" element={<OurHours />} />
               <Route path="/message-us" element={<MessageUs />} />
               <Route path="/configure-hours" element={<ConfigureHours />} />
+              <Route path="/user-management" element={<UserManagement />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/register-user" element={<RegisterPage />} />
               <Route path="/forms/new-patient-registration" element={<NewPatientRegistration />} />
