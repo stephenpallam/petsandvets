@@ -312,6 +312,21 @@ const ConfigureHours = () => {
     );
   }
 
+  // Show compact loading modal while authentication is being determined
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm mx-4">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-3"></div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Loading</h3>
+            <p className="text-sm text-gray-600">Verifying your access permissions...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!isAdmin()) {
     return (
       <div className="min-h-screen bg-gray-50 py-12">
