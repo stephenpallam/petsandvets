@@ -74,6 +74,33 @@ const ConfigureHours = () => {
     }
   ];
 
+  // Authentication useEffect - same pattern as PhotoManagement
+  useEffect(() => {
+    // Wait for auth to finish loading before checking permissions
+    if (authLoading) {
+      return;
+    }
+
+    // If there's a token but no user yet, wait for user profile to load
+    if (token && !user) {
+      return;
+    }
+
+    if (user && isAdmin()) {
+      setAuthError(null);
+      setPageLoading(false);
+    } else if (user && !isAdmin()) {
+      setAuthError('Access denied. Admin privileges required.');
+      setPageLoading(false);
+    } else if (!token) {
+      // Only show error if there's definitely no token
+      setAuthError('You need administrator privileges to configure hospital hours.');
+      setPageLoading(false);
+    }
+  }, [user, token, authLoading]);
+
+  // Existing useEffects start here...
+
   useEffect(() => {
     // Wait for auth to finish loading
     if (authLoading) {
