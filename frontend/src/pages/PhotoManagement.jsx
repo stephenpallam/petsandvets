@@ -728,7 +728,7 @@ const TeamMemberSection = ({
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {teamMembers.map((member) => (
-            <div key={`team-member-${member.id}`} className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+            <div key={`team-member-${member.id}`} className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6 shadow-sm">
               {editingTeamMember === member.id ? (
                 /* Edit Form */
                 <div className="space-y-4">
