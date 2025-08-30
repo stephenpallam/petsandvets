@@ -362,22 +362,7 @@ const Home = () => {
                     </div>
                   </div>
                   
-                  {/* Image indicators */}
-                  {heroImages.length > 1 && (
-                    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                      {heroImages.map((_, index) => (
-                        <button
-                          key={index}
-                          onClick={() => setCurrentHeroImage(index)}
-                          className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                            currentHeroImage === index 
-                              ? 'bg-white' 
-                              : 'bg-white/50 hover:bg-white/75'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  )}
+
                 </>
               ) : (
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center" style={{ height: '25rem' }}>
