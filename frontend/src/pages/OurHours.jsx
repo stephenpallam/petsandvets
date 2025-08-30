@@ -129,6 +129,26 @@ const OurHours = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="bg-white">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
+            Our Hours
+          </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+              <Clock className="mr-2 h-4 w-4" />
+              Always Here When You Need Us
+            </span>
+          </div>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto mb-8">
+            Flexible scheduling with both general practice and urgent care services. 
+            Quality veterinary care on your schedule with extended hours to meet your pet's needs 
+            when it's most convenient for your family.
+          </p>
+        </div>
+      </section>
+
       {/* Operating Hours - Moved to Top */}
       <section style={{ backgroundColor: '#f8f9fa', paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
