@@ -111,7 +111,7 @@ const RegisterPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8" style={{paddingTop: '120px', paddingBottom: '48px'}}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8" style={{paddingTop: '30px', paddingBottom: '48px'}}>
         <div className="w-full max-w-md mx-auto">
           <div className="bg-white py-8 px-6 shadow-lg rounded-lg border border-gray-200">
             {/* Form Title */}
