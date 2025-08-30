@@ -473,7 +473,7 @@ const FacilitySection = ({
                             accept="image/*"
                             onChange={(e) => {
                               if (e.target.files[0]) {
-                                handleFacilityUpload(e.target.files[0], false);
+                                handleFacilityImageReplace(e.target.files[0]);
                                 e.target.value = '';
                               }
                             }}
