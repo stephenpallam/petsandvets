@@ -976,7 +976,7 @@ async def get_appointments(
 @api_router.get("/urgent-care-appointments/{appointment_id}", response_model=UrgentCareAppointment)
 async def get_appointment_details(
     appointment_id: str,
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_staff_user)  # Changed from get_admin_user
 ):
     appointment = await db.urgent_care_appointments.find_one({"id": appointment_id})
     if not appointment:
