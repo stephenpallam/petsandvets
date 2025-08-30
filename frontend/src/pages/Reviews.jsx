@@ -19,6 +19,32 @@ const Reviews = () => {
   const { user, token, isAdmin, loading: authLoading } = useAuth();
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
 
+  // Authentication useEffect - same pattern as ConfigureHours and BusinessInfo
+  useEffect(() => {
+    // Wait for auth to finish loading before checking permissions
+    if (authLoading) {
+      return;
+    }
+
+    // If there's a token but no user yet, wait for user profile to load
+    if (token && !user) {
+      return;
+    }
+
+    if (user && isAdmin()) {
+      setAuthError(null);
+      setPageLoading(false);
+      fetchReviews();
+    } else if (user && !isAdmin()) {
+      setAuthError('Access denied. Admin privileges required.');
+      setPageLoading(false);
+    } else if (!token) {
+      // Only show error if there's definitely no token
+      setAuthError('You must be logged in as an admin to manage reviews.');
+      setPageLoading(false);
+    }
+  }, [user, token, authLoading]);
+
   const fetchReviews = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/reviews/manage`, {
