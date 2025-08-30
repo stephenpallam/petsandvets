@@ -82,10 +82,10 @@ const SliderSection = ({
             />
           </div>
 
-          <div className="border-2 border-dashed border-blue-300 rounded-lg p-4 text-center">
-            <Image className="h-8 w-8 mx-auto text-blue-400 mb-2" />
-            <p className="text-sm text-blue-700 mb-2">Upload Slider Image</p>
-            <p className="text-xs text-blue-600 mb-3">Recommended size: 1920x800px for best results</p>
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center bg-gray-50">
+            <Image className="h-8 w-8 mx-auto text-gray-400 mb-2" />
+            <p className="text-sm text-gray-700 mb-2">Upload Slider Image</p>
+            <p className="text-xs text-gray-600 mb-3">Recommended size: 1920x800px for best results</p>
             
             {/* Check if all required fields are filled */}
             {sliderForm.title && sliderForm.description ? (
