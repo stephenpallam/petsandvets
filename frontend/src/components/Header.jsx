@@ -343,7 +343,7 @@ const Header = () => {
     switch (itemName) {
       case 'Services':
         return location.pathname.includes('/services') || 
-               location.pathname.includes('/urgent-care') || 
+               (location.pathname.includes('/urgent-care') && !location.pathname.includes('/urgent-care-appointments')) || 
                location.pathname.includes('/dog-') || 
                location.pathname.includes('/cat-') || 
                (location.pathname.includes('/pet-') && !location.pathname.includes('/pet-insurance-payments')) || 
