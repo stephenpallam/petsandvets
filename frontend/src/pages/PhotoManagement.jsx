@@ -285,7 +285,10 @@ const SliderSection = ({
                   <div className="flex flex-col space-y-1">
                     <button
                       onClick={() => startEditSlider(image)}
-                      className="p-1 text-blue-600 hover:text-blue-700 transition-colors"
+                      className="p-1 transition-colors"
+                      style={{ color: '#29add3' }}
+                      onMouseEnter={(e) => e.target.style.color = '#2196c7'}
+                      onMouseLeave={(e) => e.target.style.color = '#29add3'}
                       title="Edit"
                     >
                       <Eye className="h-4 w-4" />
