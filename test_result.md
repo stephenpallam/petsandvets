@@ -157,17 +157,17 @@ frontend:
         agent: "main"
         comment: "Replaced modal-based registration with dedicated RegisterPage. Updated App.js routing to use RegisterPage for both /register and /register-user paths. Enhanced role-based registration with proper permissions (admin can create all roles, manager can create user/technician/manager, etc.)."
 
-  - task: "Dynamic Role-Based Navigation"
+  - task: "Authentication Persistence Fix for Admin Pages"
     implemented: true
     working: false
-    file: "/app/frontend/src/components/Header.jsx"
+    file: "/app/frontend/src/pages/BusinessInfo.jsx, /app/frontend/src/pages/PhotoManagement.jsx, /app/frontend/src/pages/Reviews.jsx, /app/frontend/src/pages/GoogleIntegration.jsx, /app/frontend/src/pages/GoogleCallback.jsx"
     stuck_count: 0
     priority: "high"
     needs_retesting: true
     status_history:
       - working: false
         agent: "main"
-        comment: "Enhanced Manager dropdown navigation with role-based access control. Admin gets full access to all management features, Manager gets appointments and user registration, Technician gets appointments only. Updated navigation links to use /register instead of /register-user."
+        comment: "Fixed authentication persistence issue on page refresh for all admin pages. Added authLoading checks to prevent premature permission validation before user data is loaded from localStorage. Updated BusinessInfo, PhotoManagement, Reviews, GoogleIntegration, and GoogleCallback pages to wait for authentication to complete before checking permissions."
 
 metadata:
   created_by: "main_agent"
