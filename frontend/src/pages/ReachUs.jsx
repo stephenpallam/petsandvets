@@ -48,19 +48,15 @@ const ReachUs = () => {
             Reach Us
           </h1>
           <div className="mb-6">
-            <span className="inline-flex items-center px-6 py-3 rounded-full text-lg font-bold text-white shadow-lg" style={{ backgroundColor: primaryColor }}>
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
               Your Partner in Pet Care Excellence
             </span>
           </div>
-          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto mb-8">
-            Every question matters, every concern is heard, and every pet receives the compassionate care they deserve. 
-            Connect with us through multiple convenient channels - because exceptional veterinary care begins with exceptional communication.
-          </p>
         </div>
       </section>
 
       {/* Quick Contact Info */}
-      <section className="bg-white" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-xl font-bold text-gray-900 mb-4">
