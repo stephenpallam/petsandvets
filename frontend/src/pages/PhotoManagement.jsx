@@ -526,7 +526,7 @@ const FacilitySection = ({
                   
                   <div className="flex justify-between">
                     <button
-                      onClick={() => handleDeleteFacility(photo.id)}
+                      onClick={() => confirmDeleteFacility(photo.id)}
                       className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
                     >
                       Delete Photo
