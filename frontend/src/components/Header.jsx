@@ -257,6 +257,18 @@ const Header = () => {
         { name: 'Download Forms', href: '/forms-download' }
       ]
     },
+    ...(user ? [{
+      name: 'Manager',
+      dropdown: [
+        ...(isAdmin() ? [{ name: 'Urgent Care Appointments', href: '/urgent-care-appointments' }] : []),
+        ...(isAdmin() ? [{ name: 'Configure Hours', href: '/configure-hours' }] : []),
+        ...(isAdmin() ? [{ name: 'Reviews', href: '/reviews' }] : []),
+        ...(isAdmin() ? [{ name: 'Business Info', href: '/business-info' }] : []),
+        ...(isAdmin() ? [{ name: 'Photo Management', href: '/photo-management' }] : []),
+        ...(user ? [{ name: 'Register User', href: '/register-user' }] : []),
+        { name: 'Logout', action: 'logout', className: 'border-t border-gray-200 pt-2' }
+      ]
+    }] : []),
     { 
       name: 'Contact Us',
       dropdown: [
