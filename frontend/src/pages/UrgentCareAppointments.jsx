@@ -323,16 +323,16 @@ const UrgentCareAppointments = () => {
         ) : (
           <div className="bg-white rounded-xl shadow-lg overflow-hidden">
             {/* Header - Always visible */}
-            <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-              <div className="flex items-center justify-between">
+            <div className="px-4 sm:px-6 py-4 bg-gray-50 border-b border-gray-200">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <h2 className="text-lg font-semibold text-gray-900">
                   Appointments
                 </h2>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 w-full sm:w-auto">
                   <select
                     value={filterDays}
                     onChange={(e) => handleFilterChange(e.target.value)}
-                    className="pl-4 py-2 pr-10 text-sm font-medium border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white min-w-[160px] appearance-none bg-no-repeat"
+                    className="flex-1 sm:flex-none pl-4 py-2 pr-10 text-sm font-medium border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white min-w-[160px] appearance-none bg-no-repeat"
                     style={{ 
                       borderColor: primaryColor,
                       backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
