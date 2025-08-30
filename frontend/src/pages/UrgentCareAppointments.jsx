@@ -617,16 +617,19 @@ const UrgentCareAppointments = () => {
               >
                 Close
               </button>
-              <button
-                onClick={() => {
-                  setShowModal(false);
-                  confirmDelete(selectedAppointment);
-                }}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 flex items-center transition-colors"
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Delete Appointment
-              </button>
+              {/* Only show delete button for managers and admins */}
+              {canAccessManager() && (
+                <button
+                  onClick={() => {
+                    setShowModal(false);
+                    confirmDelete(selectedAppointment);
+                  }}
+                  className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 flex items-center transition-colors"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete Appointment
+                </button>
+              )}
             </div>
           </div>
         </div>
