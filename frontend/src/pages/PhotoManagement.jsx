@@ -2038,7 +2038,7 @@ const PhotoManagement = () => {
                     handleFileUpload={handleFileUpload}
                     handleTeamImageReplace={handleTeamImageReplace}
                     handleUpdateTeamMember={handleUpdateTeamMember}
-                    handleDeleteTeamMember={handleDeleteTeamMember}
+                    handleDeleteTeamMember={confirmDeleteTeamMember}
                     startEditTeamMember={startEditTeamMember}
                     uploading={uploading}
                     error={error}
