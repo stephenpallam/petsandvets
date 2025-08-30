@@ -1939,30 +1939,32 @@ const PhotoManagement = () => {
                     category={tab.id} 
                     files={uploadedFiles[tab.id]} 
                   />
-                )}
+                  )}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Information Note */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <Camera className="h-5 w-5 text-blue-400" />
             </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-blue-800">
-                Photo Management Tips
-              </h3>
-              <div className="mt-2 text-sm text-blue-700">
-                <ul className="list-disc list-inside space-y-1">
-                  <li><strong>Home Page Slider:</strong> Use high-quality images (1920x800px recommended) for best results</li>
-                  <li><strong>Team Photos:</strong> Professional headshots work best, consistent lighting and backgrounds preferred</li>
-                  <li><strong>Facility Photos:</strong> Showcase your clinic, equipment, and treatment areas</li>
-                  <li><strong>File Formats:</strong> JPG, PNG, GIF, and WebP are supported (Max: 10MB per file)</li>
-                  <li><strong>Multiple Upload:</strong> You can select multiple files at once for faster uploading</li>
-                </ul>
+
+            {/* Information Note */}
+            <div className="mt-6 sm:mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <Camera className="h-5 w-5 text-blue-400" />
+                </div>
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-blue-800">
+                    Photo Management Tips
+                  </h3>
+                  <div className="mt-2 text-sm text-blue-700">
+                    <ul className="list-disc list-inside space-y-1 text-xs sm:text-sm">
+                      <li><strong>Home Page Slider:</strong> Use high-quality images (1920x800px recommended) for best results</li>
+                      <li><strong>Team Photos:</strong> Professional headshots work best, consistent lighting and backgrounds preferred</li>
+                      <li><strong>Facility Photos:</strong> Showcase your clinic, equipment, and treatment areas</li>
+                      <li><strong>File Formats:</strong> JPG, PNG, GIF, and WebP are supported (Max: 10MB per file)</li>
+                      <li><strong>Multiple Upload:</strong> You can select multiple files at once for faster uploading</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
