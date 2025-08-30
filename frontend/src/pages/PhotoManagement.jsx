@@ -498,7 +498,7 @@ const FacilitySection = ({
                         </div>
                       </div>
                       <div>
-                        <label className="inline-flex items-center px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded cursor-pointer hover:bg-blue-200 transition-colors">
+                        <label className="inline-flex items-center px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded cursor-pointer hover:bg-gray-200 transition-colors">
                           <Upload className="h-3 w-3 mr-1" />
                           Replace Image
                           <input
