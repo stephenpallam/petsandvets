@@ -37,6 +37,21 @@ const UrgentCareAppointments = () => {
   const [pageSize] = useState(20);
 
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+
+  // Status label mapping
+  const getStatusLabel = (status) => {
+    const statusLabels = {
+      'scheduled': 'Scheduled',
+      'confirmed': 'Confirmed', 
+      'in_progress': 'In Progress',
+      'checked_in': 'Checked In',
+      'completed': 'Completed',
+      'no_show': 'No Show',
+      'cancelled': 'Cancelled',
+      'abandoned': 'Abandoned'
+    };
+    return statusLabels[status] || status;
+  };
   const primaryColor = '#29add3';
 
   const filterOptions = [
