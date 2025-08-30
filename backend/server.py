@@ -197,6 +197,8 @@ api_router = APIRouter(prefix="/api")
 # Enums
 class UserRole(str, Enum):
     ADMIN = "admin"
+    MANAGER = "manager"
+    TECHNICIAN = "technician"
     USER = "user"
 
 
