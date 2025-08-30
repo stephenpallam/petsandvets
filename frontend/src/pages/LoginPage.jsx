@@ -73,6 +73,8 @@ const LoginPage = () => {
                   name="email"
                   type="email"
                   autoComplete="email"
+                  data-lpignore="true"
+                  data-form-type="other"
                   required
                   className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                   placeholder="Enter your email"
