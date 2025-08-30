@@ -987,7 +987,7 @@ async def get_appointment_details(
 @api_router.delete("/urgent-care-appointments/{appointment_id}")
 async def delete_appointment(
     appointment_id: str,
-    current_user: User = Depends(get_manager_or_admin_user)  # Changed from get_admin_user
+    current_user: User = Depends(get_staff_user)  # Changed from get_manager_or_admin_user to allow technicians
 ):
     """Delete an urgent care appointment and free up the time slot"""
     appointment = await db.urgent_care_appointments.find_one({"id": appointment_id})
