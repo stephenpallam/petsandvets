@@ -268,14 +268,14 @@ const UrgentCareAppointments = () => {
     );
   }
 
-  if (!isAdmin()) {
+  if (!canAccessTechnician()) {
     return (
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
             <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-red-800 mb-2">Access Denied</h2>
-            <p className="text-red-600">You need administrator privileges to view appointments.</p>
+            <p className="text-red-600">You need staff privileges (technician, manager, or admin) to view appointments.</p>
           </div>
         </div>
       </div>
