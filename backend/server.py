@@ -2311,7 +2311,7 @@ async def get_all_users(
         for user in users:
             user_dict = {
                 "id": user["id"],
-                "fullName": user["fullName"],
+                "fullName": user["full_name"],  # Convert snake_case to camelCase for API response
                 "email": user["email"],
                 "role": user["role"],
                 "isBlocked": user.get("isBlocked", False),
