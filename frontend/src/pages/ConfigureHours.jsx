@@ -328,37 +328,48 @@ const ConfigureHours = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
-      <div className="max-w-6xl mx-auto px-2 sm:px-4 lg:px-8">
-
-
-        {/* Message Display */}
-        {message.text && (
-          <div className={`mb-6 rounded-md p-4 ${
-            message.type === 'error' 
-              ? 'bg-red-50 border border-red-200' 
-              : 'bg-green-50 border border-green-200'
-          }`}>
-            <div className="flex">
-              <div className="flex-shrink-0">
-                {message.type === 'error' ? (
-                  <AlertCircle className="h-5 w-5 text-red-400" />
-                ) : (
-                  <CheckCircle className="h-5 w-5 text-green-400" />
-                )}
-              </div>
-              <div className="ml-3">
-                <p className={`text-sm font-medium ${
-                  message.type === 'error' ? 'text-red-800' : 'text-green-800'
-                }`}>
-                  {message.text}
-                </p>
-              </div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          {/* Header - Inside the main card */}
+          <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Configure Hours
+              </h2>
             </div>
           </div>
-        )}
 
-        {/* Tab Navigation */}
+          {/* Content Area */}
+          <div className="p-6">
+            {/* Message Display */}
+            {message.text && (
+              <div className={`mb-6 rounded-md p-4 ${
+                message.type === 'error' 
+                  ? 'bg-red-50 border border-red-200' 
+                  : 'bg-green-50 border border-green-200'
+              }`}>
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    {message.type === 'error' ? (
+                      <AlertCircle className="h-5 w-5 text-red-400" />
+                    ) : (
+                      <CheckCircle className="h-5 w-5 text-green-400" />
+                    )}
+                  </div>
+                  <div className="ml-3">
+                    <p className={`text-sm font-medium ${
+                      message.type === 'error' ? 'text-red-800' : 'text-green-800'
+                    }`}>
+                      {message.text}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Tab Navigation */}
         <div className="bg-white rounded-lg shadow-sm mb-4 sm:mb-6">
           <div className="border-b border-gray-200">
             <nav className="flex flex-col sm:flex-row sm:space-x-8 px-3 sm:px-6" aria-label="Tabs">
