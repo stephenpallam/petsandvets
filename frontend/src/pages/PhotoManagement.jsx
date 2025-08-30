@@ -31,7 +31,10 @@ const SliderSection = ({
         </div>
         <button
           onClick={() => setShowSliderForm(!showSliderForm)}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          className="px-4 py-2 text-white rounded-md transition-colors"
+          style={{ backgroundColor: '#29add3' }}
+          onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+          onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
         >
           {showSliderForm ? 'Cancel' : 'Add Slider Image'}
         </button>
