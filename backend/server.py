@@ -681,6 +681,25 @@ async def get_admin_user(current_user: User = Depends(get_current_user)):
     return current_user
 
 
+async def get_manager_or_admin_user(current_user: User = Depends(get_current_user)):
+    if current_user.role not in [UserRole.ADMIN, UserRole.MANAGER]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not enough permissions"
+        )
+    return current_user
+
+
+async def get_staff_user(current_user: User = Depends(get_current_user)):
+    """Allow admin, manager, or technician access"""
+    if current_user.role not in [UserRole.ADMIN, UserRole.MANAGER, UserRole.TECHNICIAN]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not enough permissions"
+        )
+    return current_user
+
+
 # Initialize admin user if not exists
 @app.on_event("startup")
 async def create_admin_user():
