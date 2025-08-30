@@ -417,7 +417,10 @@ const UrgentCareAppointments = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
                           onClick={() => fetchAppointmentDetails(appointment.id)}
-                          className="text-indigo-600 hover:text-indigo-900 p-2 rounded hover:bg-indigo-50"
+                          className="p-2 rounded hover:bg-blue-50"
+                          style={{ color: '#29add3' }}
+                          onMouseEnter={(e) => e.target.style.color = '#2196c7'}
+                          onMouseLeave={(e) => e.target.style.color = '#29add3'}
                           title="View Details"
                         >
                           <Eye className="h-4 w-4" />
