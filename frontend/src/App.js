@@ -49,6 +49,7 @@ import ReachUs from "./pages/ReachUs";
 import OurHours from "./pages/OurHours";
 import MessageUs from "./pages/MessageUs";
 import ConfigureHours from "./pages/ConfigureHours";
+import RegisterPage from "./pages/RegisterPage";
 import UserManagement from "./pages/UserManagement";
 import NewPatientRegistration from "./pages/forms/NewPatientRegistration";
 import PatientDropOff from "./pages/forms/PatientDropOff";
