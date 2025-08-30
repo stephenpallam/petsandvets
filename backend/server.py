@@ -2249,6 +2249,222 @@ async def disconnect_google_business(
     return {"message": "Google Business Profile disconnected successfully"}
 
 
+# ===============================
+# USER MANAGEMENT ENDPOINTS
+# ===============================
+
+# Pydantic models for user management
+class UserListResponse(BaseModel):
+    users: List[dict]
+    total: int
+
+class UserUpdateRequest(BaseModel):
+    fullName: Optional[str] = None
+    password: Optional[str] = None
+    role: Optional[UserRole] = None
+    isBlocked: Optional[bool] = None
+
+class UserBlockRequest(BaseModel):
+    isBlocked: bool
+    reason: Optional[str] = None
+
+@api_router.get("/users", response_model=UserListResponse)
+async def get_all_users(
+    page: int = 1,
+    page_size: int = 10,
+    search: str = "",
+    role_filter: str = "",
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Get all users with pagination and filtering"""
+    try:
+        skip = (page - 1) * page_size
+        
+        # Build query based on current user's role
+        query = {}
+        
+        # Add search filter
+        if search:
+            query["$or"] = [
+                {"fullName": {"$regex": search, "$options": "i"}},
+                {"email": {"$regex": search, "$options": "i"}}
+            ]
+        
+        # Add role filter
+        if role_filter:
+            query["role"] = role_filter
+        
+        # Role-based access control
+        if current_user.role == UserRole.MANAGER:
+            # Managers can only see users and technicians, not other managers or admins
+            query["role"] = {"$in": [UserRole.USER, UserRole.TECHNICIAN]}
+        
+        # Get total count
+        total = await db.users.count_documents(query)
+        
+        # Get users with pagination
+        cursor = db.users.find(query).skip(skip).limit(page_size).sort("createdAt", -1)
+        users = await cursor.to_list(length=page_size)
+        
+        # Convert to dict and remove sensitive info
+        user_list = []
+        for user in users:
+            user_dict = {
+                "id": user["id"],
+                "fullName": user["fullName"],
+                "email": user["email"],
+                "role": user["role"],
+                "isBlocked": user.get("isBlocked", False),
+                "createdAt": user.get("createdAt", ""),
+                "lastLogin": user.get("lastLogin", "")
+            }
+            user_list.append(user_dict)
+        
+        return UserListResponse(users=user_list, total=total)
+        
+    except Exception as e:
+        logger.error(f"Error fetching users: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch users")
+
+@api_router.put("/users/{user_id}")
+async def update_user(
+    user_id: str,
+    user_update: UserUpdateRequest,
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Update user information"""
+    try:
+        # Get target user
+        target_user = await db.users.find_one({"id": user_id})
+        if not target_user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Role-based access control
+        if current_user.role == UserRole.MANAGER:
+            # Managers can only update users and technicians
+            if target_user["role"] not in [UserRole.USER, UserRole.TECHNICIAN]:
+                raise HTTPException(status_code=403, detail="Cannot update this user")
+        
+        # Build update query
+        update_data = {}
+        if user_update.fullName is not None:
+            update_data["fullName"] = user_update.fullName
+        if user_update.password is not None:
+            update_data["password"] = hash_password(user_update.password)
+        if user_update.role is not None and current_user.role == UserRole.ADMIN:
+            # Only admins can change roles
+            update_data["role"] = user_update.role
+        if user_update.isBlocked is not None:
+            update_data["isBlocked"] = user_update.isBlocked
+        
+        if not update_data:
+            raise HTTPException(status_code=400, detail="No valid fields to update")
+        
+        update_data["updatedAt"] = datetime.utcnow().isoformat()
+        
+        # Update user
+        result = await db.users.update_one(
+            {"id": user_id},
+            {"$set": update_data}
+        )
+        
+        if result.modified_count == 0:
+            raise HTTPException(status_code=400, detail="No changes made")
+        
+        return {"message": "User updated successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating user: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to update user")
+
+@api_router.patch("/users/{user_id}/block")
+async def block_unblock_user(
+    user_id: str,
+    block_request: UserBlockRequest,
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Block or unblock a user"""
+    try:
+        # Get target user
+        target_user = await db.users.find_one({"id": user_id})
+        if not target_user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Prevent users from blocking themselves
+        if target_user["id"] == current_user.id:
+            raise HTTPException(status_code=400, detail="Cannot block yourself")
+        
+        # Role-based access control
+        if current_user.role == UserRole.MANAGER:
+            # Managers can only block users and technicians
+            if target_user["role"] not in [UserRole.USER, UserRole.TECHNICIAN]:
+                raise HTTPException(status_code=403, detail="Cannot block this user")
+        
+        # Update user block status
+        update_data = {
+            "isBlocked": block_request.isBlocked,
+            "updatedAt": datetime.utcnow().isoformat()
+        }
+        
+        if block_request.reason:
+            update_data["blockReason"] = block_request.reason
+        
+        result = await db.users.update_one(
+            {"id": user_id},
+            {"$set": update_data}
+        )
+        
+        if result.modified_count == 0:
+            raise HTTPException(status_code=400, detail="No changes made")
+        
+        action = "blocked" if block_request.isBlocked else "unblocked"
+        return {"message": f"User {action} successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error blocking/unblocking user: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to update user status")
+
+@api_router.delete("/users/{user_id}")
+async def delete_user(
+    user_id: str,
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Delete a user"""
+    try:
+        # Get target user
+        target_user = await db.users.find_one({"id": user_id})
+        if not target_user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Prevent users from deleting themselves
+        if target_user["id"] == current_user.id:
+            raise HTTPException(status_code=400, detail="Cannot delete yourself")
+        
+        # Role-based access control
+        if current_user.role == UserRole.MANAGER:
+            # Managers can only delete users and technicians
+            if target_user["role"] not in [UserRole.USER, UserRole.TECHNICIAN]:
+                raise HTTPException(status_code=403, detail="Cannot delete this user")
+        
+        # Delete user
+        result = await db.users.delete_one({"id": user_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=400, detail="Failed to delete user")
+        
+        return {"message": "User deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting user: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to delete user")
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
