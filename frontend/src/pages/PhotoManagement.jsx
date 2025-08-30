@@ -224,18 +224,19 @@ const SliderSection = ({
                       Delete Image
                     </button>
                     <div className="flex space-x-2">
-                    <button
-                      onClick={() => setEditingSlider(null)}
-                      className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={() => handleUpdateSlider(image.id)}
-                      className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
-                    >
-                      Save
-                    </button>
+                      <button
+                        onClick={() => setEditingSlider(null)}
+                        className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={() => handleUpdateSlider(image.id)}
+                        className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+                      >
+                        Save
+                      </button>
+                    </div>
                   </div>
                 </div>
               ) : (
