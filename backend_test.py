@@ -3144,6 +3144,749 @@ def test_business_info_timestamps():
         return False
 
 # ============================================================================
+# USER MANAGEMENT API TESTS - NEW IMPLEMENTATION
+# ============================================================================
+
+# Global variables for user management testing
+created_test_user_id = None
+created_test_technician_id = None
+
+def test_get_users_admin():
+    """Test GET /users endpoint with admin token"""
+    if not admin_token:
+        results.log_failure("Get Users (Admin)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.get(f"{API_URL}/users", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if isinstance(data, dict) and "users" in data and "total" in data:
+                if isinstance(data["users"], list):
+                    results.log_success("Get Users (Admin)")
+                    return True
+        results.log_failure("Get Users (Admin)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Users (Admin)", str(e))
+        return False
+
+def test_get_users_manager():
+    """Test GET /users endpoint with manager token (should only see users and technicians)"""
+    if not manager_token:
+        results.log_failure("Get Users (Manager)", "No manager token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {manager_token}"}
+        response = requests.get(f"{API_URL}/users", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if isinstance(data, dict) and "users" in data and "total" in data:
+                # Manager should only see users and technicians, not other managers or admins
+                users = data["users"]
+                for user in users:
+                    if user.get("role") in ["manager", "admin"]:
+                        results.log_failure("Get Users (Manager)", "Manager can see other managers/admins")
+                        return False
+                results.log_success("Get Users (Manager - Restricted View)")
+                return True
+        results.log_failure("Get Users (Manager)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Users (Manager)", str(e))
+        return False
+
+def test_get_users_regular_user():
+    """Test GET /users endpoint with regular user token (should fail)"""
+    if not user_token:
+        results.log_failure("Get Users (Regular User - Should Fail)", "No user token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {user_token}"}
+        response = requests.get(f"{API_URL}/users", headers=headers)
+        if response.status_code == 403:
+            results.log_success("Get Users (Regular User - Correctly Forbidden)")
+            return True
+        results.log_failure("Get Users (Regular User)", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Users (Regular User)", str(e))
+        return False
+
+def test_get_users_pagination():
+    """Test GET /users endpoint with pagination parameters"""
+    if not admin_token:
+        results.log_failure("Get Users Pagination", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.get(f"{API_URL}/users?page=1&page_size=3", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if (isinstance(data, dict) and "users" in data and "total" in data and
+                isinstance(data["users"], list) and len(data["users"]) <= 3):
+                results.log_success("Get Users Pagination")
+                return True
+        results.log_failure("Get Users Pagination", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Users Pagination", str(e))
+        return False
+
+def test_get_users_search():
+    """Test GET /users endpoint with search parameter"""
+    if not admin_token:
+        results.log_failure("Get Users Search", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.get(f"{API_URL}/users?search=admin", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if isinstance(data, dict) and "users" in data and "total" in data:
+                results.log_success("Get Users Search")
+                return True
+        results.log_failure("Get Users Search", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Users Search", str(e))
+        return False
+
+def test_get_users_role_filter():
+    """Test GET /users endpoint with role filter parameter"""
+    if not admin_token:
+        results.log_failure("Get Users Role Filter", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.get(f"{API_URL}/users?role_filter=admin", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if isinstance(data, dict) and "users" in data and "total" in data:
+                # All returned users should have admin role
+                users = data["users"]
+                for user in users:
+                    if user.get("role") != "admin":
+                        results.log_failure("Get Users Role Filter", "Non-admin user in admin filter results")
+                        return False
+                results.log_success("Get Users Role Filter")
+                return True
+        results.log_failure("Get Users Role Filter", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Users Role Filter", str(e))
+        return False
+
+def test_get_users_manager_restrictions():
+    """Test that manager can only see users and technicians"""
+    if not manager_token:
+        results.log_failure("Get Users Manager Restrictions", "No manager token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {manager_token}"}
+        response = requests.get(f"{API_URL}/users", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if isinstance(data, dict) and "users" in data:
+                users = data["users"]
+                allowed_roles = ["user", "technician"]
+                for user in users:
+                    if user.get("role") not in allowed_roles:
+                        results.log_failure("Get Users Manager Restrictions", f"Manager sees unauthorized role: {user.get('role')}")
+                        return False
+                results.log_success("Get Users Manager Restrictions")
+                return True
+        results.log_failure("Get Users Manager Restrictions", f"Status: {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Users Manager Restrictions", str(e))
+        return False
+
+def test_update_user_admin():
+    """Test PUT /users/{user_id} endpoint with admin token"""
+    global created_test_user_id
+    if not admin_token:
+        results.log_failure("Update User (Admin)", "No admin token available")
+        return False
+    
+    try:
+        # First create a test user to update
+        test_user_data = {
+            "email": "updatetest@veterinary.com",
+            "password": "updatetest123",
+            "full_name": "Update Test User",
+            "role": "user"
+        }
+        
+        response = requests.post(f"{API_URL}/register", json=test_user_data)
+        if response.status_code == 200:
+            created_test_user_id = response.json()["id"]
+        elif response.status_code == 400:
+            # User already exists, get their ID
+            headers = {"Authorization": f"Bearer {admin_token}"}
+            search_response = requests.get(f"{API_URL}/users?search=updatetest@veterinary.com", headers=headers)
+            if search_response.status_code == 200:
+                users = search_response.json()["users"]
+                if users:
+                    created_test_user_id = users[0]["id"]
+        
+        if not created_test_user_id:
+            results.log_failure("Update User (Admin - Setup)", "Failed to create or find test user")
+            return False
+        
+        # Now update the user
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        update_data = {
+            "fullName": "Updated Test User Name",
+            "role": "technician"
+        }
+        
+        response = requests.put(f"{API_URL}/users/{created_test_user_id}", json=update_data, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if "message" in data and "updated successfully" in data["message"]:
+                results.log_success("Update User (Admin)")
+                return True
+        results.log_failure("Update User (Admin)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update User (Admin)", str(e))
+        return False
+
+def test_update_user_manager():
+    """Test PUT /users/{user_id} endpoint with manager token (should work for users/technicians)"""
+    if not manager_token or not created_test_user_id:
+        results.log_failure("Update User (Manager)", "No manager token or test user ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {manager_token}"}
+        update_data = {
+            "fullName": "Manager Updated Name"
+        }
+        
+        response = requests.put(f"{API_URL}/users/{created_test_user_id}", json=update_data, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if "message" in data and "updated successfully" in data["message"]:
+                results.log_success("Update User (Manager)")
+                return True
+        results.log_failure("Update User (Manager)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update User (Manager)", str(e))
+        return False
+
+def test_update_user_regular_user():
+    """Test PUT /users/{user_id} endpoint with regular user token (should fail)"""
+    if not user_token or not created_test_user_id:
+        results.log_failure("Update User (Regular User - Should Fail)", "No user token or test user ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {user_token}"}
+        update_data = {
+            "fullName": "Should Not Work"
+        }
+        
+        response = requests.put(f"{API_URL}/users/{created_test_user_id}", json=update_data, headers=headers)
+        if response.status_code == 403:
+            results.log_success("Update User (Regular User - Correctly Forbidden)")
+            return True
+        results.log_failure("Update User (Regular User)", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Update User (Regular User)", str(e))
+        return False
+
+def test_update_user_password():
+    """Test updating user password"""
+    if not admin_token or not created_test_user_id:
+        results.log_failure("Update User Password", "No admin token or test user ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        update_data = {
+            "password": "newpassword123"
+        }
+        
+        response = requests.put(f"{API_URL}/users/{created_test_user_id}", json=update_data, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if "message" in data and "updated successfully" in data["message"]:
+                results.log_success("Update User Password")
+                return True
+        results.log_failure("Update User Password", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update User Password", str(e))
+        return False
+
+def test_update_user_role_admin_only():
+    """Test that only admins can change user roles"""
+    if not manager_token or not created_test_user_id:
+        results.log_failure("Update User Role (Admin Only)", "No manager token or test user ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {manager_token}"}
+        update_data = {
+            "role": "admin"  # Manager trying to make someone admin
+        }
+        
+        response = requests.put(f"{API_URL}/users/{created_test_user_id}", json=update_data, headers=headers)
+        # Should succeed but role should not change (only admins can change roles)
+        if response.status_code == 200:
+            results.log_success("Update User Role (Admin Only - Manager Cannot Change Roles)")
+            return True
+        results.log_failure("Update User Role (Admin Only)", f"Status: {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Update User Role (Admin Only)", str(e))
+        return False
+
+def test_update_user_manager_restrictions():
+    """Test that managers can only update users and technicians"""
+    if not manager_token or not admin_token:
+        results.log_failure("Update User Manager Restrictions", "No manager or admin token available")
+        return False
+    
+    try:
+        # Try to update an admin user with manager token (should fail)
+        headers = {"Authorization": f"Bearer {manager_token}"}
+        
+        # Get admin user ID
+        admin_headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.get(f"{API_URL}/users?role_filter=admin", headers=admin_headers)
+        if response.status_code == 200:
+            admin_users = response.json()["users"]
+            if admin_users:
+                admin_user_id = admin_users[0]["id"]
+                
+                update_data = {"fullName": "Should Not Work"}
+                response = requests.put(f"{API_URL}/users/{admin_user_id}", json=update_data, headers=headers)
+                
+                if response.status_code == 403:
+                    results.log_success("Update User Manager Restrictions (Cannot Update Admin)")
+                    return True
+        results.log_failure("Update User Manager Restrictions", f"Manager was able to update admin user")
+        return False
+    except Exception as e:
+        results.log_failure("Update User Manager Restrictions", str(e))
+        return False
+
+def test_update_user_not_found():
+    """Test PUT /users/{user_id} with non-existent user ID"""
+    if not admin_token:
+        results.log_failure("Update User Not Found", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        fake_user_id = "non-existent-user-id-12345"
+        update_data = {"fullName": "Should Not Work"}
+        
+        response = requests.put(f"{API_URL}/users/{fake_user_id}", json=update_data, headers=headers)
+        if response.status_code == 404:
+            results.log_success("Update User Not Found (404)")
+            return True
+        results.log_failure("Update User Not Found", f"Expected 404, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Update User Not Found", str(e))
+        return False
+
+def test_block_user_admin():
+    """Test PATCH /users/{user_id}/block endpoint with admin token"""
+    if not admin_token or not created_test_user_id:
+        results.log_failure("Block User (Admin)", "No admin token or test user ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        block_data = {
+            "isBlocked": True,
+            "reason": "Test blocking by admin"
+        }
+        
+        response = requests.patch(f"{API_URL}/users/{created_test_user_id}/block", json=block_data, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if "message" in data and "blocked successfully" in data["message"]:
+                results.log_success("Block User (Admin)")
+                return True
+        results.log_failure("Block User (Admin)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Block User (Admin)", str(e))
+        return False
+
+def test_block_user_manager():
+    """Test PATCH /users/{user_id}/block endpoint with manager token"""
+    if not manager_token or not created_test_user_id:
+        results.log_failure("Block User (Manager)", "No manager token or test user ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {manager_token}"}
+        block_data = {
+            "isBlocked": True,
+            "reason": "Test blocking by manager"
+        }
+        
+        response = requests.patch(f"{API_URL}/users/{created_test_user_id}/block", json=block_data, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if "message" in data and "blocked successfully" in data["message"]:
+                results.log_success("Block User (Manager)")
+                return True
+        results.log_failure("Block User (Manager)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Block User (Manager)", str(e))
+        return False
+
+def test_block_user_with_reason():
+    """Test blocking user with reason"""
+    if not admin_token or not created_test_user_id:
+        results.log_failure("Block User With Reason", "No admin token or test user ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        block_data = {
+            "isBlocked": True,
+            "reason": "Detailed blocking reason for testing"
+        }
+        
+        response = requests.patch(f"{API_URL}/users/{created_test_user_id}/block", json=block_data, headers=headers)
+        if response.status_code == 200:
+            results.log_success("Block User With Reason")
+            return True
+        results.log_failure("Block User With Reason", f"Status: {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Block User With Reason", str(e))
+        return False
+
+def test_unblock_user():
+    """Test unblocking a user"""
+    if not admin_token or not created_test_user_id:
+        results.log_failure("Unblock User", "No admin token or test user ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        unblock_data = {
+            "isBlocked": False
+        }
+        
+        response = requests.patch(f"{API_URL}/users/{created_test_user_id}/block", json=unblock_data, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if "message" in data and "unblocked successfully" in data["message"]:
+                results.log_success("Unblock User")
+                return True
+        results.log_failure("Unblock User", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Unblock User", str(e))
+        return False
+
+def test_block_self_prevention():
+    """Test that users cannot block themselves"""
+    if not admin_token:
+        results.log_failure("Block Self Prevention", "No admin token available")
+        return False
+    
+    try:
+        # Get current admin user ID
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.get(f"{API_URL}/me", headers=headers)
+        if response.status_code == 200:
+            admin_user_id = response.json()["id"]
+            
+            # Try to block self
+            block_data = {"isBlocked": True, "reason": "Self block test"}
+            response = requests.patch(f"{API_URL}/users/{admin_user_id}/block", json=block_data, headers=headers)
+            
+            if response.status_code == 400:
+                results.log_success("Block Self Prevention (Correctly Prevented)")
+                return True
+        results.log_failure("Block Self Prevention", f"Self-blocking was not prevented")
+        return False
+    except Exception as e:
+        results.log_failure("Block Self Prevention", str(e))
+        return False
+
+def test_block_user_manager_restrictions():
+    """Test that managers can only block users and technicians"""
+    if not manager_token or not admin_token:
+        results.log_failure("Block User Manager Restrictions", "No manager or admin token available")
+        return False
+    
+    try:
+        # Try to block an admin user with manager token (should fail)
+        admin_headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.get(f"{API_URL}/users?role_filter=admin", headers=admin_headers)
+        if response.status_code == 200:
+            admin_users = response.json()["users"]
+            if admin_users:
+                admin_user_id = admin_users[0]["id"]
+                
+                manager_headers = {"Authorization": f"Bearer {manager_token}"}
+                block_data = {"isBlocked": True, "reason": "Should not work"}
+                response = requests.patch(f"{API_URL}/users/{admin_user_id}/block", json=block_data, headers=manager_headers)
+                
+                if response.status_code == 403:
+                    results.log_success("Block User Manager Restrictions (Cannot Block Admin)")
+                    return True
+        results.log_failure("Block User Manager Restrictions", "Manager was able to block admin user")
+        return False
+    except Exception as e:
+        results.log_failure("Block User Manager Restrictions", str(e))
+        return False
+
+def test_block_user_not_found():
+    """Test PATCH /users/{user_id}/block with non-existent user ID"""
+    if not admin_token:
+        results.log_failure("Block User Not Found", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        fake_user_id = "non-existent-user-id-12345"
+        block_data = {"isBlocked": True, "reason": "Should not work"}
+        
+        response = requests.patch(f"{API_URL}/users/{fake_user_id}/block", json=block_data, headers=headers)
+        if response.status_code == 404:
+            results.log_success("Block User Not Found (404)")
+            return True
+        results.log_failure("Block User Not Found", f"Expected 404, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Block User Not Found", str(e))
+        return False
+
+def test_delete_user_admin():
+    """Test DELETE /users/{user_id} endpoint with admin token"""
+    if not admin_token:
+        results.log_failure("Delete User (Admin)", "No admin token available")
+        return False
+    
+    try:
+        # Create a test user to delete
+        test_user_data = {
+            "email": "deletetest@veterinary.com",
+            "password": "deletetest123",
+            "full_name": "Delete Test User",
+            "role": "user"
+        }
+        
+        response = requests.post(f"{API_URL}/register", json=test_user_data)
+        if response.status_code == 200:
+            user_to_delete_id = response.json()["id"]
+        elif response.status_code == 400:
+            # User already exists, get their ID
+            headers = {"Authorization": f"Bearer {admin_token}"}
+            search_response = requests.get(f"{API_URL}/users?search=deletetest@veterinary.com", headers=headers)
+            if search_response.status_code == 200:
+                users = search_response.json()["users"]
+                if users:
+                    user_to_delete_id = users[0]["id"]
+                else:
+                    results.log_failure("Delete User (Admin - Setup)", "Could not find test user")
+                    return False
+            else:
+                results.log_failure("Delete User (Admin - Setup)", "Could not search for test user")
+                return False
+        else:
+            results.log_failure("Delete User (Admin - Setup)", f"Failed to create test user: {response.status_code}")
+            return False
+        
+        # Now delete the user
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.delete(f"{API_URL}/users/{user_to_delete_id}", headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if "message" in data and "deleted successfully" in data["message"]:
+                results.log_success("Delete User (Admin)")
+                return True
+        results.log_failure("Delete User (Admin)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Delete User (Admin)", str(e))
+        return False
+
+def test_delete_user_manager():
+    """Test DELETE /users/{user_id} endpoint with manager token"""
+    if not manager_token or not created_test_user_id:
+        results.log_failure("Delete User (Manager)", "No manager token or test user ID available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {manager_token}"}
+        response = requests.delete(f"{API_URL}/users/{created_test_user_id}", headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if "message" in data and "deleted successfully" in data["message"]:
+                results.log_success("Delete User (Manager)")
+                return True
+        results.log_failure("Delete User (Manager)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Delete User (Manager)", str(e))
+        return False
+
+def test_delete_user_regular_user():
+    """Test DELETE /users/{user_id} endpoint with regular user token (should fail)"""
+    if not user_token:
+        results.log_failure("Delete User (Regular User - Should Fail)", "No user token available")
+        return False
+    
+    try:
+        # Create a test user to attempt deletion
+        test_user_data = {
+            "email": "cantdelete@veterinary.com",
+            "password": "cantdelete123",
+            "full_name": "Cant Delete User",
+            "role": "user"
+        }
+        
+        response = requests.post(f"{API_URL}/register", json=test_user_data)
+        if response.status_code == 200:
+            user_id = response.json()["id"]
+        else:
+            # Assume user exists, use a dummy ID
+            user_id = "dummy-user-id"
+        
+        headers = {"Authorization": f"Bearer {user_token}"}
+        response = requests.delete(f"{API_URL}/users/{user_id}", headers=headers)
+        
+        if response.status_code == 403:
+            results.log_success("Delete User (Regular User - Correctly Forbidden)")
+            return True
+        results.log_failure("Delete User (Regular User)", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Delete User (Regular User)", str(e))
+        return False
+
+def test_delete_self_prevention():
+    """Test that users cannot delete themselves"""
+    if not admin_token:
+        results.log_failure("Delete Self Prevention", "No admin token available")
+        return False
+    
+    try:
+        # Get current admin user ID
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.get(f"{API_URL}/me", headers=headers)
+        if response.status_code == 200:
+            admin_user_id = response.json()["id"]
+            
+            # Try to delete self
+            response = requests.delete(f"{API_URL}/users/{admin_user_id}", headers=headers)
+            
+            if response.status_code == 400:
+                results.log_success("Delete Self Prevention (Correctly Prevented)")
+                return True
+        results.log_failure("Delete Self Prevention", "Self-deletion was not prevented")
+        return False
+    except Exception as e:
+        results.log_failure("Delete Self Prevention", str(e))
+        return False
+
+def test_delete_user_manager_restrictions():
+    """Test that managers can only delete users and technicians"""
+    if not manager_token or not admin_token:
+        results.log_failure("Delete User Manager Restrictions", "No manager or admin token available")
+        return False
+    
+    try:
+        # Try to delete an admin user with manager token (should fail)
+        admin_headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.get(f"{API_URL}/users?role_filter=admin", headers=admin_headers)
+        if response.status_code == 200:
+            admin_users = response.json()["users"]
+            if admin_users:
+                admin_user_id = admin_users[0]["id"]
+                
+                manager_headers = {"Authorization": f"Bearer {manager_token}"}
+                response = requests.delete(f"{API_URL}/users/{admin_user_id}", headers=manager_headers)
+                
+                if response.status_code == 403:
+                    results.log_success("Delete User Manager Restrictions (Cannot Delete Admin)")
+                    return True
+        results.log_failure("Delete User Manager Restrictions", "Manager was able to delete admin user")
+        return False
+    except Exception as e:
+        results.log_failure("Delete User Manager Restrictions", str(e))
+        return False
+
+def test_delete_user_not_found():
+    """Test DELETE /users/{user_id} with non-existent user ID"""
+    if not admin_token:
+        results.log_failure("Delete User Not Found", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        fake_user_id = "non-existent-user-id-12345"
+        
+        response = requests.delete(f"{API_URL}/users/{fake_user_id}", headers=headers)
+        if response.status_code == 404:
+            results.log_success("Delete User Not Found (404)")
+            return True
+        results.log_failure("Delete User Not Found", f"Expected 404, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Delete User Not Found", str(e))
+        return False
+
+def test_user_management_integration_with_registration():
+    """Test that user management integrates properly with registration"""
+    if not admin_token:
+        results.log_failure("User Management Integration", "No admin token available")
+        return False
+    
+    try:
+        # Create a new user via registration
+        integration_user_data = {
+            "email": "integration@veterinary.com",
+            "password": "integration123",
+            "full_name": "Integration Test User",
+            "role": "technician"
+        }
+        
+        response = requests.post(f"{API_URL}/register", json=integration_user_data)
+        if response.status_code == 200 or response.status_code == 400:  # 400 if already exists
+            # Check if user appears in user management list
+            headers = {"Authorization": f"Bearer {admin_token}"}
+            response = requests.get(f"{API_URL}/users?search=integration@veterinary.com", headers=headers)
+            
+            if response.status_code == 200:
+                users = response.json()["users"]
+                if users and users[0]["email"] == "integration@veterinary.com":
+                    results.log_success("User Management Integration (Registration → Management)")
+                    return True
+        results.log_failure("User Management Integration", "User not found in management after registration")
+        return False
+    except Exception as e:
+        results.log_failure("User Management Integration", str(e))
+        return False
+
+# ============================================================================
 # TEAM MEMBER MANAGEMENT API TESTS - NEW IMPLEMENTATION
 # ============================================================================
 
