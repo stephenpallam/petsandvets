@@ -2019,7 +2019,7 @@ const PhotoManagement = () => {
                     handleSliderUpload={handleSliderUpload}
                     handleSliderImageReplace={handleSliderImageReplace}
                     handleUpdateSlider={handleUpdateSlider}
-                    handleDeleteSlider={handleDeleteSlider}
+                    handleDeleteSlider={confirmDeleteSlider}
                     startEditSlider={startEditSlider}
                     uploading={uploading}
                     error={error}
