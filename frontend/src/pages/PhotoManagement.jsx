@@ -338,7 +338,7 @@ const FacilitySection = ({
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="text-lg font-medium" style={{ color: '#29add3' }}>Add New Facility Photo</h3>
-          <p className="text-sm text-blue-700">Upload a photo and add title and description</p>
+          <p className="text-sm text-gray-700">Upload a photo and add title and description</p>
         </div>
         <button
           onClick={() => setShowFacilityForm(!showFacilityForm)}
