@@ -185,7 +185,7 @@ const RegisterPage = () => {
                       name="role"
                       value={formData.role}
                       onChange={handleChange}
-                      className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                      className="appearance-none block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                     >
                       {availableRoles.map(role => (
                         <option key={role.value} value={role.value}>
@@ -193,6 +193,9 @@ const RegisterPage = () => {
                         </option>
                       ))}
                     </select>
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <ChevronDown className="h-5 w-5 text-gray-400" />
+                    </div>
                   </div>
                 </div>
               )}
