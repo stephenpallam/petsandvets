@@ -458,7 +458,7 @@ const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
+          <nav className="hidden md:flex space-x-4">
             {navigation.map((item) => {
               // Hide Home link when on home page
               if (item.name === 'Home' && location.pathname === '/') {
