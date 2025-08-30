@@ -15,7 +15,7 @@ import {
 import axios from 'axios';
 
 const GoogleIntegration = () => {
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, loading: authLoading } = useAuth();
   const [settings, setSettings] = useState({
     client_id: '',
     client_secret: '',
