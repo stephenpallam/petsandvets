@@ -181,7 +181,7 @@ const Header = () => {
     const baseNavigation = [
       { name: 'Home', href: '/' },
       { 
-        name: 'About Us',
+        name: 'About',
         dropdown: [
           { name: 'Our Mission', href: '/our-mission' },
           { name: 'Our Values', href: '/our-core-values' },
