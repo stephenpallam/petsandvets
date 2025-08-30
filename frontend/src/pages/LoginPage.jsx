@@ -49,15 +49,131 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Header Section */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-3">
-              <h1 className="text-xl font-semibold text-gray-900">Pets & Vets</h1>
-              <span className="text-sm text-gray-500">Management Portal</span>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
+      <div className="w-full max-w-md">
+        <div className="bg-white py-8 px-6 shadow-lg rounded-lg border border-gray-200">
+          {/* Login Form Title */}
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900">Sign In</h2>
+            <p className="mt-2 text-sm text-gray-600">Access your management dashboard</p>
+          </div>
+
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* Email Field */}
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email address
+              </label>
+              <div className="mt-1 relative rounded-md shadow-sm">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                  placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
+
+            {/* Password Field */}
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <div className="mt-1 relative rounded-md shadow-sm">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  required
+                  className="appearance-none block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                  placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                  <button
+                    type="button"
+                    className="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Error/Success Message */}
+            {message.text && (
+              <div className={`rounded-md p-4 ${
+                message.type === 'error' 
+                  ? 'bg-red-50 border border-red-200' 
+                  : 'bg-green-50 border border-green-200'
+              }`}>
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    {message.type === 'error' ? (
+                      <AlertCircle className="h-5 w-5 text-red-400" />
+                    ) : (
+                      <CheckCircle className="h-5 w-5 text-green-400" />
+                    )}
+                  </div>
+                  <div className="ml-3">
+                    <p className={`text-sm font-medium ${
+                      message.type === 'error' ? 'text-red-800' : 'text-green-800'
+                    }`}>
+                      {message.text}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ 
+                  backgroundColor: loading ? '#94a3b8' : '#29add3',
+                }}
+                onMouseEnter={(e) => {
+                  if (!loading) e.target.style.backgroundColor = '#2196c7';
+                }}
+                onMouseLeave={(e) => {
+                  if (!loading) e.target.style.backgroundColor = '#29add3';
+                }}
+              >
+                {loading ? (
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Signing in...
+                  </div>
+                ) : (
+                  'Sign in'
+                )}
+              </button>
+            </div>
+          </form>
+
+          {/* Back to Website Link */}
+          <div className="mt-6 text-center">
             <button
               type="button"
               onClick={() => navigate('/')}
@@ -66,154 +182,15 @@ const LoginPage = () => {
               ← Back to Website
             </button>
           </div>
-        </div>
-      </header>
 
-      {/* Main Content Area */}
-      <main className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
-        <div className="w-full max-w-md">
-          <div className="bg-white py-8 px-6 shadow-lg rounded-lg border border-gray-200">
-            {/* Login Form Title */}
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900">Sign In</h2>
-              <p className="mt-2 text-sm text-gray-600">Access your management dashboard</p>
-            </div>
-
-            <form className="space-y-6" onSubmit={handleSubmit}>
-              {/* Email Field */}
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email address
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                    placeholder="Enter your email"
-                    value={formData.email}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-
-              {/* Password Field */}
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                  Password
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    id="password"
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    autoComplete="current-password"
-                    required
-                    className="appearance-none block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={handleChange}
-                  />
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                    <button
-                      type="button"
-                      className="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-5 w-5" />
-                      ) : (
-                        <Eye className="h-5 w-5" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Error/Success Message */}
-              {message.text && (
-                <div className={`rounded-md p-4 ${
-                  message.type === 'error' 
-                    ? 'bg-red-50 border border-red-200' 
-                    : 'bg-green-50 border border-green-200'
-                }`}>
-                  <div className="flex">
-                    <div className="flex-shrink-0">
-                      {message.type === 'error' ? (
-                        <AlertCircle className="h-5 w-5 text-red-400" />
-                      ) : (
-                        <CheckCircle className="h-5 w-5 text-green-400" />
-                      )}
-                    </div>
-                    <div className="ml-3">
-                      <p className={`text-sm font-medium ${
-                        message.type === 'error' ? 'text-red-800' : 'text-green-800'
-                      }`}>
-                        {message.text}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Submit Button */}
-              <div>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{ 
-                    backgroundColor: loading ? '#94a3b8' : '#29add3',
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) e.target.style.backgroundColor = '#2196c7';
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!loading) e.target.style.backgroundColor = '#29add3';
-                  }}
-                >
-                  {loading ? (
-                    <div className="flex items-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Signing in...
-                    </div>
-                  ) : (
-                    'Sign in'
-                  )}
-                </button>
-              </div>
-            </form>
+          {/* Test Credentials Info */}
+          <div className="mt-6 bg-blue-50 border border-blue-200 rounded-md p-3 text-center">
+            <p className="text-xs text-blue-800 font-medium mb-1">Test Credentials:</p>
+            <p className="text-xs text-blue-700">Email: admin@test.com</p>
+            <p className="text-xs text-blue-700">Password: admin123</p>
           </div>
         </div>
-      </main>
-
-      {/* Footer Section */}
-      <footer className="bg-white border-t border-gray-200 mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
-            <div className="text-center sm:text-left">
-              <p className="text-xs text-gray-600">
-                © 2024 Pets & Vets Animal Hospital & Urgent Care. All rights reserved.
-              </p>
-            </div>
-            
-            {/* Test Credentials Info */}
-            <div className="bg-blue-50 border border-blue-200 rounded-md p-2 text-center">
-              <p className="text-xs text-blue-800 font-medium mb-1">Test Credentials:</p>
-              <p className="text-xs text-blue-700">Email: admin@test.com • Password: admin123</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+      </div>
     </div>
   );
 };
