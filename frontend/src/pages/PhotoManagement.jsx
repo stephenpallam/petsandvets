@@ -1889,6 +1889,7 @@ const PhotoManagement = () => {
                     sliderForm={sliderForm}
                     handleSliderFormChange={handleSliderFormChange}
                     handleSliderUpload={handleSliderUpload}
+                    handleSliderImageReplace={handleSliderImageReplace}
                     handleUpdateSlider={handleUpdateSlider}
                     handleDeleteSlider={handleDeleteSlider}
                     startEditSlider={startEditSlider}
