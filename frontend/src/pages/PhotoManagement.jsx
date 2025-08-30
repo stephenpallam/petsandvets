@@ -385,7 +385,11 @@ const FacilitySection = ({
             <Building2 className="h-8 w-8 mx-auto text-blue-400 mb-2" />
             <p className="text-sm text-blue-700 mb-2">Upload Facility Photo</p>
             <p className="text-xs text-blue-600 mb-3">Recommended size: 400x300px (4:3 aspect ratio) for best results</p>
-            <label className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors cursor-pointer">
+            <label className="inline-flex items-center px-4 py-2 text-white rounded-md transition-colors cursor-pointer"
+              style={{ backgroundColor: '#29add3' }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
+            >
               <Upload className="h-4 w-4 mr-2" />
               Choose Photo & Create
               <input
