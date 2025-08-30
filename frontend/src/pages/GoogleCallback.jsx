@@ -12,6 +12,11 @@ const GoogleCallback = () => {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
+    // Wait for auth to finish loading before checking permissions
+    if (authLoading) {
+      return;
+    }
+
     if (!user || !isAdmin()) {
       setStatus('error');
       setMessage('Admin access required');
