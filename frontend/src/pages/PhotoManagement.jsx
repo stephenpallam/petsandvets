@@ -494,18 +494,19 @@ const FacilitySection = ({
                       Delete Photo
                     </button>
                     <div className="flex space-x-2">
-                    <button
-                      onClick={() => setEditingFacility(null)}
-                      className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={() => handleUpdateFacility(photo.id)}
-                      className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
-                    >
-                      Save
-                    </button>
+                      <button
+                        onClick={() => setEditingFacility(null)}
+                        className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={() => handleUpdateFacility(photo.id)}
+                        className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+                      >
+                        Save
+                      </button>
+                    </div>
                   </div>
                 </div>
               ) : (
