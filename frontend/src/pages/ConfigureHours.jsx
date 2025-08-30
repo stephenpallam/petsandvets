@@ -102,18 +102,12 @@ const ConfigureHours = () => {
   // Existing useEffects start here...
 
   useEffect(() => {
-    // Wait for auth to finish loading
-    if (authLoading) {
-      return;
+    // Only fetch data if user is authenticated and authorized
+    if (!pageLoading && user && isAdmin()) {
+      fetchHours();
+      checkGoogleConnection();
     }
-    
-    if (!isAdmin()) {
-      setMessage({ type: 'error', text: 'Access denied. Admin privileges required.' });
-      return;
-    }
-    fetchHours();
-    checkGoogleConnection();
-  }, [authLoading, isAdmin]);
+  }, [pageLoading, user, isAdmin]);
 
   const checkGoogleConnection = async () => {
     try {
