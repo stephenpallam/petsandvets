@@ -1803,7 +1803,10 @@ const PhotoManagement = () => {
                       href={`${API_BASE_URL}${file.url}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
+                      className="inline-flex items-center px-2 py-1 text-xs text-white rounded transition-colors"
+                      style={{ backgroundColor: '#29add3' }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
                     >
                       <Eye className="h-3 w-3 mr-1" />
                       View
