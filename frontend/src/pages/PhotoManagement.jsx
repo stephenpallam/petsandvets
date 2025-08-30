@@ -12,6 +12,7 @@ const SliderSection = ({
   sliderForm,
   handleSliderFormChange,
   handleSliderUpload,
+  handleSliderImageReplace,
   handleUpdateSlider,
   handleDeleteSlider,
   startEditSlider,
