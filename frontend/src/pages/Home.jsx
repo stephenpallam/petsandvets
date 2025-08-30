@@ -337,29 +337,63 @@ const Home = () => {
               ) : heroImages.length > 0 ? (
                 <>
                   <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                    <img
-                      src={heroImages[currentHeroImage].image_url}
-                      alt={heroImages[currentHeroImage].title}
-                      className="w-full object-cover transition-opacity duration-1000"
-                      style={{ height: '25rem' }}
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
-                      }}
-                    />
-                    <div className="hidden w-full h-full items-center justify-center bg-gray-100 absolute inset-0" style={{ height: '25rem' }}>
-                      <div className="text-center text-gray-500">
-                        <Users className="h-16 w-16 mx-auto mb-2" />
-                        <p>Image not available</p>
-                      </div>
+                    {/* Image Stack for Smooth Transitions */}
+                    <div className="relative w-full" style={{ height: '25rem' }}>
+                      {heroImages.map((image, index) => (
+                        <div
+                          key={image.id}
+                          className={`absolute inset-0 transition-all duration-1000 ease-in-out transform ${
+                            index === currentHeroImage 
+                              ? 'opacity-100 scale-100 translate-x-0' 
+                              : 'opacity-0 scale-105 translate-x-4'
+                          }`}
+                        >
+                          <img
+                            src={image.image_url}
+                            alt={image.title}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              e.target.nextSibling.style.display = 'flex';
+                            }}
+                          />
+                          <div className="hidden w-full h-full items-center justify-center bg-gray-100 absolute inset-0">
+                            <div className="text-center text-gray-500">
+                              <Users className="h-16 w-16 mx-auto mb-2" />
+                              <p>Image not available</p>
+                            </div>
+                          </div>
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                          
+                          {/* Image title and description overlay */}
+                          <div className={`absolute bottom-6 left-6 right-6 text-white transition-all duration-700 delay-300 ${
+                            index === currentHeroImage 
+                              ? 'opacity-100 translate-y-0' 
+                              : 'opacity-0 translate-y-4'
+                          }`}>
+                            <h3 className="text-xl font-bold mb-2">{image.title}</h3>
+                            <p className="text-sm opacity-90">{image.description}</p>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                     
-                    {/* Image title and description overlay */}
-                    <div className="absolute bottom-6 left-6 right-6 text-white">
-                      <h3 className="text-xl font-bold mb-2">{heroImages[currentHeroImage].title}</h3>
-                      <p className="text-sm opacity-90">{heroImages[currentHeroImage].description}</p>
-                    </div>
+                    {/* Slider Indicators */}
+                    {heroImages.length > 1 && (
+                      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                        {heroImages.map((_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => setCurrentHeroImage(index)}
+                            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                              index === currentHeroImage 
+                                ? 'bg-white scale-125' 
+                                : 'bg-white/50 hover:bg-white/75'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
                   
 
