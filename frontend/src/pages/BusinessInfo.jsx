@@ -44,6 +44,11 @@ const BusinessInfo = () => {
   };
 
   useEffect(() => {
+    // Wait for auth to finish loading before checking permissions
+    if (authLoading) {
+      return;
+    }
+
     if (user && isAdmin()) {
       fetchBusinessInfo();
       checkGoogleConnection();
@@ -54,7 +59,7 @@ const BusinessInfo = () => {
       setError('Please log in as an admin to manage business information.');
       setLoading(false);
     }
-  }, [user]);
+  }, [user, authLoading]);
 
   const checkGoogleConnection = async () => {
     try {
