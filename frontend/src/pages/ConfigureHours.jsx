@@ -841,7 +841,16 @@ const ConfigureHours = () => {
                     <button
                       onClick={addSpecialHour}
                       disabled={loading || !newSpecialHour.date || !newSpecialHour.name}
-                      className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50 flex items-center font-medium"
+                      className="text-white px-4 py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center font-medium"
+                      style={{ 
+                        backgroundColor: (loading || !newSpecialHour.date || !newSpecialHour.name) ? '#94a3b8' : '#29add3'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!loading && newSpecialHour.date && newSpecialHour.name) e.target.style.backgroundColor = '#2196c7';
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!loading && newSpecialHour.date && newSpecialHour.name) e.target.style.backgroundColor = '#29add3';
+                      }}
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Add Special Hours
