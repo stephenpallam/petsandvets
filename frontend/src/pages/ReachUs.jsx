@@ -58,15 +58,6 @@ const ReachUs = () => {
       {/* Quick Contact Info */}
       <section style={{ backgroundColor: '#f8f9fa', paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">
-              Reach Us
-            </h2>
-            <p className="text-gray-600 max-w-3xl mx-auto">
-              Multiple convenient ways to reach us for appointments, questions, or urgent care needs
-            </p>
-          </div>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {quickInfo.map((info, index) => (
               <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center">
