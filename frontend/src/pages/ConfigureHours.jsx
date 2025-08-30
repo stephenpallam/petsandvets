@@ -634,15 +634,7 @@ const ConfigureHours = () => {
             {/* Special Holidays Tab */}
             {activeTab === 'special' && (
               <div className="space-y-6">
-                <div className="flex justify-between items-center mb-6">
-                  <div>
-                    <h2 className="text-xl font-semibold text-gray-900 flex items-center">
-                      <CalendarDays className="h-5 w-5 mr-2" style={{ color: '#7c3aed' }} />
-                      Special Holiday Hours
-                    </h2>
-                    <p className="text-gray-600 text-sm mt-1">Set special hours for holidays and events</p>
-                  </div>
-                  
+                <div className="flex justify-end items-center mb-6">
                   <div className="flex items-center space-x-3">
                     {/* Google Sync Button */}
                     {googleConnected ? (
