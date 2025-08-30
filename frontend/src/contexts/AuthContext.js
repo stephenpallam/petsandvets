@@ -115,6 +115,30 @@ export const AuthProvider = ({ children }) => {
     return user && user.role === 'admin';
   };
 
+  const isManager = () => {
+    return user && user.role === 'manager';
+  };
+
+  const isTechnician = () => {
+    return user && user.role === 'technician';
+  };
+
+  const hasRole = (role) => {
+    return user && user.role === role;
+  };
+
+  const canAccessAdmin = () => {
+    return user && user.role === 'admin';
+  };
+
+  const canAccessManager = () => {
+    return user && (user.role === 'admin' || user.role === 'manager');
+  };
+
+  const canAccessTechnician = () => {
+    return user && (user.role === 'admin' || user.role === 'manager' || user.role === 'technician');
+  };
+
   const value = {
     user,
     token,
@@ -122,6 +146,12 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     isAdmin,
+    isManager,
+    isTechnician,
+    hasRole,
+    canAccessAdmin,
+    canAccessManager,
+    canAccessTechnician,
     loading
   };
 
