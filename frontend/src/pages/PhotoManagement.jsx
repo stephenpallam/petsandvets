@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Image, Upload, Trash2, Eye, Camera, Users, Building2 } from 'lucide-react';
+import { Image, Upload, Trash2, Eye, Camera, Users, Building2, X, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 // Slider Image Management Section Component
