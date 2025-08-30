@@ -668,7 +668,7 @@ const ConfigureHours = () => {
                     ) : (
                       <a
                         href="/google-integration"
-                        className="text-white px-6 py-2 rounded-lg transition-colors font-medium no-underline flex items-center"
+                        className="w-full sm:w-auto text-white px-6 py-2 rounded-lg transition-colors font-medium no-underline flex items-center justify-center sm:justify-start"
                         style={{ backgroundColor: '#29add3' }}
                         onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
                         onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
