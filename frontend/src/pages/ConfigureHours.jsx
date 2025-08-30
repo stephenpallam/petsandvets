@@ -917,6 +917,8 @@ const ConfigureHours = () => {
                 )}
               </div>
             )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
