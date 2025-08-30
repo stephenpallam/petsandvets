@@ -1297,10 +1297,17 @@ const PhotoManagement = () => {
     }
   };
 
+  const confirmDeleteFacility = (photoId) => {
+    const photo = facilityPhotos.find(p => p.id === photoId);
+    setDeleteData({
+      type: 'facility',
+      id: photoId,
+      name: photo ? photo.title || 'Facility Photo' : 'Facility Photo'
+    });
+    setShowDeleteConfirm(true);
+  };
+
   const handleDeleteFacility = async (photoId) => {
-    if (!window.confirm('Are you sure you want to delete this facility photo?')) {
-      return;
-    }
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/facility-photos/${photoId}`, {
