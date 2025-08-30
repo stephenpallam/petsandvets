@@ -202,6 +202,7 @@ const Reviews = () => {
                 >
                   <Plus className="h-5 w-5 mr-2" />
                   Add Review
+                </button>
               )}
             </div>
           </div>
