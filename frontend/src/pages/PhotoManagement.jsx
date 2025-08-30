@@ -1454,10 +1454,17 @@ const PhotoManagement = () => {
     }
   };
 
+  const confirmDeleteSlider = (imageId) => {
+    const image = sliderImages.find(img => img.id === imageId);
+    setDeleteData({
+      type: 'slider',
+      id: imageId,
+      name: image ? image.title || 'Slider Image' : 'Slider Image'
+    });
+    setShowDeleteConfirm(true);
+  };
+
   const handleDeleteSlider = async (imageId) => {
-    if (!window.confirm('Are you sure you want to delete this slider image?')) {
-      return;
-    }
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/slider-images/${imageId}`, {
