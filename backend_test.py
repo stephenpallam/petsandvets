@@ -3627,6 +3627,35 @@ def run_all_tests():
     test_get_current_user_regular()
     test_authentication_middleware()
     
+    print("\n" + "="*50)
+    print("ROLE-BASED AUTHENTICATION SYSTEM TESTS - NEW FEATURES")
+    print("="*50)
+    
+    # Role-based user registration tests
+    test_register_technician_user()
+    test_register_manager_user()
+    test_register_admin_user()
+    test_register_invalid_role()
+    
+    # Role-based login tests
+    test_technician_login()
+    test_manager_login()
+    test_new_admin_login()
+    
+    # Role-based /me endpoint tests
+    test_get_current_user_technician()
+    test_get_current_user_manager()
+    test_get_current_user_new_admin()
+    
+    # Role-based permissions for urgent care appointments
+    test_get_appointments_technician()
+    test_get_appointments_manager()
+    test_update_appointment_status_technician()
+    test_update_appointment_status_manager()
+    test_delete_appointment_manager()
+    test_delete_appointment_technician()
+    test_get_appointment_details_technician()
+    
     # Hospital hours tests
     test_get_hospital_hours()
     test_get_urgent_care_hours()
