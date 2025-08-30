@@ -135,7 +135,7 @@ const MessageUs = () => {
       </section>
 
       {/* Contact Methods */}
-      <section className="bg-white" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-xl font-bold text-gray-900 mb-4">
@@ -148,7 +148,7 @@ const MessageUs = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {contactMethods.map((method, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center">
+              <div key={index} className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center">
                 <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: `${method.color}15` }}>
                   <method.icon className="h-8 w-8" style={{ color: method.color }} />
                 </div>
@@ -170,9 +170,9 @@ const MessageUs = () => {
       </section>
 
       {/* Contact Form */}
-      <section id="contact-form" style={{ backgroundColor: '#f8f9fa', paddingTop: '40px', paddingBottom: '40px' }}>
+      <section id="contact-form" className="bg-white" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white p-8 rounded-xl shadow-lg">
+          <div className="bg-gray-50 p-8 rounded-xl shadow-lg">
             <div className="text-center mb-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
                 Send Us a Message
