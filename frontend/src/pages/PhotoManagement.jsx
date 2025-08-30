@@ -1876,12 +1876,8 @@ const PhotoManagement = () => {
 
               {/* Tab Content */}
               <div className="p-4 sm:p-6">
-            {tabs.map((tab) => (
-              <div key={tab.id} className={activeTab === tab.id ? 'block' : 'hidden'}>
-                <div className="mb-6">
-                  <h2 className="text-lg font-medium text-gray-900 mb-2">{tab.name}</h2>
-                  <p className="text-gray-600">{tab.description}</p>
-                </div>
+                {tabs.map((tab) => (
+                  <div key={tab.id} className={activeTab === tab.id ? 'block' : 'hidden'}>
                 {tab.id === 'homepageslider' ? (
                   <SliderSection 
                     sliderImages={sliderImages}
