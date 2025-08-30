@@ -584,7 +584,7 @@ const FacilitySection = ({
                       <Eye className="h-4 w-4" />
                     </button>
                     <button
-                      onClick={() => handleDeleteFacility(photo.id)}
+                      onClick={() => confirmDeleteFacility(photo.id)}
                       className="p-1 text-red-600 hover:text-red-700 transition-colors"
                       title="Delete"
                     >
