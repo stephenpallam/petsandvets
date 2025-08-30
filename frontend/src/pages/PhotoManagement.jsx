@@ -23,15 +23,15 @@ const SliderSection = ({
 }) => (
   <div className="space-y-6">
     {/* Add New Slider Image */}
-    <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h3 className="text-lg font-medium" style={{ color: '#29add3' }}>Add New Slider Image</h3>
-          <p className="text-sm text-gray-700">Upload an image for the home page hero carousel with title and description</p>
+    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
+        <div className="flex-1 min-w-0">
+          <h3 className="text-lg font-medium truncate" style={{ color: '#29add3' }}>Add New Slider Image</h3>
+          <p className="text-sm text-gray-700 mt-1">Upload an image for the home page hero carousel with title and description</p>
         </div>
         <button
           onClick={() => setShowSliderForm(!showSliderForm)}
-          className="px-4 py-2 text-white rounded-md transition-colors"
+          className="w-full sm:w-auto px-4 py-2 text-white rounded-md transition-colors whitespace-nowrap"
           style={{ backgroundColor: '#29add3' }}
           onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
           onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
