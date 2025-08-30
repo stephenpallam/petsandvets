@@ -37,6 +37,11 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const fetchUserProfile = async () => {
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await fetch(`${API_BASE_URL}/api/me`, {
         headers: {
@@ -48,15 +53,18 @@ export const AuthProvider = ({ children }) => {
       if (response.ok) {
         const userData = await response.json();
         setUser(userData);
-      } else {
-        // Token is invalid, remove it
+      } else if (response.status === 401 || response.status === 403) {
+        // Token is invalid or expired
+        console.log('Token invalid, clearing authentication');
         localStorage.removeItem('token');
         setToken(null);
+        setUser(null);
+      } else {
+        console.error('Error fetching user profile:', response.status);
       }
     } catch (error) {
-      console.error('Error fetching user profile:', error);
-      localStorage.removeItem('token');
-      setToken(null);
+      console.error('Network error fetching user profile:', error);
+      // Don't clear token on network errors, user might be offline
     } finally {
       setLoading(false);
     }
