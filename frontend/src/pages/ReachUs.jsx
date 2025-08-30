@@ -52,6 +52,10 @@ const ReachUs = () => {
               Your Partner in Pet Care Excellence
             </span>
           </div>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto mb-8">
+            Multiple convenient ways to reach us for appointments, questions, or urgent care needs. 
+            Our dedicated team is here to provide compassionate support for you and your beloved pets.
+          </p>
         </div>
       </section>
 
