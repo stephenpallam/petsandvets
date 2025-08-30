@@ -330,18 +330,18 @@ const Header = () => {
                location.pathname.includes('/on-site-pharmacy') ||
                location.pathname.includes('/pet-travel-certificates');
       
-      case 'About Us':
+      case 'About':
         return location.pathname.includes('/our-') || 
                location.pathname.includes('/about') || 
                location.pathname.includes('/gallery');
       
-      case 'Contact Us':
+      case 'Contact':
         return location.pathname.includes('/reach-us') || 
                location.pathname.includes('/message-us') || 
                location.pathname.includes('/contact') ||
                location.pathname.includes('/our-hours');
       
-      case 'Patient Resources':
+      case 'Patient':
         return location.pathname.includes('/forms') || 
                location.pathname.includes('/your-first-visit') ||
                location.pathname.includes('/pet-insurance-payments');
