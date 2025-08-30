@@ -50,10 +50,10 @@ const UrgentCareAppointments = () => {
   ];
 
   useEffect(() => {
-    if (!authLoading && isAdmin()) {
+    if (!authLoading && canAccessTechnician()) {
       fetchAppointments();
     }
-  }, [authLoading, isAdmin, currentPage, filterDays]);
+  }, [authLoading, canAccessTechnician, currentPage, filterDays]);
 
   const fetchAppointments = async () => {
     setLoading(true);
