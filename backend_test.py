@@ -225,6 +225,496 @@ def test_authentication_middleware():
         results.log_failure("Authentication Middleware", str(e))
         return False
 
+# ============================================================================
+# ROLE-BASED AUTHENTICATION SYSTEM TESTS - NEW FEATURES
+# ============================================================================
+
+def test_register_technician_user():
+    """Test registering a technician user"""
+    try:
+        response = requests.post(f"{API_URL}/register", json=technician_user_data)
+        if response.status_code == 200:
+            data = response.json()
+            if data.get("email") == technician_user_data["email"] and data.get("role") == "technician":
+                results.log_success("Register Technician User")
+                return True
+        elif response.status_code == 400 and "already registered" in response.json().get("detail", ""):
+            results.log_success("Register Technician User (already exists)")
+            return True
+        results.log_failure("Register Technician User", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Register Technician User", str(e))
+        return False
+
+def test_register_manager_user():
+    """Test registering a manager user"""
+    try:
+        response = requests.post(f"{API_URL}/register", json=manager_user_data)
+        if response.status_code == 200:
+            data = response.json()
+            if data.get("email") == manager_user_data["email"] and data.get("role") == "manager":
+                results.log_success("Register Manager User")
+                return True
+        elif response.status_code == 400 and "already registered" in response.json().get("detail", ""):
+            results.log_success("Register Manager User (already exists)")
+            return True
+        results.log_failure("Register Manager User", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Register Manager User", str(e))
+        return False
+
+def test_register_admin_user():
+    """Test registering an admin user"""
+    try:
+        response = requests.post(f"{API_URL}/register", json=admin_user_data)
+        if response.status_code == 200:
+            data = response.json()
+            if data.get("email") == admin_user_data["email"] and data.get("role") == "admin":
+                results.log_success("Register Admin User")
+                return True
+        elif response.status_code == 400 and "already registered" in response.json().get("detail", ""):
+            results.log_success("Register Admin User (already exists)")
+            return True
+        results.log_failure("Register Admin User", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Register Admin User", str(e))
+        return False
+
+def test_register_invalid_role():
+    """Test registering with invalid role"""
+    try:
+        invalid_role_data = {
+            "email": "invalid@veterinary.com",
+            "password": "invalid123",
+            "full_name": "Invalid Role User",
+            "role": "invalid_role"
+        }
+        response = requests.post(f"{API_URL}/register", json=invalid_role_data)
+        if response.status_code == 422:  # Validation error
+            results.log_success("Register Invalid Role (Validation Error)")
+            return True
+        results.log_failure("Register Invalid Role", f"Expected 422, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Register Invalid Role", str(e))
+        return False
+
+def test_technician_login():
+    """Test technician login endpoint"""
+    global technician_token
+    try:
+        technician_login = {
+            "email": technician_user_data["email"],
+            "password": technician_user_data["password"]
+        }
+        response = requests.post(f"{API_URL}/login", json=technician_login)
+        if response.status_code == 200:
+            data = response.json()
+            if "access_token" in data and data.get("token_type") == "bearer":
+                technician_token = data["access_token"]
+                results.log_success("Technician Login")
+                return True
+        results.log_failure("Technician Login", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Technician Login", str(e))
+        return False
+
+def test_manager_login():
+    """Test manager login endpoint"""
+    global manager_token
+    try:
+        manager_login = {
+            "email": manager_user_data["email"],
+            "password": manager_user_data["password"]
+        }
+        response = requests.post(f"{API_URL}/login", json=manager_login)
+        if response.status_code == 200:
+            data = response.json()
+            if "access_token" in data and data.get("token_type") == "bearer":
+                manager_token = data["access_token"]
+                results.log_success("Manager Login")
+                return True
+        results.log_failure("Manager Login", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Manager Login", str(e))
+        return False
+
+def test_new_admin_login():
+    """Test new admin login endpoint"""
+    global new_admin_token
+    try:
+        new_admin_login = {
+            "email": admin_user_data["email"],
+            "password": admin_user_data["password"]
+        }
+        response = requests.post(f"{API_URL}/login", json=new_admin_login)
+        if response.status_code == 200:
+            data = response.json()
+            if "access_token" in data and data.get("token_type") == "bearer":
+                new_admin_token = data["access_token"]
+                results.log_success("New Admin Login")
+                return True
+        results.log_failure("New Admin Login", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("New Admin Login", str(e))
+        return False
+
+def test_get_current_user_technician():
+    """Test /me endpoint with technician token"""
+    if not technician_token:
+        results.log_failure("Get Current User (Technician)", "No technician token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {technician_token}"}
+        response = requests.get(f"{API_URL}/me", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if data.get("email") == technician_user_data["email"] and data.get("role") == "technician":
+                results.log_success("Get Current User (Technician)")
+                return True
+        results.log_failure("Get Current User (Technician)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Current User (Technician)", str(e))
+        return False
+
+def test_get_current_user_manager():
+    """Test /me endpoint with manager token"""
+    if not manager_token:
+        results.log_failure("Get Current User (Manager)", "No manager token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {manager_token}"}
+        response = requests.get(f"{API_URL}/me", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if data.get("email") == manager_user_data["email"] and data.get("role") == "manager":
+                results.log_success("Get Current User (Manager)")
+                return True
+        results.log_failure("Get Current User (Manager)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Current User (Manager)", str(e))
+        return False
+
+def test_get_current_user_new_admin():
+    """Test /me endpoint with new admin token"""
+    if not new_admin_token:
+        results.log_failure("Get Current User (New Admin)", "No new admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {new_admin_token}"}
+        response = requests.get(f"{API_URL}/me", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if data.get("email") == admin_user_data["email"] and data.get("role") == "admin":
+                results.log_success("Get Current User (New Admin)")
+                return True
+        results.log_failure("Get Current User (New Admin)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Current User (New Admin)", str(e))
+        return False
+
+# ============================================================================
+# ROLE-BASED PERMISSIONS TESTS FOR URGENT CARE APPOINTMENTS
+# ============================================================================
+
+def test_get_appointments_technician():
+    """Test GET /urgent-care-appointments with technician token (should work - staff access)"""
+    if not technician_token:
+        results.log_failure("Get Appointments (Technician)", "No technician token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {technician_token}"}
+        response = requests.get(f"{API_URL}/urgent-care-appointments", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if isinstance(data, dict) and "appointments" in data:
+                results.log_success("Get Appointments (Technician - Staff Access)")
+                return True
+        results.log_failure("Get Appointments (Technician)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Appointments (Technician)", str(e))
+        return False
+
+def test_get_appointments_manager():
+    """Test GET /urgent-care-appointments with manager token (should work - staff access)"""
+    if not manager_token:
+        results.log_failure("Get Appointments (Manager)", "No manager token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {manager_token}"}
+        response = requests.get(f"{API_URL}/urgent-care-appointments", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if isinstance(data, dict) and "appointments" in data:
+                results.log_success("Get Appointments (Manager - Staff Access)")
+                return True
+        results.log_failure("Get Appointments (Manager)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Appointments (Manager)", str(e))
+        return False
+
+def test_update_appointment_status_technician():
+    """Test PATCH /urgent-care-appointments/{id}/status with technician token (should work - staff access)"""
+    if not technician_token:
+        results.log_failure("Update Appointment Status (Technician)", "No technician token available")
+        return False
+    
+    try:
+        # First create an appointment to update
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=8)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T14:30"
+        
+        appointment_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "TechUpdate",
+            "owner_last_name": "TestUser",
+            "email": "techupdate@test.com",
+            "phone": "(555) 444-5555",
+            "pet_name": "TechPet",
+            "pet_type": "dog",
+            "reason_for_visit": "Test appointment for technician status update",
+            "primary_vet_hospital": "Test Hospital",
+            "how_heard_about_us": "Testing"
+        }
+        
+        # Create appointment
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=appointment_data)
+        if response.status_code != 200:
+            results.log_failure("Update Appointment Status (Technician - Setup)", f"Failed to create appointment: {response.status_code}")
+            return False
+        
+        appointment_id = response.json()["id"]
+        
+        # Update status with technician token
+        headers = {"Authorization": f"Bearer {technician_token}"}
+        response = requests.patch(
+            f"{API_URL}/urgent-care-appointments/{appointment_id}/status",
+            params={"status": "verified"},
+            headers=headers
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            if data.get("status") == "verified":
+                results.log_success("Update Appointment Status (Technician - Staff Access)")
+                return True
+        results.log_failure("Update Appointment Status (Technician)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Appointment Status (Technician)", str(e))
+        return False
+
+def test_update_appointment_status_manager():
+    """Test PATCH /urgent-care-appointments/{id}/status with manager token (should work - staff access)"""
+    if not manager_token:
+        results.log_failure("Update Appointment Status (Manager)", "No manager token available")
+        return False
+    
+    try:
+        # First create an appointment to update
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=9)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T15:00"
+        
+        appointment_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "ManagerUpdate",
+            "owner_last_name": "TestUser",
+            "email": "managerupdate@test.com",
+            "phone": "(555) 555-6666",
+            "pet_name": "ManagerPet",
+            "pet_type": "cat",
+            "reason_for_visit": "Test appointment for manager status update",
+            "primary_vet_hospital": "Test Hospital",
+            "how_heard_about_us": "Testing"
+        }
+        
+        # Create appointment
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=appointment_data)
+        if response.status_code != 200:
+            results.log_failure("Update Appointment Status (Manager - Setup)", f"Failed to create appointment: {response.status_code}")
+            return False
+        
+        appointment_id = response.json()["id"]
+        
+        # Update status with manager token
+        headers = {"Authorization": f"Bearer {manager_token}"}
+        response = requests.patch(
+            f"{API_URL}/urgent-care-appointments/{appointment_id}/status",
+            params={"status": "checked_in"},
+            headers=headers
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            if data.get("status") == "checked_in":
+                results.log_success("Update Appointment Status (Manager - Staff Access)")
+                return True
+        results.log_failure("Update Appointment Status (Manager)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Appointment Status (Manager)", str(e))
+        return False
+
+def test_delete_appointment_manager():
+    """Test DELETE /urgent-care-appointments/{id} with manager token (should work - manager/admin access)"""
+    if not manager_token:
+        results.log_failure("Delete Appointment (Manager)", "No manager token available")
+        return False
+    
+    try:
+        # First create an appointment to delete
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=10)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T16:00"
+        
+        appointment_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "ManagerDelete",
+            "owner_last_name": "TestUser",
+            "email": "managerdelete@test.com",
+            "phone": "(555) 666-7777",
+            "pet_name": "DeletePet",
+            "pet_type": "dog",
+            "reason_for_visit": "Test appointment for manager deletion",
+            "primary_vet_hospital": "Test Hospital",
+            "how_heard_about_us": "Testing"
+        }
+        
+        # Create appointment
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=appointment_data)
+        if response.status_code != 200:
+            results.log_failure("Delete Appointment (Manager - Setup)", f"Failed to create appointment: {response.status_code}")
+            return False
+        
+        appointment_id = response.json()["id"]
+        
+        # Delete with manager token
+        headers = {"Authorization": f"Bearer {manager_token}"}
+        response = requests.delete(f"{API_URL}/urgent-care-appointments/{appointment_id}", headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if "message" in data and "freed_slot" in data:
+                results.log_success("Delete Appointment (Manager - Manager/Admin Access)")
+                return True
+        results.log_failure("Delete Appointment (Manager)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Delete Appointment (Manager)", str(e))
+        return False
+
+def test_delete_appointment_technician():
+    """Test DELETE /urgent-care-appointments/{id} with technician token (should fail - manager/admin only)"""
+    if not technician_token:
+        results.log_failure("Delete Appointment (Technician - Should Fail)", "No technician token available")
+        return False
+    
+    try:
+        # First create an appointment to attempt deletion
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=11)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T17:00"
+        
+        appointment_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "TechDelete",
+            "owner_last_name": "TestUser",
+            "email": "techdelete@test.com",
+            "phone": "(555) 777-8888",
+            "pet_name": "CantDeletePet",
+            "pet_type": "cat",
+            "reason_for_visit": "Test appointment for technician deletion attempt",
+            "primary_vet_hospital": "Test Hospital",
+            "how_heard_about_us": "Testing"
+        }
+        
+        # Create appointment
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=appointment_data)
+        if response.status_code != 200:
+            results.log_failure("Delete Appointment (Technician - Setup)", f"Failed to create appointment: {response.status_code}")
+            return False
+        
+        appointment_id = response.json()["id"]
+        
+        # Try to delete with technician token (should fail)
+        headers = {"Authorization": f"Bearer {technician_token}"}
+        response = requests.delete(f"{API_URL}/urgent-care-appointments/{appointment_id}", headers=headers)
+        
+        if response.status_code == 403:
+            results.log_success("Delete Appointment (Technician - Correctly Forbidden)")
+            return True
+        results.log_failure("Delete Appointment (Technician)", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Delete Appointment (Technician)", str(e))
+        return False
+
+def test_get_appointment_details_technician():
+    """Test GET /urgent-care-appointments/{id} with technician token (should work - staff access)"""
+    if not technician_token:
+        results.log_failure("Get Appointment Details (Technician)", "No technician token available")
+        return False
+    
+    try:
+        # First create an appointment to view
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=12)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T18:00"
+        
+        appointment_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "TechView",
+            "owner_last_name": "TestUser",
+            "email": "techview@test.com",
+            "phone": "(555) 888-9999",
+            "pet_name": "ViewPet",
+            "pet_type": "dog",
+            "reason_for_visit": "Test appointment for technician viewing",
+            "primary_vet_hospital": "Test Hospital",
+            "how_heard_about_us": "Testing"
+        }
+        
+        # Create appointment
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=appointment_data)
+        if response.status_code != 200:
+            results.log_failure("Get Appointment Details (Technician - Setup)", f"Failed to create appointment: {response.status_code}")
+            return False
+        
+        appointment_id = response.json()["id"]
+        
+        # View with technician token
+        headers = {"Authorization": f"Bearer {technician_token}"}
+        response = requests.get(f"{API_URL}/urgent-care-appointments/{appointment_id}", headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if data.get("id") == appointment_id and data.get("owner_first_name") == "TechView":
+                results.log_success("Get Appointment Details (Technician - Staff Access)")
+                return True
+        results.log_failure("Get Appointment Details (Technician)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Appointment Details (Technician)", str(e))
+        return False
+
 def test_get_hospital_hours():
     """Test GET /hospital-hours endpoint"""
     try:
