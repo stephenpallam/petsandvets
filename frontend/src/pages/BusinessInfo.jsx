@@ -371,14 +371,12 @@ const BusinessInfo = () => {
                     )}
                   </button>
                 ) : (
-                  <div className="text-sm text-gray-500">
-                    <a 
-                      href="/google-integration" 
-                      className="text-blue-600 hover:text-blue-500 underline"
-                    >
-                      Connect Google Business Profile
-                    </a> to sync automatically
-                  </div>
+                  <a 
+                    href="/google-integration" 
+                    className="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors font-medium no-underline"
+                  >
+                    Connect Google Business Profile
+                  </a>
                 )}
               </div>
 
