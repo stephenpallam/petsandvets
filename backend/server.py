@@ -1007,7 +1007,7 @@ async def delete_appointment(
 async def update_appointment_status(
     appointment_id: str,
     status: str,
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_staff_user)  # Changed from get_admin_user
 ):
     """Update appointment status (scheduled, completed, cancelled, no_show, abandoned)"""
     
