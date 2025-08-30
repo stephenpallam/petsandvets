@@ -1004,6 +1004,8 @@ const PhotoManagement = () => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteData, setDeleteData] = useState({ type: '', id: '', name: '' });
 
   const { user, token, isAdmin } = useAuth();
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
