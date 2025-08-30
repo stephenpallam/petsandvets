@@ -457,9 +457,13 @@ const UrgentCareAppointments = () => {
                           onClick={() => handlePageChange(page)}
                           className={`px-3 py-2 text-sm font-medium rounded-md ${
                             currentPage === page
-                              ? 'bg-indigo-600 text-white'
-                              : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'
+                              ? 'text-white'
+                              : 'bg-white border border-gray-300 hover:bg-gray-50'
                           }`}
+                          style={{
+                            backgroundColor: currentPage === page ? '#29add3' : 'white',
+                            color: currentPage === page ? 'white' : '#29add3'
+                          }}
                         >
                           {page}
                         </button>
