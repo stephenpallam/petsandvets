@@ -421,9 +421,9 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-3">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3">
-            <div className="rounded-lg p-2" style={{ backgroundColor: '#29add3' }}>
-              <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
+          <Link to="/" className="flex items-center space-x-2">
+            <div className="rounded-lg p-1.5" style={{ backgroundColor: '#29add3' }}>
+              <div className="w-7 h-7 bg-white rounded flex items-center justify-center">
                 <div className="relative">
                   {/* Hospital plus sign */}
                   <div 
