@@ -152,36 +152,34 @@ const BusinessInfo = () => {
     }
   };
 
-  if (!user) {
+  // Show compact loading modal while authentication is being determined
+  if (authLoading || (loading && !error)) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center bg-white p-8 rounded-lg shadow-sm border border-gray-200">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Authentication Required</h1>
-          <p className="text-gray-600 mb-4">You must be logged in as an admin to manage business information.</p>
-          <p className="text-sm text-gray-500">Please log in using the login button in the top navigation bar.</p>
+        <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm mx-4">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-3"></div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Loading</h3>
+            <p className="text-sm text-gray-600">
+              {authLoading ? 'Verifying your access permissions...' : 'Loading business information...'}
+            </p>
+          </div>
         </div>
       </div>
     );
   }
 
-  if (user && !isAdmin()) {
+  // Show error if authentication or data loading failed
+  if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center bg-white p-8 rounded-lg shadow-sm border border-gray-200">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h1>
-          <p className="text-gray-600 mb-4">Admin privileges are required to manage business information.</p>
-          <p className="text-sm text-gray-500">Please contact an administrator if you need access.</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading business information...</p>
+      <div className="min-h-screen bg-gray-50 py-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+            <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+            <h2 className="text-xl font-semibold text-red-800 mb-2">Access Denied</h2>
+            <p className="text-red-600">{error}</p>
+            <p className="text-red-600 text-sm mt-2">Please log in with an admin account.</p>
+          </div>
         </div>
       </div>
     );
