@@ -1890,7 +1890,7 @@ const PhotoManagement = () => {
                       )
                     ) : tab.id === 'facility' ? (
                       facilityPhotos && facilityPhotos.length > 0 && (
-                        <span className="ml-2 bg-blue-100 text-blue-600 text-xs px-2 py-0.5 rounded-full">
+                        <span className="ml-2 bg-gray-200 text-gray-600 text-xs px-2 py-0.5 rounded-full">
                           {facilityPhotos.length}
                         </span>
                       )
