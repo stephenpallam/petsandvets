@@ -32,11 +32,16 @@ const GoogleIntegration = () => {
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
+    // Wait for auth to finish loading before checking permissions
+    if (authLoading) {
+      return;
+    }
+
     if (user && isAdmin()) {
       fetchGoogleSettings();
       fetchSyncLogs();
     }
-  }, [user]);
+  }, [user, authLoading]);
 
   const fetchGoogleSettings = async () => {
     try {
