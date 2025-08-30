@@ -348,43 +348,44 @@ const BusinessInfo = () => {
             </div>
 
             {/* Submit Button */}
-            <div className="flex justify-between items-center pt-6 border-t border-gray-200">
+            <div className="flex items-center space-x-4 pt-6 border-t border-gray-200">
               {/* Google Sync Section */}
-              <div className="flex items-center space-x-4">
-                {googleConnected ? (
-                  <button
-                    type="button"
-                    onClick={handleGoogleSync}
-                    disabled={syncing}
-                    className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {syncing ? (
-                      <>
-                        <RefreshCw className="animate-spin h-4 w-4 mr-2" />
-                        Syncing to Google...
-                      </>
-                    ) : (
-                      <>
-                        <ExternalLink className="h-4 w-4 mr-2" />
-                        Sync to Google Business
-                      </>
-                    )}
-                  </button>
-                ) : (
-                  <a 
-                    href="/google-integration" 
-                    className="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors font-medium no-underline"
-                  >
-                    Connect Google Business Profile
-                  </a>
-                )}
-              </div>
+              {googleConnected ? (
+                <button
+                  type="button"
+                  onClick={handleGoogleSync}
+                  disabled={syncing}
+                  className="inline-flex items-center px-4 py-2 text-white rounded-md hover:opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ backgroundColor: '#29add3' }}
+                >
+                  {syncing ? (
+                    <>
+                      <RefreshCw className="animate-spin h-4 w-4 mr-2" />
+                      Syncing to Google...
+                    </>
+                  ) : (
+                    <>
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      Sync to Google Business
+                    </>
+                  )}
+                </button>
+              ) : (
+                <a 
+                  href="/google-integration" 
+                  className="inline-flex items-center px-4 py-2 text-white rounded-md hover:opacity-90 transition-colors font-medium no-underline"
+                  style={{ backgroundColor: '#29add3' }}
+                >
+                  Connect Google Business Profile
+                </a>
+              )}
 
               {/* Save Button */}
               <button
                 type="submit"
                 disabled={saving}
-                className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center px-6 py-3 text-white rounded-lg hover:opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ backgroundColor: '#29add3' }}
               >
                 {saving ? (
                   <>
