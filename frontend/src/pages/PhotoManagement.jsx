@@ -328,7 +328,7 @@ const FacilitySection = ({
 }) => (
   <div className="space-y-6">
     {/* Add New Facility Photo */}
-    <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+    <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="text-lg font-medium text-blue-900">Add New Facility Photo</h3>
