@@ -439,7 +439,7 @@ const FacilitySection = ({
         <h3 className="text-lg font-medium text-gray-900 mb-4">
           Facility Photos ({facilityPhotos.length})
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6">
           {facilityPhotos.map((photo) => (
             <div key={`facility-photo-${photo.id}`} className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6 shadow-sm">
               {editingFacility === photo.id ? (
