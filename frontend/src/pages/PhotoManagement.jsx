@@ -1796,20 +1796,18 @@ const PhotoManagement = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-          <div className="flex items-center">
-            <Camera className="h-8 w-8 text-blue-600 mr-4" />
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Photo Management</h1>
-              <p className="mt-2 text-gray-600">
-                Upload and manage photos for your website including home page slider, team, and facility images
-              </p>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          {/* Header - Inside the main card */}
+          <div className="px-4 sm:px-6 py-4 bg-gray-50 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Photo Management
+              </h2>
             </div>
           </div>
-        </div>
 
         {/* Success Alert */}
         {success && (
