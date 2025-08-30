@@ -617,8 +617,8 @@ const UrgentCareAppointments = () => {
               >
                 Close
               </button>
-              {/* Only show delete button for managers and admins */}
-              {canAccessManager() && (
+              {/* Only show delete button for technicians, managers and admins */}
+              {canAccessTechnician() && (
                 <button
                   onClick={() => {
                     setShowModal(false);
