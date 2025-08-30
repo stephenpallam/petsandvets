@@ -296,7 +296,7 @@ const Header = () => {
 
     // Add Contact Us
     baseNavigation.push({
-      name: 'Contact Us',
+      name: 'Contact',
       dropdown: [
         { name: 'Reach Us', href: '/reach-us' },
         { name: 'Our Hours', href: '/our-hours' },
