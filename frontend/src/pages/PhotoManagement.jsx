@@ -925,7 +925,7 @@ const TeamMemberSection = ({
                   </div>
                   <div className="flex-1">
                     <h4 className="text-lg font-medium text-gray-900">{member.name}</h4>
-                    <p className="text-blue-600 text-sm font-medium mb-2">{member.title}</p>
+                    <p className="text-gray-900 text-sm font-medium mb-2">{member.title}</p>
                     <p className="text-gray-600 text-sm mb-2 line-clamp-2">{member.bio}</p>
                     <p className="text-gray-500 text-xs">{member.credentials}</p>
                   </div>
