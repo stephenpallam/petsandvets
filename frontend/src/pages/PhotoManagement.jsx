@@ -2098,6 +2098,54 @@ const PhotoManagement = () => {
             </div>
           </div>
         </div>
+
+        {/* Delete Confirmation Dialog */}
+        {showDeleteConfirm && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 relative">
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <AlertCircle className="h-6 w-6 text-red-500 mr-3" />
+                  Delete Confirmation
+                </h3>
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="p-6">
+                <p className="text-gray-700 mb-4">
+                  Are you sure you want to delete{' '}
+                  <span className="font-semibold text-gray-900">"{deleteData.name}"</span>?
+                </p>
+                <p className="text-sm text-gray-500">
+                  This action cannot be undone. The {deleteData.type === 'team' ? 'team member' : deleteData.type === 'slider' ? 'slider image' : 'facility photo'} will be permanently removed.
+                </p>
+              </div>
+
+              {/* Footer */}
+              <div className="flex justify-end space-x-3 p-6 border-t border-gray-200">
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleConfirmDelete}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
