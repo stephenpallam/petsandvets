@@ -304,6 +304,7 @@ const FacilitySection = ({
   facilityForm,
   handleFacilityFormChange,
   handleFacilityUpload,
+  handleFacilityImageReplace,
   handleUpdateFacility,
   handleDeleteFacility,
   startEditFacility,
