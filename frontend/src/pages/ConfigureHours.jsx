@@ -520,7 +520,7 @@ const ConfigureHours = () => {
                       <button
                         onClick={() => handleGoogleSync('urgent_care')}
                         disabled={syncing || loading}
-                        className="text-white px-4 py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center font-medium"
+                        className="w-full sm:w-auto text-white px-4 py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center sm:justify-start font-medium"
                         style={{ 
                           backgroundColor: syncing ? '#94a3b8' : '#29add3'
                         }}
