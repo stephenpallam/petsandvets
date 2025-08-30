@@ -250,7 +250,10 @@ const SliderSection = ({
                       </button>
                       <button
                         onClick={() => handleUpdateSlider(image.id)}
-                        className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+                        className="px-3 py-1 text-sm text-white rounded transition-colors"
+                        style={{ backgroundColor: '#29add3' }}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                        onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
                       >
                         Save
                       </button>
