@@ -1538,6 +1538,124 @@ const PhotoManagement = () => {
     }
   };
 
+  // Image replacement functions for edit mode
+  const handleSliderImageReplace = async (file) => {
+    setUploading(true);
+    setError(null);
+    
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch(`${API_BASE_URL}/api/upload/homepageslider`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        const newImageUrl = `${API_BASE_URL}${result.url}`;
+        
+        // Update the slider form with new image URL
+        setSliderForm(prev => ({
+          ...prev,
+          image_url: newImageUrl
+        }));
+        
+        setSuccess('Image replaced successfully!');
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Upload failed');
+      }
+    } catch (err) {
+      setError(`Upload failed: ${err.message}`);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleFacilityImageReplace = async (file) => {
+    setUploading(true);
+    setError(null);
+    
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch(`${API_BASE_URL}/api/upload/facility`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        const newImageUrl = `${API_BASE_URL}${result.url}`;
+        
+        // Update the facility form with new image URL
+        setFacilityForm(prev => ({
+          ...prev,
+          photo_url: newImageUrl
+        }));
+        
+        setSuccess('Image replaced successfully!');
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Upload failed');
+      }
+    } catch (err) {
+      setError(`Upload failed: ${err.message}`);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleTeamImageReplace = async (file) => {
+    setUploading(true);
+    setError(null);
+    
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch(`${API_BASE_URL}/api/upload/team`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        const newImageUrl = `${API_BASE_URL}${result.url}`;
+        
+        // Update the team member form with new image URL
+        setTeamMemberForm(prev => ({
+          ...prev,
+          photo_url: newImageUrl
+        }));
+        
+        setSuccess('Image replaced successfully!');
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Upload failed');
+      }
+    } catch (err) {
+      setError(`Upload failed: ${err.message}`);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   // FileUploadSection component  
   const FileUploadSection = ({ category, files }) => (
     <div className="space-y-6">
