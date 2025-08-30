@@ -352,7 +352,7 @@ const Header = () => {
                location.pathname.includes('/reviews') ||
                location.pathname.includes('/business-info') ||
                location.pathname.includes('/photo-management') ||
-               location.pathname.includes('/register-user');
+               location.pathname.includes('/register');  // Updated from /register-user
       
       default:
         return false;
