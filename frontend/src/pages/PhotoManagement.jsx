@@ -1809,24 +1809,26 @@ const PhotoManagement = () => {
             </div>
           </div>
 
-        {/* Success Alert */}
-        {success && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
-            {success}
-          </div>
-        )}
+          {/* Content Area */}
+          <div className="px-4 sm:px-6 py-4 sm:py-6">
+            {/* Success Alert */}
+            {success && (
+              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4 sm:mb-6">
+                {success}
+              </div>
+            )}
 
-        {/* Error Alert */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-            {error}
-          </div>
-        )}
+            {/* Error Alert */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 sm:mb-6">
+                {error}
+              </div>
+            )}
 
-        {/* Tabs */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
-          <div className="border-b border-gray-200">
-            <nav className="flex space-x-8 px-6" aria-label="Tabs">
+            {/* Tabs */}
+            <div className="border border-gray-200 rounded-lg mb-4 sm:mb-8">
+              <div className="border-b border-gray-200">
+                <nav className="flex flex-col sm:flex-row sm:space-x-8 px-3 sm:px-6" aria-label="Tabs">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 return (
