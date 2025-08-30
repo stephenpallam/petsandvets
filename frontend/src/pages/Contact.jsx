@@ -254,7 +254,15 @@ const Contact = () => {
                     please contact your nearest 24-hour emergency animal hospital immediately.
                   </p>
                   <p className="text-red-600 font-semibold">
-                    VCA SouthPaws Veterinary Specialists & Emergency Center: (703) 752-9100
+                    <a 
+                      href="tel:(703) 752-9100" 
+                      className="transition-colors duration-200"
+                      style={{ color: '#dc2626' }}
+                      onMouseEnter={(e) => e.target.style.color = '#b91c1c'}
+                      onMouseLeave={(e) => e.target.style.color = '#dc2626'}
+                    >
+                      VCA SouthPaws Veterinary Specialists & Emergency Center: (703) 752-9100
+                    </a>
                   </p>
                 </div>
               </div>
