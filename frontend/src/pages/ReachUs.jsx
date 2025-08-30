@@ -64,7 +64,7 @@ const ReachUs = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {quickInfo.map((info, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center">
+              <div key={index} className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center">
                 <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-6" style={{ backgroundColor: `${info.color}15` }}>
                   <info.icon className="h-8 w-8" style={{ color: info.color }} />
                 </div>
@@ -84,7 +84,7 @@ const ReachUs = () => {
       </section>
 
       {/* Main Location Section */}
-      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '40px', paddingBottom: '40px' }}>
+      <section className="bg-white" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white p-8 rounded-xl shadow-lg">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
