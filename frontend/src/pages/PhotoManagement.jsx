@@ -1908,6 +1908,7 @@ const PhotoManagement = () => {
                     teamMemberForm={teamMemberForm}
                     handleTeamMemberFormChange={handleTeamMemberFormChange}
                     handleFileUpload={handleFileUpload}
+                    handleTeamImageReplace={handleTeamImageReplace}
                     handleUpdateTeamMember={handleUpdateTeamMember}
                     handleDeleteTeamMember={handleDeleteTeamMember}
                     startEditTeamMember={startEditTeamMember}
