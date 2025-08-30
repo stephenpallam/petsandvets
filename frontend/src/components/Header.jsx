@@ -254,13 +254,7 @@ const Header = () => {
             { name: 'Request Pet Records', href: '/forms/request-pet-records' }
           ]
         },
-        { name: 'Download Forms', href: '/forms-download' },
-        ...(isAdmin() ? [{ name: 'Urgent Care Appointments', href: '/urgent-care-appointments' }] : []),
-        ...(isAdmin() ? [{ name: 'Configure Hours', href: '/configure-hours' }] : []),
-        ...(isAdmin() ? [{ name: 'Reviews', href: '/reviews' }] : []),
-        ...(isAdmin() ? [{ name: 'Business Info', href: '/business-info' }] : []),
-        ...(isAdmin() ? [{ name: 'Photo Management', href: '/photo-management' }] : []),
-        ...(user ? [{ name: 'Register User', href: '/register-user' }] : [])
+        { name: 'Download Forms', href: '/forms-download' }
       ]
     },
     { 
