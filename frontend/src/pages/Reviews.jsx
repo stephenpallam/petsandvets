@@ -215,9 +215,9 @@ const Reviews = () => {
           </div>
         )}
 
-        {/* Add Review Form */}
-        {showAddForm && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            {/* Add Review Form */}
+            {showAddForm && (
+              <div className="border-t border-gray-200 pt-6 mt-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Add New Review</h2>
             <form onSubmit={handleAddReview}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
