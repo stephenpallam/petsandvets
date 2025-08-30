@@ -236,7 +236,7 @@ const SliderSection = ({
                   
                   <div className="flex justify-between">
                     <button
-                      onClick={() => handleDeleteSlider(image.id)}
+                      onClick={() => confirmDeleteSlider(image.id)}
                       className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
                     >
                       Delete Image
