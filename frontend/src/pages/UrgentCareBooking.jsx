@@ -46,7 +46,7 @@ const UrgentCareBooking = () => {
     { id: 2, title: 'Pet Details', icon: Heart },
     { id: 3, title: 'Visit Reason', icon: Stethoscope },
     { id: 4, title: 'Other Details', icon: CheckCircle },
-    { id: 5, title: 'Review Details', icon: AlertCircle },
+    { id: 5, title: 'Review', icon: AlertCircle },
     { id: 6, title: 'Confirmation', icon: Check }
   ];
 
