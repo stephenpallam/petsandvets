@@ -648,7 +648,7 @@ const TeamMemberSection = ({
       {showTeamMemberForm && (
         <div className="mt-4 bg-gray-50 rounded-lg p-4 border border-gray-200">
           <div className="space-y-4 mb-4">
-            <div>
+            <div className="w-full">
               <label className="block text-sm font-medium text-gray-700 mb-2">Name *</label>
               <input
                 key="name-input"
@@ -656,13 +656,13 @@ const TeamMemberSection = ({
                 name="name"
                 value={teamMemberForm.name}
                 onChange={handleTeamMemberFormChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 block"
                 style={{ "--tw-ring-color": "#29add3" }}
                 placeholder="Dr. Jennifer Smith"
                 required
               />
             </div>
-            <div>
+            <div className="w-full">
               <label className="block text-sm font-medium text-gray-700 mb-2">Title *</label>
               <input
                 key="title-input"
@@ -670,7 +670,7 @@ const TeamMemberSection = ({
                 name="title"
                 value={teamMemberForm.title}
                 onChange={handleTeamMemberFormChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 block"
                 style={{ "--tw-ring-color": "#29add3" }}
                 placeholder="Lead Veterinarian"
                 required
@@ -678,7 +678,7 @@ const TeamMemberSection = ({
             </div>
           </div>
           
-          <div className="mb-4">
+          <div className="mb-4 w-full">
             <label className="block text-sm font-medium text-gray-700 mb-2">Bio *</label>
             <textarea
               key="bio-input"
@@ -686,14 +686,14 @@ const TeamMemberSection = ({
               value={teamMemberForm.bio}
               onChange={handleTeamMemberFormChange}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 block"
               style={{ "--tw-ring-color": "#29add3" }}
               placeholder="Dr. Smith has over 15 years of experience in veterinary medicine and specializes in internal medicine and surgery."
               required
             />
           </div>
           
-          <div className="mb-4">
+          <div className="mb-4 w-full">
             <label className="block text-sm font-medium text-gray-700 mb-2">Credentials *</label>
             <input
               key="credentials-input"
@@ -701,14 +701,14 @@ const TeamMemberSection = ({
               name="credentials"
               value={teamMemberForm.credentials}
               onChange={handleTeamMemberFormChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 block"
               style={{ "--tw-ring-color": "#29add3" }}
               placeholder="DVM from Virginia Tech"
               required
             />
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4 w-full">
             <label className="block text-sm font-medium text-gray-700 mb-2">Display Order</label>
             <input
               key="order-input"
@@ -716,7 +716,7 @@ const TeamMemberSection = ({
               name="order"
               value={teamMemberForm.order}
               onChange={handleTeamMemberFormChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 block"
               style={{ "--tw-ring-color": "#29add3" }}
               placeholder="0"
               min="0"
