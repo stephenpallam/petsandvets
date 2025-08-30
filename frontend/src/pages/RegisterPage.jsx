@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Mail, Lock, User, Shield, AlertCircle, CheckCircle } from 'lucide-react';
+import { Mail, Lock, User, Shield, AlertCircle, CheckCircle, ChevronDown } from 'lucide-react';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
