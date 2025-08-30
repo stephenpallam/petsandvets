@@ -182,28 +182,30 @@ const Reviews = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Manage Reviews</h1>
-              <p className="mt-2 text-gray-600">
-                Add and manage customer reviews displayed on the home page (Maximum 3 reviews)
-              </p>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          {/* Header - Inside the main card */}
+          <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Reviews
+              </h2>
+              {reviews.length < 3 && !showAddForm && (
+                <button
+                  onClick={() => setShowAddForm(true)}
+                  className="inline-flex items-center px-4 py-2 text-white rounded-lg transition-colors"
+                  style={{ backgroundColor: '#29add3' }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
+                >
+                  <Plus className="h-5 w-5 mr-2" />
+                  Add Review
+                </Plus>
+              )}
             </div>
-            {reviews.length < 3 && !showAddForm && (
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                <Plus className="h-5 w-5 mr-2" />
-                Add Review
-              </button>
-            )}
           </div>
-        </div>
 
         {/* Error Alert */}
         {error && (
