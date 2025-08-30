@@ -512,15 +512,7 @@ const ConfigureHours = () => {
             {/* Urgent Care Hours Tab */}
             {activeTab === 'urgent' && (
               <div className="space-y-6">
-                <div className="flex justify-between items-center mb-6">
-                  <div>
-                    <h2 className="text-xl font-semibold text-gray-900 flex items-center">
-                      <Clock className="h-5 w-5 mr-2" style={{ color: '#374151' }} />
-                      Urgent Care Hours
-                    </h2>
-                    <p className="text-gray-600 text-sm mt-1">Set your after-hours urgent care availability</p>
-                  </div>
-                  
+                <div className="flex justify-end items-center mb-6">
                   <div className="flex items-center space-x-3">
                     {/* Google Sync Button */}
                     {googleConnected ? (
