@@ -200,7 +200,7 @@ const UrgentCareAppointments = () => {
 
       if (response.ok) {
         const data = await response.json();
-        let message = `Appointment status updated to ${newStatus}.`;
+        let message = `Appointment status updated to ${getStatusLabel(newStatus)}.`;
         if (data.freed_slot) {
           message += ` Time slot ${data.freed_slot} is now available for booking.`;
         }
