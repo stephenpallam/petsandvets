@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Star, Plus, Edit, Trash2, Save, X } from 'lucide-react';
+import { Star, Plus, Edit, Trash2, Save, X, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 const Reviews = () => {
