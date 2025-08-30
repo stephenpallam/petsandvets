@@ -181,7 +181,20 @@ const UserManagement = () => {
         setTimeout(() => setMessage({ text: '', type: '' }), 5000);
       } else {
         const errorData = await response.json();
-        setMessage({ text: errorData.detail || 'Failed to update user', type: 'error' });
+        let errorMessage = 'Failed to update user';
+        
+        if (errorData.detail) {
+          if (typeof errorData.detail === 'string') {
+            errorMessage = errorData.detail;
+          } else if (Array.isArray(errorData.detail)) {
+            // Handle FastAPI validation errors
+            errorMessage = errorData.detail.map(err => err.msg || err).join(', ');
+          } else if (typeof errorData.detail === 'object' && errorData.detail.msg) {
+            errorMessage = errorData.detail.msg;
+          }
+        }
+        
+        setMessage({ text: errorMessage, type: 'error' });
       }
     } catch (error) {
       console.error('Error updating user:', error);
