@@ -1874,8 +1874,8 @@ const PhotoManagement = () => {
             </nav>
           </div>
 
-          {/* Tab Content */}
-          <div className="p-6">
+              {/* Tab Content */}
+              <div className="p-4 sm:p-6">
             {tabs.map((tab) => (
               <div key={tab.id} className={activeTab === tab.id ? 'block' : 'hidden'}>
                 <div className="mb-6">
