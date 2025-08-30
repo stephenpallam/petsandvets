@@ -440,7 +440,7 @@ const Header = () => {
           </div>
 
           {/* Mobile Layout */}
-          <div className="md:hidden">
+          <div className="lg:hidden">
             {/* Row 1: Phone (left) and GP Status (right) */}
             <div className="flex justify-between items-center text-xs mb-0.5">
               <div className="flex items-center space-x-1">
