@@ -248,7 +248,7 @@ const Header = () => {
         ]
       },
       { 
-        name: 'Patient Resources',
+        name: 'Patient',
         dropdown: [
           { name: 'Your First Visit', href: '/your-first-visit' },
           { name: 'Insurance & Payments', href: '/pet-insurance-payments' },
