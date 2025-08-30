@@ -380,8 +380,10 @@ const BusinessInfo = () => {
               ) : (
                 <a 
                   href="/google-integration" 
-                  className="inline-flex items-center px-4 py-2 text-white rounded-md hover:opacity-90 transition-colors font-medium no-underline"
+                  className="inline-flex items-center px-4 py-2 text-white rounded-md transition-colors font-medium no-underline"
                   style={{ backgroundColor: '#29add3' }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
                 >
                   Connect Google Business Profile
                 </a>
