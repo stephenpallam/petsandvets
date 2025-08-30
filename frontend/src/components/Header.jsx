@@ -384,7 +384,7 @@ const Header = () => {
                location.pathname.includes('/pet-travel-certificates');
       
       case 'About':
-        return location.pathname.includes('/our-') || 
+        return (location.pathname.includes('/our-') && !location.pathname.includes('/our-hours')) || 
                location.pathname.includes('/about') || 
                location.pathname.includes('/gallery');
       
