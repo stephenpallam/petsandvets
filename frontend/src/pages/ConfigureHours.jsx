@@ -658,7 +658,16 @@ const ConfigureHours = () => {
                       <button
                         onClick={() => handleGoogleSync('special_hours')}
                         disabled={syncing || loading}
-                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 flex items-center font-medium"
+                        className="text-white px-4 py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center font-medium"
+                        style={{ 
+                          backgroundColor: syncing ? '#94a3b8' : '#29add3'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!syncing) e.target.style.backgroundColor = '#2196c7';
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!syncing) e.target.style.backgroundColor = '#29add3';
+                        }}
                       >
                         {syncing ? (
                           <>
