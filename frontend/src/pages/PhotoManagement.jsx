@@ -801,7 +801,7 @@ const TeamMemberSection = ({
                             accept="image/*"
                             onChange={(e) => {
                               if (e.target.files[0]) {
-                                handleFileUpload('team', e.target.files[0], false);
+                                handleTeamImageReplace(e.target.files[0]);
                                 e.target.value = '';
                               }
                             }}
