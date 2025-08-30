@@ -791,8 +791,8 @@ const TeamMemberSection = ({
                 /* Edit Form */
                 <div className="space-y-4">
                   <div className="space-y-4">
-                    <div className="w-full">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                    <div className="w-full" style={{ display: 'block' }}>
+                      <label className="block text-sm font-medium text-gray-700 mb-2" style={{ display: 'block', width: '100%' }}>Name</label>
                       <input
                         key={`edit-name-${member.id}`}
                         type="text"
@@ -800,11 +800,11 @@ const TeamMemberSection = ({
                         value={teamMemberForm.name}
                         onChange={handleTeamMemberFormChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 block"
-                        style={{ "--tw-ring-color": "#29add3" }}
+                        style={{ "--tw-ring-color": "#29add3", display: 'block', width: '100%' }}
                       />
                     </div>
-                    <div className="w-full">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
+                    <div className="w-full" style={{ display: 'block' }}>
+                      <label className="block text-sm font-medium text-gray-700 mb-2" style={{ display: 'block', width: '100%' }}>Title</label>
                       <input
                         key={`edit-title-${member.id}`}
                         type="text"
@@ -812,7 +812,7 @@ const TeamMemberSection = ({
                         value={teamMemberForm.title}
                         onChange={handleTeamMemberFormChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 block"
-                        style={{ "--tw-ring-color": "#29add3" }}
+                        style={{ "--tw-ring-color": "#29add3", display: 'block', width: '100%' }}
                       />
                     </div>
                   </div>
