@@ -437,7 +437,7 @@ const ConfigureHours = () => {
                     <button
                       onClick={() => saveHours('hospital')}
                       disabled={loading}
-                      className="text-white px-6 py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center font-medium"
+                      className="w-full sm:w-auto text-white px-6 py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center sm:justify-start font-medium"
                       style={{ 
                         backgroundColor: loading ? '#94a3b8' : '#29add3'
                       }}
