@@ -941,7 +941,7 @@ const TeamMemberSection = ({
                       <Eye className="h-4 w-4" />
                     </button>
                     <button
-                      onClick={() => handleDeleteTeamMember(member.id)}
+                      onClick={() => confirmDeleteTeamMember(member.id)}
                       className="p-1 text-red-600 hover:text-red-700 transition-colors"
                       title="Delete"
                     >
