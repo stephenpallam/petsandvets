@@ -1746,6 +1746,24 @@ const PhotoManagement = () => {
     }
   };
 
+  // Handle confirmed delete
+  const handleConfirmDelete = async () => {
+    const { type, id } = deleteData;
+    
+    try {
+      if (type === 'slider') {
+        await handleDeleteSlider(id);
+      } else if (type === 'facility') {
+        await handleDeleteFacility(id);
+      } else if (type === 'team') {
+        await handleDeleteTeamMember(id);
+      }
+    } finally {
+      setShowDeleteConfirm(false);
+      setDeleteData({ type: '', id: '', name: '' });
+    }
+  };
+
   // FileUploadSection component  
   const FileUploadSection = ({ category, files }) => (
     <div className="space-y-6">
