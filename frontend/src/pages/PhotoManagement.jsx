@@ -648,8 +648,8 @@ const TeamMemberSection = ({
       {showTeamMemberForm && (
         <div className="mt-4 bg-gray-50 rounded-lg p-4 border border-gray-200">
           <div className="space-y-4 mb-4">
-            <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Name *</label>
+            <div className="w-full" style={{ display: 'block' }}>
+              <label className="block text-sm font-medium text-gray-700 mb-2" style={{ display: 'block', width: '100%' }}>Name *</label>
               <input
                 key="name-input"
                 type="text"
@@ -657,13 +657,13 @@ const TeamMemberSection = ({
                 value={teamMemberForm.name}
                 onChange={handleTeamMemberFormChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 block"
-                style={{ "--tw-ring-color": "#29add3" }}
+                style={{ "--tw-ring-color": "#29add3", display: 'block', width: '100%' }}
                 placeholder="Dr. Jennifer Smith"
                 required
               />
             </div>
-            <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Title *</label>
+            <div className="w-full" style={{ display: 'block' }}>
+              <label className="block text-sm font-medium text-gray-700 mb-2" style={{ display: 'block', width: '100%' }}>Title *</label>
               <input
                 key="title-input"
                 type="text"
@@ -671,7 +671,7 @@ const TeamMemberSection = ({
                 value={teamMemberForm.title}
                 onChange={handleTeamMemberFormChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 block"
-                style={{ "--tw-ring-color": "#29add3" }}
+                style={{ "--tw-ring-color": "#29add3", display: 'block', width: '100%' }}
                 placeholder="Lead Veterinarian"
                 required
               />
