@@ -132,6 +132,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     setToken(null);
     setUser(null);
+    setLoading(false);
   };
 
   const isAdmin = () => {
