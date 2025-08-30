@@ -116,8 +116,21 @@ const Contact = () => {
       </section>
 
       {/* Reach Us Section */}
-      <section className="pt-5 pb-16" style={{ backgroundColor: '#f8f9fa' }}>
+      <section style={{ backgroundColor: '#f8f9fa', paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Introduction */}
+          <div className="text-center mb-12">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              Contact Information
+            </h2>
+            <p className="text-gray-700 mb-2">
+              Multiple convenient ways to reach us for appointments, questions, or urgent care needs
+            </p>
+            <p className="text-gray-700">
+              Our dedicated team is here to provide compassionate support for you and your beloved pets
+            </p>
+          </div>
+
           {/* Reach Us Map - Full Width */}
           <div className="mb-12">
             <div className="bg-white p-8 rounded-xl shadow-lg">
