@@ -83,8 +83,12 @@ export const AuthProvider = ({ children }) => {
       if (response.ok) {
         const data = await response.json();
         const newToken = data.access_token;
+        
+        // Store token in localStorage and state
         localStorage.setItem('token', newToken);
         setToken(newToken);
+        
+        // The useEffect will trigger fetchUserProfile when token changes
         return { success: true };
       } else {
         const errorData = await response.json();
