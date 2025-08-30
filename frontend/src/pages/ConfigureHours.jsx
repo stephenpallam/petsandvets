@@ -513,8 +513,8 @@ const ConfigureHours = () => {
             {/* Urgent Care Hours Tab */}
             {activeTab === 'urgent' && (
               <div className="space-y-6">
-                <div className="flex justify-end items-center mb-6">
-                  <div className="flex items-center space-x-3">
+                <div className="flex flex-col sm:flex-row justify-end items-stretch sm:items-center mb-4 sm:mb-6 gap-3">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:space-x-3">
                     {/* Google Sync Button */}
                     {googleConnected ? (
                       <button
