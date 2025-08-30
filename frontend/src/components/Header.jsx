@@ -267,13 +267,13 @@ const Header = () => {
       }
     ];
 
-    // Add Manager menu only if user is logged in
+    // Add role-based menu only if user is logged in
     if (user) {
-      const managerDropdown = [];
+      const roleDropdown = [];
       
       // Admin gets access to all management features
       if (user.role === 'admin') {
-        managerDropdown.push(
+        roleDropdown.push(
           { name: 'Urgent Care Appointments', href: '/urgent-care-appointments' },
           { name: 'Configure Hours', href: '/configure-hours' },
           { name: 'Reviews', href: '/reviews' },
@@ -285,16 +285,16 @@ const Header = () => {
       // Manager gets access to appointments and user management
       if (user.role === 'manager' || user.role === 'admin') {
         if (user.role === 'manager') {
-          managerDropdown.push(
+          roleDropdown.push(
             { name: 'Urgent Care Appointments', href: '/urgent-care-appointments' }
           );
         }
-        managerDropdown.push({ name: 'Register User', href: '/register' });
+        roleDropdown.push({ name: 'Register User', href: '/register' });
       }
       
       // Technician gets limited access
       if (user.role === 'technician') {
-        managerDropdown.push(
+        roleDropdown.push(
           { name: 'Urgent Care Appointments', href: '/urgent-care-appointments' }
         );
       }
@@ -302,22 +302,39 @@ const Header = () => {
       // All logged-in users can access basic registration (this will be controlled by RegisterPage logic)
       if (user.role === 'user' || user.role === 'technician' || user.role === 'manager' || user.role === 'admin') {
         // Only add register if not already added for managers/admins
-        const hasRegister = managerDropdown.some(item => item.href === '/register');
+        const hasRegister = roleDropdown.some(item => item.href === '/register');
         if (!hasRegister) {
-          managerDropdown.push({ name: 'Register User', href: '/register' });
+          roleDropdown.push({ name: 'Register User', href: '/register' });
         }
       }
       
       // Always add logout for logged-in users
-      if (managerDropdown.length > 0) {
-        managerDropdown.push({ name: 'Logout', action: 'logout', className: 'border-t border-gray-200 pt-2' });
+      if (roleDropdown.length > 0) {
+        roleDropdown.push({ name: 'Logout', action: 'logout', className: 'border-t border-gray-200 pt-2' });
       }
       
-      // Only show Manager dropdown if there are items
-      if (managerDropdown.length > 0) {
+      // Determine navigation label based on user role
+      let navigationLabel;
+      switch (user.role) {
+        case 'admin':
+          navigationLabel = 'Admin';
+          break;
+        case 'manager':
+          navigationLabel = 'Manager';
+          break;
+        case 'technician':
+          navigationLabel = 'Technician';
+          break;
+        default:
+          navigationLabel = 'User';
+          break;
+      }
+      
+      // Only show role dropdown if there are items
+      if (roleDropdown.length > 0) {
         baseNavigation.push({
-          name: 'Manager',
-          dropdown: managerDropdown
+          name: navigationLabel,
+          dropdown: roleDropdown
         });
       }
     }
