@@ -2057,7 +2057,7 @@ const PhotoManagement = () => {
                     handleFacilityUpload={handleFacilityUpload}
                     handleFacilityImageReplace={handleFacilityImageReplace}
                     handleUpdateFacility={handleUpdateFacility}
-                    handleDeleteFacility={handleDeleteFacility}
+                    handleDeleteFacility={confirmDeleteFacility}
                     startEditFacility={startEditFacility}
                     error={error}
                     setError={setError}
