@@ -95,8 +95,28 @@ const Contact = () => {
         </div>
       </section>
 
+      {/* Hero Section */}
+      <section className="bg-white">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
+            Reach Us
+          </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+              <MapPin className="mr-2 h-4 w-4" />
+              Connect With Care, Anytime
+            </span>
+          </div>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto mb-8">
+            Multiple convenient ways to reach us for appointments, questions, or urgent care needs. 
+            Our dedicated team is here to provide compassionate support for you and your beloved pets 
+            every step of the way.
+          </p>
+        </div>
+      </section>
+
       {/* Reach Us Section */}
-      <section className="pt-5 pb-16">
+      <section className="pt-5 pb-16" style={{ backgroundColor: '#f8f9fa' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Reach Us Map - Full Width */}
           <div className="mb-12">
