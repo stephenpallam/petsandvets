@@ -671,7 +671,7 @@ const Header = () => {
 
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 shadow-lg">
+        <div className="lg:hidden bg-white border-t border-gray-200 shadow-lg">
           <div className="px-4 py-3 space-y-3 max-h-96 overflow-y-auto">
             {navigation.map((item) => {
               // Hide Home link when on home page
