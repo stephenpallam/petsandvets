@@ -177,15 +177,15 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Role-Based Authentication System with 4 Roles"
     - "Authentication Context with Persistence Fix"
     - "Dedicated Registration Page"
     - "Dynamic Role-Based Navigation"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
-  backend_testing_complete: false
-  role_based_auth_testing_needed: true
+  backend_testing_complete: true
+  role_based_auth_testing_needed: false
+  role_based_auth_testing_complete: true
 
 agent_communication:
   - agent: "main"
