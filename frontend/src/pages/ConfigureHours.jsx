@@ -833,7 +833,7 @@ const ConfigureHours = () => {
                     <button
                       onClick={addSpecialHour}
                       disabled={loading || !newSpecialHour.date || !newSpecialHour.name}
-                      className="text-white px-4 py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center font-medium"
+                      className="w-full sm:w-auto text-white px-4 py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center sm:justify-start font-medium"
                       style={{ 
                         backgroundColor: (loading || !newSpecialHour.date || !newSpecialHour.name) ? '#94a3b8' : '#29add3'
                       }}
