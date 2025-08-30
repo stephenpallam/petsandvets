@@ -478,7 +478,7 @@ const Header = () => {
                     >
                       <button
                         onClick={() => setActiveDropdown(activeDropdown === item.name ? null : item.name)}
-                        className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                        className={`flex items-center px-2 py-1 text-sm font-medium rounded-lg transition-all duration-200 ${
                           isNavItemActive(item.name)
                             ? 'text-gray-900' 
                             : 'text-gray-700 hover:text-gray-900'
