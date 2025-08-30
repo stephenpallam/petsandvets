@@ -204,14 +204,7 @@ const SliderSection = ({
                             accept="image/*"
                             onChange={(e) => {
                               if (e.target.files[0]) {
-                                handleSliderUpload(e.target.files[0], false).then(() => {
-                                  // Update the form with new image URL after successful upload
-                                  const reader = new FileReader();
-                                  reader.onload = () => {
-                                    // This will be handled by the upload response
-                                  };
-                                  reader.readAsDataURL(e.target.files[0]);
-                                });
+                                handleSliderImageReplace(e.target.files[0]);
                                 e.target.value = '';
                               }
                             }}
