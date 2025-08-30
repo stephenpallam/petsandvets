@@ -102,7 +102,7 @@ const Contact = () => {
             Reach Us
           </h1>
           <div className="mb-6">
-            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+            <span className="inline-flex items-center px-6 py-3 rounded-full text-lg font-bold text-white shadow-lg" style={{ backgroundColor: primaryColor }}>
               Your Partner in Pet Care Excellence
             </span>
           </div>
