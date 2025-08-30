@@ -176,20 +176,21 @@ const BusinessInfo = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-          <div className="flex items-center">
-            <Building className="h-8 w-8 text-blue-600 mr-4" />
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Business Information</h1>
-              <p className="mt-2 text-gray-600">
-                Manage your hospital's business information that appears throughout the website
-              </p>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          {/* Header - Inside the main card */}
+          <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Business Information
+              </h2>
             </div>
           </div>
-        </div>
+
+          {/* Content Area */}
+          <div className="p-6">
 
         {/* Success Alert */}
         {success && (
