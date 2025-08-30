@@ -13,6 +13,8 @@ const Reviews = () => {
     pet_name: '',
     owner_name: ''
   });
+  const [authError, setAuthError] = useState(null); // New state for authentication errors
+  const [pageLoading, setPageLoading] = useState(true); // New state for page loading
 
   const { user, token, isAdmin, loading: authLoading } = useAuth();
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
