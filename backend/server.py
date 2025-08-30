@@ -911,7 +911,7 @@ async def get_appointments(
     filter_days: Optional[str] = "today",  # today, last_7_days, last_15_days, last_30_days, last_3_months, last_6_months, last_1_year
     page: int = 1,
     page_size: int = 20,
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_staff_user)  # Changed from get_admin_user
 ):
     """Get paginated and filtered appointments"""
     
