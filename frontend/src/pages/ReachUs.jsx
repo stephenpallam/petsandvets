@@ -86,7 +86,7 @@ const ReachUs = () => {
       {/* Main Location Section */}
       <section className="bg-white" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white p-8 rounded-xl shadow-lg">
+          <div className="bg-gray-50 p-8 rounded-xl shadow-lg">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-900 flex items-center mb-4 lg:mb-0">
                 <MapPin className="mr-3 h-6 w-6" style={{ color: primaryColor }} />
