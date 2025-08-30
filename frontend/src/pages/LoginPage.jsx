@@ -58,7 +58,13 @@ const LoginPage = () => {
             <p className="mt-2 text-sm text-gray-600">Access your management dashboard</p>
           </div>
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form 
+            className="space-y-6" 
+            onSubmit={handleSubmit}
+            data-lpignore="true"
+            data-form-type="other"
+            autoComplete="off"
+          >
             {/* Email Field */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
