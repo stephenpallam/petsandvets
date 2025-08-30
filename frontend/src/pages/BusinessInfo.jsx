@@ -401,27 +401,29 @@ const BusinessInfo = () => {
                 )}
               </button>
             </div>
-          </form>
-        </div>
-
-        {/* Information Note */}
-        <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <Building className="h-5 w-5 text-blue-400" />
+              </form>
             </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-blue-800">
-                About Business Information
-              </h3>
-              <div className="mt-2 text-sm text-blue-700">
-                <ul className="list-disc list-inside space-y-1">
-                  <li>Changes will appear immediately across the entire website</li>
-                  <li>The hospital name and tagline appear in the header and footer</li>
-                  <li>Contact information is displayed in multiple locations</li>
-                  <li>Social media links will be shown in the footer (leave blank to hide)</li>
-                  <li>For photo management, use the dedicated Photo Management page</li>
-                </ul>
+
+            {/* Information Note */}
+            <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <Building className="h-5 w-5 text-blue-400" />
+                </div>
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-blue-800">
+                    About Business Information
+                  </h3>
+                  <div className="mt-2 text-sm text-blue-700">
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Changes will appear immediately across the entire website</li>
+                      <li>The hospital name and tagline appear in the header and footer</li>
+                      <li>Contact information is displayed in multiple locations</li>
+                      <li>Social media links will be shown in the footer (leave blank to hide)</li>
+                      <li>For photo management, use the dedicated Photo Management page</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
