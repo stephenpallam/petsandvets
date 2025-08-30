@@ -192,22 +192,22 @@ const BusinessInfo = () => {
           {/* Content Area */}
           <div className="p-6">
 
-        {/* Success Alert */}
-        {success && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
-            {success}
-          </div>
-        )}
+            {/* Success Alert */}
+            {success && (
+              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
+                {success}
+              </div>
+            )}
 
-        {/* Error Alert */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-            {error}
-          </div>
-        )}
+            {/* Error Alert */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+                {error}
+              </div>
+            )}
 
-        {/* Business Information Form */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            {/* Business Information Form */}
+            <div>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Hospital Name & Tagline */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
