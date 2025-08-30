@@ -292,11 +292,25 @@ const UrgentCare = () => {
               Fast Relief When You Need It Most
             </span>
           </div>
-          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto mb-8">
             When your pet needs care—not just quickly, but right away—our Urgent Veterinary Services deliver 
             fast, compassionate relief when your regular vet is closed or unavailable. At Pets and Vets Animal 
             Hospital, we treat your family pets with the expertise and empathy they deserve.
           </p>
+          
+          {/* Check In Online Button */}
+          <div className="flex justify-center">
+            <Link
+              to="/urgent-care-booking"
+              className="inline-flex items-center justify-center px-8 py-4 rounded-lg font-semibold text-white transition-all duration-200 transform hover:scale-105 hover:shadow-lg"
+              style={{ backgroundColor: primaryColor }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = primaryLight}
+              onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
+            >
+              <Calendar className="mr-2 h-5 w-5" />
+              Check In Online
+            </Link>
+          </div>
         </div>
       </section>
 
