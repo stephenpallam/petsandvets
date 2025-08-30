@@ -49,7 +49,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 sm:px-6 lg:px-8" style={{paddingTop: '30px', paddingBottom: '48px'}}>
       <div className="w-full max-w-md">
         <div className="bg-white py-8 px-6 shadow-lg rounded-lg border border-gray-200">
           {/* Login Form Title */}
