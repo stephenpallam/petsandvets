@@ -635,6 +635,16 @@ const Header = () => {
                                   ))}
                                 </div>
                               </div>
+                            ) : dropdownItem.action === 'logout' ? (
+                              <button
+                                onClick={() => {
+                                  logout();
+                                  setIsMenuOpen(false);
+                                }}
+                                className={`block w-full text-left px-3 py-2 text-sm text-gray-700 hover:text-red-600 rounded transition-colors duration-200 ${dropdownItem.className || ''}`}
+                              >
+                                {dropdownItem.name}
+                              </button>
                             ) : (
                               <Link
                                 to={dropdownItem.href}
