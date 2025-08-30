@@ -282,7 +282,7 @@ const Header = () => {
       }
       
       if (user) {
-        managerDropdown.push({ name: 'Register User', href: '/register-user' });
+        managerDropdown.push({ name: 'Register User', href: '/register' });
       }
       
       // Always add logout for logged-in users
