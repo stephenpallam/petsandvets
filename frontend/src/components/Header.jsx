@@ -278,7 +278,8 @@ const Header = () => {
           { name: 'Configure Hours', href: '/configure-hours' },
           { name: 'Reviews', href: '/reviews' },
           { name: 'Business Info', href: '/business-info' },
-          { name: 'Photo Management', href: '/photo-management' }
+          { name: 'Photo Management', href: '/photo-management' },
+          { name: 'User Management', href: '/user-management' }
         );
       }
       
@@ -286,7 +287,8 @@ const Header = () => {
       if (user.role === 'manager' || user.role === 'admin') {
         if (user.role === 'manager') {
           roleDropdown.push(
-            { name: 'Urgent Care Appointments', href: '/urgent-care-appointments' }
+            { name: 'Urgent Care Appointments', href: '/urgent-care-appointments' },
+            { name: 'User Management', href: '/user-management' }
           );
         }
         roleDropdown.push({ name: 'Register User', href: '/register' });
