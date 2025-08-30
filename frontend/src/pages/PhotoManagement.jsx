@@ -89,7 +89,15 @@ const SliderSection = ({
             
             {/* Check if all required fields are filled */}
             {sliderForm.title && sliderForm.description ? (
-              <label className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors cursor-pointer">
+              <label className="inline-flex items-center px-4 py-2 text-white rounded-md transition-colors cursor-pointer"
+                style={{ backgroundColor: uploading ? '#94a3b8' : '#29add3' }}
+                onMouseEnter={(e) => {
+                  if (!uploading) e.target.style.backgroundColor = '#2196c7';
+                }}
+                onMouseLeave={(e) => {
+                  if (!uploading) e.target.style.backgroundColor = '#29add3';
+                }}
+              >
                 <Upload className="h-4 w-4 mr-2" />
                 {uploading ? 'Creating Slider Image...' : 'Choose Image & Create'}
                 <input
