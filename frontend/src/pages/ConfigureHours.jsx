@@ -330,13 +330,7 @@ const ConfigureHours = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="mb-4">
-            <h1 className="text-2xl font-bold text-gray-900">Configure Hospital Hours</h1>
-            <p className="text-gray-600">Manage general practice, urgent care, and special holiday hours</p>
-          </div>
-        </div>
+
 
         {/* Message Display */}
         {message.text && (
