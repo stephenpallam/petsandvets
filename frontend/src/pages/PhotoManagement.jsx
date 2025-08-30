@@ -619,7 +619,7 @@ const TeamMemberSection = ({
     <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-lg font-medium text-blue-900">Add New Team Member</h3>
+          <h3 className="text-lg font-medium" style={{ color: '#29add3' }}>Add New Team Member</h3>
           <p className="text-sm text-blue-700">Upload a photo and fill in team member details</p>
         </div>
         <button
