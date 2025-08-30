@@ -1724,7 +1724,11 @@ const PhotoManagement = () => {
         <p className="text-sm text-gray-600 mb-4">
           Drag and drop files here or click to browse
         </p>
-        <label className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer">
+        <label className="inline-flex items-center px-6 py-3 text-white rounded-lg transition-colors cursor-pointer"
+          style={{ backgroundColor: '#29add3' }}
+          onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+          onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
+        >
           <Upload className="h-5 w-5 mr-2" />
           Choose Files
           <input
