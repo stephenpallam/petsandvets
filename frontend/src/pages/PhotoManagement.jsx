@@ -1007,7 +1007,7 @@ const PhotoManagement = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteData, setDeleteData] = useState({ type: '', id: '', name: '' });
 
-  const { user, token, isAdmin } = useAuth();
+  const { user, token, isAdmin, loading: authLoading } = useAuth();
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
 
   const tabs = [
