@@ -767,7 +767,8 @@ const ConfigureHours = () => {
                                 ...prev,
                                 general_practice: { ...prev.general_practice, open_time: e.target.value }
                               }))}
-                              className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1"
+                              style={{ "--tw-ring-color": "#29add3" }}
                             />
                           </div>
                           <div>
