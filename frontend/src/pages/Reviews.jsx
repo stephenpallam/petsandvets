@@ -393,23 +393,25 @@ const Reviews = () => {
           )}
         </div>
 
-        {/* Information Note */}
-        <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <Star className="h-5 w-5 text-blue-400" />
-            </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-blue-800">
-                About Reviews
-              </h3>
-              <div className="mt-2 text-sm text-blue-700">
-                <ul className="list-disc list-inside space-y-1">
-                  <li>Maximum of 3 reviews can be displayed on the home page</li>
-                  <li>All reviews automatically have 5-star ratings</li>
-                  <li>Reviews are displayed as "Pet Owner Name - Pet parent to Pet Name"</li>
-                  <li>Changes appear immediately on the home page</li>
-                </ul>
+            {/* Information Note */}
+            <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <Star className="h-5 w-5 text-blue-400" />
+                </div>
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-blue-800">
+                    About Reviews
+                  </h3>
+                  <div className="mt-2 text-sm text-blue-700">
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Maximum of 3 reviews can be displayed on the home page</li>
+                      <li>All reviews automatically have 5-star ratings</li>
+                      <li>Reviews are displayed as "Pet Owner Name - Pet parent to Pet Name"</li>
+                      <li>Changes appear immediately on the home page</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
