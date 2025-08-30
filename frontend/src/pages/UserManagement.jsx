@@ -266,6 +266,8 @@ const UserManagement = () => {
   useEffect(() => {
     if (!authLoading && canAccessManager()) {
       fetchUsers();
+      // Scroll to top when page changes
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [authLoading, canAccessManager, currentPage]);
 
