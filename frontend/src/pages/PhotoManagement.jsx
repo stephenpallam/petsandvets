@@ -294,7 +294,7 @@ const SliderSection = ({
                       <Eye className="h-4 w-4" />
                     </button>
                     <button
-                      onClick={() => handleDeleteSlider(image.id)}
+                      onClick={() => confirmDeleteSlider(image.id)}
                       className="p-1 text-red-600 hover:text-red-700 transition-colors"
                       title="Delete"
                     >
