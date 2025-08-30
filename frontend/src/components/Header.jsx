@@ -271,7 +271,8 @@ const Header = () => {
     if (user) {
       const managerDropdown = [];
       
-      if (isAdmin()) {
+      // Admin gets access to all management features
+      if (user.role === 'admin') {
         managerDropdown.push(
           { name: 'Urgent Care Appointments', href: '/urgent-care-appointments' },
           { name: 'Configure Hours', href: '/configure-hours' },
@@ -281,17 +282,44 @@ const Header = () => {
         );
       }
       
-      if (user) {
+      // Manager gets access to appointments and user management
+      if (user.role === 'manager' || user.role === 'admin') {
+        if (user.role === 'manager') {
+          managerDropdown.push(
+            { name: 'Urgent Care Appointments', href: '/urgent-care-appointments' }
+          );
+        }
         managerDropdown.push({ name: 'Register User', href: '/register' });
       }
       
-      // Always add logout for logged-in users
-      managerDropdown.push({ name: 'Logout', action: 'logout', className: 'border-t border-gray-200 pt-2' });
+      // Technician gets limited access
+      if (user.role === 'technician') {
+        managerDropdown.push(
+          { name: 'Urgent Care Appointments', href: '/urgent-care-appointments' }
+        );
+      }
       
-      baseNavigation.push({
-        name: 'Manager',
-        dropdown: managerDropdown
-      });
+      // All logged-in users can access basic registration (this will be controlled by RegisterPage logic)
+      if (user.role === 'user' || user.role === 'technician' || user.role === 'manager' || user.role === 'admin') {
+        // Only add register if not already added for managers/admins
+        const hasRegister = managerDropdown.some(item => item.href === '/register');
+        if (!hasRegister) {
+          managerDropdown.push({ name: 'Register User', href: '/register' });
+        }
+      }
+      
+      // Always add logout for logged-in users
+      if (managerDropdown.length > 0) {
+        managerDropdown.push({ name: 'Logout', action: 'logout', className: 'border-t border-gray-200 pt-2' });
+      }
+      
+      // Only show Manager dropdown if there are items
+      if (managerDropdown.length > 0) {
+        baseNavigation.push({
+          name: 'Manager',
+          dropdown: managerDropdown
+        });
+      }
     }
 
     // Add Contact Us
