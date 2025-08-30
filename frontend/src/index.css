@@ -87,22 +87,4 @@ code {
   body {
     @apply bg-background text-foreground;
     }
-  
-  /* Override default link colors to use theme color */
-  a {
-    color: var(--custom-primary);
-    text-decoration: none;
-  }
-  
-  a:hover {
-    color: var(--custom-primary-dark);
-  }
-  
-  a:visited {
-    color: var(--custom-primary);
-  }
-  
-  a:visited:hover {
-    color: var(--custom-primary-dark);
-  }
 }
