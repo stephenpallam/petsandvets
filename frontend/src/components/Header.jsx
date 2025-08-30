@@ -767,7 +767,7 @@ const Header = () => {
                                     setIsMenuOpen(false);
                                     setOpenMobileSubmenu(null);
                                   }}
-                                  className="block px-3 py-2 text-sm text-gray-700 hover:text-white hover:bg-blue-600 rounded-md transition-all duration-200"
+                                  className="block px-3 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-all duration-200"
                                   style={{
                                     backgroundColor: location.pathname === dropdownItem.href ? '#29add3' : undefined,
                                     color: location.pathname === dropdownItem.href ? 'white' : undefined
