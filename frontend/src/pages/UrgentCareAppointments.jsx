@@ -515,49 +515,59 @@ const UrgentCareAppointments = () => {
             
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-                <div className="flex items-center justify-between">
-                  <div className="text-sm text-gray-700">
+              <div className="px-4 sm:px-6 py-4 bg-gray-50 border-t border-gray-200">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="text-sm text-gray-700 text-center sm:text-left">
                     Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, totalCount)} of {totalCount} results
                   </div>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handlePageChange(currentPage - 1)}
                       disabled={currentPage === 1}
-                      className="flex items-center px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex items-center px-2 sm:px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{ color: currentPage === 1 ? '#9ca3af' : '#29add3' }}
                     >
                       <ChevronLeft className="h-4 w-4 mr-1" />
-                      Previous
+                      <span className="hidden xs:inline">Previous</span>
                     </button>
                     
                     <div className="flex gap-1">
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                        <button
-                          key={page}
-                          onClick={() => handlePageChange(page)}
-                          className={`px-3 py-2 text-sm font-medium rounded-md ${
-                            currentPage === page
-                              ? 'text-white'
-                              : 'bg-white border border-gray-300 hover:bg-gray-50'
-                          }`}
-                          style={{
-                            backgroundColor: currentPage === page ? '#29add3' : 'white',
-                            color: currentPage === page ? 'white' : '#29add3'
-                          }}
-                        >
-                          {page}
-                        </button>
-                      ))}
+                      {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                        let page;
+                        if (totalPages <= 5) {
+                          page = i + 1;
+                        } else if (currentPage <= 3) {
+                          page = i + 1;
+                        } else if (currentPage >= totalPages - 2) {
+                          page = totalPages - 4 + i;
+                        } else {
+                          page = currentPage - 2 + i;
+                        }
+                        
+                        return (
+                          <button
+                            key={page}
+                            onClick={() => handlePageChange(page)}
+                            className="px-2 sm:px-3 py-2 text-sm font-medium rounded-md"
+                            style={{
+                              backgroundColor: currentPage === page ? '#29add3' : 'white',
+                              color: currentPage === page ? 'white' : '#29add3',
+                              border: currentPage === page ? 'none' : '1px solid #d1d5db'
+                            }}
+                          >
+                            {page}
+                          </button>
+                        );
+                      })}
                     </div>
                     
                     <button
                       onClick={() => handlePageChange(currentPage + 1)}
                       disabled={currentPage === totalPages}
-                      className="flex items-center px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex items-center px-2 sm:px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{ color: currentPage === totalPages ? '#9ca3af' : '#29add3' }}
                     >
-                      Next
+                      <span className="hidden xs:inline">Next</span>
                       <ChevronRight className="h-4 w-4 ml-1" />
                     </button>
                   </div>
