@@ -388,10 +388,10 @@ const Reviews = () => {
                     </div>
                   </div>
                 )}
-              </div>
-            ))
-          )}
-        </div>
+                  </div>
+                ))
+              )}
+            </div>
 
             {/* Information Note */}
             <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
