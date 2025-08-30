@@ -429,8 +429,8 @@ const Header = () => {
                   <div 
                     className="absolute" 
                     style={{
-                      width: '16px',
-                      height: '4px',
+                      width: '14px',
+                      height: '3px',
                       backgroundColor: '#29add3',
                       top: '50%',
                       left: '50%',
@@ -440,8 +440,8 @@ const Header = () => {
                   <div 
                     className="absolute" 
                     style={{
-                      width: '4px',
-                      height: '16px',
+                      width: '3px',
+                      height: '14px',
                       backgroundColor: '#29add3',
                       top: '50%',
                       left: '50%',
