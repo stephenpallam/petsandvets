@@ -1753,8 +1753,8 @@ const PhotoManagement = () => {
       {uploading && (
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
           <div className="flex items-center">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-3"></div>
-            <span className="text-blue-700">Uploading photo...</span>
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 mr-3" style={{ borderBottomColor: '#29add3' }}></div>
+            <span style={{ color: '#29add3' }}>Uploading photo...</span>
           </div>
         </div>
       )}
