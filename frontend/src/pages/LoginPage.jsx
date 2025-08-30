@@ -172,23 +172,7 @@ const LoginPage = () => {
             </div>
           </form>
 
-          {/* Back to Website Link */}
-          <div className="mt-6 text-center">
-            <button
-              type="button"
-              onClick={() => navigate('/')}
-              className="text-sm text-gray-600 hover:text-gray-900 focus:outline-none focus:underline transition-colors"
-            >
-              ← Back to Website
-            </button>
-          </div>
 
-          {/* Test Credentials Info */}
-          <div className="mt-6 bg-blue-50 border border-blue-200 rounded-md p-3 text-center">
-            <p className="text-xs text-blue-800 font-medium mb-1">Test Credentials:</p>
-            <p className="text-xs text-blue-700">Email: admin@test.com</p>
-            <p className="text-xs text-blue-700">Password: admin123</p>
-          </div>
         </div>
       </div>
     </div>
