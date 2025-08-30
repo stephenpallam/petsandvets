@@ -613,7 +613,7 @@ const TeamMemberSection = ({
       </div>
 
       {showTeamMemberForm && (
-        <div className="mt-4 bg-white rounded-lg p-4 border border-blue-200">
+        <div className="mt-4 bg-gray-50 rounded-lg p-4 border border-gray-200">
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Name *</label>
