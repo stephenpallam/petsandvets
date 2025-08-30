@@ -10,7 +10,7 @@ const Header = () => {
   const [businessInfo, setBusinessInfo] = useState(null);
   const [currentHours, setCurrentHours] = useState(null);
   const location = useLocation();
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, logout } = useAuth();
 
   // Fetch business information and current hours
   useEffect(() => {
