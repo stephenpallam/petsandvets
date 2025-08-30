@@ -791,52 +791,52 @@ const TeamMemberSection = ({
                 /* Edit Form */
                 <div className="space-y-4">
                   <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                    <div className="w-full">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
                       <input
                         key={`edit-name-${member.id}`}
                         type="text"
                         name="name"
                         value={teamMemberForm.name}
                         onChange={handleTeamMemberFormChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 block"
                         style={{ "--tw-ring-color": "#29add3" }}
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                    <div className="w-full">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
                       <input
                         key={`edit-title-${member.id}`}
                         type="text"
                         name="title"
                         value={teamMemberForm.title}
                         onChange={handleTeamMemberFormChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 block"
                         style={{ "--tw-ring-color": "#29add3" }}
                       />
                     </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+                  <div className="w-full">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Bio</label>
                     <textarea
                       key={`edit-bio-${member.id}`}
                       name="bio"
                       value={teamMemberForm.bio}
                       onChange={handleTeamMemberFormChange}
                       rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 block"
                       style={{ "--tw-ring-color": "#29add3" }}
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Credentials</label>
+                  <div className="w-full">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Credentials</label>
                     <input
                       key={`edit-credentials-${member.id}`}
                       type="text"
                       name="credentials"
                       value={teamMemberForm.credentials}
                       onChange={handleTeamMemberFormChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 block"
                       style={{ "--tw-ring-color": "#29add3" }}
                     />
                   </div>
