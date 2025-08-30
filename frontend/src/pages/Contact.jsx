@@ -103,14 +103,12 @@ const Contact = () => {
           </h1>
           <div className="mb-6">
             <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
-              <MapPin className="mr-2 h-4 w-4" />
-              Connect With Care, Anytime
+              Your Partner in Pet Care Excellence
             </span>
           </div>
           <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto mb-8">
-            Multiple convenient ways to reach us for appointments, questions, or urgent care needs. 
-            Our dedicated team is here to provide compassionate support for you and your beloved pets 
-            every step of the way.
+            Every question matters, every concern is heard, and every pet receives the compassionate care they deserve. 
+            Connect with us through multiple convenient channels - because exceptional veterinary care begins with exceptional communication.
           </p>
         </div>
       </section>
