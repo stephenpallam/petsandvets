@@ -350,7 +350,7 @@ const UrgentCareAppointments = () => {
               </div>
             </div>
             
-            {/* Content Area */}
+            {/* Content Area - Responsive Design */}
             {appointments.length === 0 ? (
               <div className="text-center py-12">
                 <Calendar className="h-16 w-16 text-gray-400 mx-auto mb-4" />
@@ -359,66 +359,146 @@ const UrgentCareAppointments = () => {
               </div>
             ) : (
               <>
-                <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      S.No
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Patient
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Phone Number
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Reason for Visit
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Time
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                {/* Desktop Table View - Hidden on mobile */}
+                <div className="hidden md:block overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          S.No
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Patient
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Phone Number
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Reason for Visit
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Time
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {appointments.map((appointment, index) => (
+                        <tr key={appointment.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {(currentPage - 1) * pageSize + index + 1}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div>
+                              <div className="text-sm font-medium text-gray-900">
+                                {appointment.owner_first_name} {appointment.owner_last_name}
+                              </div>
+                              <div className="text-sm text-gray-500">
+                                {appointment.pet_name} ({appointment.pet_type})
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">{appointment.phone}</div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="text-sm text-gray-900">{appointment.reason_for_visit}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm font-medium text-gray-900">
+                              {formatTimeOnly(appointment.appointment_time)}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <select
+                              value={appointment.status || 'scheduled'}
+                              onChange={(e) => handleStatusChange(appointment.id, e.target.value, appointment.status || 'scheduled')}
+                              className="text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                              style={{ color: getStatusColor(appointment.status || 'scheduled') }}
+                            >
+                              <option value="scheduled">Scheduled</option>
+                              <option value="verified">Verified</option>
+                              <option value="checked_in">Checked In</option>
+                              <option value="completed">Completed</option>
+                              <option value="no_show">No Show</option>
+                              <option value="cancelled">Cancelled</option>
+                              <option value="abandoned">Abandoned</option>
+                            </select>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button
+                              onClick={() => fetchAppointmentDetails(appointment.id)}
+                              className="p-2 rounded hover:bg-blue-50"
+                              style={{ color: '#29add3' }}
+                              onMouseEnter={(e) => e.target.style.color = '#2196c7'}
+                              onMouseLeave={(e) => e.target.style.color = '#29add3'}
+                              title="View Details"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Mobile Card View - Visible only on mobile */}
+                <div className="md:hidden divide-y divide-gray-200">
                   {appointments.map((appointment, index) => (
-                    <tr key={appointment.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {(currentPage - 1) * pageSize + index + 1}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div>
-                          <div className="text-sm font-medium text-gray-900">
-                            {appointment.owner_first_name} {appointment.owner_last_name}
+                    <div key={appointment.id} className="p-4 hover:bg-gray-50">
+                      {/* Card Header */}
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                              #{(currentPage - 1) * pageSize + index + 1}
+                            </span>
+                            <h3 className="text-sm font-semibold text-gray-900">
+                              {appointment.owner_first_name} {appointment.owner_last_name}
+                            </h3>
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <p className="text-sm text-gray-600">
                             {appointment.pet_name} ({appointment.pet_type})
-                          </div>
+                          </p>
                         </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{appointment.phone}</div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-900">{appointment.reason_for_visit}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">
+                        <button
+                          onClick={() => fetchAppointmentDetails(appointment.id)}
+                          className="p-2 rounded hover:bg-blue-50 ml-2"
+                          style={{ color: '#29add3' }}
+                          title="View Details"
+                        >
+                          <Eye className="h-5 w-5" />
+                        </button>
+                      </div>
+
+                      {/* Card Body */}
+                      <div className="space-y-2 mb-3">
+                        <div className="flex items-center text-sm text-gray-600">
+                          <Phone className="h-4 w-4 mr-2 text-gray-400" />
+                          {appointment.phone}
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600">
+                          <Clock className="h-4 w-4 mr-2 text-gray-400" />
                           {formatTimeOnly(appointment.appointment_time)}
                         </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-600">
+                          <span className="font-medium">Reason:</span> {appointment.reason_for_visit}
+                        </div>
+                      </div>
+
+                      {/* Card Footer - Status */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-medium text-gray-500 uppercase">Status</span>
                         <select
                           value={appointment.status || 'scheduled'}
                           onChange={(e) => handleStatusChange(appointment.id, e.target.value, appointment.status || 'scheduled')}
-                          className="text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                          style={{ color: getStatusColor(appointment.status || 'scheduled') }}
+                          className="text-sm px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white min-w-[120px]"
                         >
                           <option value="scheduled">Scheduled</option>
                           <option value="verified">Verified</option>
@@ -428,24 +508,10 @@ const UrgentCareAppointments = () => {
                           <option value="cancelled">Cancelled</option>
                           <option value="abandoned">Abandoned</option>
                         </select>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button
-                          onClick={() => fetchAppointmentDetails(appointment.id)}
-                          className="p-2 rounded hover:bg-blue-50"
-                          style={{ color: '#29add3' }}
-                          onMouseEnter={(e) => e.target.style.color = '#2196c7'}
-                          onMouseLeave={(e) => e.target.style.color = '#29add3'}
-                          title="View Details"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </button>
-                      </td>
-                    </tr>
+                      </div>
+                    </div>
                   ))}
-                </tbody>
-              </table>
-            </div>
+                </div>
             
             {/* Pagination */}
             {totalPages > 1 && (
