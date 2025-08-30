@@ -1077,6 +1077,11 @@ const PhotoManagement = () => {
       return;
     }
 
+    // If there's a token but no user yet, wait for user profile to load
+    if (token && !user) {
+      return;
+    }
+
     if (user && isAdmin()) {
       const loadData = async () => {
         await fetchUploadedFiles();
@@ -1089,11 +1094,12 @@ const PhotoManagement = () => {
     } else if (user && !isAdmin()) {
       setError('Access denied. Admin privileges required.');
       setLoading(false);
-    } else {
+    } else if (!token) {
+      // Only show error if there's definitely no token
       setError('Please log in as an admin to manage photos.');
       setLoading(false);
     }
-  }, [user, authLoading]);
+  }, [user, token, authLoading]);
 
   const handleTeamMemberFormChange = useCallback((e) => {
     const { name, value } = e.target;
