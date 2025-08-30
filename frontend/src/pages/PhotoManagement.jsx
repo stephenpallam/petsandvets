@@ -452,7 +452,54 @@ const FacilitySection = ({
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-                  <div className="flex justify-end space-x-2">
+                  
+                  {/* Current Image and Replacement */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Current Image</label>
+                    <div className="flex items-center space-x-4">
+                      <div className="w-24 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                        <img
+                          src={photo.photo_url}
+                          alt={photo.title}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.nextSibling.style.display = 'flex';
+                          }}
+                        />
+                        <div className="hidden w-full h-full items-center justify-center bg-gray-100">
+                          <Building2 className="h-6 w-6 text-gray-400" />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="inline-flex items-center px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded cursor-pointer hover:bg-blue-200 transition-colors">
+                          <Upload className="h-3 w-3 mr-1" />
+                          Replace Image
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              if (e.target.files[0]) {
+                                handleFacilityUpload(e.target.files[0], false);
+                                e.target.value = '';
+                              }
+                            }}
+                            className="hidden"
+                          />
+                        </label>
+                        <p className="text-xs text-gray-500 mt-1">Recommended: 400x300px</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <button
+                      onClick={() => handleDeleteFacility(photo.id)}
+                      className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
+                    >
+                      Delete Photo
+                    </button>
+                    <div className="flex space-x-2">
                     <button
                       onClick={() => setEditingFacility(null)}
                       className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
