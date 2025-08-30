@@ -416,7 +416,7 @@ const Header = () => {
       <div className="text-white py-2" style={{ backgroundColor: '#29add3' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Desktop Layout */}
-          <div className="hidden md:flex justify-between items-center text-sm">
+          <div className="hidden lg:flex justify-between items-center text-sm">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-1">
                 <Phone className="h-4 w-4" />
