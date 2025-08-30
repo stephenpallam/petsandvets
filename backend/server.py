@@ -2286,7 +2286,7 @@ async def get_all_users(
         # Add search filter
         if search:
             query["$or"] = [
-                {"fullName": {"$regex": search, "$options": "i"}},
+                {"full_name": {"$regex": search, "$options": "i"}},
                 {"email": {"$regex": search, "$options": "i"}}
             ]
         
