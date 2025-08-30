@@ -41,6 +41,24 @@ const ReachUs = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="bg-white">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
+            Reach Us
+          </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-6 py-3 rounded-full text-lg font-bold text-white shadow-lg" style={{ backgroundColor: primaryColor }}>
+              Your Partner in Pet Care Excellence
+            </span>
+          </div>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto mb-8">
+            Every question matters, every concern is heard, and every pet receives the compassionate care they deserve. 
+            Connect with us through multiple convenient channels - because exceptional veterinary care begins with exceptional communication.
+          </p>
+        </div>
+      </section>
+
       {/* Quick Contact Info */}
       <section className="bg-white" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
