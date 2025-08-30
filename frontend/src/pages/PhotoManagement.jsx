@@ -1855,11 +1855,24 @@ const PhotoManagement = () => {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`w-full sm:w-auto py-3 sm:py-4 px-3 sm:px-1 border-b-2 font-medium text-sm flex items-center justify-center sm:justify-start transition-colors ${
-                      activeTab === tab.id
-                        ? 'border-blue-500 text-blue-600 bg-blue-50 sm:bg-transparent'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50 sm:hover:bg-transparent'
-                    }`}
+                    className="w-full sm:w-auto py-3 sm:py-4 px-3 sm:px-1 border-b-2 font-medium text-sm flex items-center justify-center sm:justify-start transition-colors border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50 sm:hover:bg-transparent"
+                    style={{
+                      borderBottomColor: activeTab === tab.id ? '#29add3' : 'transparent',
+                      color: activeTab === tab.id ? '#29add3' : undefined,
+                      backgroundColor: activeTab === tab.id ? '#f3f4f6' : undefined
+                    }}
+                    onMouseEnter={(e) => {
+                      if (activeTab !== tab.id) {
+                        e.target.style.backgroundColor = '#f9fafb';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (activeTab !== tab.id) {
+                        e.target.style.backgroundColor = 'transparent';
+                      } else {
+                        e.target.style.backgroundColor = '#f3f4f6';
+                      }
+                    }}
                   >
                     <Icon className="h-5 w-5 mr-2" />
                     {tab.name}
