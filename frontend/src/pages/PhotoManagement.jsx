@@ -424,7 +424,7 @@ const FacilitySection = ({
                 className="hidden"
               />
             </label>
-            <p className="text-xs text-blue-600 mt-1">Fill title and description first</p>
+            <p className="text-xs text-gray-600 mt-1">Fill title and description first</p>
           </div>
         </div>
       )}
