@@ -277,7 +277,7 @@ const RegisterPage = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full sm:w-auto text-white px-6 py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center sm:justify-start font-medium"
+                  className="w-full text-white px-6 py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center font-medium"
                   style={{ 
                     backgroundColor: loading ? '#94a3b8' : '#29add3'
                   }}
