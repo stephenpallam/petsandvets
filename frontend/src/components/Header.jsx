@@ -314,9 +314,14 @@ const Header = () => {
       case 'Patient Resources':
         return location.pathname.includes('/forms') || 
                location.pathname.includes('/your-first-visit') ||
-               location.pathname.includes('/pet-insurance-payments') ||
-               location.pathname.includes('/urgent-care-appointments') ||
+               location.pathname.includes('/pet-insurance-payments');
+      
+      case 'Manager':
+        return location.pathname.includes('/urgent-care-appointments') ||
                location.pathname.includes('/configure-hours') ||
+               location.pathname.includes('/reviews') ||
+               location.pathname.includes('/business-info') ||
+               location.pathname.includes('/photo-management') ||
                location.pathname.includes('/register-user');
       
       default:
