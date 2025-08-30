@@ -1072,6 +1072,11 @@ const PhotoManagement = () => {
   };
 
   useEffect(() => {
+    // Wait for auth to finish loading before checking permissions
+    if (authLoading) {
+      return;
+    }
+
     if (user && isAdmin()) {
       const loadData = async () => {
         await fetchUploadedFiles();
@@ -1088,7 +1093,7 @@ const PhotoManagement = () => {
       setError('Please log in as an admin to manage photos.');
       setLoading(false);
     }
-  }, [user]);
+  }, [user, authLoading]);
 
   const handleTeamMemberFormChange = useCallback((e) => {
     const { name, value } = e.target;
