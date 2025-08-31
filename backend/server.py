@@ -1539,7 +1539,7 @@ async def get_available_time_slots(date: str):
                     "business_time": current_slot.strftime("%I:%M %p %Z")
                 })
             
-            current_slot += timedelta(minutes=30)
+            current_slot += timedelta(minutes=slot_interval)
         
         if not available_slots:
             return {
