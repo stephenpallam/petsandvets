@@ -144,14 +144,10 @@ const OurHours = () => {
         </div>
       </section>
 
-      {/* Operating Hours - Moved to Top */}
+      {/* Hours Section */}
       <section style={{ backgroundColor: '#f8f9fa', paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">
-              Operating Hours
-              {loading && <span className="ml-2 text-sm text-gray-500">(Loading...)</span>}
-            </h2>
             <p className="text-gray-700 mb-2">
               All services are provided by appointment only - please call ahead to schedule
             </p>
