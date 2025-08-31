@@ -275,6 +275,16 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 mt-6 pt-6 text-center">
+          <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-6 mb-4">
+            <Link 
+              to="/privacy-policy" 
+              className="text-gray-400 hover:text-white transition-colors text-sm"
+              onMouseEnter={(e) => e.target.style.color = '#5bc0db'}
+              onMouseLeave={(e) => e.target.style.color = '#9ca3af'}
+            >
+              Privacy Policy
+            </Link>
+          </div>
           <p className="text-gray-400 text-sm">
             © 2024 Pets and Vets Animal Hospital & Urgent Care. All rights reserved.
           </p>
