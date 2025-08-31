@@ -111,20 +111,42 @@ const UrgentCareBooking = () => {
   };
 
   const validateCurrentTab = () => {
+    // Check if user is logged in (staff member)
+    const isStaffMember = user && user.role && (user.role === 'manager' || user.role === 'technician' || user.role === 'admin');
+    
     switch (currentTab) {
       case 0:
         return formData.appointment_time !== '';
       case 1:
-        return formData.owner_first_name && formData.owner_last_name && 
-               formData.email && formData.phone &&
-               /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) &&
-               /^\d{10,}$/.test(formData.phone.replace(/\D/g, ''));
+        if (isStaffMember) {
+          // For staff: only require names and phone number
+          return formData.owner_first_name && formData.owner_last_name && formData.phone &&
+                 /^\d{10,}$/.test(formData.phone.replace(/\D/g, ''));
+        } else {
+          // For regular users: require all fields including email
+          return formData.owner_first_name && formData.owner_last_name && 
+                 formData.email && formData.phone &&
+                 /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) &&
+                 /^\d{10,}$/.test(formData.phone.replace(/\D/g, ''));
+        }
       case 2:
-        return formData.pet_name && formData.pet_type;
+        if (isStaffMember) {
+          // For staff: pet details are optional
+          return true;
+        } else {
+          // For regular users: require pet details
+          return formData.pet_name && formData.pet_type;
+        }
       case 3:
-        return formData.reason_for_visit;
+        if (isStaffMember) {
+          // For staff: visit reason is optional
+          return true;
+        } else {
+          // For regular users: require visit reason
+          return formData.reason_for_visit;
+        }
       case 4:
-        return true; // Primary vet hospital and how heard about us are now optional
+        return true; // Primary vet hospital and how heard about us are always optional
       default:
         return false;
     }
