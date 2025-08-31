@@ -823,7 +823,7 @@ async def get_urgent_care_hours():
 @api_router.put("/urgent-care-hours", response_model=UrgentCareHours)
 async def update_urgent_care_hours(
     hours_data: UrgentCareHoursCreate,
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_manager_or_admin_user)
 ):
     hours = UrgentCareHours(
         **hours_data.dict(),
