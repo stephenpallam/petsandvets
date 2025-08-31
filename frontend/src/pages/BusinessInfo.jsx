@@ -54,16 +54,16 @@ const BusinessInfo = () => {
       return;
     }
 
-    if (user && isAdmin()) {
+    if (user && canAccessManager()) {
       setError(null);
       fetchBusinessInfo();
       checkGoogleConnection();
-    } else if (user && !isAdmin()) {
-      setError('Access denied. Admin privileges required.');
+    } else if (user && !canAccessManager()) {
+      setError('Access denied. Manager or admin privileges required.');
       setLoading(false);
     } else if (!token) {
       // Only show error if there's definitely no token
-      setError('Please log in as an admin to manage business information.');
+      setError('Please log in as a manager or admin to manage business information.');
       setLoading(false);
     }
   }, [user, token, authLoading]);
