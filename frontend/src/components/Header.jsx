@@ -196,7 +196,8 @@ const Header = () => {
           { name: 'Our Facility', href: '/gallery' }
         ]
       },
-      { name: 'Urgent Care', href: '/urgent-care' },
+      // Only show Urgent Care button if user is not logged in
+      ...(user ? [] : [{ name: 'Urgent Care', href: '/urgent-care' }]),
       { 
         name: 'Services',
         dropdown: [
