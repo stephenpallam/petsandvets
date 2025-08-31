@@ -473,6 +473,40 @@ class BusinessInfoUpdate(BaseModel):
     hero_images: Optional[List[str]] = None
 
 
+class EmailProvider(str, Enum):
+    GMAIL = "gmail"
+    SENDGRID = "sendgrid"
+
+
+class EmailConfig(BaseModel):
+    id: str
+    notification_email: str
+    email_provider: EmailProvider = EmailProvider.GMAIL
+    is_enabled: bool = False
+    # Gmail SMTP fields (encrypted in database)
+    smtp_email: Optional[str] = None
+    smtp_password: Optional[str] = None  # This will be encrypted
+    # SendGrid fields (encrypted in database)
+    sendgrid_api_key: Optional[str] = None  # This will be encrypted
+    sender_email: Optional[str] = None
+    created_at: datetime
+    updated_at: datetime
+
+
+class EmailConfigUpdate(BaseModel):
+    notification_email: Optional[str] = None
+    email_provider: Optional[EmailProvider] = None
+    is_enabled: Optional[bool] = None
+    smtp_email: Optional[str] = None
+    smtp_password: Optional[str] = None
+    sendgrid_api_key: Optional[str] = None
+    sender_email: Optional[str] = None
+
+
+class TestEmailRequest(BaseModel):
+    test_email: EmailStr
+
+
 class TeamMember(BaseModel):
     id: str
     name: str
