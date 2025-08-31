@@ -112,28 +112,6 @@ const ReviewUs = () => {
         </div>
       </section>
 
-      {/* Why Reviews Matter */}
-      <section className="bg-[#f8f9fa] py-6">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="space-y-6">
-            <p className="text-base text-gray-600 leading-relaxed text-center">
-              Reviews help us understand what we're doing well and where we can improve. Your honest feedback 
-              is invaluable in helping us provide the best possible care for your beloved pets.
-            </p>
-            
-            <div className="p-8 rounded-xl border-l-4 bg-white" style={{ borderColor: primaryColor }}>
-              <div className="flex items-center justify-center mb-4">
-                <Star className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
-                <h3 className="text-xl font-semibold text-gray-900">Share Your Experience</h3>
-              </div>
-              <p className="font-medium italic text-gray-800 text-center" style={{ fontSize: '1rem' }}>
-                "Every review helps us serve your pets better and guides other pet owners to quality care."
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Review Platforms */}
       {reviewPlatforms.length > 0 ? (
         <section className="bg-white py-6">
