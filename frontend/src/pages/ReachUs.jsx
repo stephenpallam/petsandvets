@@ -225,9 +225,18 @@ const ReachUs = () => {
                   <p className="text-red-700 mb-2">
                     For emergencies outside our hours, contact the nearest 24-hour emergency hospital:
                   </p>
-                  <p className="text-red-600 font-semibold">
-                    VCA SouthPaws: (703) 752-9100
-                  </p>
+                  {currentBusinessInfo.referral_hospital_name && currentBusinessInfo.referral_hospital_phone ? (
+                    <a 
+                      href={`tel:${currentBusinessInfo.referral_hospital_phone}`}
+                      className="text-red-600 font-semibold hover:text-red-800 transition-colors"
+                    >
+                      {currentBusinessInfo.referral_hospital_name}: {currentBusinessInfo.referral_hospital_phone}
+                    </a>
+                  ) : (
+                    <p className="text-red-600 font-semibold">
+                      VCA SouthPaws: (703) 752-9100
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
