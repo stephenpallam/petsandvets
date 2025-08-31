@@ -868,7 +868,7 @@ async def create_special_hours(
 async def update_special_hours(
     special_hours_id: str,
     special_data: SpecialHoursCreate,
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_manager_or_admin_user)
 ):
     existing = await db.special_hours.find_one({"id": special_hours_id})
     if not existing:
