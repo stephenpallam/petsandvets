@@ -316,7 +316,7 @@ const Home = () => {
                   </div>
                   <div className="flex-1 flex items-end">
                     <a
-                      href={`tel:${hospitalInfo.phone}`}
+                      href={`tel:${currentBusinessInfo.phone}`}
                       className="inline-flex items-center justify-center text-white px-8 py-4 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl group w-full"
                       style={{ backgroundColor: primaryColor, height: '56px' }}
                       onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
