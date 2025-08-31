@@ -460,6 +460,22 @@ class AppointmentListResponse(BaseModel):
     total_pages: int
 
 
+class AppointmentSlotConfig(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    slot_interval_minutes: int = 30  # 15, 30, 45, 60
+    first_appointment_delay_minutes: int = 0  # 0, 15, 30, 45, 60
+    last_appointment_cutoff_minutes: int = 30  # 15, 30, 45, 60
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_by: str
+
+
+class AppointmentSlotConfigUpdate(BaseModel):
+    slot_interval_minutes: Optional[int] = None
+    first_appointment_delay_minutes: Optional[int] = None  
+    last_appointment_cutoff_minutes: Optional[int] = None
+
+
 class PetInfo(BaseModel):
     pet_name: str
     pet_species: str  # Dog, Cat, Other
