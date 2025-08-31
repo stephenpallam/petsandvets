@@ -13,6 +13,8 @@ const BusinessInfo = () => {
     facebook_link: '',
     instagram_link: '',
     twitter_link: '',
+    google_reviews_link: '',
+    yelp_reviews_link: '',
     hero_images: [],
     notification_email: '',
     email_provider: 'gmail', // 'gmail' or 'sendgrid'
