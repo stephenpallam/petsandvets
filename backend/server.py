@@ -1898,6 +1898,8 @@ async def update_business_info(
         update_data["email"] = business_data.email
     if business_data.address is not None:
         update_data["address"] = business_data.address
+    if business_data.timezone is not None:
+        update_data["timezone"] = business_data.timezone
     if business_data.facebook_link is not None:
         update_data["facebook_link"] = business_data.facebook_link
     if business_data.instagram_link is not None:
