@@ -1511,7 +1511,7 @@ async def get_business_info():
 @api_router.put("/business-info", response_model=BusinessInfo)
 async def update_business_info(
     business_data: BusinessInfoUpdate, 
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_manager_or_admin_user)
 ):
     """Update business information (admin only)"""
     
