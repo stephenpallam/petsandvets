@@ -888,7 +888,7 @@ async def update_special_hours(
 @api_router.delete("/special-hours/{special_hours_id}")
 async def delete_special_hours(
     special_hours_id: str,
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_manager_or_admin_user)
 ):
     result = await db.special_hours.delete_one({"id": special_hours_id})
     if result.deleted_count == 0:
