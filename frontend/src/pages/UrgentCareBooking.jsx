@@ -539,7 +539,12 @@ const UrgentCareBooking = () => {
               <div>
                 <div className="mb-6">
                   <h2 className="text-xl font-semibold text-gray-900 mb-2">Pet Information</h2>
-                  <p className="text-gray-600">Tell us about your pet</p>
+                  <p className="text-gray-600">
+                    {isStaffMember 
+                      ? "Pet information (optional for staff - can be filled later)" 
+                      : "Tell us about your pet"
+                    }
+                  </p>
                 </div>
                 
                 <div className="space-y-6">
