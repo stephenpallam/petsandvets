@@ -155,14 +155,6 @@ const OurHours = () => {
       {/* Hours Section */}
       <section style={{ backgroundColor: '#f8f9fa', paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <p className="text-gray-700 mb-2">
-              All services are provided by appointment only - please call ahead to schedule
-            </p>
-            <p className="text-gray-700">
-              Convenient hours to serve your pet's healthcare needs with both general practice and urgent care services
-            </p>
-          </div>
 
           {/* Hours Grid - Side by Side */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
