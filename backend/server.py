@@ -1280,9 +1280,17 @@ async def get_available_time_slots(date: str):
                 "date": date
             }
         
+        # Check if urgent care is open today
+        if not urgent_care_hours.get("is_open", True):
+            return {
+                "available": False,
+                "message": "Urgent Care is closed today. Please call us for emergency assistance.",
+                "date": date
+            }
+        
         # Parse opening and closing times
-        open_time_str = urgent_care_hours.get("open", "")
-        close_time_str = urgent_care_hours.get("close", "")
+        open_time_str = urgent_care_hours.get("open_time", "")
+        close_time_str = urgent_care_hours.get("close_time", "")
         
         if not open_time_str or not close_time_str:
             return {
