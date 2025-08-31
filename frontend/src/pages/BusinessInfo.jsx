@@ -426,7 +426,7 @@ const BusinessInfo = () => {
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           <Twitter className="h-4 w-4 inline mr-2 text-blue-400" />
-                          Twitter Profile URL
+                          X Profile URL
                         </label>
                         <input
                           type="url"
@@ -434,7 +434,7 @@ const BusinessInfo = () => {
                           value={businessInfo.twitter_link}
                           onChange={handleInputChange}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="https://twitter.com/yourprofile"
+                          placeholder="https://x.com/yourprofile"
                         />
                       </div>
 
