@@ -158,11 +158,9 @@ const Header = () => {
 
   // Function to get status styling based on status text
   const getStatusStyling = (status) => {
-    // Simple white text styling for all statuses against blue background
+    // Simple white text styling that inherits font size and weight from parent
     return {
-      color: 'white',
-      fontSize: '12px',
-      fontWeight: '600'
+      color: 'white'
     };
   };
 
