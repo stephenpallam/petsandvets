@@ -588,7 +588,7 @@ const UrgentCare = () => {
               Call Now: {hospitalInfo.phone}
             </a>
             <Link
-              to="/contact"
+              to="/urgent-care-booking"
               className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = 'white';
