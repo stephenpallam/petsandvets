@@ -509,16 +509,28 @@ const UrgentCareAppointments = () => {
                             </select>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button
-                              onClick={() => fetchAppointmentDetails(appointment.id)}
-                              className="p-2 rounded hover:bg-blue-50"
-                              style={{ color: '#29add3' }}
-                              onMouseEnter={(e) => e.target.style.color = '#2196c7'}
-                              onMouseLeave={(e) => e.target.style.color = '#29add3'}
-                              title="View Details"
-                            >
-                              <Eye className="h-4 w-4" />
-                            </button>
+                            <div className="flex items-center justify-end gap-2">
+                              <button
+                                onClick={() => handleEditAppointment(appointment)}
+                                className="p-2 rounded hover:bg-green-50"
+                                style={{ color: '#16a34a' }}
+                                onMouseEnter={(e) => e.target.style.color = '#15803d'}
+                                onMouseLeave={(e) => e.target.style.color = '#16a34a'}
+                                title="Edit Appointment"
+                              >
+                                <Edit className="h-4 w-4" />
+                              </button>
+                              <button
+                                onClick={() => fetchAppointmentDetails(appointment.id)}
+                                className="p-2 rounded hover:bg-blue-50"
+                                style={{ color: '#29add3' }}
+                                onMouseEnter={(e) => e.target.style.color = '#2196c7'}
+                                onMouseLeave={(e) => e.target.style.color = '#29add3'}
+                                title="View Details"
+                              >
+                                <Eye className="h-4 w-4" />
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}
