@@ -144,32 +144,22 @@ const BusinessInfo = () => {
     }
   };
 
-  // Show compact loading modal while authentication is being determined
-  if (authLoading || (loading && !error)) {
+  if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm mx-4">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-3"></div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Loading</h3>
-            <p className="text-sm text-gray-600">
-              {authLoading ? 'Verifying your access permissions...' : 'Loading business information...'}
-            </p>
-          </div>
-        </div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: '#29add3' }}></div>
       </div>
     );
   }
 
-  // Show error if authentication or data loading failed
-  if (error) {
+  if (authError) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
             <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-red-800 mb-2">Access Denied</h2>
-            <p className="text-red-600">{error}</p>
+            <p className="text-red-600">{authError}</p>
             <p className="text-red-600 text-sm mt-2">Please log in with a manager or admin account.</p>
           </div>
         </div>
