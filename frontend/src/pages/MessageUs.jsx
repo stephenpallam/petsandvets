@@ -430,14 +430,14 @@ const MessageUs = () => {
               <h3 className="text-lg font-bold mb-2" style={{ color: primaryColor }}>Call Us Now</h3>
               <p className="text-gray-700 mb-4">Speak directly with our team</p>
               <a
-                href={`tel:${hospitalInfo.phone}`}
+                href={`tel:${currentBusinessInfo.phone}`}
                 className="inline-flex items-center justify-center text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
                 style={{ backgroundColor: primaryColor }}
                 onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
                 onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
               >
                 <Phone className="mr-2 h-5 w-5" />
-                {hospitalInfo.phone}
+                {currentBusinessInfo.phone}
               </a>
             </div>
 
