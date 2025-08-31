@@ -10,6 +10,7 @@ const BusinessInfo = () => {
     phone: '',
     email: '',
     address: '',
+    timezone: 'America/New_York',
     facebook_link: '',
     instagram_link: '',
     twitter_link: '',
