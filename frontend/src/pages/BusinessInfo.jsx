@@ -43,16 +43,15 @@ const BusinessInfo = () => {
   const fetchBusinessInfo = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/business-info`);
-      
       if (response.ok) {
         const data = await response.json();
         setBusinessInfo(data);
       } else {
-        throw new Error('Failed to fetch business information');
+        throw new Error('Failed to fetch business info');
       }
     } catch (err) {
-      setError('Failed to load business information');
-      console.error('Error fetching business info:', err);
+      setMessage({ type: 'error', text: 'Failed to load business information' });
+      clearMessage();
     } finally {
       setLoading(false);
     }
