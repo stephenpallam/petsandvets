@@ -302,13 +302,23 @@ const UrgentCare = () => {
           <div className="flex justify-center">
             <Link
               to="/urgent-care-booking"
-              className="inline-flex items-center justify-center px-8 py-4 rounded-lg font-semibold text-white transition-all duration-200 transform hover:scale-105 hover:shadow-lg"
-              style={{ backgroundColor: primaryColor }}
-              onMouseEnter={(e) => e.target.style.backgroundColor = primaryLight}
-              onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
+              className="inline-flex items-center justify-center border-2 px-8 py-4 rounded-lg font-semibold transition-all duration-200"
+              style={{ 
+                borderColor: primaryColor, 
+                color: primaryColor,
+                height: '56px'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = primaryColor;
+                e.target.style.color = 'white';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'transparent';
+                e.target.style.color = primaryColor;
+              }}
             >
-              <Calendar className="mr-2 h-5 w-5" />
               Check In Online
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </div>
         </div>
