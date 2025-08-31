@@ -372,7 +372,14 @@ const UrgentCareBooking = () => {
               <div>
                 <div className="mb-6">
                   <h2 className="text-xl font-semibold text-gray-900 mb-2">Select an Arrival Time for Today</h2>
-                  <p className="text-gray-600">Choose your preferred appointment time</p>
+                  <p className="text-gray-600">
+                    {formatDateAndDay()}
+                    {todayHours && (
+                      <span className="block mt-1 text-sm" style={{ color: primaryColor }}>
+                        Urgent Care Hours: {todayHours.open} - {todayHours.close}
+                      </span>
+                    )}
+                  </p>
                 </div>
 
                 {loading ? (
@@ -384,38 +391,65 @@ const UrgentCareBooking = () => {
                     <p className="mt-2 text-gray-600">Loading available times...</p>
                   </div>
                 ) : !availableToday ? (
-                  <div className="text-center py-8">
+                  <div className="text-center py-8 space-y-4">
                     <Clock className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                    <p className="text-lg text-gray-900 mb-2">Urgent Care is Closed Today</p>
-                    <p className="text-gray-600">Please check back during our operating hours.</p>
+                    <div>
+                      <p className="text-lg text-gray-900 mb-2">Urgent Care is Not Available</p>
+                      <p className="text-gray-600 mb-4">{message.text}</p>
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 max-w-md mx-auto">
+                        <div className="flex items-center">
+                          <AlertCircle className="h-5 w-5 text-yellow-600 mr-3" />
+                          <div>
+                            <p className="text-yellow-800 font-medium">Need Emergency Care?</p>
+                            <p className="text-yellow-700 text-sm">Call us at {hospitalInfo.phone}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 ) : timeSlots.length === 0 ? (
-                  <div className="text-center py-8">
+                  <div className="text-center py-8 space-y-4">
                     <Calendar className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                    <p className="text-lg text-gray-900 mb-2">No Available Times</p>
-                    <p className="text-gray-600">All appointment slots for today are booked.</p>
+                    <div>
+                      <p className="text-lg text-gray-900 mb-2">All Slots Booked</p>
+                      <p className="text-gray-600 mb-4">All appointment slots for today are booked.</p>
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-md mx-auto">
+                        <div className="flex items-center">
+                          <Phone className="h-5 w-5 mr-3" style={{ color: primaryColor }} />
+                          <div>
+                            <p className="text-gray-900 font-medium">Call for Cancellations</p>
+                            <p className="text-gray-700 text-sm">{hospitalInfo.phone}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {timeSlots.map((slot) => (
-                      <button
-                        key={slot.value}
-                        onClick={() => handleInputChange('appointment_time', slot.value)}
-                        className={`p-4 text-center rounded-lg border-2 transition-all ${
-                          formData.appointment_time === slot.value
-                            ? ''
-                            : 'border-gray-200 bg-white hover:border-gray-300 text-gray-900'
-                        }`}
-                        style={formData.appointment_time === slot.value ? {
-                          borderColor: primaryColor,
-                          backgroundColor: '#e6f7fb',
-                          color: primaryColor
-                        } : {}}
-                      >
-                        <Clock className="h-5 w-5 mx-auto mb-2" />
-                        <div className="font-medium">{formatTime(slot.time)}</div>
-                      </button>
-                    ))}
+                  <div>
+                    <p className="text-sm text-gray-600 mb-4">
+                      {timeSlots.length} appointment slot{timeSlots.length !== 1 ? 's' : ''} available today
+                    </p>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                      {timeSlots.map((slot) => (
+                        <button
+                          key={slot.value}
+                          onClick={() => handleInputChange('appointment_time', slot.value)}
+                          className={`p-4 text-center rounded-lg border-2 transition-all ${
+                            formData.appointment_time === slot.value
+                              ? ''
+                              : 'border-gray-200 bg-white hover:border-gray-300 text-gray-900'
+                          }`}
+                          style={formData.appointment_time === slot.value ? {
+                            borderColor: primaryColor,
+                            backgroundColor: '#e6f7fb',
+                            color: primaryColor
+                          } : {}}
+                        >
+                          <Clock className="h-5 w-5 mx-auto mb-2" />
+                          <div className="font-medium">{slot.display || formatTime(slot.time)}</div>
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
