@@ -536,6 +536,8 @@ const EmailConfiguration = () => {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
         </div>
       </div>
     </div>
