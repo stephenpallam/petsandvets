@@ -83,6 +83,63 @@ const ReviewUs = () => {
     return platforms;
   };
 
+  // Get configured social media platforms
+  const getConfiguredSocialPlatforms = () => {
+    if (!businessInfo) return [];
+    
+    const platforms = [];
+    
+    if (businessInfo.facebook_link && businessInfo.facebook_link.trim()) {
+      platforms.push({
+        name: 'Facebook',
+        description: 'Follow us for updates and pet care tips',
+        icon: Facebook,
+        link: businessInfo.facebook_link,
+        color: '#1877f2',
+        bgColor: '#e3f2fd',
+        buttonText: 'Follow Us'
+      });
+    }
+    
+    if (businessInfo.instagram_link && businessInfo.instagram_link.trim()) {
+      platforms.push({
+        name: 'Instagram',
+        description: 'See adorable pets and behind-the-scenes content',
+        icon: Instagram,
+        link: businessInfo.instagram_link,
+        color: '#E4405F',
+        bgColor: '#fce4ec',
+        buttonText: 'Follow Us'
+      });
+    }
+    
+    if (businessInfo.twitter_link && businessInfo.twitter_link.trim()) {
+      platforms.push({
+        name: 'X (Twitter)',
+        description: 'Get quick updates and pet health tips',
+        icon: X,
+        link: businessInfo.twitter_link,
+        color: '#000000',
+        bgColor: '#f5f5f5',
+        buttonText: 'Follow Us'
+      });
+    }
+    
+    if (businessInfo.whatsapp_group_link && businessInfo.whatsapp_group_link.trim()) {
+      platforms.push({
+        name: 'WhatsApp',
+        description: 'Join our community for quick updates and support',
+        icon: MessageCircle,
+        link: businessInfo.whatsapp_group_link,
+        color: '#25D366',
+        bgColor: '#e8f5e8',
+        buttonText: 'Join Group'
+      });
+    }
+    
+    return platforms;
+  };
+
   const serviceAreas = [
     "South Riding", "Chantilly", "Aldie", "Ashburn", "Herndon", "Centreville", "Fairfax"
   ];
