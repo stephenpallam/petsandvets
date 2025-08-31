@@ -204,6 +204,22 @@ const ConfigureHours = () => {
         setSpecialHours(specialData);
       }
 
+      // Fetch appointment slot configuration
+      try {
+        const slotConfigResponse = await fetch(`${API_BASE_URL}/api/appointment-slot-config`, { headers });
+        if (slotConfigResponse.ok) {
+          const slotConfigData = await slotConfigResponse.json();
+          setAppointmentSlotConfig({
+            slot_interval_minutes: slotConfigData.slot_interval_minutes,
+            first_appointment_delay_minutes: slotConfigData.first_appointment_delay_minutes,
+            last_appointment_cutoff_minutes: slotConfigData.last_appointment_cutoff_minutes
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching appointment slot config:', error);
+        // Don't show error message for slot config as it might not exist yet
+      }
+
     } catch (error) {
       console.error('Error fetching hours:', error);
       setMessage({ type: 'error', text: 'Failed to load hours data.' });
