@@ -45,23 +45,23 @@ const ReachUs = () => {
   const quickInfo = [
     {
       title: "Phone",
-      value: hospitalInfo.phone,
+      value: currentBusinessInfo.phone,
       icon: Phone,
-      link: `tel:${hospitalInfo.phone}`,
+      link: `tel:${currentBusinessInfo.phone}`,
       color: "#10b981"
     },
     {
       title: "Email",
-      value: hospitalInfo.email,
+      value: currentBusinessInfo.email,
       icon: Mail,
-      link: `mailto:${hospitalInfo.email}`,
+      link: `mailto:${currentBusinessInfo.email}`,
       color: "#3b82f6"
     },
     {
       title: "Address",
-      value: hospitalInfo.address,
+      value: currentBusinessInfo.address,
       icon: MapPin,
-      link: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(hospitalInfo.address)}`,
+      link: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(currentBusinessInfo.address)}`,
       color: "#8b5cf6"
     }
   ];
