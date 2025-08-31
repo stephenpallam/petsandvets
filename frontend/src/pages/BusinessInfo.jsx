@@ -343,6 +343,44 @@ const BusinessInfo = () => {
                         placeholder="Full business address"
                       />
                     </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <Globe className="h-4 w-4 inline mr-2" />
+                        Business Timezone *
+                      </label>
+                      <select
+                        name="timezone"
+                        value={businessInfo.timezone}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <optgroup label="US Timezones">
+                          <option value="America/New_York">Eastern Time (ET)</option>
+                          <option value="America/Chicago">Central Time (CT)</option>
+                          <option value="America/Denver">Mountain Time (MT)</option>
+                          <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                          <option value="America/Anchorage">Alaska Time (AKT)</option>
+                          <option value="Pacific/Honolulu">Hawaii Time (HST)</option>
+                        </optgroup>
+                        <optgroup label="Canada Timezones">
+                          <option value="America/Toronto">Eastern Time - Toronto</option>
+                          <option value="America/Winnipeg">Central Time - Winnipeg</option>
+                          <option value="America/Edmonton">Mountain Time - Edmonton</option>
+                          <option value="America/Vancouver">Pacific Time - Vancouver</option>
+                        </optgroup>
+                        <optgroup label="Common International">
+                          <option value="Europe/London">London (GMT/BST)</option>
+                          <option value="Europe/Paris">Paris (CET/CEST)</option>
+                          <option value="Asia/Tokyo">Tokyo (JST)</option>
+                          <option value="Australia/Sydney">Sydney (AEST/AEDT)</option>
+                        </optgroup>
+                      </select>
+                      <p className="mt-2 text-sm text-gray-600">
+                        This timezone will be used for all appointment scheduling and business hours calculations.
+                      </p>
+                    </div>
                   </div>
                 )}
 
