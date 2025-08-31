@@ -462,7 +462,8 @@ const EmailConfiguration = () => {
                                 value={emailConfig.sender_email}
                                 onChange={handleInputChange}
                                 required={emailConfig.email_provider === 'sendgrid'}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 text-sm sm:text-base"
+                                style={{ '--tw-ring-color': '#29add3' }}
                                 placeholder="noreply@yourpractice.com"
                               />
                               <p className="text-xs sm:text-sm text-gray-500 mt-2">
