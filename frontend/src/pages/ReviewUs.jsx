@@ -114,7 +114,7 @@ const ReviewUs = () => {
 
       {/* Review Platforms */}
       {reviewPlatforms.length > 0 ? (
-        <section className="bg-white py-6">
+        <section className="bg-[#f8f9fa] py-6">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-xl font-bold text-gray-900 mb-8 text-center">
               Leave a Review on Your Preferred Platform
@@ -122,7 +122,7 @@ const ReviewUs = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               {reviewPlatforms.map((platform, index) => (
-                <div key={index} className="p-6 rounded-xl shadow-md text-center border-2 border-gray-100 hover:border-gray-200 transition-colors">
+                <div key={index} className="p-6 rounded-xl shadow-md text-center border-2 border-gray-100 hover:border-gray-200 transition-colors bg-white">
                   <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: platform.bgColor }}>
                     <platform.icon className="h-8 w-8" style={{ color: platform.color }} />
                   </div>
@@ -146,9 +146,9 @@ const ReviewUs = () => {
           </div>
         </section>
       ) : (
-        <section className="bg-white py-6">
+        <section className="bg-[#f8f9fa] py-6">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div className="p-8 rounded-xl bg-gray-50">
+            <div className="p-8 rounded-xl bg-white">
               <MessageSquare className="h-12 w-12 mx-auto mb-4 text-gray-400" />
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Review Links Not Configured</h3>
               <p className="text-gray-600">
@@ -160,7 +160,7 @@ const ReviewUs = () => {
       )}
 
       {/* Service Areas */}
-      <section className="bg-[#f8f9fa] py-6">
+      <section className="bg-white py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             Proudly Serving Northern Virginia
