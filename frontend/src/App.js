@@ -118,6 +118,7 @@ function App() {
               <Route path="/our-core-values" element={<OurCoreValues />} />
               <Route path="/our-team" element={<OurTeam />} />
               <Route path="/reach-us" element={<ReachUs />} />
+              <Route path="/review-us" element={<ReviewUs />} />
               <Route path="/our-hours" element={<OurHours />} />
               <Route path="/message-us" element={<MessageUs />} />
               <Route path="/configure-hours" element={<ConfigureHours />} />
