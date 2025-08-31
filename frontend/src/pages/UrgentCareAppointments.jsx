@@ -24,6 +24,9 @@ const UrgentCareAppointments = () => {
   const [loading, setLoading] = useState(true);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingAppointment, setEditingAppointment] = useState(null);
+  const [editFormData, setEditFormData] = useState({});
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [appointmentToDelete, setAppointmentToDelete] = useState(null);
   const [message, setMessage] = useState({ type: '', text: '' });
