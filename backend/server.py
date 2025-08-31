@@ -180,6 +180,104 @@ class GoogleBusinessService:
 
 google_service = GoogleBusinessService()
 
+# Email Service
+class EmailService:
+    def __init__(self):
+        self.encrypt_key = os.environ.get('ENCRYPT_KEY', 'your-encryption-key-change-this').encode()
+    
+    def encrypt_data(self, data: str) -> str:
+        """Simple base64 encryption for demo purposes. In production, use proper encryption."""
+        if not data:
+            return ""
+        return base64.b64encode(data.encode()).decode()
+    
+    def decrypt_data(self, encrypted_data: str) -> str:
+        """Simple base64 decryption for demo purposes. In production, use proper decryption."""
+        if not encrypted_data:
+            return ""
+        try:
+            return base64.b64decode(encrypted_data.encode()).decode()
+        except:
+            return ""
+    
+    async def send_gmail_smtp(self, config: dict, to_email: str, subject: str, html_content: str) -> bool:
+        """Send email using Gmail SMTP"""
+        try:
+            smtp_email = self.decrypt_data(config.get('smtp_email', ''))
+            smtp_password = self.decrypt_data(config.get('smtp_password', ''))
+            
+            if not smtp_email or not smtp_password:
+                raise Exception("Gmail SMTP credentials not configured")
+            
+            # Create message
+            message = MIMEMultipart("alternative")
+            message["Subject"] = subject
+            message["From"] = smtp_email
+            message["To"] = to_email
+            
+            # Add HTML content
+            html_part = MIMEText(html_content, "html")
+            message.attach(html_part)
+            
+            # Send email
+            context = ssl.create_default_context()
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+                server.login(smtp_email, smtp_password)
+                server.sendmail(smtp_email, to_email, message.as_string())
+            
+            return True
+        except Exception as e:
+            logging.error(f"Gmail SMTP send failed: {str(e)}")
+            raise Exception(f"Gmail SMTP send failed: {str(e)}")
+    
+    async def send_sendgrid(self, config: dict, to_email: str, subject: str, html_content: str) -> bool:
+        """Send email using SendGrid"""
+        try:
+            api_key = self.decrypt_data(config.get('sendgrid_api_key', ''))
+            sender_email = config.get('sender_email', '')
+            
+            if not api_key or not sender_email:
+                raise Exception("SendGrid credentials not configured")
+            
+            message = Mail(
+                from_email=sender_email,
+                to_emails=to_email,
+                subject=subject,
+                html_content=html_content
+            )
+            
+            sg = SendGridAPIClient(api_key)
+            response = sg.send(message)
+            
+            return response.status_code == 202
+        except Exception as e:
+            logging.error(f"SendGrid send failed: {str(e)}")
+            raise Exception(f"SendGrid send failed: {str(e)}")
+    
+    async def send_email(self, to_email: str, subject: str, html_content: str) -> bool:
+        """Send email using configured provider"""
+        try:
+            # Get email configuration
+            config_doc = await db.email_config.find_one({})
+            if not config_doc or not config_doc.get('is_enabled'):
+                logging.warning("Email notifications are disabled or not configured")
+                return False
+            
+            provider = config_doc.get('email_provider', 'gmail')
+            
+            if provider == 'gmail':
+                return await self.send_gmail_smtp(config_doc, to_email, subject, html_content)
+            elif provider == 'sendgrid':
+                return await self.send_sendgrid(config_doc, to_email, subject, html_content)
+            else:
+                raise Exception(f"Unknown email provider: {provider}")
+                
+        except Exception as e:
+            logging.error(f"Email send failed: {str(e)}")
+            return False
+
+email_service = EmailService()
+
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
