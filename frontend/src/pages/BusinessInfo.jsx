@@ -441,7 +441,7 @@ const BusinessInfo = () => {
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           <MessageCircle className="h-4 w-4 inline mr-2 text-green-600" />
-                          WhatsApp Group URL
+                          WhatsApp Group/Channel URL
                         </label>
                         <input
                           type="url"
@@ -452,7 +452,7 @@ const BusinessInfo = () => {
                           placeholder="https://chat.whatsapp.com/..."
                         />
                         <p className="text-xs text-gray-500 mt-1">
-                          Link to your WhatsApp group for community updates
+                          Link to your WhatsApp group or channel for community updates
                         </p>
                       </div>
                     </div>
