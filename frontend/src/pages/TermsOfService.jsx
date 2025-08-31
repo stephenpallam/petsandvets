@@ -19,7 +19,8 @@ import {
   CreditCard,
   Calendar,
   UserX,
-  Gavel
+  Gavel,
+  Globe
 } from 'lucide-react';
 import { hospitalInfo } from '../mock';
 
