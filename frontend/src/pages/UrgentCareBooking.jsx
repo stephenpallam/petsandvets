@@ -24,6 +24,7 @@ const UrgentCareBooking = () => {
   const [timeSlots, setTimeSlots] = useState([]);
   const [availableToday, setAvailableToday] = useState(true);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const { user } = useAuth(); // Get authentication context
 
   const [formData, setFormData] = useState({
     appointment_time: '',
