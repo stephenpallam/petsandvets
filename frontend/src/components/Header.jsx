@@ -520,7 +520,7 @@ const Header = () => {
               <div className="flex items-center space-x-1">
                 <Clock className="h-3 w-3" />
                 <span>UC:</span>
-                <span style={{...getStatusStyling(getUrgentCareStatus()), fontSize: '10px'}}>
+                <span style={getStatusStyling(getUrgentCareStatus())}>
                   {getUrgentCareStatus()}
                 </span>
               </div>
