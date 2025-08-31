@@ -141,6 +141,14 @@ const OurHours = () => {
               Always Here When You Need Us
             </span>
           </div>
+          <div className="max-w-3xl mx-auto mb-8">
+            <p className="text-gray-700 mb-2">
+              All services are provided by appointment only - please call ahead to schedule
+            </p>
+            <p className="text-gray-700">
+              Convenient hours to serve your pet's healthcare needs with both general practice and urgent care services
+            </p>
+          </div>
         </div>
       </section>
 
