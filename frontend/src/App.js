@@ -144,6 +144,7 @@ function App() {
               <Route path="/google-integration" element={<GoogleIntegration />} />
               <Route path="/google-integration/callback" element={<GoogleCallback />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/accessibility" element={<AccessibilityStatement />} />
             </Routes>
           </main>
           <Footer />
