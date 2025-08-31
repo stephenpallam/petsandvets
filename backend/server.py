@@ -1875,7 +1875,7 @@ async def get_slider_images():
 @api_router.post("/slider-images", response_model=SliderImage)
 async def create_slider_image(
     image_data: SliderImageCreate, 
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_manager_or_admin_user)
 ):
     """Create a new slider image (admin only)"""
     now = datetime.utcnow()
