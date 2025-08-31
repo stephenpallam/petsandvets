@@ -33,6 +33,28 @@ const MessageUs = () => {
   const primaryLight = '#5bc0db';
   const primaryBg = '#e6f7fb';
 
+  // Fetch business information
+  useEffect(() => {
+    const fetchBusinessInfo = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/business-info`);
+        if (response.ok) {
+          const data = await response.json();
+          setBusinessInfo(data);
+        }
+      } catch (error) {
+        console.error('Error fetching business info:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBusinessInfo();
+  }, []);
+
+  // Use dynamic business info or fallback to static
+  const currentBusinessInfo = businessInfo || hospitalInfo;
+
   const serviceTypes = [
     'General Inquiry',
     'Schedule Appointment',
