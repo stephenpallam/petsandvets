@@ -5972,6 +5972,15 @@ def run_all_tests():
     test_business_info_database_storage()
     test_business_info_timestamps()
     
+    # Referral Hospital Fields Tests
+    test_get_business_info_referral_fields()
+    test_update_business_info_referral_fields_only()
+    test_update_business_info_referral_fields_partial()
+    test_update_business_info_referral_fields_empty()
+    test_update_business_info_referral_fields_regular_user()
+    test_update_business_info_referral_fields_manager()
+    test_business_info_referral_fields_validation()
+    
     print("\n" + "="*50)
     print("EMAIL CONFIGURATION API TESTS")
     print("="*50)
