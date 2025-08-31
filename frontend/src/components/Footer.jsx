@@ -221,6 +221,7 @@ const Footer = () => {
                 </span>
               </div>
             </div>
+            <p className="text-blue-400 text-xs mt-2">By Appointment Only</p>
           </div>
 
           {/* Urgent Care Hours */}
