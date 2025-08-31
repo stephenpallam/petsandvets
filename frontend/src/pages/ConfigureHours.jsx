@@ -293,6 +293,41 @@ const ConfigureHours = () => {
     }
   };
 
+  const saveAppointmentSlotConfig = async () => {
+    setLoading(true);
+    setMessage({ type: '', text: '' });
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/appointment-slot-config`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(appointmentSlotConfig)
+      });
+
+      if (response.ok) {
+        setMessage({ type: 'success', text: 'Appointment slot configuration updated successfully!' });
+      } else {
+        const errorData = await response.json();
+        setMessage({ type: 'error', text: errorData.detail || 'Failed to update appointment slot configuration' });
+      }
+    } catch (error) {
+      console.error('Error saving appointment slot config:', error);
+      setMessage({ type: 'error', text: 'Network error. Please try again.' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSlotConfigChange = (field, value) => {
+    setAppointmentSlotConfig({
+      ...appointmentSlotConfig,
+      [field]: parseInt(value)
+    });
+  };
+
   const addSpecialHour = async () => {
     if (!newSpecialHour.date || !newSpecialHour.name) {
       setMessage({ type: 'error', text: 'Please fill in date and name for special hours.' });
