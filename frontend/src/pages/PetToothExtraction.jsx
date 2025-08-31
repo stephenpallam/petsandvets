@@ -35,7 +35,7 @@ import {
   Pill,
   Bandage
 } from 'lucide-react';
-import { hospitalInfo }
+import { hospitalInfo } from '../mock';
 import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const PetToothExtraction = () => {

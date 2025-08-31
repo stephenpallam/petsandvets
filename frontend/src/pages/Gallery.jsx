@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { X, Camera, MapPin, Clock, Phone } from 'lucide-react';
-import { hospitalInfo }
+import { hospitalInfo } from '../mock';
 import { useBusinessInfo } from '../hooks/useBusinessInfo';
 import axios from 'axios';
 

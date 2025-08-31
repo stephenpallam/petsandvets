@@ -12,7 +12,7 @@ import {
   Stethoscope,
   Shield
 } from 'lucide-react';
-import { hospitalInfo }
+import { hospitalInfo } from '../mock';
 import { useBusinessInfo } from '../../hooks/useBusinessInfo';
 
 const FormsDownload = () => {

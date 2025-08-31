@@ -9,7 +9,7 @@ import {
   MapPin,
   Info
 } from 'lucide-react';
-import { hospitalInfo }
+import { hospitalInfo } from '../mock';
 import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const OurHours = () => {

@@ -14,7 +14,7 @@ import {
   Stethoscope,
   Check
 } from 'lucide-react';
-import { hospitalInfo }
+import { hospitalInfo } from '../mock';
 import { useBusinessInfo } from '../hooks/useBusinessInfo';
 import { useAuth } from '../contexts/AuthContext';
 
