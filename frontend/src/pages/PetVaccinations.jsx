@@ -388,7 +388,7 @@ const PetVaccinations = () => {
       </section>
 
       {/* The Bottom Line */}
-      <section className="bg-white" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
+      <section className="bg-white" style={{ paddingTop: '15px', paddingBottom: '30px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">
             The Bottom Line: Lifesaving Protection
@@ -400,13 +400,13 @@ const PetVaccinations = () => {
               for years to come.
             </p>
             <div className="bg-white p-6 rounded-lg">
-              <div className="flex items-center justify-center mb-4">
-                <Shield className="h-8 w-8 mr-3" style={{ color: primaryColor }} />
-                <h3 className="text-xl font-semibold text-gray-900">Comprehensive Vaccination Services</h3>
-              </div>
-              <p className="text-gray-800 font-semibold">
+              <p className="text-gray-800 font-medium mb-4">
                 Trust our experienced team to provide the highest standard of preventive care with 
                 compassionate, professional vaccination services tailored to your pet's needs.
+              </p>
+              <p className="text-gray-700 italic">
+                Remember: Prevention through vaccination is always more effective and affordable than treating 
+                preventable diseases. Keep your furry family members protected with regular vaccinations.
               </p>
             </div>
           </div>
