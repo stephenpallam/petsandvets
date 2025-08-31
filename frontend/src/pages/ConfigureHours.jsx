@@ -350,7 +350,7 @@ const ConfigureHours = () => {
             <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-red-800 mb-2">Access Denied</h2>
             <p className="text-red-600">{authError}</p>
-            <p className="text-red-600 text-sm mt-2">Please log in with an admin account.</p>
+            <p className="text-red-600 text-sm mt-2">Please log in with a manager or admin account.</p>
           </div>
         </div>
       </div>
