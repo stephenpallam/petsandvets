@@ -505,7 +505,7 @@ const Header = () => {
               <div className="flex items-center space-x-1">
                 <Clock className="h-3 w-3" />
                 <span>GP:</span>
-                <span style={{...getStatusStyling(getGeneralPracticeStatus()), fontSize: '10px'}}>
+                <span style={getStatusStyling(getGeneralPracticeStatus())}>
                   {getGeneralPracticeStatus()}
                 </span>
               </div>
