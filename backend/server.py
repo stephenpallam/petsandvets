@@ -1745,7 +1745,7 @@ async def create_team_member(
 async def update_team_member(
     member_id: str,
     team_data: TeamMemberUpdate,
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_manager_or_admin_user)
 ):
     """Update a team member (admin only)"""
     existing_member = await db.team_members.find_one({"id": member_id})
