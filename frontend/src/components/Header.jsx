@@ -185,7 +185,8 @@ const Header = () => {
 
   const getNavigation = () => {
     const baseNavigation = [
-      { name: 'Home', href: '/' },
+      // Only show Home button if user is not logged in
+      ...(user ? [] : [{ name: 'Home', href: '/' }]),
       { 
         name: 'About',
         dropdown: [
