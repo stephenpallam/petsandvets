@@ -129,7 +129,7 @@ const ReachUs = () => {
               </h2>
               <div className="flex flex-col sm:flex-row gap-4">
                 <a 
-                  href={`tel:${hospitalInfo.phone}`}
+                  href={`tel:${currentBusinessInfo.phone}`}
                   className="flex items-center justify-center px-4 py-2 rounded-lg transition-colors duration-200 border-2"
                   style={{ borderColor: primaryColor, color: primaryColor }}
                   onMouseEnter={(e) => {
@@ -142,10 +142,10 @@ const ReachUs = () => {
                   }}
                 >
                   <Phone className="mr-2 h-4 w-4" />
-                  {hospitalInfo.phone}
+                  {currentBusinessInfo.phone}
                 </a>
                 <a 
-                  href={`mailto:${hospitalInfo.email}`}
+                  href={`mailto:${currentBusinessInfo.email}`}
                   className="flex items-center justify-center px-4 py-2 rounded-lg transition-colors duration-200 border-2"
                   style={{ borderColor: primaryColor, color: primaryColor }}
                   onMouseEnter={(e) => {
@@ -158,7 +158,7 @@ const ReachUs = () => {
                   }}
                 >
                   <Mail className="mr-2 h-4 w-4" />
-                  {hospitalInfo.email}
+                  {currentBusinessInfo.email}
                 </a>
               </div>
             </div>
