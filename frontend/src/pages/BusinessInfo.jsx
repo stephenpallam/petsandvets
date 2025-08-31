@@ -15,8 +15,13 @@ const BusinessInfo = () => {
     twitter_link: '',
     hero_images: [],
     notification_email: '',
+    email_provider: 'gmail', // 'gmail' or 'sendgrid'
+    // Gmail SMTP fields
     smtp_email: '',
-    smtp_password: ''
+    smtp_password: '',
+    // SendGrid fields
+    sendgrid_api_key: '',
+    sender_email: ''
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
