@@ -399,13 +399,16 @@ const MessageUs = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-blue-50 border-2 border-blue-200 p-6 rounded-xl text-center">
-              <Phone className="h-8 w-8 text-blue-600 mx-auto mb-4" />
-              <h3 className="text-lg font-bold text-blue-900 mb-2">Call Us Now</h3>
-              <p className="text-blue-700 mb-4">Speak directly with our team</p>
+            <div className="p-6 rounded-xl text-center" style={{ backgroundColor: '#e6f7fb', border: `2px solid ${primaryColor}` }}>
+              <Phone className="h-8 w-8 mx-auto mb-4" style={{ color: primaryColor }} />
+              <h3 className="text-lg font-bold mb-2" style={{ color: primaryColor }}>Call Us Now</h3>
+              <p className="text-gray-700 mb-4">Speak directly with our team</p>
               <a
                 href={`tel:${hospitalInfo.phone}`}
-                className="inline-flex items-center justify-center bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200"
+                className="inline-flex items-center justify-center text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
+                style={{ backgroundColor: primaryColor }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
               >
                 <Phone className="mr-2 h-5 w-5" />
                 {hospitalInfo.phone}
