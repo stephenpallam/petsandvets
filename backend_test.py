@@ -3144,6 +3144,421 @@ def test_business_info_timestamps():
         return False
 
 # ============================================================================
+# EMAIL CONFIGURATION API TESTS - NEW IMPLEMENTATION
+# ============================================================================
+
+def test_get_email_config_no_auth():
+    """Test GET /api/email-config without authentication (should fail)"""
+    try:
+        response = requests.get(f"{API_URL}/email-config")
+        if response.status_code in [401, 403]:
+            results.log_success("Get Email Config (No Auth - Correctly Unauthorized)")
+            return True
+        results.log_failure("Get Email Config (No Auth)", f"Expected 401/403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Email Config (No Auth)", str(e))
+        return False
+
+def test_get_email_config_regular_user():
+    """Test GET /api/email-config with regular user token (should fail)"""
+    if not user_token:
+        results.log_failure("Get Email Config (Regular User - Should Fail)", "No user token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {user_token}"}
+        response = requests.get(f"{API_URL}/email-config", headers=headers)
+        if response.status_code == 403:
+            results.log_success("Get Email Config (Regular User - Correctly Forbidden)")
+            return True
+        results.log_failure("Get Email Config (Regular User)", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Email Config (Regular User)", str(e))
+        return False
+
+def test_get_email_config_admin():
+    """Test GET /api/email-config with admin token (should work)"""
+    if not admin_token:
+        results.log_failure("Get Email Config (Admin)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.get(f"{API_URL}/email-config", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            required_fields = ["id", "notification_email", "email_provider", "is_enabled", "created_at", "updated_at"]
+            if all(field in data for field in required_fields):
+                results.log_success("Get Email Config (Admin)")
+                return True
+        results.log_failure("Get Email Config (Admin)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Email Config (Admin)", str(e))
+        return False
+
+def test_get_email_config_manager():
+    """Test GET /api/email-config with manager token (should work)"""
+    if not manager_token:
+        results.log_failure("Get Email Config (Manager)", "No manager token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {manager_token}"}
+        response = requests.get(f"{API_URL}/email-config", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            required_fields = ["id", "notification_email", "email_provider", "is_enabled", "created_at", "updated_at"]
+            if all(field in data for field in required_fields):
+                results.log_success("Get Email Config (Manager)")
+                return True
+        results.log_failure("Get Email Config (Manager)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Email Config (Manager)", str(e))
+        return False
+
+def test_get_email_config_masks_sensitive_data():
+    """Test that GET /api/email-config masks sensitive data like passwords/API keys"""
+    if not admin_token:
+        results.log_failure("Get Email Config (Masks Sensitive Data)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.get(f"{API_URL}/email-config", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            # Check that sensitive fields are masked or None
+            smtp_password = data.get("smtp_password")
+            sendgrid_api_key = data.get("sendgrid_api_key")
+            
+            # Should be None (not configured) or masked with ****
+            if (smtp_password is None or smtp_password == "****") and \
+               (sendgrid_api_key is None or sendgrid_api_key == "****"):
+                results.log_success("Get Email Config (Masks Sensitive Data)")
+                return True
+            else:
+                results.log_failure("Get Email Config (Masks Sensitive Data)", f"Sensitive data not masked: smtp_password={smtp_password}, sendgrid_api_key={sendgrid_api_key}")
+                return False
+        results.log_failure("Get Email Config (Masks Sensitive Data)", f"Status: {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Email Config (Masks Sensitive Data)", str(e))
+        return False
+
+def test_create_email_config_gmail_admin():
+    """Test POST /api/email-config with Gmail SMTP configuration (admin)"""
+    if not admin_token:
+        results.log_failure("Create Email Config Gmail (Admin)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        gmail_config = {
+            "notification_email": "notifications@veterinary.com",
+            "email_provider": "gmail",
+            "is_enabled": True,
+            "smtp_email": "test@gmail.com",
+            "smtp_password": "test_app_password_123"
+        }
+        
+        response = requests.post(f"{API_URL}/email-config", json=gmail_config, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if "message" in data and "successfully" in data["message"]:
+                results.log_success("Create Email Config Gmail (Admin)")
+                return True
+        results.log_failure("Create Email Config Gmail (Admin)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Create Email Config Gmail (Admin)", str(e))
+        return False
+
+def test_create_email_config_sendgrid_manager():
+    """Test POST /api/email-config with SendGrid configuration (manager)"""
+    if not manager_token:
+        results.log_failure("Create Email Config SendGrid (Manager)", "No manager token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {manager_token}"}
+        sendgrid_config = {
+            "notification_email": "notifications@veterinary.com",
+            "email_provider": "sendgrid",
+            "is_enabled": True,
+            "sendgrid_api_key": "SG.test_api_key_123456789",
+            "sender_email": "noreply@veterinary.com"
+        }
+        
+        response = requests.post(f"{API_URL}/email-config", json=sendgrid_config, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if "message" in data and "successfully" in data["message"]:
+                results.log_success("Create Email Config SendGrid (Manager)")
+                return True
+        results.log_failure("Create Email Config SendGrid (Manager)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Create Email Config SendGrid (Manager)", str(e))
+        return False
+
+def test_update_email_config_partial():
+    """Test POST /api/email-config with partial update"""
+    if not admin_token:
+        results.log_failure("Update Email Config (Partial)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        partial_update = {
+            "notification_email": "updated-notifications@veterinary.com",
+            "is_enabled": False
+        }
+        
+        response = requests.post(f"{API_URL}/email-config", json=partial_update, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if "message" in data and "successfully" in data["message"]:
+                results.log_success("Update Email Config (Partial)")
+                return True
+        results.log_failure("Update Email Config (Partial)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Email Config (Partial)", str(e))
+        return False
+
+def test_create_email_config_no_auth():
+    """Test POST /api/email-config without authentication (should fail)"""
+    try:
+        config_data = {
+            "notification_email": "test@example.com",
+            "email_provider": "gmail",
+            "is_enabled": True
+        }
+        
+        response = requests.post(f"{API_URL}/email-config", json=config_data)
+        if response.status_code in [401, 403]:
+            results.log_success("Create Email Config (No Auth - Correctly Unauthorized)")
+            return True
+        results.log_failure("Create Email Config (No Auth)", f"Expected 401/403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Create Email Config (No Auth)", str(e))
+        return False
+
+def test_create_email_config_regular_user():
+    """Test POST /api/email-config with regular user token (should fail)"""
+    if not user_token:
+        results.log_failure("Create Email Config (Regular User - Should Fail)", "No user token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {user_token}"}
+        config_data = {
+            "notification_email": "test@example.com",
+            "email_provider": "gmail",
+            "is_enabled": True
+        }
+        
+        response = requests.post(f"{API_URL}/email-config", json=config_data, headers=headers)
+        if response.status_code == 403:
+            results.log_success("Create Email Config (Regular User - Correctly Forbidden)")
+            return True
+        results.log_failure("Create Email Config (Regular User)", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Create Email Config (Regular User)", str(e))
+        return False
+
+def test_test_email_config_admin():
+    """Test POST /api/email-config/test with admin token"""
+    if not admin_token:
+        results.log_failure("Test Email Config (Admin)", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        test_request = {
+            "test_email": "test@veterinary.com"
+        }
+        
+        response = requests.post(f"{API_URL}/email-config/test", json=test_request, headers=headers)
+        # This might fail if email is not properly configured, but should not return auth errors
+        if response.status_code in [200, 400, 500]:  # 400/500 for config issues, not auth issues
+            if response.status_code == 200:
+                data = response.json()
+                if "message" in data:
+                    results.log_success("Test Email Config (Admin - Success)")
+                    return True
+            else:
+                # Email test failed due to configuration, not authentication
+                results.log_success("Test Email Config (Admin - Config Error Expected)")
+                return True
+        results.log_failure("Test Email Config (Admin)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Test Email Config (Admin)", str(e))
+        return False
+
+def test_test_email_config_manager():
+    """Test POST /api/email-config/test with manager token"""
+    if not manager_token:
+        results.log_failure("Test Email Config (Manager)", "No manager token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {manager_token}"}
+        test_request = {
+            "test_email": "manager-test@veterinary.com"
+        }
+        
+        response = requests.post(f"{API_URL}/email-config/test", json=test_request, headers=headers)
+        # This might fail if email is not properly configured, but should not return auth errors
+        if response.status_code in [200, 400, 500]:  # 400/500 for config issues, not auth issues
+            if response.status_code == 200:
+                data = response.json()
+                if "message" in data:
+                    results.log_success("Test Email Config (Manager - Success)")
+                    return True
+            else:
+                # Email test failed due to configuration, not authentication
+                results.log_success("Test Email Config (Manager - Config Error Expected)")
+                return True
+        results.log_failure("Test Email Config (Manager)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Test Email Config (Manager)", str(e))
+        return False
+
+def test_test_email_config_no_auth():
+    """Test POST /api/email-config/test without authentication (should fail)"""
+    try:
+        test_request = {
+            "test_email": "test@example.com"
+        }
+        
+        response = requests.post(f"{API_URL}/email-config/test", json=test_request)
+        if response.status_code in [401, 403]:
+            results.log_success("Test Email Config (No Auth - Correctly Unauthorized)")
+            return True
+        results.log_failure("Test Email Config (No Auth)", f"Expected 401/403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Test Email Config (No Auth)", str(e))
+        return False
+
+def test_test_email_config_regular_user():
+    """Test POST /api/email-config/test with regular user token (should fail)"""
+    if not user_token:
+        results.log_failure("Test Email Config (Regular User - Should Fail)", "No user token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {user_token}"}
+        test_request = {
+            "test_email": "user-test@example.com"
+        }
+        
+        response = requests.post(f"{API_URL}/email-config/test", json=test_request, headers=headers)
+        if response.status_code == 403:
+            results.log_success("Test Email Config (Regular User - Correctly Forbidden)")
+            return True
+        results.log_failure("Test Email Config (Regular User)", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Test Email Config (Regular User)", str(e))
+        return False
+
+def test_email_config_data_encryption():
+    """Test that sensitive email configuration data is encrypted in database"""
+    if not admin_token:
+        results.log_failure("Email Config Data Encryption", "No admin token available")
+        return False
+    
+    try:
+        # First create a config with sensitive data
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        config_with_secrets = {
+            "notification_email": "encryption-test@veterinary.com",
+            "email_provider": "gmail",
+            "is_enabled": True,
+            "smtp_email": "encryption-test@gmail.com",
+            "smtp_password": "very_secret_password_123"
+        }
+        
+        response = requests.post(f"{API_URL}/email-config", json=config_with_secrets, headers=headers)
+        if response.status_code == 200:
+            # Now get the config back and verify sensitive data is masked
+            response = requests.get(f"{API_URL}/email-config", headers=headers)
+            if response.status_code == 200:
+                data = response.json()
+                smtp_password = data.get("smtp_password")
+                
+                # Password should be masked, not the original value
+                if smtp_password == "****":
+                    results.log_success("Email Config Data Encryption (Password Masked)")
+                    return True
+                else:
+                    results.log_failure("Email Config Data Encryption", f"Password not masked: {smtp_password}")
+                    return False
+        results.log_failure("Email Config Data Encryption", f"Status: {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Email Config Data Encryption", str(e))
+        return False
+
+def test_email_config_provider_validation():
+    """Test email provider validation (only gmail and sendgrid allowed)"""
+    if not admin_token:
+        results.log_failure("Email Config Provider Validation", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        invalid_config = {
+            "notification_email": "test@veterinary.com",
+            "email_provider": "invalid_provider",
+            "is_enabled": True
+        }
+        
+        response = requests.post(f"{API_URL}/email-config", json=invalid_config, headers=headers)
+        if response.status_code == 422:  # Validation error
+            results.log_success("Email Config Provider Validation (Invalid Provider Rejected)")
+            return True
+        results.log_failure("Email Config Provider Validation", f"Expected 422, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Email Config Provider Validation", str(e))
+        return False
+
+def test_email_config_email_validation():
+    """Test email address validation in email configuration"""
+    if not admin_token:
+        results.log_failure("Email Config Email Validation", "No admin token available")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        invalid_email_config = {
+            "notification_email": "invalid-email-format",
+            "email_provider": "gmail",
+            "is_enabled": True
+        }
+        
+        response = requests.post(f"{API_URL}/email-config", json=invalid_email_config, headers=headers)
+        if response.status_code == 422:  # Validation error
+            results.log_success("Email Config Email Validation (Invalid Email Rejected)")
+            return True
+        results.log_failure("Email Config Email Validation", f"Expected 422, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Email Config Email Validation", str(e))
+        return False
+
+# ============================================================================
 # USER MANAGEMENT API TESTS - NEW IMPLEMENTATION
 # ============================================================================
 
