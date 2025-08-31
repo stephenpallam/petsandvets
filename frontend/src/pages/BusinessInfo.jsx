@@ -58,26 +58,17 @@ const BusinessInfo = () => {
   };
 
   useEffect(() => {
-    // Wait for auth to finish loading before checking permissions
-    if (authLoading) {
-      return;
-    }
-
-    // If there's a token but no user yet, wait for user profile to load
-    if (token && !user) {
-      return;
-    }
+    if (authLoading) return;
+    if (token && !user) return;
 
     if (user && canAccessManager()) {
-      setError(null);
+      setAuthError('');
       fetchBusinessInfo();
-      checkGoogleConnection();
     } else if (user && !canAccessManager()) {
-      setError('Access denied. Manager or admin privileges required.');
+      setAuthError('Access denied. Manager or admin privileges required.');
       setLoading(false);
     } else if (!token) {
-      // Only show error if there's definitely no token
-      setError('Please log in as a manager or admin to manage business information.');
+      setAuthError('Please log in as a manager or admin to access business information.');
       setLoading(false);
     }
   }, [user, token, authLoading]);
