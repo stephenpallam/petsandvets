@@ -367,6 +367,24 @@ const BusinessInfo = () => {
                     placeholder="https://twitter.com/yourpage"
                   />
                 </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <MessageCircle className="h-4 w-4 inline mr-2 text-green-600" />
+                    WhatsApp Group URL
+                  </label>
+                  <input
+                    type="url"
+                    name="whatsapp_group_link"
+                    value={businessInfo.whatsapp_group_link}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="https://chat.whatsapp.com/..."
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Link to your WhatsApp group for community updates
+                  </p>
+                </div>
               </div>
             </div>
 
