@@ -1453,18 +1453,33 @@ async def get_available_time_slots(date: str):
                 "business_timezone": business_timezone_str
             }
         
-        # Ensure we don't start before current time (in business timezone)
-        start_time = max(open_time, business_now)
+        # Get appointment slot configuration
+        slot_config = await db.appointment_slot_config.find_one()
+        if not slot_config:
+            # Use default configuration
+            slot_interval = 30
+            first_delay = 0
+            last_cutoff = 30
+        else:
+            slot_interval = slot_config.get("slot_interval_minutes", 30)
+            first_delay = slot_config.get("first_appointment_delay_minutes", 0)
+            last_cutoff = slot_config.get("last_appointment_cutoff_minutes", 30)
         
-        # Round start time to next 30-minute interval
-        if start_time.minute % 30 != 0:
-            minutes_to_add = 30 - (start_time.minute % 30)
+        # Apply first appointment delay to opening time
+        adjusted_open_time = open_time + timedelta(minutes=first_delay)
+        
+        # Ensure we don't start before current time (in business timezone)
+        start_time = max(adjusted_open_time, business_now)
+        
+        # Round start time to next slot interval
+        if start_time.minute % slot_interval != 0:
+            minutes_to_add = slot_interval - (start_time.minute % slot_interval)
             start_time = start_time.replace(second=0, microsecond=0) + timedelta(minutes=minutes_to_add)
         else:
             start_time = start_time.replace(second=0, microsecond=0)
         
-        # Last appointment slot should be 30 minutes before closing
-        end_time = close_time - timedelta(minutes=30)
+        # Last appointment slot should be [cutoff] minutes before closing
+        end_time = close_time - timedelta(minutes=last_cutoff)
         
         if start_time >= end_time:
             return {
