@@ -364,9 +364,14 @@ const UrgentCareBooking = () => {
                         onClick={() => handleInputChange('appointment_time', slot.value)}
                         className={`p-4 text-center rounded-lg border-2 transition-all ${
                           formData.appointment_time === slot.value
-                            ? 'border-blue-500 bg-blue-50 text-blue-700'
+                            ? ''
                             : 'border-gray-200 bg-white hover:border-gray-300 text-gray-900'
                         }`}
+                        style={formData.appointment_time === slot.value ? {
+                          borderColor: primaryColor,
+                          backgroundColor: '#e6f7fb',
+                          color: primaryColor
+                        } : {}}
                       >
                         <Clock className="h-5 w-5 mx-auto mb-2" />
                         <div className="font-medium">{formatTime(slot.time)}</div>
