@@ -403,7 +403,7 @@ const MessageUs = () => {
                 <div>
                   <p className="text-sm text-gray-700">
                     <strong>Response Time:</strong> We typically respond to messages within 24 hours during business days. 
-                    For urgent matters, please call us directly at {hospitalInfo.phone}.
+                    For urgent matters, please call us directly at {currentBusinessInfo.phone}.
                   </p>
                 </div>
               </div>
