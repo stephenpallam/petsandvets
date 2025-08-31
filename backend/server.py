@@ -1823,7 +1823,7 @@ async def create_facility_photo(
 async def update_facility_photo(
     photo_id: str,
     photo_data: FacilityPhotoUpdate,
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_manager_or_admin_user)
 ):
     """Update a facility photo (admin only)"""
     existing_photo = await db.facility_photos.find_one({"id": photo_id})
