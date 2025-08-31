@@ -1096,7 +1096,7 @@ const PhotoManagement = () => {
       return;
     }
 
-    if (user && isAdmin()) {
+    if (user && canAccessManager()) {
       const loadData = async () => {
         await fetchUploadedFiles();
         await fetchTeamMembers();
@@ -1105,12 +1105,12 @@ const PhotoManagement = () => {
         setLoading(false);
       };
       loadData();
-    } else if (user && !isAdmin()) {
-      setError('Access denied. Admin privileges required.');
+    } else if (user && !canAccessManager()) {
+      setError('Access denied. Manager or admin privileges required.');
       setLoading(false);
     } else if (!token) {
       // Only show error if there's definitely no token
-      setError('Please log in as an admin to manage photos.');
+      setError('Please log in as a manager or admin to manage photos.');
       setLoading(false);
     }
   }, [user, token, authLoading]);
