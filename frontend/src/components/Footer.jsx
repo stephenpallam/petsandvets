@@ -304,7 +304,7 @@ const Footer = () => {
             </Link>
           </div>
           <p className="text-gray-400 text-sm">
-            © 2024 Pets and Vets Animal Hospital & Urgent Care. All rights reserved.
+            © 2025 Prime Pixel LLC. All rights reserved.
           </p>
         </div>
       </div>
