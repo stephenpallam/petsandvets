@@ -68,6 +68,7 @@ import PhotoManagement from "./pages/PhotoManagement";
 import LoginPage from "./pages/LoginPage";
 import GoogleIntegration from "./pages/GoogleIntegration";
 import GoogleCallback from "./pages/GoogleCallback";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 function App() {
   return (
