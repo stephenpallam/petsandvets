@@ -481,7 +481,7 @@ const UrgentCareBooking = () => {
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Email Address *
+                      Email Address {isStaffMember ? "(Optional)" : "*"}
                     </label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
@@ -499,8 +499,8 @@ const UrgentCareBooking = () => {
                           e.target.style.borderColor = '#d1d5db';
                           e.target.style.boxShadow = 'none';
                         }}
-                        placeholder="Enter your email address"
-                        required
+                        placeholder="Enter email address"
+                        required={!isStaffMember}
                       />
                     </div>
                   </div>
