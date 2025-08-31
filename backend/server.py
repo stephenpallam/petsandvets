@@ -1801,7 +1801,7 @@ async def get_facility_photos():
 @api_router.post("/facility-photos", response_model=FacilityPhoto)
 async def create_facility_photo(
     photo_data: FacilityPhotoCreate, 
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_manager_or_admin_user)
 ):
     """Create a new facility photo (admin only)"""
     now = datetime.utcnow()
