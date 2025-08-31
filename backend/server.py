@@ -558,6 +558,7 @@ class BusinessInfo(BaseModel):
     phone: str
     email: str
     address: str
+    timezone: Optional[str] = "America/New_York"  # Default to Eastern Time
     facebook_link: Optional[str] = ""
     instagram_link: Optional[str] = ""
     twitter_link: Optional[str] = ""
