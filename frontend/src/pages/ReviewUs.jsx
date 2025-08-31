@@ -170,10 +170,9 @@ const ReviewUs = () => {
           <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto mb-4">
             Every review helps us serve your pets better and guides other pet owners to quality care.
           </p>
-          
           {/* Review Platforms - moved here */}
           {reviewPlatforms.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full mt-6">
               {reviewPlatforms.map((platform, index) => (
                 <div key={index} className="p-4 rounded-lg shadow-md text-center border border-gray-200 hover:border-gray-300 transition-colors bg-white">
                   <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3" style={{ backgroundColor: platform.bgColor }}>
@@ -197,7 +196,7 @@ const ReviewUs = () => {
               ))}
             </div>
           ) : (
-            <div className="p-8 rounded-xl bg-gray-50">
+            <div className="p-8 rounded-xl bg-gray-50 mt-6">
               <MessageSquare className="h-12 w-12 mx-auto mb-4 text-gray-400" />
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Review Links Not Configured</h3>
               <p className="text-gray-600">
