@@ -1665,7 +1665,7 @@ async def get_file(category: str, filename: str):
 
 
 @api_router.get("/files/{category}")
-async def list_files(category: str, current_user: User = Depends(get_admin_user)):
+async def list_files(category: str, current_user: User = Depends(get_manager_or_admin_user)):
     """List all files in a category (admin only)"""
     valid_categories = ["homepageslider", "team", "facility"]
     if category not in valid_categories:
