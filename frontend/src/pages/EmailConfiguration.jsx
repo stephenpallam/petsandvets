@@ -306,7 +306,11 @@ const EmailConfiguration = () => {
                               value="gmail"
                               checked={emailConfig.email_provider === 'gmail'}
                               onChange={handleInputChange}
-                              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                              className="h-4 w-4 border-gray-300"
+                              style={{ 
+                                accentColor: '#29add3',
+                                color: '#29add3'
+                              }}
                             />
                             <label htmlFor="gmail" className="ml-3 text-sm sm:text-base text-gray-900">
                               Gmail SMTP <span className="text-sm text-gray-500">(Recommended for small practices)</span>
