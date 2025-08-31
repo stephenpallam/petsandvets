@@ -97,7 +97,7 @@ const ReviewUs = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section className="bg-white">
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
           <h1 className="text-xl font-bold text-gray-900 mb-6">
             Review Us
           </h1>
