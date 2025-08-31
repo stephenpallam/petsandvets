@@ -611,7 +611,12 @@ const UrgentCareBooking = () => {
               <div>
                 <div className="mb-6">
                   <h2 className="text-xl font-semibold text-gray-900 mb-2">Reason for Visit</h2>
-                  <p className="text-gray-600">What brings your pet in today?</p>
+                  <p className="text-gray-600">
+                    {isStaffMember 
+                      ? "Visit reason (optional for staff - can be filled during appointment)" 
+                      : "What brings your pet in today?"
+                    }
+                  </p>
                 </div>
                 
                 <div>
