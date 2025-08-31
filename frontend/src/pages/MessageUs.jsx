@@ -371,11 +371,11 @@ const MessageUs = () => {
               </button>
             </form>
 
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+            <div className="mt-6 p-4 rounded-lg" style={{ backgroundColor: '#e6f7fb' }}>
               <div className="flex items-start">
-                <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
+                <CheckCircle className="h-5 w-5 mt-0.5 mr-3 flex-shrink-0" style={{ color: primaryColor }} />
                 <div>
-                  <p className="text-sm text-blue-700">
+                  <p className="text-sm text-gray-700">
                     <strong>Response Time:</strong> We typically respond to messages within 24 hours during business days. 
                     For urgent matters, please call us directly at {hospitalInfo.phone}.
                   </p>
