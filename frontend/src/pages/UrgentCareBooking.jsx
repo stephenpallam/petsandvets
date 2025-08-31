@@ -263,13 +263,38 @@ const UrgentCareBooking = () => {
                     disabled={!isEnabled}
                     className={`flex-1 flex items-center justify-center px-4 py-4 text-sm font-medium border-b-2 transition-colors ${
                       isActive
-                        ? 'border-blue-500 text-blue-600 bg-blue-50'
+                        ? ''
                         : isCompleted
-                        ? 'border-blue-500 text-blue-600 bg-blue-50 hover:bg-blue-100'
+                        ? ''
                         : isEnabled
                         ? 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                         : 'border-transparent text-gray-300 cursor-not-allowed'
                     }`}
+                    style={
+                      isActive
+                        ? { 
+                            borderColor: primaryColor, 
+                            color: primaryColor, 
+                            backgroundColor: '#e6f7fb' 
+                          }
+                        : isCompleted
+                        ? { 
+                            borderColor: primaryColor, 
+                            color: primaryColor, 
+                            backgroundColor: '#e6f7fb' 
+                          }
+                        : {}
+                    }
+                    onMouseEnter={(e) => {
+                      if (isCompleted && !isActive) {
+                        e.target.style.backgroundColor = '#d4f4f9';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (isCompleted && !isActive) {
+                        e.target.style.backgroundColor = '#e6f7fb';
+                      }
+                    }}
                   >
                     <div className="flex items-center">
                       {isCompleted ? (
