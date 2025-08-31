@@ -1401,8 +1401,8 @@ async def get_reviews():
 
 
 @api_router.get("/reviews/manage", response_model=ReviewsResponse)
-async def get_reviews_for_management(current_user: User = Depends(get_admin_user)):
-    """Get all reviews for admin management"""
+async def get_reviews_for_management(current_user: User = Depends(get_manager_or_admin_user)):
+    """Get all reviews for manager/admin management"""
     reviews_data = await db.reviews.find().sort("created_at", -1).to_list(10)
     reviews = [Review(**review) for review in reviews_data]
     return ReviewsResponse(reviews=reviews)
