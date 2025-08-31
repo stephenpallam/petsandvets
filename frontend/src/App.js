@@ -70,6 +70,7 @@ import GoogleIntegration from "./pages/GoogleIntegration";
 import GoogleCallback from "./pages/GoogleCallback";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AccessibilityStatement from "./pages/AccessibilityStatement";
+import TermsOfService from "./pages/TermsOfService";
 
 function App() {
   return (
