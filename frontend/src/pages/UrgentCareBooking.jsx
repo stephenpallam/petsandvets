@@ -621,7 +621,7 @@ const UrgentCareBooking = () => {
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-4">
-                    Select the reason for your visit *
+                    Select the reason for your visit {isStaffMember ? "(Optional)" : "*"}
                   </label>
                   <select
                     value={formData.reason_for_visit}
@@ -636,7 +636,7 @@ const UrgentCareBooking = () => {
                       e.target.style.borderColor = '#d1d5db';
                       e.target.style.boxShadow = 'none';
                     }}
-                    required
+                    required={!isStaffMember}
                   >
                     <option value="">Select reason for visit</option>
                     {reasonOptions.map((reason, index) => (
