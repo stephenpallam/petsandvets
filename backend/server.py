@@ -1233,38 +1233,175 @@ async def update_appointment(
 async def get_available_time_slots(date: str):
     """Get available time slots for urgent care booking for a specific date"""
     try:
-        # FOR TESTING - Return some sample time slots for today
         from datetime import datetime, timedelta
-        today_str = datetime.now().strftime("%Y-%m-%d")
+        import re
         
-        if date == today_str:
-            # Generate some test time slots for today
-            current_time = datetime.now()
-            test_slots = []
-            
-            # Start from next hour, rounded to 30-minute intervals
-            start_time = current_time.replace(minute=0 if current_time.minute < 30 else 30, second=0, microsecond=0)
-            if start_time <= current_time:
-                start_time += timedelta(minutes=30)
-            
-            # Generate 12 time slots (6 hours worth)
-            for i in range(12):
-                slot_time = start_time + timedelta(minutes=30 * i)
-                test_slots.append({
-                    "time": slot_time.strftime("%H:%M"),
-                    "value": slot_time.strftime("%Y-%m-%dT%H:%M")
-                })
-            
+        # Only allow today's date
+        today_str = datetime.now().strftime("%Y-%m-%d")
+        if date != today_str:
             return {
-                "available": True,
-                "slots": test_slots,
+                "available": False, 
+                "message": "Appointments are only available for today. For future appointments, please call us directly.",
                 "date": date
             }
+        
+        today = datetime.now()
+        day_name = today.strftime("%A").lower()
+        
+        # Check for special holidays first
+        special_hours = await db.special_hours.find({"date": date}).to_list(length=None)
+        urgent_care_hours = None
+        
+        if special_hours:
+            # Found special hours for today
+            special_hour = special_hours[0]
+            if special_hour.get("closed", False):
+                return {
+                    "available": False,
+                    "message": f"Urgent Care is closed today ({special_hour.get('name', 'Special Holiday')}). Please call us for emergency assistance.",
+                    "date": date
+                }
+            urgent_care_hours = special_hour.get("urgent_care")
         else:
-            return {"available": False, "message": "Test slots only available for today"}
+            # Get regular urgent care hours
+            regular_hours = await db.urgent_care_hours.find_one()
+            if not regular_hours:
+                return {
+                    "available": False,
+                    "message": "Urgent care hours not configured. Please call us to schedule an appointment.",
+                    "date": date
+                }
+            urgent_care_hours = regular_hours.get(day_name)
+        
+        if not urgent_care_hours or urgent_care_hours.get("closed", False):
+            return {
+                "available": False,
+                "message": "Urgent Care is closed today. Please call us for emergency assistance.",
+                "date": date
+            }
+        
+        # Parse opening and closing times
+        open_time_str = urgent_care_hours.get("open", "")
+        close_time_str = urgent_care_hours.get("close", "")
+        
+        if not open_time_str or not close_time_str:
+            return {
+                "available": False,
+                "message": "Urgent Care hours not properly configured. Please call us to schedule an appointment.",
+                "date": date
+            }
+        
+        # Convert time strings to datetime objects
+        def parse_time(time_str):
+            # Handle formats like "09:00", "9:00 AM", "09:00 AM", etc.
+            time_str = time_str.strip().upper()
+            
+            # Remove AM/PM and extract time
+            am_pm = ""
+            if "AM" in time_str or "PM" in time_str:
+                am_pm = "AM" if "AM" in time_str else "PM"
+                time_str = re.sub(r'\s*(AM|PM)\s*', '', time_str)
+            
+            # Parse hour and minute
+            if ":" in time_str:
+                hour, minute = map(int, time_str.split(":"))
+            else:
+                hour = int(time_str)
+                minute = 0
+            
+            # Convert to 24-hour format if needed
+            if am_pm == "PM" and hour != 12:
+                hour += 12
+            elif am_pm == "AM" and hour == 12:
+                hour = 0
+            
+            return today.replace(hour=hour, minute=minute, second=0, microsecond=0)
+        
+        try:
+            open_time = parse_time(open_time_str)
+            close_time = parse_time(close_time_str)
+        except (ValueError, TypeError) as e:
+            return {
+                "available": False,
+                "message": "Invalid time format in urgent care hours. Please call us to schedule an appointment.",
+                "date": date
+            }
+        
+        # Ensure we don't start before current time
+        current_time = datetime.now()
+        start_time = max(open_time, current_time)
+        
+        # Round start time to next 30-minute interval
+        if start_time.minute % 30 != 0:
+            minutes_to_add = 30 - (start_time.minute % 30)
+            start_time = start_time.replace(second=0, microsecond=0) + timedelta(minutes=minutes_to_add)
+        else:
+            start_time = start_time.replace(second=0, microsecond=0)
+        
+        # Last appointment slot should be 30 minutes before closing
+        end_time = close_time - timedelta(minutes=30)
+        
+        if start_time >= end_time:
+            return {
+                "available": False,
+                "message": "No more appointments available today. Urgent Care is closing soon. Please call us for emergency assistance.",
+                "date": date
+            }
+        
+        # Get existing appointments for today to exclude booked slots
+        existing_appointments = await db.urgent_care_appointments.find({
+            "appointment_time": {
+                "$gte": today.strftime("%Y-%m-%dT00:00:00"),
+                "$lt": (today + timedelta(days=1)).strftime("%Y-%m-%dT00:00:00")
+            },
+            "status": {"$ne": "cancelled"}  # Exclude cancelled appointments
+        }).to_list(length=None)
+        
+        booked_slots = set()
+        for appointment in existing_appointments:
+            appointment_time = appointment.get("appointment_time", "")
+            if appointment_time:
+                # Extract just time portion for comparison
+                if "T" in appointment_time:
+                    time_part = appointment_time.split("T")[1][:5]  # Get HH:MM
+                    booked_slots.add(time_part)
+        
+        # Generate available time slots
+        available_slots = []
+        current_slot = start_time
+        
+        while current_slot < end_time:
+            slot_time_str = current_slot.strftime("%H:%M")
+            
+            # Only add if slot is not already booked
+            if slot_time_str not in booked_slots:
+                available_slots.append({
+                    "time": slot_time_str,
+                    "value": current_slot.strftime("%Y-%m-%dT%H:%M"),
+                    "display": current_slot.strftime("%I:%M %p").lstrip('0')  # Format like "9:00 AM"
+                })
+            
+            current_slot += timedelta(minutes=30)
+        
+        if not available_slots:
+            return {
+                "available": False,
+                "message": "All appointment slots are booked for today. Please call us to check for cancellations or emergency assistance.",
+                "date": date
+            }
+        
+        return {
+            "available": True,
+            "slots": available_slots,
+            "date": date,
+            "hours": {
+                "open": open_time.strftime("%I:%M %p").lstrip('0'),
+                "close": close_time.strftime("%I:%M %p").lstrip('0')
+            }
+        }
         
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Error generating time slots: {str(e)}")
 
 
 def generate_pdf(form_data: PatientRegistrationForm) -> bytes:
