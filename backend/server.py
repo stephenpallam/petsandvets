@@ -1061,6 +1061,90 @@ async def delete_special_hours(
     return {"message": "Special hours deleted successfully"}
 
 
+# Appointment Slot Configuration Routes
+@api_router.get("/appointment-slot-config", response_model=AppointmentSlotConfig)
+async def get_appointment_slot_config(
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Get appointment slot configuration (manager/admin only)"""
+    config = await db.appointment_slot_config.find_one()
+    
+    if not config:
+        # Return default configuration
+        now = datetime.utcnow()
+        default_config = AppointmentSlotConfig(
+            id=str(uuid.uuid4()),
+            slot_interval_minutes=30,
+            first_appointment_delay_minutes=0,
+            last_appointment_cutoff_minutes=30,
+            created_at=now,
+            updated_at=now,
+            updated_by=current_user.id
+        )
+        await db.appointment_slot_config.insert_one(default_config.dict())
+        return default_config
+    
+    return AppointmentSlotConfig(**config)
+
+
+@api_router.put("/appointment-slot-config", response_model=AppointmentSlotConfig)
+async def update_appointment_slot_config(
+    config_data: AppointmentSlotConfigUpdate,
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Update appointment slot configuration (manager/admin only)"""
+    
+    # Validate values
+    valid_intervals = [15, 30, 45, 60]
+    valid_delays = [0, 15, 30, 45, 60]
+    valid_cutoffs = [15, 30, 45, 60]
+    
+    if config_data.slot_interval_minutes is not None and config_data.slot_interval_minutes not in valid_intervals:
+        raise HTTPException(status_code=400, detail="Slot interval must be 15, 30, 45, or 60 minutes")
+    
+    if config_data.first_appointment_delay_minutes is not None and config_data.first_appointment_delay_minutes not in valid_delays:
+        raise HTTPException(status_code=400, detail="First appointment delay must be 0, 15, 30, 45, or 60 minutes")
+    
+    if config_data.last_appointment_cutoff_minutes is not None and config_data.last_appointment_cutoff_minutes not in valid_cutoffs:
+        raise HTTPException(status_code=400, detail="Last appointment cutoff must be 15, 30, 45, or 60 minutes")
+    
+    # Get existing configuration
+    existing_config = await db.appointment_slot_config.find_one()
+    
+    if not existing_config:
+        # Create new configuration
+        now = datetime.utcnow()
+        new_config = AppointmentSlotConfig(
+            id=str(uuid.uuid4()),
+            slot_interval_minutes=config_data.slot_interval_minutes or 30,
+            first_appointment_delay_minutes=config_data.first_appointment_delay_minutes or 0,
+            last_appointment_cutoff_minutes=config_data.last_appointment_cutoff_minutes or 30,
+            created_at=now,
+            updated_at=now,
+            updated_by=current_user.id
+        )
+        await db.appointment_slot_config.insert_one(new_config.dict())
+        return new_config
+    
+    # Update existing configuration
+    update_data = {}
+    if config_data.slot_interval_minutes is not None:
+        update_data["slot_interval_minutes"] = config_data.slot_interval_minutes
+    if config_data.first_appointment_delay_minutes is not None:
+        update_data["first_appointment_delay_minutes"] = config_data.first_appointment_delay_minutes
+    if config_data.last_appointment_cutoff_minutes is not None:
+        update_data["last_appointment_cutoff_minutes"] = config_data.last_appointment_cutoff_minutes
+    
+    if update_data:
+        update_data["updated_at"] = datetime.utcnow()
+        update_data["updated_by"] = current_user.id
+        await db.appointment_slot_config.update_one({}, {"$set": update_data})
+    
+    # Get updated configuration
+    updated_config = await db.appointment_slot_config.find_one()
+    return AppointmentSlotConfig(**updated_config)
+
+
 # Urgent Care Appointments Routes
 @api_router.post("/urgent-care-appointments", response_model=UrgentCareAppointment)
 async def create_appointment(
