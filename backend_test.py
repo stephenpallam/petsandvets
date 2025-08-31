@@ -3938,6 +3938,255 @@ def test_business_info_timestamps():
         return False
 
 # ============================================================================
+# BUSINESS INFORMATION API TESTS - REFERRAL HOSPITAL FIELDS
+# ============================================================================
+
+def test_get_business_info_referral_fields():
+    """Test GET /api/business-info returns referral hospital fields with defaults"""
+    try:
+        response = requests.get(f"{API_URL}/business-info")
+        if response.status_code == 200:
+            data = response.json()
+            # Check that referral hospital fields exist and have empty string defaults
+            if ("referral_hospital_name" in data and 
+                "referral_hospital_phone" in data and
+                data.get("referral_hospital_name") == "" and
+                data.get("referral_hospital_phone") == ""):
+                results.log_success("Get Business Info - Referral Fields Default Values")
+                return True
+            elif ("referral_hospital_name" in data and 
+                  "referral_hospital_phone" in data):
+                # Fields exist but may have values from previous tests
+                results.log_success("Get Business Info - Referral Fields Present")
+                return True
+            else:
+                results.log_failure("Get Business Info - Referral Fields", "Missing referral_hospital_name or referral_hospital_phone fields")
+                return False
+        results.log_failure("Get Business Info - Referral Fields", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Get Business Info - Referral Fields", str(e))
+        return False
+
+def test_update_business_info_referral_fields_only():
+    """Test PUT /api/business-info updating only referral hospital fields"""
+    if not admin_token:
+        results.log_failure("Update Business Info - Referral Fields Only", "No admin token available")
+        return False
+    
+    try:
+        # First get current business info
+        response = requests.get(f"{API_URL}/business-info")
+        if response.status_code != 200:
+            results.log_failure("Update Business Info - Referral Fields Only (Setup)", "Failed to get current business info")
+            return False
+        
+        current_data = response.json()
+        
+        # Update only referral hospital fields
+        update_data = {
+            "referral_hospital_name": "Emergency Pet Hospital of Northern Virginia",
+            "referral_hospital_phone": "(703) 777-5755"
+        }
+        
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.put(f"{API_URL}/business-info", json=update_data, headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            # Check that referral fields were updated
+            if (data.get("referral_hospital_name") == "Emergency Pet Hospital of Northern Virginia" and
+                data.get("referral_hospital_phone") == "(703) 777-5755"):
+                # Verify other fields weren't affected
+                if (data.get("hospital_name") == current_data.get("hospital_name") and
+                    data.get("phone") == current_data.get("phone") and
+                    data.get("email") == current_data.get("email")):
+                    results.log_success("Update Business Info - Referral Fields Only")
+                    return True
+                else:
+                    results.log_failure("Update Business Info - Referral Fields Only", "Other fields were unexpectedly modified")
+                    return False
+            else:
+                results.log_failure("Update Business Info - Referral Fields Only", "Referral fields not updated correctly")
+                return False
+        results.log_failure("Update Business Info - Referral Fields Only", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Business Info - Referral Fields Only", str(e))
+        return False
+
+def test_update_business_info_referral_fields_partial():
+    """Test PUT /api/business-info updating only one referral field"""
+    if not admin_token:
+        results.log_failure("Update Business Info - Referral Fields Partial", "No admin token available")
+        return False
+    
+    try:
+        # Update only referral hospital name
+        update_data = {
+            "referral_hospital_name": "BluePearl Pet Hospital"
+        }
+        
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.put(f"{API_URL}/business-info", json=update_data, headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            # Check that only referral name was updated
+            if data.get("referral_hospital_name") == "BluePearl Pet Hospital":
+                # Phone should remain from previous test
+                if data.get("referral_hospital_phone") == "(703) 777-5755":
+                    results.log_success("Update Business Info - Referral Fields Partial")
+                    return True
+                else:
+                    results.log_success("Update Business Info - Referral Fields Partial (Phone Reset)")
+                    return True
+            else:
+                results.log_failure("Update Business Info - Referral Fields Partial", "Referral hospital name not updated")
+                return False
+        results.log_failure("Update Business Info - Referral Fields Partial", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Business Info - Referral Fields Partial", str(e))
+        return False
+
+def test_update_business_info_referral_fields_empty():
+    """Test PUT /api/business-info setting referral fields to empty strings"""
+    if not admin_token:
+        results.log_failure("Update Business Info - Referral Fields Empty", "No admin token available")
+        return False
+    
+    try:
+        # Set referral fields to empty strings
+        update_data = {
+            "referral_hospital_name": "",
+            "referral_hospital_phone": ""
+        }
+        
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.put(f"{API_URL}/business-info", json=update_data, headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            # Check that referral fields are empty
+            if (data.get("referral_hospital_name") == "" and
+                data.get("referral_hospital_phone") == ""):
+                results.log_success("Update Business Info - Referral Fields Empty")
+                return True
+            else:
+                results.log_failure("Update Business Info - Referral Fields Empty", "Referral fields not set to empty strings")
+                return False
+        results.log_failure("Update Business Info - Referral Fields Empty", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Business Info - Referral Fields Empty", str(e))
+        return False
+
+def test_update_business_info_referral_fields_regular_user():
+    """Test PUT /api/business-info with regular user token (should fail)"""
+    if not user_token:
+        results.log_failure("Update Business Info - Referral Fields Regular User", "No user token available")
+        return False
+    
+    try:
+        update_data = {
+            "referral_hospital_name": "Unauthorized Hospital",
+            "referral_hospital_phone": "(555) 000-0000"
+        }
+        
+        headers = {"Authorization": f"Bearer {user_token}"}
+        response = requests.put(f"{API_URL}/business-info", json=update_data, headers=headers)
+        
+        if response.status_code == 403:
+            results.log_success("Update Business Info - Referral Fields Regular User (Correctly Forbidden)")
+            return True
+        results.log_failure("Update Business Info - Referral Fields Regular User", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Business Info - Referral Fields Regular User", str(e))
+        return False
+
+def test_update_business_info_referral_fields_manager():
+    """Test PUT /api/business-info with manager token (should work)"""
+    if not manager_token:
+        results.log_failure("Update Business Info - Referral Fields Manager", "No manager token available")
+        return False
+    
+    try:
+        update_data = {
+            "referral_hospital_name": "VCA Animal Hospital",
+            "referral_hospital_phone": "(703) 555-1234"
+        }
+        
+        headers = {"Authorization": f"Bearer {manager_token}"}
+        response = requests.put(f"{API_URL}/business-info", json=update_data, headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("referral_hospital_name") == "VCA Animal Hospital" and
+                data.get("referral_hospital_phone") == "(703) 555-1234"):
+                results.log_success("Update Business Info - Referral Fields Manager")
+                return True
+            else:
+                results.log_failure("Update Business Info - Referral Fields Manager", "Referral fields not updated correctly")
+                return False
+        results.log_failure("Update Business Info - Referral Fields Manager", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Business Info - Referral Fields Manager", str(e))
+        return False
+
+def test_business_info_referral_fields_validation():
+    """Test business info referral fields accept various formats"""
+    if not admin_token:
+        results.log_failure("Business Info - Referral Fields Validation", "No admin token available")
+        return False
+    
+    try:
+        # Test with various phone number formats
+        test_cases = [
+            {
+                "referral_hospital_name": "Test Hospital 1",
+                "referral_hospital_phone": "(703) 123-4567"
+            },
+            {
+                "referral_hospital_name": "Test Hospital 2", 
+                "referral_hospital_phone": "703-123-4567"
+            },
+            {
+                "referral_hospital_name": "Test Hospital 3",
+                "referral_hospital_phone": "7031234567"
+            },
+            {
+                "referral_hospital_name": "Test Hospital with Long Name and Special Characters & More",
+                "referral_hospital_phone": "+1 (703) 123-4567 ext. 123"
+            }
+        ]
+        
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        
+        for i, test_case in enumerate(test_cases):
+            response = requests.put(f"{API_URL}/business-info", json=test_case, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if (data.get("referral_hospital_name") == test_case["referral_hospital_name"] and
+                    data.get("referral_hospital_phone") == test_case["referral_hospital_phone"]):
+                    continue
+                else:
+                    results.log_failure("Business Info - Referral Fields Validation", f"Test case {i+1} failed: fields not updated correctly")
+                    return False
+            else:
+                results.log_failure("Business Info - Referral Fields Validation", f"Test case {i+1} failed: Status {response.status_code}")
+                return False
+        
+        results.log_success("Business Info - Referral Fields Validation")
+        return True
+    except Exception as e:
+        results.log_failure("Business Info - Referral Fields Validation", str(e))
+        return False
+
+# ============================================================================
 # EMAIL CONFIGURATION API TESTS - NEW IMPLEMENTATION
 # ============================================================================
 
