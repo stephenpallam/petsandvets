@@ -2030,7 +2030,7 @@ async def update_business_info(
     existing_info = await db.business_info.find_one()
     
     if not existing_info:
-        # Create new business info if doesn't exist
+        # Create default business info with user-provided updates
         now = datetime.utcnow()
         new_info = BusinessInfo(
             id=str(uuid.uuid4()),
@@ -2047,8 +2047,8 @@ async def update_business_info(
             google_reviews_link=business_data.google_reviews_link or "",
             yelp_reviews_link=business_data.yelp_reviews_link or "",
             facebook_reviews_link=business_data.facebook_reviews_link or "",
-            referral_hospital_name=business_data.referral_hospital_name or "",
-            referral_hospital_phone=business_data.referral_hospital_phone or "",
+            referral_hospital_name=business_data.referral_hospital_name or "VCA SouthPaws",
+            referral_hospital_phone=business_data.referral_hospital_phone or "(703) 752-9100",
             hero_images=business_data.hero_images or [
                 "https://customer-assets.emergentagent.com/job_peacock-pet-care/artifacts/ulwulpak_emilee.png",
                 "https://customer-assets.emergentagent.com/job_peacock-pet-care/artifacts/ej59vv47_vanama.png"
@@ -2056,7 +2056,12 @@ async def update_business_info(
             created_at=now,
             updated_at=now
         )
-        await db.business_info.insert_one(new_info.dict())
+        # Use upsert to prevent duplicates
+        await db.business_info.replace_one(
+            {},  # Empty filter means any document
+            new_info.dict(),
+            upsert=True
+        )
         return new_info
     
     # Update existing business info
