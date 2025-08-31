@@ -73,46 +73,36 @@ const BusinessInfo = () => {
     }
   }, [user, token, authLoading]);
 
-  const checkGoogleConnection = async () => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/api/google-business/settings`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      setGoogleConnected(response.data.is_connected || false);
-    } catch (err) {
-      console.error('Error checking Google connection:', err);
-    }
-  };
-
   const handleGoogleSync = async () => {
     setSyncing(true);
-    setError(null);
-    setSuccess(null);
+    setMessage({ type: '', text: '' });
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/google-business/sync`, 
-        { sync_type: 'business_info' },
-        {
-          headers: { 
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/api/business-info/sync-google`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: businessInfo.hospital_name,
+          phone: businessInfo.phone,
+          address: businessInfo.address
+        })
+      });
 
-      if (response.data.success) {
-        setSuccess('Business information synced to Google Business Profile successfully!');
+      if (response.ok) {
+        setMessage({ type: 'success', text: 'Business information synced to Google Business Profile successfully!' });
+        clearMessage();
       } else {
-        setError(response.data.message || 'Sync failed');
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to sync with Google Business Profile');
       }
     } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to sync to Google Business Profile');
+      setMessage({ type: 'error', text: err.message });
+      clearMessage();
     } finally {
       setSyncing(false);
-      setTimeout(() => {
-        setSuccess(null);
-        setError(null);
-      }, 5000);
     }
   };
 
