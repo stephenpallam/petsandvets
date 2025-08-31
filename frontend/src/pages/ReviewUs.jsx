@@ -230,17 +230,17 @@ const ReviewUs = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 w-full">
               {getConfiguredSocialPlatforms().map((platform, index) => (
-                <div key={index} className="p-4 rounded-lg shadow-md text-center border border-gray-200 hover:border-gray-300 transition-colors bg-white">
+                <div key={index} className="p-4 rounded-lg shadow-md text-center border border-gray-200 hover:border-gray-300 transition-colors bg-white flex flex-col h-full">
                   <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3" style={{ backgroundColor: platform.bgColor }}>
                     <platform.icon className="h-6 w-6" style={{ color: platform.color }} />
                   </div>
                   <h3 className="text-base font-semibold text-gray-900 mb-2">{platform.name}</h3>
-                  <p className="text-gray-600 text-xs leading-relaxed mb-3">{platform.description}</p>
+                  <p className="text-gray-600 text-xs leading-relaxed mb-3 flex-grow">{platform.description}</p>
                   <a
                     href={platform.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-4 py-2 rounded-md font-medium transition-colors duration-200 text-white text-sm"
+                    className="inline-flex items-center justify-center px-4 py-2 rounded-md font-medium transition-colors duration-200 text-white text-sm mt-auto"
                     style={{ backgroundColor: platform.color }}
                     onMouseEnter={(e) => e.target.style.opacity = '0.9'}
                     onMouseLeave={(e) => e.target.style.opacity = '1'}
