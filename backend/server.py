@@ -1780,7 +1780,7 @@ async def update_team_member(
 @api_router.delete("/team-members/{member_id}")
 async def delete_team_member(
     member_id: str, 
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_manager_or_admin_user)
 ):
     """Delete a team member (admin only)"""
     result = await db.team_members.delete_one({"id": member_id})
