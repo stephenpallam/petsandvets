@@ -550,7 +550,7 @@ const UrgentCareBooking = () => {
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Pet Name *
+                      Pet Name {isStaffMember ? "(Optional)" : "*"}
                     </label>
                     <input
                       type="text"
@@ -566,8 +566,8 @@ const UrgentCareBooking = () => {
                         e.target.style.borderColor = '#d1d5db';
                         e.target.style.boxShadow = 'none';
                       }}
-                      placeholder="Enter your pet's name"
-                      required
+                      placeholder="Enter pet's name"
+                      required={!isStaffMember}
                     />
                   </div>
                   
