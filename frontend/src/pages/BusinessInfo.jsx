@@ -18,15 +18,7 @@ const BusinessInfo = () => {
     google_reviews_link: '',
     yelp_reviews_link: '',
     facebook_reviews_link: '',
-    hero_images: [],
-    notification_email: '',
-    email_provider: 'gmail', // 'gmail' or 'sendgrid'
-    // Gmail SMTP fields
-    smtp_email: '',
-    smtp_password: '',
-    // SendGrid fields
-    sendgrid_api_key: '',
-    sender_email: ''
+    hero_images: []
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
