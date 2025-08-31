@@ -168,7 +168,7 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 mt-0.5 flex-shrink-0" style={{ color: '#5bc0db' }} />
-                <p className="text-gray-300 text-sm">{hospitalInfo.address}</p>
+                <p className="text-gray-300 text-sm">{businessInfo?.address || hospitalInfo.address}</p>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="h-5 w-5" style={{ color: '#5bc0db' }} />
