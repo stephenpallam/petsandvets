@@ -827,14 +827,15 @@ const Header = () => {
               );
             })}
             <Link
-              to="/urgent-care"
+              to="/urgent-care-booking"
               onClick={() => setIsMenuOpen(false)}
-              className="block w-full text-center text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
+              className="inline-flex items-center justify-center w-full text-center text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
               style={{ backgroundColor: '#29add3' }}
               onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
               onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
             >
-              Urgent Care
+              Check In Online
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </div>
         </div>
