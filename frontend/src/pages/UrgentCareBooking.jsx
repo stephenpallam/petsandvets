@@ -315,14 +315,23 @@ const UrgentCareBooking = () => {
             {/* Messages */}
             {message.text && (
               <div className={`mb-6 p-4 rounded-lg flex items-center ${
-                message.type === 'success' ? 'bg-blue-50 border border-blue-200' : 'bg-red-50 border border-red-200'
-              }`}>
+                message.type === 'success' ? 'border' : 'bg-red-50 border border-red-200'
+              }`}
+              style={message.type === 'success' ? {
+                backgroundColor: '#e6f7fb',
+                borderColor: '#29add3'
+              } : {}}
+              >
                 <AlertCircle className={`h-5 w-5 mr-3 ${
-                  message.type === 'success' ? 'text-blue-600' : 'text-red-600'
-                }`} />
+                  message.type === 'success' ? '' : 'text-red-600'
+                }`} 
+                style={message.type === 'success' ? { color: primaryColor } : {}}
+                />
                 <p className={`${
-                  message.type === 'success' ? 'text-blue-800' : 'text-red-800'
-                }`}>
+                  message.type === 'success' ? '' : 'text-red-800'
+                }`}
+                style={message.type === 'success' ? { color: '#1e7a8c' } : {}}
+                >
                   {message.text}
                 </p>
               </div>
