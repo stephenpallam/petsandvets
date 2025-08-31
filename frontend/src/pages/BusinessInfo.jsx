@@ -20,15 +20,21 @@ const BusinessInfo = () => {
     facebook_reviews_link: '',
     hero_images: []
   });
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [syncing, setSyncing] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
-  const [googleConnected, setGoogleConnected] = useState(false);
+  const [message, setMessage] = useState({ type: '', text: '' });
+  const [authError, setAuthError] = useState('');
 
   const { user, token, isAdmin, canAccessManager, loading: authLoading } = useAuth();
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+
+  const tabs = [
+    { id: 'business', label: 'Business Info', icon: Building, color: '#29add3' },
+    { id: 'social', label: 'Social Media', icon: Globe, color: '#29add3' },
+    { id: 'reviews', label: 'Review Platforms', icon: Star, color: '#29add3' }
+  ];
 
   const fetchBusinessInfo = async () => {
     try {
