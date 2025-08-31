@@ -206,13 +206,13 @@ const ReachUs = () => {
           <h2 className="font-bold text-white mb-4 text-xl">
             Ready to Visit Us?
           </h2>
-          <p className="mb-8 text-white text-lg">
+          <p className="mb-8" style={{ color: 'white', fontSize: '1rem' }}>
             Call us today to schedule an appointment or get directions to our convenient South Riding location
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href={`tel:${hospitalInfo.phone}`}
-              className="inline-flex items-center justify-center bg-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              className="inline-flex items-center justify-center bg-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               style={{ color: primaryColor }}
               onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
@@ -222,7 +222,7 @@ const ReachUs = () => {
             </a>
             <Link
               to="/our-hours"
-              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = 'white';
                 e.target.style.color = primaryColor;
