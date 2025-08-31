@@ -20,6 +20,7 @@ import {
   Plane
 } from 'lucide-react';
 import { hospitalInfo, services, specialOffers } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 import axios from 'axios';
 
 const Home = () => {
