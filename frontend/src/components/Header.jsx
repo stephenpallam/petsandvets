@@ -158,52 +158,12 @@ const Header = () => {
 
   // Function to get status styling based on status text
   const getStatusStyling = (status) => {
-    switch (status) {
-      case 'Open':
-        return {
-          color: '#10b981', // green-500
-          backgroundColor: 'rgba(16, 185, 129, 0.1)', // green background with opacity
-          padding: '2px 8px',
-          borderRadius: '12px',
-          fontSize: '12px',
-          fontWeight: '600'
-        };
-      case 'Closed':
-        return {
-          color: '#ef4444', // red-500
-          backgroundColor: 'rgba(239, 68, 68, 0.1)', // red background with opacity
-          padding: '2px 8px',
-          borderRadius: '12px',
-          fontSize: '12px',
-          fontWeight: '600'
-        };
-      case 'Opening Soon':
-        return {
-          color: '#f59e0b', // amber-500
-          backgroundColor: 'rgba(245, 158, 11, 0.1)', // amber background with opacity
-          padding: '2px 8px',
-          borderRadius: '12px',
-          fontSize: '12px',
-          fontWeight: '600'
-        };
-      case 'Closing Soon':
-        return {
-          color: '#f97316', // orange-500
-          backgroundColor: 'rgba(249, 115, 22, 0.1)', // orange background with opacity
-          padding: '2px 8px',
-          borderRadius: '12px',
-          fontSize: '12px',
-          fontWeight: '600'
-        };
-      default:
-        return {
-          color: '#6b7280', // gray-500
-          padding: '2px 8px',
-          borderRadius: '12px',
-          fontSize: '12px',
-          fontWeight: '600'
-        };
-    }
+    // Simple white text styling for all statuses against blue background
+    return {
+      color: 'white',
+      fontSize: '12px',
+      fontWeight: '600'
+    };
   };
 
   // Get short address from business info
