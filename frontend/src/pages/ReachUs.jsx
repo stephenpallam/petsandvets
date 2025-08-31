@@ -187,7 +187,7 @@ const ReachUs = () => {
                   style={{ backgroundColor: primaryColor }}
                   onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
                   onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
-                  onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(hospitalInfo.address)}`, '_blank')}
+                  onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(currentBusinessInfo.address)}`, '_blank')}
                 >
                   <Navigation className="inline-block w-4 h-4 mr-2" />
                   Get Directions
