@@ -401,7 +401,8 @@ const Header = () => {
       case 'About':
         return (location.pathname.includes('/our-') && !location.pathname.includes('/our-hours')) || 
                location.pathname.includes('/about') || 
-               location.pathname.includes('/gallery');
+               location.pathname.includes('/gallery') ||
+               location.pathname.includes('/review-us');
       
       case 'Contact':
         return location.pathname.includes('/reach-us') || 
