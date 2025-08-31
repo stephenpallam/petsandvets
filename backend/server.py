@@ -2081,6 +2081,10 @@ async def update_business_info(
         update_data["yelp_reviews_link"] = business_data.yelp_reviews_link
     if business_data.facebook_reviews_link is not None:
         update_data["facebook_reviews_link"] = business_data.facebook_reviews_link
+    if business_data.referral_hospital_name is not None:
+        update_data["referral_hospital_name"] = business_data.referral_hospital_name
+    if business_data.referral_hospital_phone is not None:
+        update_data["referral_hospital_phone"] = business_data.referral_hospital_phone
     if business_data.hero_images is not None:
         update_data["hero_images"] = business_data.hero_images
     
