@@ -10,8 +10,8 @@ import {
   Phone,
   MapPin
 } from 'lucide-react';
-import { hospitalInfo }
-import { useBusinessInfo } from '../mock';
+import { hospitalInfo } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const DogDentalCare = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();
