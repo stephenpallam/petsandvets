@@ -1913,12 +1913,12 @@ const PhotoManagement = () => {
     );
   }
 
-  if (user && !isAdmin()) {
+  if (user && !canAccessManager()) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center bg-white p-8 rounded-lg shadow-sm border border-gray-200">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h1>
-          <p className="text-gray-600 mb-4">Admin privileges are required to manage photos.</p>
+          <p className="text-gray-600 mb-4">Manager or admin privileges are required to manage photos.</p>
           <p className="text-sm text-gray-500">Please contact an administrator if you need access.</p>
         </div>
       </div>
