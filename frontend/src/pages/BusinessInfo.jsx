@@ -11,6 +11,8 @@ const BusinessInfo = () => {
     email: '',
     address: '',
     timezone: 'America/New_York',
+    referral_hospital_name: '',
+    referral_hospital_phone: '',
     facebook_link: '',
     instagram_link: '',
     twitter_link: '',
