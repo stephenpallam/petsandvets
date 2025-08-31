@@ -117,31 +117,28 @@ const BusinessInfo = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
-    setError(null);
-    setSuccess(null);
-    
+    setMessage({ type: '', text: '' });
+
     try {
       const response = await fetch(`${API_BASE_URL}/api/business-info`, {
         method: 'PUT',
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(businessInfo)
       });
 
       if (response.ok) {
-        const updatedInfo = await response.json();
-        setBusinessInfo(updatedInfo);
-        setSuccess('Business information updated successfully!');
-        // Clear success message after 3 seconds
-        setTimeout(() => setSuccess(null), 3000);
+        setMessage({ type: 'success', text: 'Business information updated successfully!' });
+        clearMessage();
       } else {
         const errorData = await response.json();
         throw new Error(errorData.detail || 'Failed to update business information');
       }
     } catch (err) {
-      setError(err.message);
+      setMessage({ type: 'error', text: err.message });
+      clearMessage();
     } finally {
       setSaving(false);
     }
