@@ -165,7 +165,7 @@ const Footer = () => {
                 onMouseEnter={(e) => e.target.style.color = '#5bc0db'}
                 onMouseLeave={(e) => e.target.style.color = '#9ca3af'}
               >
-                <Twitter className="h-5 w-5" />
+                <X className="h-5 w-5" />
               </a>
             </div>
           </div>
