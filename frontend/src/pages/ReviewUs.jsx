@@ -156,31 +156,25 @@ const ReviewUs = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="bg-white">
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
-          <h1 className="text-xl font-bold text-gray-900 mb-6">
-            Review Us
-          </h1>
-          <div className="mb-6">
-            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
-              Your Voice Matters to Us
-            </span>
+      {/* Hero Section with Review Platforms */}
+      <section className="bg-white py-6">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+            <h1 className="text-xl font-bold text-gray-900 mb-6">
+              Review Us
+            </h1>
+            <div className="mb-6">
+              <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+                Your Voice Matters to Us
+              </span>
+            </div>
+            <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto mb-8">
+              Every review helps us serve your pets better and guides other pet owners to quality care.
+            </p>
           </div>
-          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
-            Every review helps us serve your pets better and guides other pet owners to quality care.
-          </p>
-        </div>
-      </section>
-
-      {/* Review Platforms */}
-      {reviewPlatforms.length > 0 ? (
-        <section className="bg-[#f8f9fa] py-6">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-8 text-center">
-              Leave a Review on Your Preferred Platform
-            </h2>
-            
+          
+          {/* Review Platforms - moved here */}
+          {reviewPlatforms.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full">
               {reviewPlatforms.map((platform, index) => (
                 <div key={index} className="p-4 rounded-lg shadow-md text-center border border-gray-200 hover:border-gray-300 transition-colors bg-white">
@@ -204,21 +198,17 @@ const ReviewUs = () => {
                 </div>
               ))}
             </div>
-          </div>
-        </section>
-      ) : (
-        <section className="bg-[#f8f9fa] py-6">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div className="p-8 rounded-xl bg-white">
+          ) : (
+            <div className="p-8 rounded-xl bg-gray-50">
               <MessageSquare className="h-12 w-12 mx-auto mb-4 text-gray-400" />
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Review Links Not Configured</h3>
               <p className="text-gray-600">
                 Review platform links haven't been set up yet. Please contact us directly to share your feedback.
               </p>
             </div>
-          </div>
-        </section>
-      )}
+          )}
+        </div>
+      </section>
 
       {/* Social Media Follow Section */}
       {getConfiguredSocialPlatforms().length > 0 && (
