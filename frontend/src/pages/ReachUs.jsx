@@ -11,9 +11,36 @@ import {
 import { hospitalInfo } from '../mock';
 
 const ReachUs = () => {
+  const [businessInfo, setBusinessInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  
   const primaryColor = '#29add3';
   const primaryLight = '#5bc0db';
   const primaryBg = '#e6f7fb';
+
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL || window.location.origin;
+
+  // Fetch business information
+  useEffect(() => {
+    const fetchBusinessInfo = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/business-info`);
+        if (response.ok) {
+          const data = await response.json();
+          setBusinessInfo(data);
+        }
+      } catch (error) {
+        console.error('Error fetching business info:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBusinessInfo();
+  }, []);
+
+  // Use dynamic business info or fallback to static
+  const currentBusinessInfo = businessInfo || hospitalInfo;
 
   const quickInfo = [
     {
