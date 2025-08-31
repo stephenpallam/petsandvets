@@ -97,13 +97,18 @@ const UrgentCareBooking = () => {
       if (data.available) {
         setTimeSlots(data.slots);
         setAvailableToday(true);
+        setTodayHours(data.hours);
+        setMessage({ type: '', text: '' });
       } else {
         setAvailableToday(false);
-        setMessage({ type: 'error', text: data.message });
+        setTimeSlots([]);
+        setTodayHours(null);
+        setMessage({ type: 'error', text: data.message || 'Urgent Care is not available today' });
       }
     } catch (error) {
       console.error('Error fetching time slots:', error);
-      setMessage({ type: 'error', text: 'Unable to load available times' });
+      setAvailableToday(false);
+      setMessage({ type: 'error', text: 'Unable to load available times. Please try again or call us directly.' });
     } finally {
       setLoading(false);
     }
