@@ -368,6 +368,51 @@ const BusinessInfo = () => {
               </div>
             </div>
 
+            {/* Review Platform Links */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">
+                Review Platform Links
+              </h3>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <Globe className="h-4 w-4 inline mr-2 text-blue-500" />
+                    Google Reviews URL
+                  </label>
+                  <input
+                    type="url"
+                    name="google_reviews_link"
+                    value={businessInfo.google_reviews_link}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="https://g.page/r/..."
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Link to your Google Business reviews page
+                  </p>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <ExternalLink className="h-4 w-4 inline mr-2 text-red-600" />
+                    Yelp Reviews URL
+                  </label>
+                  <input
+                    type="url"
+                    name="yelp_reviews_link"
+                    value={businessInfo.yelp_reviews_link}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="https://www.yelp.com/biz/..."
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Link to your Yelp business reviews page
+                  </p>
+                </div>
+              </div>
+            </div>
+
             {/* Submit Button */}
             <div className="flex items-center space-x-4 pt-6 border-t border-gray-200">
               {/* Google Sync Section */}
