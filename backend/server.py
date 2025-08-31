@@ -1691,7 +1691,7 @@ async def list_files(category: str, current_user: User = Depends(get_manager_or_
 async def delete_file(
     category: str, 
     filename: str, 
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_manager_or_admin_user)
 ):
     """Delete a file from specified category (admin only)"""
     valid_categories = ["homepageslider", "team", "facility"]
