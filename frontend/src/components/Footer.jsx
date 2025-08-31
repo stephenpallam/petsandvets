@@ -173,12 +173,12 @@ const Footer = () => {
               <div className="flex items-center space-x-3">
                 <Phone className="h-5 w-5" style={{ color: '#5bc0db' }} />
                 <a 
-                  href={`tel:${hospitalInfo.phone}`} 
+                  href={`tel:${businessInfo?.phone || hospitalInfo.phone}`} 
                   className="text-gray-300 transition-colors text-sm"
                   onMouseEnter={(e) => e.target.style.color = '#5bc0db'}
                   onMouseLeave={(e) => e.target.style.color = '#d1d5db'}
                 >
-                  {hospitalInfo.phone}
+                  {businessInfo?.phone || hospitalInfo.phone}
                 </a>
               </div>
               <div className="flex items-center space-x-3">
