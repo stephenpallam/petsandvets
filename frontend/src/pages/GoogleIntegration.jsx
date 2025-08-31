@@ -29,7 +29,7 @@ const GoogleIntegration = () => {
   const [message, setMessage] = useState({ type: '', text: '' });
   const [showCredentialsForm, setShowCredentialsForm] = useState(false);
   
-  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
   useEffect(() => {
     // Wait for auth to finish loading before checking permissions
