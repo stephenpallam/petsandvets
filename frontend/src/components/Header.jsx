@@ -546,7 +546,10 @@ const Header = () => {
               </div>
               <div className="flex items-center space-x-1">
                 <Clock className="h-3 w-3" />
-                <span>General Practice: {getGeneralPracticeStatus()}</span>
+                <span>GP:</span>
+                <span style={{...getStatusStyling(getGeneralPracticeStatus()), fontSize: '10px', padding: '1px 6px'}}>
+                  {getGeneralPracticeStatus()}
+                </span>
               </div>
             </div>
             
@@ -558,7 +561,10 @@ const Header = () => {
               </div>
               <div className="flex items-center space-x-1">
                 <Clock className="h-3 w-3" />
-                <span>Urgent Care: {getUrgentCareStatus()}</span>
+                <span>UC:</span>
+                <span style={{...getStatusStyling(getUrgentCareStatus()), fontSize: '10px', padding: '1px 6px'}}>
+                  {getUrgentCareStatus()}
+                </span>
               </div>
             </div>
           </div>
