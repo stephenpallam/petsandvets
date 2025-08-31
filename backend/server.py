@@ -1237,18 +1237,34 @@ async def get_available_time_slots(date: str):
     try:
         from datetime import datetime, timedelta
         import re
+        import pytz
         
-        # Only allow today's date
-        today_str = datetime.now().strftime("%Y-%m-%d")
-        if date != today_str:
+        # Get business timezone from business info
+        business_info = await db.business_info.find_one()
+        business_timezone_str = "America/New_York"  # Default timezone
+        if business_info and business_info.get("timezone"):
+            business_timezone_str = business_info["timezone"]
+        
+        # Set up timezone
+        business_tz = pytz.timezone(business_timezone_str)
+        utc_tz = pytz.UTC
+        
+        # Get current time in business timezone
+        utc_now = datetime.now(utc_tz)
+        business_now = utc_now.astimezone(business_tz)
+        business_today_str = business_now.strftime("%Y-%m-%d")
+        
+        # Only allow today's date (in business timezone)
+        if date != business_today_str:
             return {
                 "available": False, 
                 "message": "Appointments are only available for today. For future appointments, please call us directly.",
-                "date": date
+                "date": date,
+                "business_timezone": business_timezone_str,
+                "business_time": business_now.strftime("%I:%M %p %Z")
             }
         
-        today = datetime.now()
-        day_name = today.strftime("%A").lower()
+        day_name = business_now.strftime("%A").lower()
         
         # Check for special holidays first
         special_hours = await db.special_hours.find({"date": date}).to_list(length=None)
@@ -1261,7 +1277,8 @@ async def get_available_time_slots(date: str):
                 return {
                     "available": False,
                     "message": f"Urgent Care is closed today ({special_hour.get('name', 'Special Holiday')}). Please call us for emergency assistance.",
-                    "date": date
+                    "date": date,
+                    "business_timezone": business_timezone_str
                 }
             urgent_care_hours = special_hour.get("urgent_care")
         else:
@@ -1271,23 +1288,18 @@ async def get_available_time_slots(date: str):
                 return {
                     "available": False,
                     "message": "Urgent care hours not configured. Please call us to schedule an appointment.",
-                    "date": date
+                    "date": date,
+                    "business_timezone": business_timezone_str
                 }
             urgent_care_hours = regular_hours.get(day_name)
         
-        if not urgent_care_hours or urgent_care_hours.get("closed", False):
-            return {
-                "available": False,
-                "message": "Urgent Care is closed today. Please call us for emergency assistance.",
-                "date": date
-            }
-        
         # Check if urgent care is open today
-        if not urgent_care_hours.get("is_open", True):
+        if not urgent_care_hours or not urgent_care_hours.get("is_open", True):
             return {
                 "available": False,
                 "message": "Urgent Care is closed today. Please call us for emergency assistance.",
-                "date": date
+                "date": date,
+                "business_timezone": business_timezone_str
             }
         
         # Parse opening and closing times
@@ -1298,10 +1310,11 @@ async def get_available_time_slots(date: str):
             return {
                 "available": False,
                 "message": "Urgent Care hours not properly configured. Please call us to schedule an appointment.",
-                "date": date
+                "date": date,
+                "business_timezone": business_timezone_str
             }
         
-        # Convert time strings to datetime objects
+        # Convert time strings to datetime objects in business timezone
         def parse_time(time_str):
             # Handle formats like "09:00", "9:00 AM", "09:00 AM", etc.
             time_str = time_str.strip().upper()
@@ -1325,7 +1338,9 @@ async def get_available_time_slots(date: str):
             elif am_pm == "AM" and hour == 12:
                 hour = 0
             
-            return today.replace(hour=hour, minute=minute, second=0, microsecond=0)
+            # Create timezone-aware datetime
+            business_date = business_now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+            return business_date
         
         try:
             open_time = parse_time(open_time_str)
@@ -1334,12 +1349,12 @@ async def get_available_time_slots(date: str):
             return {
                 "available": False,
                 "message": "Invalid time format in urgent care hours. Please call us to schedule an appointment.",
-                "date": date
+                "date": date,
+                "business_timezone": business_timezone_str
             }
         
-        # Ensure we don't start before current time
-        current_time = datetime.now()
-        start_time = max(open_time, current_time)
+        # Ensure we don't start before current time (in business timezone)
+        start_time = max(open_time, business_now)
         
         # Round start time to next 30-minute interval
         if start_time.minute % 30 != 0:
@@ -1355,14 +1370,23 @@ async def get_available_time_slots(date: str):
             return {
                 "available": False,
                 "message": "No more appointments available today. Urgent Care is closing soon. Please call us for emergency assistance.",
-                "date": date
+                "date": date,
+                "business_timezone": business_timezone_str,
+                "current_business_time": business_now.strftime("%I:%M %p %Z")
             }
         
         # Get existing appointments for today to exclude booked slots
+        # Convert business date range to UTC for database query
+        business_start_of_day = business_now.replace(hour=0, minute=0, second=0, microsecond=0)
+        business_end_of_day = business_start_of_day + timedelta(days=1)
+        
+        utc_start_of_day = business_start_of_day.astimezone(utc_tz)
+        utc_end_of_day = business_end_of_day.astimezone(utc_tz)
+        
         existing_appointments = await db.urgent_care_appointments.find({
             "appointment_time": {
-                "$gte": today.strftime("%Y-%m-%dT00:00:00"),
-                "$lt": (today + timedelta(days=1)).strftime("%Y-%m-%dT00:00:00")
+                "$gte": utc_start_of_day.strftime("%Y-%m-%dT%H:%M:%S"),
+                "$lt": utc_end_of_day.strftime("%Y-%m-%dT%H:%M:%S")
             },
             "status": {"$ne": "cancelled"}  # Exclude cancelled appointments
         }).to_list(length=None)
@@ -1371,10 +1395,18 @@ async def get_available_time_slots(date: str):
         for appointment in existing_appointments:
             appointment_time = appointment.get("appointment_time", "")
             if appointment_time:
-                # Extract just time portion for comparison
-                if "T" in appointment_time:
-                    time_part = appointment_time.split("T")[1][:5]  # Get HH:MM
-                    booked_slots.add(time_part)
+                try:
+                    # Parse appointment time and convert to business timezone
+                    if "T" in appointment_time:
+                        appt_dt = datetime.fromisoformat(appointment_time.replace('Z', '+00:00'))
+                        if appt_dt.tzinfo is None:
+                            appt_dt = utc_tz.localize(appt_dt)
+                        appt_business_time = appt_dt.astimezone(business_tz)
+                        time_part = appt_business_time.strftime("%H:%M")
+                        booked_slots.add(time_part)
+                except Exception as e:
+                    print(f"Error parsing appointment time {appointment_time}: {e}")
+                    continue
         
         # Generate available time slots
         available_slots = []
@@ -1387,8 +1419,9 @@ async def get_available_time_slots(date: str):
             if slot_time_str not in booked_slots:
                 available_slots.append({
                     "time": slot_time_str,
-                    "value": current_slot.strftime("%Y-%m-%dT%H:%M"),
-                    "display": current_slot.strftime("%I:%M %p").lstrip('0')  # Format like "9:00 AM"
+                    "value": current_slot.astimezone(utc_tz).strftime("%Y-%m-%dT%H:%M"),  # Store as UTC
+                    "display": current_slot.strftime("%I:%M %p").lstrip('0'),  # Display in business time
+                    "business_time": current_slot.strftime("%I:%M %p %Z")
                 })
             
             current_slot += timedelta(minutes=30)
@@ -1397,13 +1430,17 @@ async def get_available_time_slots(date: str):
             return {
                 "available": False,
                 "message": "All appointment slots are booked for today. Please call us to check for cancellations or emergency assistance.",
-                "date": date
+                "date": date,
+                "business_timezone": business_timezone_str,
+                "current_business_time": business_now.strftime("%I:%M %p %Z")
             }
         
         return {
             "available": True,
             "slots": available_slots,
             "date": date,
+            "business_timezone": business_timezone_str,
+            "current_business_time": business_now.strftime("%I:%M %p %Z"),
             "hours": {
                 "open": open_time.strftime("%I:%M %p").lstrip('0'),
                 "close": close_time.strftime("%I:%M %p").lstrip('0')
@@ -1411,7 +1448,11 @@ async def get_available_time_slots(date: str):
         }
         
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error generating time slots: {str(e)}")
+        return {
+            "available": False,
+            "message": f"Error generating time slots: {str(e)}",
+            "date": date
+        }
 
 
 def generate_pdf(form_data: PatientRegistrationForm) -> bytes:
