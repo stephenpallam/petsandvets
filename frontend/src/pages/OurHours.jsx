@@ -141,11 +141,6 @@ const OurHours = () => {
               Always Here When You Need Us
             </span>
           </div>
-          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto mb-8">
-            Flexible scheduling with both general practice and urgent care services. 
-            Quality veterinary care on your schedule with extended hours to meet your pet's needs 
-            when it's most convenient for your family.
-          </p>
         </div>
       </section>
 
