@@ -1439,7 +1439,7 @@ async def create_review(review_data: ReviewCreate, current_user: User = Depends(
 async def update_review(
     review_id: str, 
     review_data: ReviewUpdate, 
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_manager_or_admin_user)
 ):
     """Update a review (admin only)"""
     existing_review = await db.reviews.find_one({"id": review_id})
