@@ -4,7 +4,7 @@ import { Clock, Calendar, Plus, Edit2, Trash2, Save, AlertCircle, CheckCircle, E
 import axios from 'axios';
 
 const ConfigureHours = () => {
-  const { user, token, isAdmin, loading: authLoading } = useAuth();
+  const { user, token, isAdmin, canAccessManager, loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState('general');
   const [hospitalHours, setHospitalHours] = useState({
     monday: { is_open: true, open_time: '09:00', close_time: '18:00' },
