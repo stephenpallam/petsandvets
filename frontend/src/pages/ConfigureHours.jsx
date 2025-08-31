@@ -86,15 +86,15 @@ const ConfigureHours = () => {
       return;
     }
 
-    if (user && isAdmin()) {
+    if (user && canAccessManager()) {
       setAuthError(null);
       setPageLoading(false);
-    } else if (user && !isAdmin()) {
-      setAuthError('Access denied. Admin privileges required.');
+    } else if (user && !canAccessManager()) {
+      setAuthError('Access denied. Manager or admin privileges required.');
       setPageLoading(false);
     } else if (!token) {
       // Only show error if there's definitely no token
-      setAuthError('You need administrator privileges to configure hospital hours.');
+      setAuthError('You need manager or administrator privileges to configure hospital hours.');
       setPageLoading(false);
     }
   }, [user, token, authLoading]);
