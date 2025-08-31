@@ -370,10 +370,15 @@ const BusinessInfo = () => {
                           <option value="America/Edmonton">Mountain Time - Edmonton</option>
                           <option value="America/Vancouver">Pacific Time - Vancouver</option>
                         </optgroup>
-                        <optgroup label="Common International">
+                        <optgroup label="India & Asia">
+                          <option value="Asia/Kolkata">India Standard Time (IST)</option>
+                          <option value="Asia/Tokyo">Tokyo (JST)</option>
+                          <option value="Asia/Singapore">Singapore (SGT)</option>
+                          <option value="Asia/Dubai">Dubai (GST)</option>
+                        </optgroup>
+                        <optgroup label="Europe & Others">
                           <option value="Europe/London">London (GMT/BST)</option>
                           <option value="Europe/Paris">Paris (CET/CEST)</option>
-                          <option value="Asia/Tokyo">Tokyo (JST)</option>
                           <option value="Australia/Sydney">Sydney (AEST/AEDT)</option>
                         </optgroup>
                       </select>
