@@ -1983,7 +1983,7 @@ async def get_business_info():
     business_info = await db.business_info.find_one()
     
     if not business_info:
-        # Return default values if no business info exists
+        # Create default business info if none exists
         now = datetime.utcnow()
         default_info = BusinessInfo(
             id=str(uuid.uuid4()),
@@ -2008,8 +2008,12 @@ async def get_business_info():
             created_at=now,
             updated_at=now
         )
-        # Save default to database
-        await db.business_info.insert_one(default_info.dict())
+        # Use upsert to prevent duplicates
+        await db.business_info.replace_one(
+            {},  # Empty filter means any document
+            default_info.dict(),
+            upsert=True
+        )
         return default_info
     
     return BusinessInfo(**business_info)
