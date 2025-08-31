@@ -561,6 +561,8 @@ class BusinessInfo(BaseModel):
     facebook_link: Optional[str] = ""
     instagram_link: Optional[str] = ""
     twitter_link: Optional[str] = ""
+    google_reviews_link: Optional[str] = ""
+    yelp_reviews_link: Optional[str] = ""
     hero_images: Optional[List[str]] = []  # URLs for home page slider images
     created_at: datetime
     updated_at: datetime
@@ -575,6 +577,8 @@ class BusinessInfoUpdate(BaseModel):
     facebook_link: Optional[str] = None
     instagram_link: Optional[str] = None
     twitter_link: Optional[str] = None
+    google_reviews_link: Optional[str] = None
+    yelp_reviews_link: Optional[str] = None
     hero_images: Optional[List[str]] = None
 
 
