@@ -1118,6 +1118,493 @@ def test_time_slots_exclude_booked():
         return False
 
 # ============================================================================
+# APPOINTMENT EDIT FUNCTIONALITY TESTS - NEW FEATURES
+# ============================================================================
+
+def test_update_appointment_put_admin():
+    """Test PUT /urgent-care-appointments/{id} with admin authentication"""
+    if not admin_token:
+        results.log_failure("Update Appointment (PUT - Admin)", "No admin token available")
+        return False
+    
+    try:
+        # First create an appointment to update
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=15)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T14:30"
+        
+        original_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "Original",
+            "owner_last_name": "Owner",
+            "email": "original@test.com",
+            "phone": "(555) 111-2222",
+            "pet_name": "OriginalPet",
+            "pet_type": "dog",
+            "reason_for_visit": "Original reason for visit",
+            "primary_vet_hospital": "Original Hospital",
+            "how_heard_about_us": "Original source"
+        }
+        
+        # Create appointment
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=original_data)
+        if response.status_code != 200:
+            results.log_failure("Update Appointment (PUT - Admin - Setup)", f"Failed to create appointment: {response.status_code}")
+            return False
+        
+        appointment_id = response.json()["id"]
+        
+        # Update appointment data
+        updated_data = {
+            "appointment_time": f"{future_date}T15:00",  # Changed time
+            "owner_first_name": "Updated",  # Changed name
+            "owner_last_name": "NewOwner",  # Changed last name
+            "email": "updated@test.com",  # Changed email
+            "phone": "(555) 333-4444",  # Changed phone
+            "pet_name": "UpdatedPet",  # Changed pet name
+            "pet_type": "cat",  # Changed pet type
+            "reason_for_visit": "Updated reason for urgent care visit",  # Changed reason
+            "primary_vet_hospital": "Updated Veterinary Hospital",  # Changed hospital
+            "how_heard_about_us": "Updated referral source"  # Changed source
+        }
+        
+        # Update with admin token
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.put(f"{API_URL}/urgent-care-appointments/{appointment_id}", json=updated_data, headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("id") == appointment_id and
+                data.get("owner_first_name") == "Updated" and
+                data.get("owner_last_name") == "NewOwner" and
+                data.get("email") == "updated@test.com" and
+                data.get("phone") == "(555) 333-4444" and
+                data.get("pet_name") == "UpdatedPet" and
+                data.get("pet_type") == "cat" and
+                data.get("reason_for_visit") == "Updated reason for urgent care visit" and
+                data.get("appointment_time") == f"{future_date}T15:00" and
+                "updated_at" in data):
+                results.log_success("Update Appointment (PUT - Admin - All Fields)")
+                return True
+        results.log_failure("Update Appointment (PUT - Admin)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Appointment (PUT - Admin)", str(e))
+        return False
+
+def test_update_appointment_put_manager():
+    """Test PUT /urgent-care-appointments/{id} with manager authentication"""
+    if not manager_token:
+        results.log_failure("Update Appointment (PUT - Manager)", "No manager token available")
+        return False
+    
+    try:
+        # First create an appointment to update
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=16)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T16:00"
+        
+        original_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "Manager",
+            "owner_last_name": "TestOwner",
+            "email": "manager@test.com",
+            "phone": "(555) 555-6666",
+            "pet_name": "ManagerPet",
+            "pet_type": "dog",
+            "reason_for_visit": "Manager test appointment",
+            "primary_vet_hospital": "Manager Hospital",
+            "how_heard_about_us": "Manager source"
+        }
+        
+        # Create appointment
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=original_data)
+        if response.status_code != 200:
+            results.log_failure("Update Appointment (PUT - Manager - Setup)", f"Failed to create appointment: {response.status_code}")
+            return False
+        
+        appointment_id = response.json()["id"]
+        
+        # Update appointment data (partial update)
+        updated_data = {
+            "appointment_time": appointment_time,  # Keep same time
+            "owner_first_name": "UpdatedManager",  # Changed name
+            "owner_last_name": "TestOwner",  # Keep same
+            "email": "updated.manager@test.com",  # Changed email
+            "phone": "(555) 555-6666",  # Keep same
+            "pet_name": "UpdatedManagerPet",  # Changed pet name
+            "pet_type": "cat",  # Changed pet type
+            "reason_for_visit": "Updated manager test appointment",  # Changed reason
+            "primary_vet_hospital": "Manager Hospital",  # Keep same
+            "how_heard_about_us": "Manager source"  # Keep same
+        }
+        
+        # Update with manager token
+        headers = {"Authorization": f"Bearer {manager_token}"}
+        response = requests.put(f"{API_URL}/urgent-care-appointments/{appointment_id}", json=updated_data, headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("id") == appointment_id and
+                data.get("owner_first_name") == "UpdatedManager" and
+                data.get("email") == "updated.manager@test.com" and
+                data.get("pet_name") == "UpdatedManagerPet" and
+                data.get("pet_type") == "cat" and
+                data.get("reason_for_visit") == "Updated manager test appointment"):
+                results.log_success("Update Appointment (PUT - Manager - Staff Access)")
+                return True
+        results.log_failure("Update Appointment (PUT - Manager)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Appointment (PUT - Manager)", str(e))
+        return False
+
+def test_update_appointment_put_technician():
+    """Test PUT /urgent-care-appointments/{id} with technician authentication"""
+    if not technician_token:
+        results.log_failure("Update Appointment (PUT - Technician)", "No technician token available")
+        return False
+    
+    try:
+        # First create an appointment to update
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=17)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T17:30"
+        
+        original_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "Technician",
+            "owner_last_name": "TestOwner",
+            "email": "technician@test.com",
+            "phone": "(555) 777-8888",
+            "pet_name": "TechPet",
+            "pet_type": "dog",
+            "reason_for_visit": "Technician test appointment",
+            "primary_vet_hospital": "Tech Hospital",
+            "how_heard_about_us": "Tech source"
+        }
+        
+        # Create appointment
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=original_data)
+        if response.status_code != 200:
+            results.log_failure("Update Appointment (PUT - Technician - Setup)", f"Failed to create appointment: {response.status_code}")
+            return False
+        
+        appointment_id = response.json()["id"]
+        
+        # Update appointment data
+        updated_data = {
+            "appointment_time": appointment_time,  # Keep same time
+            "owner_first_name": "UpdatedTechnician",  # Changed name
+            "owner_last_name": "TestOwner",  # Keep same
+            "email": "updated.technician@test.com",  # Changed email
+            "phone": "(555) 777-8888",  # Keep same
+            "pet_name": "UpdatedTechPet",  # Changed pet name
+            "pet_type": "cat",  # Changed pet type
+            "reason_for_visit": "Updated technician test appointment",  # Changed reason
+            "primary_vet_hospital": "Tech Hospital",  # Keep same
+            "how_heard_about_us": "Tech source"  # Keep same
+        }
+        
+        # Update with technician token
+        headers = {"Authorization": f"Bearer {technician_token}"}
+        response = requests.put(f"{API_URL}/urgent-care-appointments/{appointment_id}", json=updated_data, headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("id") == appointment_id and
+                data.get("owner_first_name") == "UpdatedTechnician" and
+                data.get("email") == "updated.technician@test.com" and
+                data.get("pet_name") == "UpdatedTechPet" and
+                data.get("pet_type") == "cat"):
+                results.log_success("Update Appointment (PUT - Technician - Staff Access)")
+                return True
+        results.log_failure("Update Appointment (PUT - Technician)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Appointment (PUT - Technician)", str(e))
+        return False
+
+def test_update_appointment_put_regular_user():
+    """Test PUT /urgent-care-appointments/{id} with regular user (should fail)"""
+    if not user_token:
+        results.log_failure("Update Appointment (PUT - Regular User - Should Fail)", "No user token available")
+        return False
+    
+    try:
+        # First create an appointment to attempt update
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=18)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T18:00"
+        
+        original_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "RegularUser",
+            "owner_last_name": "TestOwner",
+            "email": "regular@test.com",
+            "phone": "(555) 999-0000",
+            "pet_name": "RegularPet",
+            "pet_type": "dog",
+            "reason_for_visit": "Regular user test appointment",
+            "primary_vet_hospital": "Regular Hospital",
+            "how_heard_about_us": "Regular source"
+        }
+        
+        # Create appointment
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=original_data)
+        if response.status_code != 200:
+            results.log_failure("Update Appointment (PUT - Regular User - Setup)", f"Failed to create appointment: {response.status_code}")
+            return False
+        
+        appointment_id = response.json()["id"]
+        
+        # Try to update with regular user token (should fail)
+        updated_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "ShouldNotUpdate",
+            "owner_last_name": "TestOwner",
+            "email": "shouldnot@test.com",
+            "phone": "(555) 999-0000",
+            "pet_name": "ShouldNotUpdatePet",
+            "pet_type": "cat",
+            "reason_for_visit": "Should not be able to update",
+            "primary_vet_hospital": "Regular Hospital",
+            "how_heard_about_us": "Regular source"
+        }
+        
+        headers = {"Authorization": f"Bearer {user_token}"}
+        response = requests.put(f"{API_URL}/urgent-care-appointments/{appointment_id}", json=updated_data, headers=headers)
+        
+        if response.status_code == 403:
+            results.log_success("Update Appointment (PUT - Regular User - Correctly Forbidden)")
+            return True
+        results.log_failure("Update Appointment (PUT - Regular User)", f"Expected 403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Appointment (PUT - Regular User)", str(e))
+        return False
+
+def test_update_appointment_put_nonexistent_id():
+    """Test PUT /urgent-care-appointments/{id} with non-existent appointment ID"""
+    if not admin_token:
+        results.log_failure("Update Appointment (PUT - Non-existent ID)", "No admin token available")
+        return False
+    
+    try:
+        fake_id = "non-existent-appointment-id-12345"
+        updated_data = {
+            "appointment_time": "2025-12-31T23:59",
+            "owner_first_name": "NonExistent",
+            "owner_last_name": "Appointment",
+            "email": "nonexistent@test.com",
+            "phone": "(555) 000-0000",
+            "pet_name": "GhostPet",
+            "pet_type": "dog",
+            "reason_for_visit": "This should not work",
+            "primary_vet_hospital": "Ghost Hospital",
+            "how_heard_about_us": "Ghost source"
+        }
+        
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.put(f"{API_URL}/urgent-care-appointments/{fake_id}", json=updated_data, headers=headers)
+        
+        if response.status_code == 404:
+            results.log_success("Update Appointment (PUT - Non-existent ID - 404)")
+            return True
+        results.log_failure("Update Appointment (PUT - Non-existent ID)", f"Expected 404, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Appointment (PUT - Non-existent ID)", str(e))
+        return False
+
+def test_update_appointment_put_no_auth():
+    """Test PUT /urgent-care-appointments/{id} without authentication"""
+    try:
+        # First create an appointment to attempt update
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=19)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T19:00"
+        
+        original_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "NoAuth",
+            "owner_last_name": "TestOwner",
+            "email": "noauth@test.com",
+            "phone": "(555) 000-1111",
+            "pet_name": "NoAuthPet",
+            "pet_type": "dog",
+            "reason_for_visit": "No auth test appointment",
+            "primary_vet_hospital": "No Auth Hospital",
+            "how_heard_about_us": "No auth source"
+        }
+        
+        # Create appointment
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=original_data)
+        if response.status_code != 200:
+            results.log_failure("Update Appointment (PUT - No Auth - Setup)", f"Failed to create appointment: {response.status_code}")
+            return False
+        
+        appointment_id = response.json()["id"]
+        
+        # Try to update without authentication
+        updated_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "ShouldNotUpdate",
+            "owner_last_name": "TestOwner",
+            "email": "shouldnot@test.com",
+            "phone": "(555) 000-1111",
+            "pet_name": "ShouldNotUpdatePet",
+            "pet_type": "cat",
+            "reason_for_visit": "Should not be able to update without auth",
+            "primary_vet_hospital": "No Auth Hospital",
+            "how_heard_about_us": "No auth source"
+        }
+        
+        # No headers (no authentication)
+        response = requests.put(f"{API_URL}/urgent-care-appointments/{appointment_id}", json=updated_data)
+        
+        if response.status_code in [401, 403]:
+            results.log_success("Update Appointment (PUT - No Auth - Correctly Rejected)")
+            return True
+        results.log_failure("Update Appointment (PUT - No Auth)", f"Expected 401/403, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Appointment (PUT - No Auth)", str(e))
+        return False
+
+def test_update_appointment_put_invalid_data():
+    """Test PUT /urgent-care-appointments/{id} with invalid data formats"""
+    if not admin_token:
+        results.log_failure("Update Appointment (PUT - Invalid Data)", "No admin token available")
+        return False
+    
+    try:
+        # First create an appointment to update
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=20)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T20:00"
+        
+        original_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "ValidData",
+            "owner_last_name": "TestOwner",
+            "email": "valid@test.com",
+            "phone": "(555) 111-2222",
+            "pet_name": "ValidPet",
+            "pet_type": "dog",
+            "reason_for_visit": "Valid test appointment",
+            "primary_vet_hospital": "Valid Hospital",
+            "how_heard_about_us": "Valid source"
+        }
+        
+        # Create appointment
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=original_data)
+        if response.status_code != 200:
+            results.log_failure("Update Appointment (PUT - Invalid Data - Setup)", f"Failed to create appointment: {response.status_code}")
+            return False
+        
+        appointment_id = response.json()["id"]
+        
+        # Try to update with invalid data (missing required fields)
+        invalid_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "InvalidData",
+            # Missing required fields like owner_last_name, email, etc.
+        }
+        
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.put(f"{API_URL}/urgent-care-appointments/{appointment_id}", json=invalid_data, headers=headers)
+        
+        if response.status_code == 422:  # Validation error
+            results.log_success("Update Appointment (PUT - Invalid Data - Validation Error)")
+            return True
+        results.log_failure("Update Appointment (PUT - Invalid Data)", f"Expected 422, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Appointment (PUT - Invalid Data)", str(e))
+        return False
+
+def test_update_appointment_put_data_persistence():
+    """Test PUT /urgent-care-appointments/{id} data persistence by fetching after update"""
+    if not admin_token:
+        results.log_failure("Update Appointment (PUT - Data Persistence)", "No admin token available")
+        return False
+    
+    try:
+        # First create an appointment to update
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=21)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T21:00"
+        
+        original_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "Persistence",
+            "owner_last_name": "TestOwner",
+            "email": "persistence@test.com",
+            "phone": "(555) 222-3333",
+            "pet_name": "PersistencePet",
+            "pet_type": "dog",
+            "reason_for_visit": "Persistence test appointment",
+            "primary_vet_hospital": "Persistence Hospital",
+            "how_heard_about_us": "Persistence source"
+        }
+        
+        # Create appointment
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=original_data)
+        if response.status_code != 200:
+            results.log_failure("Update Appointment (PUT - Data Persistence - Setup)", f"Failed to create appointment: {response.status_code}")
+            return False
+        
+        appointment_id = response.json()["id"]
+        original_created_at = response.json().get("created_at")
+        
+        # Update appointment data
+        updated_data = {
+            "appointment_time": f"{future_date}T21:30",  # Changed time
+            "owner_first_name": "UpdatedPersistence",  # Changed name
+            "owner_last_name": "UpdatedTestOwner",  # Changed last name
+            "email": "updated.persistence@test.com",  # Changed email
+            "phone": "(555) 444-5555",  # Changed phone
+            "pet_name": "UpdatedPersistencePet",  # Changed pet name
+            "pet_type": "cat",  # Changed pet type
+            "reason_for_visit": "Updated persistence test appointment",  # Changed reason
+            "primary_vet_hospital": "Updated Persistence Hospital",  # Changed hospital
+            "how_heard_about_us": "Updated persistence source"  # Changed source
+        }
+        
+        # Update appointment
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.put(f"{API_URL}/urgent-care-appointments/{appointment_id}", json=updated_data, headers=headers)
+        
+        if response.status_code != 200:
+            results.log_failure("Update Appointment (PUT - Data Persistence - Update)", f"Failed to update appointment: {response.status_code}")
+            return False
+        
+        # Fetch the appointment again to verify persistence
+        response = requests.get(f"{API_URL}/urgent-care-appointments/{appointment_id}", headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("id") == appointment_id and  # ID should remain unchanged
+                data.get("owner_first_name") == "UpdatedPersistence" and
+                data.get("owner_last_name") == "UpdatedTestOwner" and
+                data.get("email") == "updated.persistence@test.com" and
+                data.get("phone") == "(555) 444-5555" and
+                data.get("pet_name") == "UpdatedPersistencePet" and
+                data.get("pet_type") == "cat" and
+                data.get("reason_for_visit") == "Updated persistence test appointment" and
+                data.get("appointment_time") == f"{future_date}T21:30" and
+                data.get("created_at") == original_created_at and  # Created at should remain unchanged
+                "updated_at" in data):  # Updated at should be present
+                results.log_success("Update Appointment (PUT - Data Persistence - All Changes Persisted)")
+                return True
+        results.log_failure("Update Appointment (PUT - Data Persistence)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Update Appointment (PUT - Data Persistence)", str(e))
+        return False
+
+# ============================================================================
 # ENHANCED URGENT CARE BOOKING SYSTEM TESTS - NEW FEATURES
 # ============================================================================
 
