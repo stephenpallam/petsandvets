@@ -13,7 +13,7 @@ import {
   Shield
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../../mock';
+import { useBusinessInfo } from '../../hooks/useBusinessInfo';
 
 const FormsDownload = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();

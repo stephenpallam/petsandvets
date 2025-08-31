@@ -6,7 +6,7 @@ import {
   Phone
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../../mock';
+import { useBusinessInfo } from '../../hooks/useBusinessInfo';
 
 const PatientDropOff = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();

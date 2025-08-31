@@ -6,7 +6,7 @@ import {
   Phone
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../../mock';
+import { useBusinessInfo } from '../../hooks/useBusinessInfo';
 
 const DentalConsent = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();
