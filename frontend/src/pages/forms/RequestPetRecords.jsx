@@ -5,7 +5,7 @@ import {
   Clock, 
   Phone
 } from 'lucide-react';
-import { hospitalInfo } from '../mock';
+import { hospitalInfo } from '../../mock';
 import { useBusinessInfo } from '../../hooks/useBusinessInfo';
 
 const RequestPetRecords = () => {
