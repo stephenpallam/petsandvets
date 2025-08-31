@@ -193,7 +193,8 @@ const Header = () => {
           { name: 'Our Mission', href: '/our-mission' },
           { name: 'Our Values', href: '/our-core-values' },
           { name: 'Our Team', href: '/our-team' },
-          { name: 'Our Facility', href: '/gallery' }
+          { name: 'Our Facility', href: '/gallery' },
+          { name: 'Review Us', href: '/review-us' }
         ]
       },
       // Only show Urgent Care button if user is not logged in
