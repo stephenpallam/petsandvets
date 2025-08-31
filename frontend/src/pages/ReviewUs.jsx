@@ -107,8 +107,7 @@ const ReviewUs = () => {
             </span>
           </div>
           <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
-            Your feedback helps us improve our services and helps other pet owners make informed decisions about their pet's care. 
-            We'd love to hear about your experience with our veterinary team and services.
+            Every review helps us serve your pets better and guides other pet owners to quality care.
           </p>
         </div>
       </section>
