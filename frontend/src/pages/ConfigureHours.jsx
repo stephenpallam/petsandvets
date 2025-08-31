@@ -34,6 +34,12 @@ const ConfigureHours = () => {
     urgent_care: { is_open: false, open_time: '', close_time: '' }
   });
 
+  const [appointmentSlotConfig, setAppointmentSlotConfig] = useState({
+    slot_interval_minutes: 30,
+    first_appointment_delay_minutes: 0,
+    last_appointment_cutoff_minutes: 30
+  });
+
   const [loading, setLoading] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [googleConnected, setGoogleConnected] = useState(false);
