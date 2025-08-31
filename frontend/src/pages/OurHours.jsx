@@ -438,10 +438,10 @@ const OurHours = () => {
       {/* Contact CTA */}
       <section style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '40px', paddingBottom: '40px' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-bold text-white mb-4 text-xl">
+          <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
             Ready to Schedule Your Appointment?
           </h2>
-          <p className="mb-8 text-white text-lg">
+          <p className="mb-8 text-white" style={{ fontSize: '1rem' }}>
             Call us during our operating hours to book your pet's visit
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
