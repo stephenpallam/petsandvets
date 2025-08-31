@@ -1409,7 +1409,7 @@ async def get_reviews_for_management(current_user: User = Depends(get_manager_or
 
 
 @api_router.post("/reviews", response_model=Review)
-async def create_review(review_data: ReviewCreate, current_user: User = Depends(get_admin_user)):
+async def create_review(review_data: ReviewCreate, current_user: User = Depends(get_manager_or_admin_user)):
     """Create a new review (admin only)"""
     
     # Check if we already have 3 reviews
