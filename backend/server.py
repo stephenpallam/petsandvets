@@ -596,6 +596,8 @@ class BusinessInfoUpdate(BaseModel):
     email: Optional[str] = None
     address: Optional[str] = None
     timezone: Optional[str] = None
+    referral_hospital_name: Optional[str] = None
+    referral_hospital_phone: Optional[str] = None
     facebook_link: Optional[str] = None
     instagram_link: Optional[str] = None
     twitter_link: Optional[str] = None
