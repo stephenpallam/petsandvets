@@ -1,0 +1,235 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { 
+  Star, 
+  Globe,
+  MapPin,
+  Phone,
+  ExternalLink,
+  MessageSquare
+} from 'lucide-react';
+import { hospitalInfo } from '../mock';
+
+const ReviewUs = () => {
+  const [businessInfo, setBusinessInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const primaryColor = '#29add3';
+  const primaryLight = '#5bc0db';
+  const primaryBg = '#e6f7fb';
+
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+
+  const fetchBusinessInfo = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/business-info`);
+      if (response.ok) {
+        const data = await response.json();
+        setBusinessInfo(data);
+      }
+    } catch (error) {
+      console.error('Error fetching business info:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBusinessInfo();
+  }, []);
+
+  // Filter only configured review platforms
+  const getConfiguredReviewPlatforms = () => {
+    if (!businessInfo) return [];
+    
+    const platforms = [];
+    
+    if (businessInfo.google_reviews_link && businessInfo.google_reviews_link.trim()) {
+      platforms.push({
+        name: 'Google Reviews',
+        description: 'Share your experience with other pet owners on Google',
+        icon: Globe,
+        link: businessInfo.google_reviews_link,
+        color: '#4285f4',
+        bgColor: '#e3f2fd'
+      });
+    }
+    
+    if (businessInfo.yelp_reviews_link && businessInfo.yelp_reviews_link.trim()) {
+      platforms.push({
+        name: 'Yelp Reviews',
+        description: 'Help others discover great pet care on Yelp',
+        icon: ExternalLink,
+        link: businessInfo.yelp_reviews_link,
+        color: '#d32323',
+        bgColor: '#ffebee'
+      });
+    }
+    
+    return platforms;
+  };
+
+  const serviceAreas = [
+    "South Riding", "Chantilly", "Aldie", "Ashburn", "Herndon", "Centreville", "Fairfax"
+  ];
+
+  const reviewPlatforms = getConfiguredReviewPlatforms();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: primaryColor }}></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="bg-white">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
+            Review Us
+          </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+              Your Voice Matters to Us
+            </span>
+          </div>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
+            Your feedback helps us improve our services and helps other pet owners make informed decisions about their pet's care. 
+            We'd love to hear about your experience with our veterinary team and services.
+          </p>
+        </div>
+      </section>
+
+      {/* Why Reviews Matter */}
+      <section className="bg-[#f8f9fa] py-6">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="space-y-6">
+            <p className="text-base text-gray-600 leading-relaxed text-center">
+              Reviews help us understand what we're doing well and where we can improve. Your honest feedback 
+              is invaluable in helping us provide the best possible care for your beloved pets.
+            </p>
+            
+            <div className="p-8 rounded-xl border-l-4 bg-white" style={{ borderColor: primaryColor }}>
+              <div className="flex items-center justify-center mb-4">
+                <Star className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
+                <h3 className="text-xl font-semibold text-gray-900">Share Your Experience</h3>
+              </div>
+              <p className="font-medium italic text-gray-800 text-center" style={{ fontSize: '1rem' }}>
+                "Every review helps us serve your pets better and guides other pet owners to quality care."
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Review Platforms */}
+      {reviewPlatforms.length > 0 ? (
+        <section className="bg-white py-6">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-xl font-bold text-gray-900 mb-8 text-center">
+              Leave a Review on Your Preferred Platform
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              {reviewPlatforms.map((platform, index) => (
+                <div key={index} className="p-6 rounded-xl shadow-md text-center border-2 border-gray-100 hover:border-gray-200 transition-colors">
+                  <div className="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style={{ backgroundColor: platform.bgColor }}>
+                    <platform.icon className="h-8 w-8" style={{ color: platform.color }} />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">{platform.name}</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed mb-4">{platform.description}</p>
+                  <a
+                    href={platform.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold transition-colors duration-200 text-white"
+                    style={{ backgroundColor: platform.color }}
+                    onMouseEnter={(e) => e.target.style.opacity = '0.9'}
+                    onMouseLeave={(e) => e.target.style.opacity = '1'}
+                  >
+                    Write a Review
+                    <ExternalLink className="ml-2 h-4 w-4" />
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : (
+        <section className="bg-white py-6">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div className="p-8 rounded-xl bg-gray-50">
+              <MessageSquare className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Review Links Not Configured</h3>
+              <p className="text-gray-600">
+                Review platform links haven't been set up yet. Please contact us directly to share your feedback.
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Service Areas */}
+      <section className="bg-[#f8f9fa] py-6">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-xl font-bold text-gray-900 mb-6">
+            Proudly Serving Northern Virginia
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Your reviews help pet owners across these communities:
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            {serviceAreas.map((area, index) => (
+              <span key={index} className="px-4 py-2 rounded-full text-white font-medium" style={{ backgroundColor: primaryColor }}>
+                {area}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact CTA */}
+      <section style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '30px', paddingBottom: '30px' }}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
+            Prefer to Share Feedback Directly?
+          </h2>
+          <p className="mb-8" style={{ color: 'white', fontSize: '1rem' }}>
+            We also welcome your feedback through direct communication
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href={`tel:${hospitalInfo.phone}`}
+              className="inline-flex items-center justify-center bg-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
+              style={{ color: primaryColor }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+            >
+              <Phone className="mr-2 h-5 w-5" />
+              Call: {hospitalInfo.phone}
+            </a>
+            <Link
+              to="/message-us"
+              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = 'white';
+                e.target.style.color = primaryColor;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'transparent';
+                e.target.style.color = 'white';
+              }}
+            >
+              <MessageSquare className="mr-2 h-5 w-5" />
+              Send Message
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default ReviewUs;
