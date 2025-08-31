@@ -13,7 +13,10 @@ const BusinessInfo = () => {
     facebook_link: '',
     instagram_link: '',
     twitter_link: '',
-    hero_images: []
+    hero_images: [],
+    notification_email: '',
+    smtp_email: '',
+    smtp_password: ''
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
