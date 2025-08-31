@@ -16,9 +16,11 @@ import {
   Wallet,
   Users
 } from 'lucide-react';
-import { hospitalInfo } from '../mock';
+import { hospitalInfo }
+import { useBusinessInfo } from '../mock';
 
 const PetInsurancePayments = () => {
+  const { businessInfo: currentBusinessInfo } = useBusinessInfo();
   const primaryColor = '#29add3';
   const primaryLight = '#5bc0db';
   const primaryBg = '#e6f7fb';
@@ -228,15 +230,15 @@ const PetInsurancePayments = () => {
             </h2>
           </div>
           <p className="text-blue-100 mb-8" style={{ fontSize: '1rem' }}>
-            If you have any questions about payment, insurance, or financing, call us at {hospitalInfo.phone}. We'll help you find the best solution for your pet's care.
+            If you have any questions about payment, insurance, or financing, call us at {currentBusinessInfo.phone}. We'll help you find the best solution for your pet's care.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a
-              href={`tel:${hospitalInfo.phone}`}
+              href={`tel:${currentBusinessInfo.phone}`}
               className="inline-flex items-center justify-center px-8 py-3 bg-white text-gray-900 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
             >
               <Phone className="mr-2 h-5 w-5" />
-              Call {hospitalInfo.phone}
+              Call {currentBusinessInfo.phone}
             </a>
             <Link
               to="/reach-us"

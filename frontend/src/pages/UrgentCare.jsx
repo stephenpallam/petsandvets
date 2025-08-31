@@ -55,9 +55,11 @@ import {
   Info,
   ArrowRight
 } from 'lucide-react';
-import { hospitalInfo } from '../mock';
+import { hospitalInfo }
+import { useBusinessInfo } from '../mock';
 
 const UrgentCare = () => {
+  const { businessInfo: currentBusinessInfo } = useBusinessInfo();
   const [urgentCareHours, setUrgentCareHours] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -524,7 +526,7 @@ const UrgentCare = () => {
                     <strong>Urgent Care Services:</strong> For non-life-threatening conditions that need prompt attention but can wait for an appointment.
                   </p>
                   <p className="text-sm text-red-700">
-                    <strong>Call {hospitalInfo.phone}</strong> to schedule your urgent care visit during operating hours.
+                    <strong>Call {currentBusinessInfo.phone}</strong> to schedule your urgent care visit during operating hours.
                   </p>
                 </div>
               </div>
@@ -566,14 +568,14 @@ const UrgentCare = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href={`tel:${hospitalInfo.phone}`}
+              href={`tel:${currentBusinessInfo.phone}`}
               className="inline-flex items-center justify-center bg-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               style={{ color: urgentColor }}
               onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
             >
               <Phone className="mr-2 h-5 w-5" />
-              Call Now: {hospitalInfo.phone}
+              Call Now: {currentBusinessInfo.phone}
             </a>
             <Link
               to="/urgent-care-booking"

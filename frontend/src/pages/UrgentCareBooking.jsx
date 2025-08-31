@@ -14,10 +14,12 @@ import {
   Stethoscope,
   Check
 } from 'lucide-react';
-import { hospitalInfo } from '../mock';
+import { hospitalInfo }
+import { useBusinessInfo } from '../mock';
 import { useAuth } from '../contexts/AuthContext';
 
 const UrgentCareBooking = () => {
+  const { businessInfo: currentBusinessInfo } = useBusinessInfo();
   const [currentTab, setCurrentTab] = useState(0);
   const [completedTabs, setCompletedTabs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -401,7 +403,7 @@ const UrgentCareBooking = () => {
                           <AlertCircle className="h-5 w-5 text-yellow-600 mr-3" />
                           <div>
                             <p className="text-yellow-800 font-medium">Need Emergency Care?</p>
-                            <p className="text-yellow-700 text-sm">Call us at {hospitalInfo.phone}</p>
+                            <p className="text-yellow-700 text-sm">Call us at {currentBusinessInfo.phone}</p>
                           </div>
                         </div>
                       </div>
@@ -418,7 +420,7 @@ const UrgentCareBooking = () => {
                           <Phone className="h-5 w-5 mr-3" style={{ color: primaryColor }} />
                           <div>
                             <p className="text-gray-900 font-medium">Call for Cancellations</p>
-                            <p className="text-gray-700 text-sm">{hospitalInfo.phone}</p>
+                            <p className="text-gray-700 text-sm">{currentBusinessInfo.phone}</p>
                           </div>
                         </div>
                       </div>
@@ -981,14 +983,14 @@ const UrgentCareBooking = () => {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                       <a
-                        href={`tel:${hospitalInfo.phone}`}
+                        href={`tel:${currentBusinessInfo.phone}`}
                         className="inline-flex items-center justify-center bg-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
                         style={{ color: primaryColor }}
                         onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
                         onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
                       >
                         <Phone className="h-4 w-4 mr-2" />
-                        Call {hospitalInfo.phone}
+                        Call {currentBusinessInfo.phone}
                       </a>
                     </div>
                   </div>

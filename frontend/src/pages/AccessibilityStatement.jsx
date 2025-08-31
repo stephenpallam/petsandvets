@@ -19,9 +19,11 @@ import {
   Headphones,
   MousePointer
 } from 'lucide-react';
-import { hospitalInfo } from '../mock';
+import { hospitalInfo }
+import { useBusinessInfo } from '../mock';
 
 const AccessibilityStatement = () => {
+  const { businessInfo: currentBusinessInfo } = useBusinessInfo();
   const primaryColor = '#29add3';
   const primaryLight = '#5bc0db';
   const primaryBg = '#e6f7fb';
@@ -352,13 +354,13 @@ const AccessibilityStatement = () => {
                 </div>
                 <h4 className="font-semibold text-gray-900 mb-2">Call Us</h4>
                 <a 
-                  href={`tel:${hospitalInfo.phone}`}
+                  href={`tel:${currentBusinessInfo.phone}`}
                   className="text-sm transition-colors"
                   style={{ color: primaryColor }}
                   onMouseEnter={(e) => e.target.style.color = primaryLight}
                   onMouseLeave={(e) => e.target.style.color = primaryColor}
                 >
-                  {hospitalInfo.phone}
+                  {currentBusinessInfo.phone}
                 </a>
                 <p className="text-xs text-gray-500 mt-1">For immediate accessibility assistance</p>
               </div>
@@ -368,13 +370,13 @@ const AccessibilityStatement = () => {
                 </div>
                 <h4 className="font-semibold text-gray-900 mb-2">Email Us</h4>
                 <a 
-                  href={`mailto:${hospitalInfo.email}`}
+                  href={`mailto:${currentBusinessInfo.email}`}
                   className="text-sm transition-colors"
                   style={{ color: primaryColor }}
                   onMouseEnter={(e) => e.target.style.color = primaryLight}
                   onMouseLeave={(e) => e.target.style.color = primaryColor}
                 >
-                  {hospitalInfo.email}
+                  {currentBusinessInfo.email}
                 </a>
                 <p className="text-xs text-gray-500 mt-1">For accessibility feedback</p>
               </div>
@@ -406,7 +408,7 @@ const AccessibilityStatement = () => {
                   <AlertCircle className="h-5 w-5 mr-3 mt-0.5 text-yellow-600" />
                   <div>
                     <p className="text-yellow-700 text-sm">
-                      <strong>Alternative Access:</strong> If you cannot access any information or service on our website, please call us at {hospitalInfo.phone} or email us at {hospitalInfo.email} for immediate assistance.
+                      <strong>Alternative Access:</strong> If you cannot access any information or service on our website, please call us at {currentBusinessInfo.phone} or email us at {currentBusinessInfo.email} for immediate assistance.
                     </p>
                   </div>
                 </div>
@@ -449,14 +451,14 @@ const AccessibilityStatement = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href={`tel:${hospitalInfo.phone}`}
+              href={`tel:${currentBusinessInfo.phone}`}
               className="inline-flex items-center justify-center bg-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               style={{ color: primaryColor }}
               onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
             >
               <Phone className="mr-2 h-5 w-5" />
-              Need Help? Call: {hospitalInfo.phone}
+              Need Help? Call: {currentBusinessInfo.phone}
             </a>
             <Link
               to="/reach-us"

@@ -10,8 +10,10 @@ import {
 } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 import { hospitalInfo, hours, mockAPI } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const Contact = () => {
+  const { businessInfo: currentBusinessInfo } = useBusinessInfo();
   const { toast } = useToast();
   const [contactForm, setContactForm] = useState({
     name: '',
@@ -139,7 +141,7 @@ const Contact = () => {
                 </h2>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <a 
-                    href={`tel:${hospitalInfo.phone}`}
+                    href={`tel:${currentBusinessInfo.phone}`}
                     className="flex items-center justify-center px-4 py-2 rounded-lg transition-colors duration-200 border-2"
                     style={{ borderColor: primaryColor, color: primaryColor }}
                     onMouseEnter={(e) => {
@@ -152,10 +154,10 @@ const Contact = () => {
                     }}
                   >
                     <Phone className="mr-2 h-4 w-4" />
-                    {hospitalInfo.phone}
+                    {currentBusinessInfo.phone}
                   </a>
                   <a 
-                    href={`mailto:${hospitalInfo.email}`}
+                    href={`mailto:${currentBusinessInfo.email}`}
                     className="flex items-center justify-center px-4 py-2 rounded-lg transition-colors duration-200 border-2"
                     style={{ borderColor: primaryColor, color: primaryColor }}
                     onMouseEnter={(e) => {
@@ -168,7 +170,7 @@ const Contact = () => {
                     }}
                   >
                     <Mail className="mr-2 h-4 w-4" />
-                    {hospitalInfo.email}
+                    {currentBusinessInfo.email}
                   </a>
                 </div>
               </div>
@@ -189,7 +191,7 @@ const Contact = () => {
               <div className="mt-4 p-4 rounded-lg" style={{ backgroundColor: primaryBg }}>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <p className="font-semibold text-gray-900">{hospitalInfo.address}</p>
+                    <p className="font-semibold text-gray-900">{currentBusinessInfo.address}</p>
                     <p className="text-sm text-gray-600 mt-1">Located beside Sweet Frog in Peacock Market Plaza</p>
                   </div>
                   <button 
@@ -197,7 +199,7 @@ const Contact = () => {
                     style={{ backgroundColor: primaryColor }}
                     onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
                     onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
-                    onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(hospitalInfo.address)}`, '_blank')}
+                    onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(currentBusinessInfo.address)}`, '_blank')}
                   >
                     Get Directions
                   </button>
@@ -510,17 +512,17 @@ const Contact = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href={`tel:${hospitalInfo.phone}`}
+              href={`tel:${currentBusinessInfo.phone}`}
               className="inline-flex items-center justify-center bg-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
               style={{ color: primaryColor }}
               onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
             >
               <Phone className="mr-2 h-5 w-5" />
-              Call Now: {hospitalInfo.phone}
+              Call Now: {currentBusinessInfo.phone}
             </a>
             <a
-              href={`tel:${hospitalInfo.phone}`}
+              href={`tel:${currentBusinessInfo.phone}`}
               className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = 'white';

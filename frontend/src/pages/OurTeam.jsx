@@ -10,10 +10,12 @@ import {
   GraduationCap,
   Stethoscope
 } from 'lucide-react';
-import { hospitalInfo } from '../mock';
+import { hospitalInfo }
+import { useBusinessInfo } from '../mock';
 import axios from 'axios';
 
 const OurTeam = () => {
+  const { businessInfo: currentBusinessInfo } = useBusinessInfo();
   const [teamMembers, setTeamMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -226,14 +228,14 @@ const OurTeam = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href={`tel:${hospitalInfo.phone}`}
+              href={`tel:${currentBusinessInfo.phone}`}
               className="inline-flex items-center justify-center bg-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               style={{ color: primaryColor }}
               onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
             >
               <Phone className="mr-2 h-5 w-5" />
-              Call Now: {hospitalInfo.phone}
+              Call Now: {currentBusinessInfo.phone}
             </a>
             <Link
               to="/reach-us"

@@ -5,9 +5,11 @@ import {
   Clock, 
   Phone
 } from 'lucide-react';
-import { hospitalInfo } from '../../mock';
+import { hospitalInfo }
+import { useBusinessInfo } from '../../mock';
 
 const SurgeryAnesthesiaConsent = () => {
+  const { businessInfo: currentBusinessInfo } = useBusinessInfo();
   const primaryColor = '#29add3';
 
   return (
@@ -55,14 +57,14 @@ const SurgeryAnesthesiaConsent = () => {
                 If you have trouble with the online form or have questions, please call us during business hours.
               </p>
               <a
-                href={`tel:${hospitalInfo.phone}`}
+                href={`tel:${currentBusinessInfo.phone}`}
                 className="inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-colors duration-200"
                 style={{ backgroundColor: primaryColor, color: 'white' }}
                 onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
                 onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
               >
                 <Phone className="mr-2 h-4 w-4" />
-                Call {hospitalInfo.phone}
+                Call {currentBusinessInfo.phone}
               </a>
             </div>
 

@@ -22,9 +22,11 @@ import {
   Gavel,
   Globe
 } from 'lucide-react';
-import { hospitalInfo } from '../mock';
+import { hospitalInfo }
+import { useBusinessInfo } from '../mock';
 
 const TermsOfService = () => {
+  const { businessInfo: currentBusinessInfo } = useBusinessInfo();
   const primaryColor = '#29add3';
   const primaryLight = '#5bc0db';
   const primaryBg = '#e6f7fb';
@@ -490,13 +492,13 @@ const TermsOfService = () => {
                 </div>
                 <h4 className="font-semibold text-gray-900 mb-2">Call Us</h4>
                 <a 
-                  href={`tel:${hospitalInfo.phone}`}
+                  href={`tel:${currentBusinessInfo.phone}`}
                   className="text-sm transition-colors"
                   style={{ color: primaryColor }}
                   onMouseEnter={(e) => e.target.style.color = primaryLight}
                   onMouseLeave={(e) => e.target.style.color = primaryColor}
                 >
-                  {hospitalInfo.phone}
+                  {currentBusinessInfo.phone}
                 </a>
                 <p className="text-xs text-gray-500 mt-1">Speak with our team</p>
               </div>
@@ -506,13 +508,13 @@ const TermsOfService = () => {
                 </div>
                 <h4 className="font-semibold text-gray-900 mb-2">Email Us</h4>
                 <a 
-                  href={`mailto:${hospitalInfo.email}`}
+                  href={`mailto:${currentBusinessInfo.email}`}
                   className="text-sm transition-colors"
                   style={{ color: primaryColor }}
                   onMouseEnter={(e) => e.target.style.color = primaryLight}
                   onMouseLeave={(e) => e.target.style.color = primaryColor}
                 >
-                  {hospitalInfo.email}
+                  {currentBusinessInfo.email}
                 </a>
                 <p className="text-xs text-gray-500 mt-1">Written inquiries</p>
               </div>
@@ -522,7 +524,7 @@ const TermsOfService = () => {
                 </div>
                 <h4 className="font-semibold text-gray-900 mb-2">Visit Us</h4>
                 <p className="text-gray-600 text-sm">
-                  {hospitalInfo.address}
+                  {currentBusinessInfo.address}
                 </p>
                 <p className="text-xs text-gray-500 mt-1">In-person consultation</p>
               </div>
@@ -565,14 +567,14 @@ const TermsOfService = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href={`tel:${hospitalInfo.phone}`}
+              href={`tel:${currentBusinessInfo.phone}`}
               className="inline-flex items-center justify-center bg-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
               style={{ color: primaryColor }}
               onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
             >
               <Phone className="mr-2 h-5 w-5" />
-              Schedule Today: {hospitalInfo.phone}
+              Schedule Today: {currentBusinessInfo.phone}
             </a>
             <Link
               to="/reach-us"
