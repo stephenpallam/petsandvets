@@ -31,16 +31,16 @@ const Reviews = () => {
       return;
     }
 
-    if (user && isAdmin()) {
+    if (user && canAccessManager()) {
       setAuthError(null);
       setPageLoading(false);
       fetchReviews();
-    } else if (user && !isAdmin()) {
-      setAuthError('Access denied. Admin privileges required.');
+    } else if (user && !canAccessManager()) {
+      setAuthError('Access denied. Manager or admin privileges required.');
       setPageLoading(false);
     } else if (!token) {
       // Only show error if there's definitely no token
-      setAuthError('You must be logged in as an admin to manage reviews.');
+      setAuthError('You must be logged in as a manager or admin to manage reviews.');
       setPageLoading(false);
     }
   }, [user, token, authLoading]);
