@@ -184,12 +184,12 @@ const Footer = () => {
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5" style={{ color: '#5bc0db' }} />
                 <a 
-                  href={`mailto:${hospitalInfo.email}`} 
+                  href={`mailto:${businessInfo?.email || hospitalInfo.email}`} 
                   className="text-gray-300 transition-colors text-sm"
                   onMouseEnter={(e) => e.target.style.color = '#5bc0db'}
                   onMouseLeave={(e) => e.target.style.color = '#d1d5db'}
                 >
-                  {hospitalInfo.email}
+                  {businessInfo?.email || hospitalInfo.email}
                 </a>
               </div>
             </div>
