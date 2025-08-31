@@ -388,6 +388,44 @@ const BusinessInfo = () => {
                         This timezone will be used for all appointment scheduling and business hours calculations.
                       </p>
                     </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <Building className="h-4 w-4 inline mr-2" />
+                          Referral Emergency Hospital Name
+                        </label>
+                        <input
+                          type="text"
+                          name="referral_hospital_name"
+                          value={businessInfo.referral_hospital_name}
+                          onChange={handleInputChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="VCA SouthPaws"
+                        />
+                        <p className="mt-1 text-xs text-gray-500">
+                          Emergency hospital to refer clients after hours
+                        </p>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <Phone className="h-4 w-4 inline mr-2" />
+                          Referral Hospital Phone Number
+                        </label>
+                        <input
+                          type="tel"
+                          name="referral_hospital_phone"
+                          value={businessInfo.referral_hospital_phone}
+                          onChange={handleInputChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="(703) 752-9100"
+                        />
+                        <p className="mt-1 text-xs text-gray-500">
+                          Emergency contact number for after-hours referrals
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 )}
 
