@@ -103,11 +103,11 @@ const ConfigureHours = () => {
 
   useEffect(() => {
     // Only fetch data if user is authenticated and authorized
-    if (!pageLoading && user && isAdmin()) {
+    if (!pageLoading && user && canAccessManager()) {
       fetchHours();
       checkGoogleConnection();
     }
-  }, [pageLoading, user, isAdmin]);
+  }, [pageLoading, user, canAccessManager]);
 
   const checkGoogleConnection = async () => {
     try {
