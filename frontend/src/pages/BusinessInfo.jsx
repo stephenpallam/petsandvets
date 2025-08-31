@@ -22,7 +22,7 @@ const BusinessInfo = () => {
   const [success, setSuccess] = useState(null);
   const [googleConnected, setGoogleConnected] = useState(false);
 
-  const { user, token, isAdmin, loading: authLoading } = useAuth();
+  const { user, token, isAdmin, canAccessManager, loading: authLoading } = useAuth();
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
 
   const fetchBusinessInfo = async () => {
