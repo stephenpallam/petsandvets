@@ -1712,6 +1712,128 @@ async def update_business_info(
     return BusinessInfo(**existing_info)
 
 
+# Email Configuration API endpoints
+@api_router.get("/email-config", response_model=EmailConfig)
+async def get_email_config(
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Get email configuration (manager/admin only)"""
+    config = await db.email_config.find_one()
+    
+    if not config:
+        # Return default configuration
+        now = datetime.utcnow()
+        default_config = EmailConfig(
+            id=str(uuid.uuid4()),
+            notification_email="",
+            email_provider=EmailProvider.GMAIL,
+            is_enabled=False,
+            smtp_email=None,
+            smtp_password=None,
+            sendgrid_api_key=None,
+            sender_email=None,
+            created_at=now,
+            updated_at=now
+        )
+        return default_config
+    
+    # Don't return encrypted passwords/keys for security
+    config_response = EmailConfig(**config)
+    config_response.smtp_password = "****" if config.get('smtp_password') else None
+    config_response.sendgrid_api_key = "****" if config.get('sendgrid_api_key') else None
+    
+    return config_response
+
+
+@api_router.post("/email-config", response_model=dict)
+async def update_email_config(
+    config_data: EmailConfigUpdate,
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Update email configuration (manager/admin only)"""
+    
+    # Get existing config
+    existing_config = await db.email_config.find_one()
+    
+    if not existing_config:
+        # Create new config
+        now = datetime.utcnow()
+        new_config = {
+            "id": str(uuid.uuid4()),
+            "notification_email": config_data.notification_email or "",
+            "email_provider": config_data.email_provider or EmailProvider.GMAIL,
+            "is_enabled": config_data.is_enabled or False,
+            "smtp_email": email_service.encrypt_data(config_data.smtp_email) if config_data.smtp_email else None,
+            "smtp_password": email_service.encrypt_data(config_data.smtp_password) if config_data.smtp_password else None,
+            "sendgrid_api_key": email_service.encrypt_data(config_data.sendgrid_api_key) if config_data.sendgrid_api_key else None,
+            "sender_email": config_data.sender_email,
+            "created_at": now,
+            "updated_at": now
+        }
+        await db.email_config.insert_one(new_config)
+        return {"message": "Email configuration created successfully", "id": new_config["id"]}
+    
+    # Update existing config
+    update_data = {}
+    if config_data.notification_email is not None:
+        update_data["notification_email"] = config_data.notification_email
+    if config_data.email_provider is not None:
+        update_data["email_provider"] = config_data.email_provider
+    if config_data.is_enabled is not None:
+        update_data["is_enabled"] = config_data.is_enabled
+    if config_data.smtp_email is not None:
+        update_data["smtp_email"] = email_service.encrypt_data(config_data.smtp_email)
+    if config_data.smtp_password is not None:
+        update_data["smtp_password"] = email_service.encrypt_data(config_data.smtp_password)
+    if config_data.sendgrid_api_key is not None:
+        update_data["sendgrid_api_key"] = email_service.encrypt_data(config_data.sendgrid_api_key)
+    if config_data.sender_email is not None:
+        update_data["sender_email"] = config_data.sender_email
+    
+    if update_data:
+        update_data["updated_at"] = datetime.utcnow()
+        await db.email_config.update_one({}, {"$set": update_data})
+    
+    return {"message": "Email configuration updated successfully"}
+
+
+@api_router.post("/email-config/test", response_model=dict)
+async def test_email_config(
+    test_request: TestEmailRequest,
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Send test email to verify configuration (manager/admin only)"""
+    
+    try:
+        subject = "Test Email - Pet Hospital Notifications"
+        html_content = f"""
+        <html>
+            <body>
+                <h2>Email Configuration Test</h2>
+                <p>This is a test email to verify your email configuration is working correctly.</p>
+                <p><strong>Configured by:</strong> {current_user.full_name} ({current_user.email})</p>
+                <p><strong>Test sent at:</strong> {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')} UTC</p>
+                <hr>
+                <p><em>This email was sent from your Pet Hospital notification system.</em></p>
+            </body>
+        </html>
+        """
+        
+        success = await email_service.send_email(
+            to_email=test_request.test_email,
+            subject=subject,
+            html_content=html_content
+        )
+        
+        if success:
+            return {"message": "Test email sent successfully!"}
+        else:
+            raise HTTPException(status_code=500, detail="Failed to send test email")
+            
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Test email failed: {str(e)}")
+
+
 # File Upload API endpoints
 UPLOAD_DIR = Path("/app/data/upload/photos")
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
