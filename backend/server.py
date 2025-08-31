@@ -2043,6 +2043,8 @@ async def update_business_info(
             google_reviews_link=business_data.google_reviews_link or "",
             yelp_reviews_link=business_data.yelp_reviews_link or "",
             facebook_reviews_link=business_data.facebook_reviews_link or "",
+            referral_hospital_name=business_data.referral_hospital_name or "",
+            referral_hospital_phone=business_data.referral_hospital_phone or "",
             hero_images=business_data.hero_images or [
                 "https://customer-assets.emergentagent.com/job_peacock-pet-care/artifacts/ulwulpak_emilee.png",
                 "https://customer-assets.emergentagent.com/job_peacock-pet-care/artifacts/ej59vv47_vanama.png"
