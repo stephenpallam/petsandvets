@@ -183,335 +183,319 @@ const BusinessInfo = () => {
 
           {/* Content Area */}
           <div className="p-6">
-
-            {/* Success Alert */}
-            {success && (
-              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
-                {success}
-              </div>
-            )}
-
-            {/* Error Alert */}
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-                {error}
-              </div>
-            )}
-
-            {/* Business Information Form */}
-            <div>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Hospital Name & Tagline */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  <Building className="h-4 w-4 inline mr-2" />
-                  Hospital Name
-                </label>
-                <input
-                  type="text"
-                  name="hospital_name"
-                  value={businessInfo.hospital_name}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Pets and Vets Animal Hospital"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  <Globe className="h-4 w-4 inline mr-2" />
-                  Tagline
-                </label>
-                <input
-                  type="text"
-                  name="tagline"
-                  value={businessInfo.tagline}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Compassionate Care for Your Beloved Pets"
-                />
-              </div>
-            </div>
-
-            {/* Phone & Email */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  <Phone className="h-4 w-4 inline mr-2" />
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={businessInfo.phone}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="(703) 957-3297"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  <Mail className="h-4 w-4 inline mr-2" />
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={businessInfo.email}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="vet@petsandvetsanimalhospital.com"
-                />
-              </div>
-            </div>
-
-            {/* Address */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <MapPin className="h-4 w-4 inline mr-2" />
-                Full Address
-              </label>
-              <input
-                type="text"
-                name="address"
-                value={businessInfo.address}
-                onChange={handleInputChange}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="43114 Peacock Market Plaza, Suite F110, South Riding, VA 20152"
-              />
-            </div>
-
-            {/* Social Media Links */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">
-                Social Media Links
-              </h3>
-              
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Facebook className="h-4 w-4 inline mr-2 text-blue-600" />
-                    Facebook URL
-                  </label>
-                  <input
-                    type="url"
-                    name="facebook_link"
-                    value={businessInfo.facebook_link}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="https://facebook.com/yourpage"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Instagram className="h-4 w-4 inline mr-2 text-pink-600" />
-                    Instagram URL
-                  </label>
-                  <input
-                    type="url"
-                    name="instagram_link"
-                    value={businessInfo.instagram_link}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="https://instagram.com/yourpage"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Twitter className="h-4 w-4 inline mr-2 text-blue-400" />
-                    Twitter URL
-                  </label>
-                  <input
-                    type="url"
-                    name="twitter_link"
-                    value={businessInfo.twitter_link}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="https://twitter.com/yourpage"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <MessageCircle className="h-4 w-4 inline mr-2 text-green-600" />
-                    WhatsApp Group URL
-                  </label>
-                  <input
-                    type="url"
-                    name="whatsapp_group_link"
-                    value={businessInfo.whatsapp_group_link}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="https://chat.whatsapp.com/..."
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Link to your WhatsApp group for community updates
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Review Platform Links */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">
-                Review Platform Links
-              </h3>
-              
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Globe className="h-4 w-4 inline mr-2 text-blue-500" />
-                    Google Reviews URL
-                  </label>
-                  <input
-                    type="url"
-                    name="google_reviews_link"
-                    value={businessInfo.google_reviews_link}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="https://g.page/r/..."
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Link to your Google Business reviews page
-                  </p>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <ExternalLink className="h-4 w-4 inline mr-2 text-red-600" />
-                    Yelp Reviews URL
-                  </label>
-                  <input
-                    type="url"
-                    name="yelp_reviews_link"
-                    value={businessInfo.yelp_reviews_link}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="https://www.yelp.com/biz/..."
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Link to your Yelp business reviews page
-                  </p>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Facebook className="h-4 w-4 inline mr-2 text-blue-600" />
-                    Facebook Reviews URL
-                  </label>
-                  <input
-                    type="url"
-                    name="facebook_reviews_link"
-                    value={businessInfo.facebook_reviews_link}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="https://www.facebook.com/pg/.../reviews/"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Link to your Facebook business reviews page
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <div className="flex items-center space-x-4 pt-6 border-t border-gray-200">
-              {/* Google Sync Section */}
-              {googleConnected ? (
-                <button
-                  type="button"
-                  onClick={handleGoogleSync}
-                  disabled={syncing}
-                  className="inline-flex items-center px-4 py-2 text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{ backgroundColor: syncing ? '#94a3b8' : '#29add3' }}
-                  onMouseEnter={(e) => {
-                    if (!syncing) e.target.style.backgroundColor = '#2196c7';
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!syncing) e.target.style.backgroundColor = '#29add3';
-                  }}
-                >
-                  {syncing ? (
-                    <>
-                      <RefreshCw className="animate-spin h-4 w-4 mr-2" />
-                      Syncing to Google...
-                    </>
-                  ) : (
-                    <>
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      Sync to Google Business
-                    </>
-                  )}
-                </button>
-              ) : (
-                <a 
-                  href="/google-integration" 
-                  className="inline-flex items-center px-4 py-2 text-white rounded-md transition-colors font-medium no-underline"
-                  style={{ backgroundColor: '#29add3' }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
-                  onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
-                >
-                  Connect Google Business Profile
-                </a>
-              )}
-
-              {/* Save Button */}
-              <button
-                type="submit"
-                disabled={saving}
-                className="inline-flex items-center px-4 py-2 text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{ backgroundColor: saving ? '#94a3b8' : '#29add3' }}
-                onMouseEnter={(e) => {
-                  if (!saving) e.target.style.backgroundColor = '#2196c7';
-                }}
-                onMouseLeave={(e) => {
-                  if (!saving) e.target.style.backgroundColor = '#29add3';
-                }}
-              >
-                {saving ? (
-                  <>
-                    <RefreshCw className="animate-spin h-4 w-4 mr-2" />
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Save className="h-4 w-4 mr-2" />
-                    Save Changes
-                  </>
-                )}
-              </button>
-            </div>
-              </form>
-            </div>
-
-            {/* Information Note */}
-            <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <Building className="h-5 w-5 text-blue-400" />
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-blue-800">
-                    About Business Information
-                  </h3>
-                  <div className="mt-2 text-sm text-blue-700">
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>Changes will appear immediately across the entire website</li>
-                      <li>The hospital name and tagline appear in the header and footer</li>
-                      <li>Contact information is displayed in multiple locations</li>
-                      <li>Social media links will be shown in the footer (leave blank to hide)</li>
-                      <li>For photo management, use the dedicated Photo Management page</li>
-                    </ul>
+            {/* Message Display */}
+            {message.text && (
+              <div className={`mb-6 rounded-md p-4 ${
+                message.type === 'error' 
+                  ? 'bg-red-50 border border-red-200' 
+                  : 'bg-green-50 border border-green-200'
+              }`}>
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    {message.type === 'error' ? (
+                      <AlertCircle className="h-5 w-5 text-red-400" />
+                    ) : (
+                      <CheckCircle className="h-5 w-5 text-green-400" />
+                    )}
+                  </div>
+                  <div className="ml-3">
+                    <p className={`text-sm font-medium ${
+                      message.type === 'error' ? 'text-red-800' : 'text-green-800'
+                    }`}>
+                      {message.text}
+                    </p>
                   </div>
                 </div>
               </div>
+            )}
+
+            {/* Tab Navigation */}
+            <div className="border border-gray-200 rounded-lg mb-4 sm:mb-6">
+              <div className="border-b border-gray-200">
+                <nav className="flex flex-col sm:flex-row sm:space-x-8 px-3 sm:px-6" aria-label="Tabs">
+                  {tabs.map((tab) => {
+                    const Icon = tab.icon;
+                    const isActive = activeTab === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className="w-full sm:w-auto py-3 sm:py-4 px-3 sm:px-1 border-b-2 sm:border-l-0 font-medium text-sm transition-colors border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                        style={{
+                          borderBottomColor: isActive ? '#29add3' : 'transparent',
+                          color: isActive ? '#29add3' : undefined,
+                          backgroundColor: isActive ? '#f0fdff' : 'transparent'
+                        }}
+                      >
+                        <div className="flex items-center justify-center sm:justify-start space-x-2">
+                          <Icon className="h-4 w-4" style={{ color: isActive ? tab.color : undefined }} />
+                          <span>{tab.label}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </nav>
+              </div>
+
+              {/* Tab Content */}
+              <form onSubmit={handleSubmit} className="p-3 sm:p-6">
+                
+                {/* Business Info Tab */}
+                {activeTab === 'business' && (
+                  <div className="space-y-6">
+                    <div className="flex flex-col sm:flex-row justify-end items-stretch sm:items-center mb-4 sm:mb-6 gap-3">
+                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:space-x-3">
+                        {/* Google Sync Button */}
+                        <button
+                          type="button"
+                          onClick={handleGoogleSync}
+                          disabled={syncing}
+                          className="w-full sm:w-auto text-white px-4 py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center sm:justify-start font-medium"
+                          style={{ 
+                            backgroundColor: syncing ? '#94a3b8' : '#29add3'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (!syncing) e.target.style.backgroundColor = '#2196c7';
+                          }}
+                          onMouseLeave={(e) => {
+                            if (!syncing) e.target.style.backgroundColor = '#29add3';
+                          }}
+                        >
+                          <RefreshCw className={`h-4 w-4 mr-2 ${syncing ? 'animate-spin' : ''}`} />
+                          {syncing ? 'Syncing...' : 'Sync to Google'}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <Building className="h-4 w-4 inline mr-2" />
+                          Hospital Name *
+                        </label>
+                        <input
+                          type="text"
+                          name="hospital_name"
+                          value={businessInfo.hospital_name}
+                          onChange={handleInputChange}
+                          required
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Tagline
+                        </label>
+                        <input
+                          type="text"
+                          name="tagline"
+                          value={businessInfo.tagline}
+                          onChange={handleInputChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Your pet's health is our priority"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <Phone className="h-4 w-4 inline mr-2" />
+                          Phone Number *
+                        </label>
+                        <input
+                          type="tel"
+                          name="phone"
+                          value={businessInfo.phone}
+                          onChange={handleInputChange}
+                          required
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <Mail className="h-4 w-4 inline mr-2" />
+                          Email Address *
+                        </label>
+                        <input
+                          type="email"
+                          name="email"
+                          value={businessInfo.email}
+                          onChange={handleInputChange}
+                          required
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <MapPin className="h-4 w-4 inline mr-2" />
+                        Address *
+                      </label>
+                      <textarea
+                        name="address"
+                        value={businessInfo.address}
+                        onChange={handleInputChange}
+                        required
+                        rows={3}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Full business address"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Social Media Tab */}
+                {activeTab === 'social' && (
+                  <div className="space-y-6">
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <Facebook className="h-4 w-4 inline mr-2 text-blue-600" />
+                          Facebook Page URL
+                        </label>
+                        <input
+                          type="url"
+                          name="facebook_link"
+                          value={businessInfo.facebook_link}
+                          onChange={handleInputChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="https://facebook.com/yourpage"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <Instagram className="h-4 w-4 inline mr-2 text-pink-600" />
+                          Instagram Profile URL
+                        </label>
+                        <input
+                          type="url"
+                          name="instagram_link"
+                          value={businessInfo.instagram_link}
+                          onChange={handleInputChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="https://instagram.com/yourprofile"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <Twitter className="h-4 w-4 inline mr-2 text-blue-400" />
+                          Twitter Profile URL
+                        </label>
+                        <input
+                          type="url"
+                          name="twitter_link"
+                          value={businessInfo.twitter_link}
+                          onChange={handleInputChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="https://twitter.com/yourprofile"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <MessageCircle className="h-4 w-4 inline mr-2 text-green-600" />
+                          WhatsApp Group URL
+                        </label>
+                        <input
+                          type="url"
+                          name="whatsapp_group_link"
+                          value={businessInfo.whatsapp_group_link}
+                          onChange={handleInputChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="https://chat.whatsapp.com/..."
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Link to your WhatsApp group for community updates
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Review Platforms Tab */}
+                {activeTab === 'reviews' && (
+                  <div className="space-y-6">
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <Globe className="h-4 w-4 inline mr-2 text-blue-500" />
+                          Google Reviews URL
+                        </label>
+                        <input
+                          type="url"
+                          name="google_reviews_link"
+                          value={businessInfo.google_reviews_link}
+                          onChange={handleInputChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="https://g.page/r/..."
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Link to your Google Business reviews page
+                        </p>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <ExternalLink className="h-4 w-4 inline mr-2 text-red-600" />
+                          Yelp Reviews URL
+                        </label>
+                        <input
+                          type="url"
+                          name="yelp_reviews_link"
+                          value={businessInfo.yelp_reviews_link}
+                          onChange={handleInputChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="https://www.yelp.com/biz/..."
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Link to your Yelp business reviews page
+                        </p>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <Facebook className="h-4 w-4 inline mr-2 text-blue-600" />
+                          Facebook Reviews URL
+                        </label>
+                        <input
+                          type="url"
+                          name="facebook_reviews_link"
+                          value={businessInfo.facebook_reviews_link}
+                          onChange={handleInputChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="https://www.facebook.com/pg/.../reviews/"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Link to your Facebook business reviews page
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Submit Button */}
+                <div className="flex justify-end pt-6 border-t border-gray-200 mt-8">
+                  <button
+                    type="submit"
+                    disabled={saving}
+                    className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md text-white transition-colors disabled:opacity-50"
+                    style={{ backgroundColor: saving ? '#94a3b8' : '#29add3' }}
+                    onMouseEnter={(e) => {
+                      if (!saving) e.target.style.backgroundColor = '#2196c7';
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!saving) e.target.style.backgroundColor = '#29add3';
+                    }}
+                  >
+                    <Save className="h-4 w-4 mr-2" />
+                    {saving ? 'Saving...' : 'Save Changes'}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
