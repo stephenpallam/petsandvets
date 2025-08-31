@@ -180,7 +180,7 @@ const ReviewUs = () => {
 
       {/* Contact CTA */}
       <section style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '30px', paddingBottom: '30px' }}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
             Prefer to Share Feedback Directly?
           </h2>
