@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Phone, Mail, MapPin, Clock, Facebook, Instagram, Twitter } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, Facebook, Instagram, X } from 'lucide-react';
 import { hospitalInfo } from '../mock';
 
 const Footer = () => {
