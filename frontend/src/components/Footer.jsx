@@ -60,6 +60,51 @@ const Footer = () => {
     fetchData();
   }, []);
 
+  // Get configured social media links
+  const getSocialMediaLinks = () => {
+    if (!businessInfo) return [];
+    
+    const socialLinks = [];
+    
+    if (businessInfo.facebook_link && businessInfo.facebook_link.trim()) {
+      socialLinks.push({
+        name: 'Facebook',
+        url: businessInfo.facebook_link,
+        icon: Facebook,
+        color: '#1877f2'
+      });
+    }
+    
+    if (businessInfo.instagram_link && businessInfo.instagram_link.trim()) {
+      socialLinks.push({
+        name: 'Instagram',
+        url: businessInfo.instagram_link,
+        icon: Instagram,
+        color: '#E4405F'
+      });
+    }
+    
+    if (businessInfo.twitter_link && businessInfo.twitter_link.trim()) {
+      socialLinks.push({
+        name: 'X (Twitter)',
+        url: businessInfo.twitter_link,
+        icon: X,
+        color: '#000000'
+      });
+    }
+    
+    if (businessInfo.whatsapp_group_link && businessInfo.whatsapp_group_link.trim()) {
+      socialLinks.push({
+        name: 'WhatsApp',
+        url: businessInfo.whatsapp_group_link,
+        icon: MessageCircle,
+        color: '#25D366'
+      });
+    }
+    
+    return socialLinks;
+  };
+
   // Fallback to static data while loading or if fetch fails
   const defaultHours = {
     generalPractice: {
