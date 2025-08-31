@@ -49,8 +49,8 @@ const ReviewUs = () => {
         description: 'Share your experience with other pet owners on Google',
         icon: Globe,
         link: businessInfo.google_reviews_link,
-        color: '#4285f4',
-        bgColor: '#e3f2fd'
+        color: primaryColor, // Using website theme color
+        bgColor: primaryBg // Using website theme background
       });
     }
     
