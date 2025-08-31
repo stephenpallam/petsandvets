@@ -662,16 +662,16 @@ const Header = () => {
           {/* CTA Button */}
           <div className="hidden lg:flex items-center space-x-4">
             <Link
-              to="/urgent-care"
-              className="text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 shadow-md hover:shadow-lg"
+              to="/urgent-care-booking"
+              className="inline-flex items-center text-white px-6 py-2 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg"
               style={{ 
-                backgroundColor: '#29add3',
-                '&:hover': { backgroundColor: '#2196c7' }
+                backgroundColor: '#29add3'
               }}
               onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
               onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
             >
-              Urgent Care
+              Check In Online
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </div>
 
