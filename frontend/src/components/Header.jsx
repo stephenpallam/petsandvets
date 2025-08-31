@@ -156,21 +156,6 @@ const Header = () => {
     return hours * 60 + (minutes || 0);
   };
 
-  // Helper function to parse time strings like "9:00 AM" to HHMM format
-  const parseTimeString = (timeStr) => {
-    const [time, period] = timeStr.split(' ');
-    const [hours, minutes] = time.split(':').map(Number);
-    
-    let hour24 = hours;
-    if (period.toLowerCase() === 'pm' && hours !== 12) {
-      hour24 += 12;
-    } else if (period.toLowerCase() === 'am' && hours === 12) {
-      hour24 = 0;
-    }
-    
-    return hour24 * 100 + minutes;
-  };
-
   // Get short address from business info
   const getShortAddress = () => {
     if (!businessInfo || !businessInfo.address) {
