@@ -14,7 +14,8 @@ import {
   Stethoscope,
   Trash2,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Edit
 } from 'lucide-react';
 
 const UrgentCareAppointments = () => {
