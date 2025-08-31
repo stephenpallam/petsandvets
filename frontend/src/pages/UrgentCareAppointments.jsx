@@ -240,6 +240,80 @@ const UrgentCareAppointments = () => {
     });
   };
 
+  const handleEditAppointment = (appointment) => {
+    setEditingAppointment(appointment);
+    setEditFormData({
+      owner_first_name: appointment.owner_first_name || '',
+      owner_last_name: appointment.owner_last_name || '',
+      phone: appointment.phone || '',
+      email: appointment.email || '',
+      pet_name: appointment.pet_name || '',
+      pet_type: appointment.pet_type || '',
+      pet_age: appointment.pet_age || '',
+      reason_for_visit: appointment.reason_for_visit || '',
+      appointment_date: appointment.appointment_time ? appointment.appointment_time.split('T')[0] : '',
+      appointment_time: appointment.appointment_time ? 
+        new Date(appointment.appointment_time).toLocaleTimeString('en-US', { 
+          hour12: false, 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        }) : '',
+      additional_notes: appointment.additional_notes || ''
+    });
+    setShowEditModal(true);
+  };
+
+  const handleEditFormChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSaveEdit = async () => {
+    try {
+      // Combine date and time for appointment_time
+      const appointmentDateTime = `${editFormData.appointment_date}T${editFormData.appointment_time}:00`;
+      
+      const updateData = {
+        owner_first_name: editFormData.owner_first_name,
+        owner_last_name: editFormData.owner_last_name,
+        phone: editFormData.phone,
+        email: editFormData.email,
+        pet_name: editFormData.pet_name,
+        pet_type: editFormData.pet_type,
+        pet_age: editFormData.pet_age,
+        reason_for_visit: editFormData.reason_for_visit,
+        appointment_time: appointmentDateTime,
+        additional_notes: editFormData.additional_notes
+      };
+
+      const response = await fetch(`${API_BASE_URL}/api/urgent-care-appointments/${editingAppointment.id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updateData)
+      });
+
+      if (response.ok) {
+        setMessage({ type: 'success', text: 'Appointment updated successfully!' });
+        setShowEditModal(false);
+        setEditingAppointment(null);
+        setEditFormData({});
+        fetchAppointments(); // Refresh the list
+      } else {
+        const errorData = await response.json();
+        setMessage({ type: 'error', text: errorData.detail || 'Failed to update appointment' });
+      }
+    } catch (error) {
+      console.error('Error updating appointment:', error);
+      setMessage({ type: 'error', text: 'Failed to update appointment' });
+    }
+  };
+
   const confirmDelete = (appointment) => {
     setAppointmentToDelete(appointment);
     setShowDeleteConfirm(true);
