@@ -134,6 +134,7 @@ function App() {
               <Route path="/forms/patient-registration-pdf" element={<PatientRegistrationPDF />} />
               <Route path="/reviews" element={<Reviews />} />
               <Route path="/business-info" element={<BusinessInfo />} />
+              <Route path="/email-configuration" element={<EmailConfiguration />} />
               <Route path="/photo-management" element={<PhotoManagement />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/google-integration" element={<GoogleIntegration />} />
