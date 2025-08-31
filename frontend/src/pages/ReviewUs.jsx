@@ -147,7 +147,7 @@ const ReviewUs = () => {
         </section>
       ) : (
         <section className="bg-[#f8f9fa] py-6">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="p-8 rounded-xl bg-white">
               <MessageSquare className="h-12 w-12 mx-auto mb-4 text-gray-400" />
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Review Links Not Configured</h3>
