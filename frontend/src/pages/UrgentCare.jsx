@@ -270,18 +270,6 @@ const UrgentCare = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section - Mobile Only */}
-      <section className="text-white sticky z-40 block md:hidden" style={{ top: '4rem', background: `linear-gradient(135deg, ${urgentColor} 0%, #b91c1c 100%)`, paddingTop: '0.5rem', paddingBottom: '0.5rem' }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center flex items-center justify-center">
-            <Siren className="h-5 w-5 mr-2" />
-            <h1 className="font-bold" style={{ fontSize: '1.125rem' }}>
-              Urgent Care Services
-            </h1>
-          </div>
-        </div>
-      </section>
-
       {/* Hero Section */}
       <section className="bg-white">
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
