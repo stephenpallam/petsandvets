@@ -73,6 +73,12 @@ const ConfigureHours = () => {
       color: '#374151'  // Changed from red to dark grey
     },
     { 
+      id: 'slots', 
+      label: 'Appointment Slots', 
+      icon: Settings,
+      color: '#29add3'  // Theme blue
+    },
+    { 
       id: 'special', 
       label: 'Special Holidays', 
       icon: CalendarDays,
