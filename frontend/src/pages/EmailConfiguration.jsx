@@ -28,9 +28,9 @@ const EmailConfiguration = () => {
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
 
   const tabs = [
-    { id: 'general', name: 'General Settings', icon: Settings },
-    { id: 'provider', name: 'Email Provider', icon: Mail },
-    { id: 'test', name: 'Test & Verify', icon: TestTube }
+    { id: 'general', label: 'General Settings', icon: Settings },
+    { id: 'provider', label: 'Email Provider', icon: Mail },
+    { id: 'test', label: 'Test & Verify', icon: TestTube }
   ];
 
   const fetchEmailConfig = async () => {
