@@ -1721,7 +1721,7 @@ async def get_team_members():
 @api_router.post("/team-members", response_model=TeamMember)
 async def create_team_member(
     team_data: TeamMemberCreate, 
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_manager_or_admin_user)
 ):
     """Create a new team member (admin only)"""
     now = datetime.utcnow()
