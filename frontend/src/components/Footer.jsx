@@ -28,7 +28,7 @@ const Footer = () => {
   };
 
   useEffect(() => {
-    const fetchHours = async () => {
+    const fetchData = async () => {
       try {
         // Fetch hospital hours
         const hospitalResponse = await fetch(`${API_BASE_URL}/api/hospital-hours`);
@@ -43,14 +43,21 @@ const Footer = () => {
           const urgentData = await urgentResponse.json();
           setUrgentCareHours(urgentData);
         }
+
+        // Fetch business info for social media links
+        const businessResponse = await fetch(`${API_BASE_URL}/api/business-info`);
+        if (businessResponse.ok) {
+          const businessData = await businessResponse.json();
+          setBusinessInfo(businessData);
+        }
       } catch (error) {
-        console.error('Error fetching hours:', error);
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchHours();
+    fetchData();
   }, []);
 
   // Fallback to static data while loading or if fetch fails
