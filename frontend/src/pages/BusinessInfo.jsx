@@ -36,6 +36,10 @@ const BusinessInfo = () => {
     { id: 'reviews', label: 'Review Platforms', icon: Star, color: '#29add3' }
   ];
 
+  const clearMessage = () => {
+    setTimeout(() => setMessage({ type: '', text: '' }), 5000);
+  };
+
   const fetchBusinessInfo = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/business-info`);
