@@ -519,7 +519,7 @@ const Header = () => {
               </div>
               <div className="flex items-center space-x-1">
                 <Clock className="h-3 w-3" />
-                <span>UC:</span>
+                <span>Urgent Care:</span>
                 <span style={getStatusStyling(getUrgentCareStatus())}>
                   {getUrgentCareStatus()}
                 </span>
