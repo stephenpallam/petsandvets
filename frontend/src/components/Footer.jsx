@@ -284,6 +284,15 @@ const Footer = () => {
             >
               Privacy Policy
             </Link>
+            <span className="hidden sm:inline text-gray-600">•</span>
+            <Link 
+              to="/accessibility" 
+              className="text-gray-400 hover:text-white transition-colors text-sm"
+              onMouseEnter={(e) => e.target.style.color = '#5bc0db'}
+              onMouseLeave={(e) => e.target.style.color = '#9ca3af'}
+            >
+              Accessibility
+            </Link>
           </div>
           <p className="text-gray-400 text-sm">
             © 2024 Pets and Vets Animal Hospital & Urgent Care. All rights reserved.
