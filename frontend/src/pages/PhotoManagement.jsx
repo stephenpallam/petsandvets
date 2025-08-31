@@ -1022,7 +1022,7 @@ const PhotoManagement = () => {
   const [deleteData, setDeleteData] = useState({ type: '', id: '', name: '' });
 
   const { user, token, isAdmin, canAccessManager, loading: authLoading } = useAuth();
-  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL || window.location.origin;
 
   const tabs = [
     {

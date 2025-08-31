@@ -17,7 +17,7 @@ const OurHours = () => {
   const [specialHours, setSpecialHours] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL || window.location.origin;
 
   const primaryColor = '#29add3';
   const primaryLight = '#5bc0db';

@@ -47,7 +47,7 @@ const ConfigureHours = () => {
   const [authError, setAuthError] = useState(null); // New state for authentication errors
   const [pageLoading, setPageLoading] = useState(true); // New state for page loading
 
-  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL || window.location.origin;
 
   const days = [
     { key: 'monday', label: 'Monday' },

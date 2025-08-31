@@ -55,7 +55,7 @@ const UserManagement = () => {
   // Messages
   const [message, setMessage] = useState({ text: '', type: '' });
   
-  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL || window.location.origin;
 
   // Role options based on current user permissions
   const getRoleOptions = () => {

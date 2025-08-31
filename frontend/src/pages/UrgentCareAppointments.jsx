@@ -40,7 +40,7 @@ const UrgentCareAppointments = () => {
   const [filterDays, setFilterDays] = useState('today');
   const [pageSize] = useState(20);
 
-  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL || window.location.origin;
 
   // Status label mapping
   const getStatusLabel = (status) => {
