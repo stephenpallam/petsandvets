@@ -15,6 +15,7 @@ import {
   Check
 } from 'lucide-react';
 import { hospitalInfo } from '../mock';
+import { useAuth } from '../contexts/AuthContext';
 
 const UrgentCareBooking = () => {
   const [currentTab, setCurrentTab] = useState(0);
