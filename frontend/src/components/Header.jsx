@@ -289,11 +289,15 @@ const Header = () => {
         );
       }
       
-      // Manager gets access to appointments and user management
+      // Manager gets access to content management and appointments
       if (user.role === 'manager' || user.role === 'admin') {
         if (user.role === 'manager') {
           roleDropdown.push(
             { name: 'Urgent Care Appointments', href: '/urgent-care-appointments' },
+            { name: 'Configure Hours', href: '/configure-hours' },
+            { name: 'Reviews', href: '/reviews' },
+            { name: 'Business Info', href: '/business-info' },
+            { name: 'Photo Management', href: '/photo-management' },
             { name: 'User Management', href: '/user-management' }
           );
         }
