@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Clock, Calendar, Plus, Edit2, Trash2, Save, AlertCircle, CheckCircle, ExternalLink, RefreshCw, CalendarDays } from 'lucide-react';
+import { Clock, Calendar, Plus, Edit2, Trash2, Save, AlertCircle, CheckCircle, ExternalLink, RefreshCw, CalendarDays, Settings } from 'lucide-react';
 import axios from 'axios';
 
 const ConfigureHours = () => {
