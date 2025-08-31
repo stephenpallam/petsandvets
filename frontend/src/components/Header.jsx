@@ -49,77 +49,111 @@ const Header = () => {
     fetchData();
   }, []);
 
-  // Function to determine if urgent care is currently open
-  const getUrgentCareStatus = () => {
-    const now = new Date();
-    const currentHour = now.getHours();
+  // Function to get current time in business timezone
+  const getCurrentBusinessTime = () => {
+    if (!businessInfo?.timezone) {
+      return new Date(); // Fallback to local time if timezone not available
+    }
     
-    // Urgent Care hours: 3 PM - 10 PM Daily (15:00 - 22:00)
-    if (currentHour >= 15 && currentHour < 22) {
-      return "Open";
-    } else {
+    try {
+      // Create a date in the business timezone
+      const now = new Date();
+      const businessTime = new Date(now.toLocaleString("en-US", {timeZone: businessInfo.timezone}));
+      return businessTime;
+    } catch (error) {
+      console.error('Error getting business time:', error);
+      return new Date(); // Fallback to local time
+    }
+  };
+
+  // Function to determine urgent care status with Opening Soon/Closing Soon
+  const getUrgentCareStatus = () => {
+    if (!currentHours || !currentHours.urgent_care) {
+      return "Closed";
+    }
+
+    const urgentCareHours = currentHours.urgent_care;
+    
+    // Check if urgent care is closed today
+    if (!urgentCareHours.is_open || !urgentCareHours.open_time || !urgentCareHours.close_time) {
+      return "Closed";
+    }
+
+    const businessTime = getCurrentBusinessTime();
+    const currentMinutes = businessTime.getHours() * 60 + businessTime.getMinutes();
+    
+    try {
+      const openMinutes = parseTimeToMinutes(urgentCareHours.open_time);
+      const closeMinutes = parseTimeToMinutes(urgentCareHours.close_time);
+      
+      // Check if currently open
+      if (currentMinutes >= openMinutes && currentMinutes < closeMinutes) {
+        // Check if closing soon (within 60 minutes)
+        if (closeMinutes - currentMinutes <= 60) {
+          return "Closing Soon";
+        }
+        return "Open";
+      }
+      
+      // Check if opening soon (within 60 minutes)
+      if (currentMinutes < openMinutes && openMinutes - currentMinutes <= 60) {
+        return "Opening Soon";
+      }
+      
+      return "Closed";
+    } catch (error) {
+      console.error('Error parsing urgent care hours:', error);
       return "Closed";
     }
   };
 
-  // Function to determine if general practice is currently open
+  // Function to determine general practice status with Opening Soon/Closing Soon
   const getGeneralPracticeStatus = () => {
     if (!currentHours || !currentHours.general_practice) {
       return "Closed";
     }
 
-    const now = new Date();
-    const currentTime = now.getHours() * 100 + now.getMinutes(); // Convert to HHMM format
-    
     const gpHours = currentHours.general_practice;
     
-    // Handle case where gpHours is an object with open_time and close_time
-    if (typeof gpHours === 'object' && gpHours.open_time && gpHours.close_time) {
-      // Check if it's closed for the day
-      if (gpHours.open_time.toLowerCase().includes('closed') || gpHours.close_time.toLowerCase().includes('closed')) {
-        return "Closed";
+    // Check if general practice is closed today
+    if (!gpHours.is_open || !gpHours.open_time || !gpHours.close_time) {
+      return "Closed";
+    }
+
+    const businessTime = getCurrentBusinessTime();
+    const currentMinutes = businessTime.getHours() * 60 + businessTime.getMinutes();
+    
+    try {
+      const openMinutes = parseTimeToMinutes(gpHours.open_time);
+      const closeMinutes = parseTimeToMinutes(gpHours.close_time);
+      
+      // Check if currently open
+      if (currentMinutes >= openMinutes && currentMinutes < closeMinutes) {
+        // Check if closing soon (within 60 minutes)
+        if (closeMinutes - currentMinutes <= 60) {
+          return "Closing Soon";
+        }
+        return "Open";
       }
       
-      try {
-        const startTime = parseTimeString(gpHours.open_time);
-        const endTime = parseTimeString(gpHours.close_time);
-        
-        if (currentTime >= startTime && currentTime < endTime) {
-          return "Open";
-        } else {
-          return "Closed";
-        }
-      } catch (error) {
-        return "Closed";
-      }
-    }
-    
-    // Handle case where gpHours is a string like "9:00 AM - 6:00 PM"
-    if (typeof gpHours === 'string') {
-      // Check if it's closed for the day
-      if (gpHours.toLowerCase().includes('closed')) {
-        return "Closed";
+      // Check if opening soon (within 60 minutes)
+      if (currentMinutes < openMinutes && openMinutes - currentMinutes <= 60) {
+        return "Opening Soon";
       }
       
-      // Parse hours like "9:00 AM - 6:00 PM"
-      try {
-        const timeRange = gpHours.split(' - ');
-        if (timeRange.length !== 2) return "Closed";
-        
-        const startTime = parseTimeString(timeRange[0].trim());
-        const endTime = parseTimeString(timeRange[1].trim());
-        
-        if (currentTime >= startTime && currentTime < endTime) {
-          return "Open";
-        } else {
-          return "Closed";
-        }
-      } catch (error) {
-        return "Closed";
-      }
+      return "Closed";
+    } catch (error) {
+      console.error('Error parsing general practice hours:', error);
+      return "Closed";
     }
+  };
+
+  // Helper function to parse time strings like "09:00" or "14:30" to total minutes
+  const parseTimeToMinutes = (timeString) => {
+    if (!timeString) return 0;
     
-    return "Closed";
+    const [hours, minutes] = timeString.split(':').map(Number);
+    return hours * 60 + (minutes || 0);
   };
 
   // Helper function to parse time strings like "9:00 AM" to HHMM format
