@@ -4930,6 +4930,29 @@ def run_all_tests():
     test_business_info_timestamps()
     
     print("\n" + "="*50)
+    print("EMAIL CONFIGURATION API TESTS")
+    print("="*50)
+    
+    # Email Configuration API Tests - NEW
+    test_get_email_config_no_auth()
+    test_get_email_config_regular_user()
+    test_get_email_config_admin()
+    test_get_email_config_manager()
+    test_get_email_config_masks_sensitive_data()
+    test_create_email_config_gmail_admin()
+    test_create_email_config_sendgrid_manager()
+    test_update_email_config_partial()
+    test_create_email_config_no_auth()
+    test_create_email_config_regular_user()
+    test_test_email_config_admin()
+    test_test_email_config_manager()
+    test_test_email_config_no_auth()
+    test_test_email_config_regular_user()
+    test_email_config_data_encryption()
+    test_email_config_provider_validation()
+    test_email_config_email_validation()
+    
+    print("\n" + "="*50)
     print("USER MANAGEMENT API TESTS")
     print("="*50)
     
