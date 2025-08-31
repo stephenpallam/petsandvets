@@ -160,77 +160,83 @@ const EmailConfiguration = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-          <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
-            <div className="flex items-center">
-              <Mail className="h-6 sm:h-8 w-6 sm:w-8 mr-3" style={{ color: '#29add3' }} />
-              <div className="min-w-0 flex-1">
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">Email Configuration</h1>
-                <p className="text-sm sm:text-base text-gray-600 mt-1">Configure email notifications for appointments and contact forms</p>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          {/* Header - Inside the main card */}
+          <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Email Configuration
+              </h2>
+            </div>
+          </div>
+
+          {/* Content Area */}
+          <div className="p-6">
+            {/* Success Alert */}
+            {success && (
+              <div className="mb-6 rounded-md p-4 bg-green-50 border border-green-200">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <CheckCircle className="h-5 w-5 text-green-400" />
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-green-800">
+                      {success}
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
+            )}
 
-        {/* Main Content */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          {/* Success Alert */}
-          {success && (
-            <div className="mx-4 sm:mx-6 mt-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center">
-              <CheckCircle className="h-5 w-5 mr-3 flex-shrink-0" />
-              <span className="text-sm sm:text-base">{success}</span>
-            </div>
-          )}
+            {/* Error Alert */}
+            {error && (
+              <div className="mb-6 rounded-md p-4 bg-red-50 border border-red-200">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <AlertCircle className="h-5 w-5 text-red-400" />
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-red-800">
+                      {error}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
-          {/* Error Alert */}
-          {error && (
-            <div className="mx-4 sm:mx-6 mt-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center">
-              <AlertCircle className="h-5 w-5 mr-3 flex-shrink-0" />
-              <span className="text-sm sm:text-base">{error}</span>
-            </div>
-          )}
+            {/* Tab Navigation */}
+            <div className="border border-gray-200 rounded-lg mb-4 sm:mb-6">
+              <div className="border-b border-gray-200">
+                <nav className="flex flex-col sm:flex-row sm:space-x-8 px-3 sm:px-6" aria-label="Tabs">
+                  {tabs.map((tab) => {
+                    const Icon = tab.icon;
+                    const isActive = activeTab === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className="w-full sm:w-auto py-3 sm:py-4 px-3 sm:px-1 border-b-2 sm:border-l-0 font-medium text-sm transition-colors border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                        style={{
+                          borderBottomColor: isActive ? '#29add3' : 'transparent',
+                          color: isActive ? '#29add3' : undefined,
+                          backgroundColor: isActive ? '#f0fdff' : 'transparent'
+                        }}
+                      >
+                        <div className="flex items-center justify-center sm:justify-start space-x-2">
+                          <Icon className="h-4 w-4" />
+                          <span>{tab.label}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </nav>
+              </div>
 
-          {/* Tabs */}
-          <div className="border-b border-gray-200 mt-6">
-            <nav className="flex flex-col sm:flex-row sm:space-x-8 px-3 sm:px-6" aria-label="Tabs">
-              {tabs.map((tab) => {
-                const Icon = tab.icon;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className="w-full sm:w-auto py-3 sm:py-4 px-3 sm:px-1 border-b-2 font-medium text-sm flex items-center justify-center sm:justify-start transition-colors border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50 sm:hover:bg-transparent"
-                    style={{
-                      borderBottomColor: activeTab === tab.id ? '#29add3' : 'transparent',
-                      color: activeTab === tab.id ? '#29add3' : undefined,
-                      backgroundColor: activeTab === tab.id ? '#f3f4f6' : undefined
-                    }}
-                    onMouseEnter={(e) => {
-                      if (activeTab !== tab.id) {
-                        e.target.style.backgroundColor = '#f9fafb';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (activeTab !== tab.id) {
-                        e.target.style.backgroundColor = 'transparent';
-                      } else {
-                        e.target.style.backgroundColor = '#f3f4f6';
-                      }
-                    }}
-                  >
-                    <Icon className="h-5 w-5 mr-2" />
-                    {tab.name}
-                  </button>
-                );
-              })}
-            </nav>
-          </div>
-
-          {/* Tab Content */}
-          <form onSubmit={handleSubmit} className="p-4 sm:p-6">
+              {/* Tab Content */}
+              <form onSubmit={handleSubmit} className="p-3 sm:p-6">
             {/* General Settings Tab */}
             <div className={activeTab === 'general' ? 'block' : 'hidden'}>
               <div className="space-y-6">
