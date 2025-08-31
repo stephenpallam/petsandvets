@@ -195,32 +195,27 @@ const Footer = () => {
             </div>
 
             {/* Social Media Icons */}
-            <div className="flex space-x-4 pt-2">
-              <a 
-                href="#" 
-                className="text-gray-400 transition-colors"
-                onMouseEnter={(e) => e.target.style.color = '#5bc0db'}
-                onMouseLeave={(e) => e.target.style.color = '#9ca3af'}
-              >
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a 
-                href="#" 
-                className="text-gray-400 transition-colors"
-                onMouseEnter={(e) => e.target.style.color = '#5bc0db'}
-                onMouseLeave={(e) => e.target.style.color = '#9ca3af'}
-              >
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a 
-                href="#" 
-                className="text-gray-400 transition-colors"
-                onMouseEnter={(e) => e.target.style.color = '#5bc0db'}
-                onMouseLeave={(e) => e.target.style.color = '#9ca3af'}
-              >
-                <X className="h-5 w-5" />
-              </a>
-            </div>
+            {getSocialMediaLinks().length > 0 && (
+              <div className="flex space-x-4 pt-2">
+                {getSocialMediaLinks().map((social, index) => {
+                  const IconComponent = social.icon;
+                  return (
+                    <a 
+                      key={index}
+                      href={social.url} 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-400 transition-colors"
+                      title={social.name}
+                      onMouseEnter={(e) => e.target.style.color = '#5bc0db'}
+                      onMouseLeave={(e) => e.target.style.color = '#9ca3af'}
+                    >
+                      <IconComponent className="h-5 w-5" />
+                    </a>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* General Practice Hours */}
