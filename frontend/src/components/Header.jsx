@@ -195,6 +195,7 @@ const Header = () => {
           { name: 'Our Facility', href: '/gallery' }
         ]
       },
+      { name: 'Urgent Care', href: '/urgent-care' },
       { 
         name: 'Services',
         dropdown: [
