@@ -519,13 +519,19 @@ const Header = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-1">
+              <div className="flex items-center space-x-2">
                 <Clock className="h-4 w-4" />
-                <span>General Practice: {getGeneralPracticeStatus()}</span>
+                <span>General Practice:</span>
+                <span style={getStatusStyling(getGeneralPracticeStatus())}>
+                  {getGeneralPracticeStatus()}
+                </span>
               </div>
-              <div className="flex items-center space-x-1">
+              <div className="flex items-center space-x-2">
                 <Clock className="h-4 w-4" />
-                <span>Urgent Care: {getUrgentCareStatus()}</span>
+                <span>Urgent Care:</span>
+                <span style={getStatusStyling(getUrgentCareStatus())}>
+                  {getUrgentCareStatus()}
+                </span>
               </div>
             </div>
           </div>
