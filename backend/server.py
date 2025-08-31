@@ -1559,6 +1559,11 @@ async def get_available_time_slots(date: str):
             "hours": {
                 "open": open_time.strftime("%I:%M %p").lstrip('0'),
                 "close": close_time.strftime("%I:%M %p").lstrip('0')
+            },
+            "slot_config": {
+                "interval_minutes": slot_interval,
+                "first_appointment_delay_minutes": first_delay,
+                "last_appointment_cutoff_minutes": last_cutoff
             }
         }
         
