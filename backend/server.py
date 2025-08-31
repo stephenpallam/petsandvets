@@ -799,7 +799,7 @@ async def get_hospital_hours():
 @api_router.put("/hospital-hours", response_model=HospitalHours)
 async def update_hospital_hours(
     hours_data: HospitalHoursCreate,
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_manager_or_admin_user)
 ):
     hours = HospitalHours(
         **hours_data.dict(),
