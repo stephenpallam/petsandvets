@@ -1897,7 +1897,7 @@ async def create_slider_image(
 async def update_slider_image(
     image_id: str,
     image_data: SliderImageUpdate,
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_manager_or_admin_user)
 ):
     """Update a slider image (admin only)"""
     existing_image = await db.slider_images.find_one({"id": image_id})
