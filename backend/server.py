@@ -1854,7 +1854,7 @@ async def update_facility_photo(
 @api_router.delete("/facility-photos/{photo_id}")
 async def delete_facility_photo(
     photo_id: str, 
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_manager_or_admin_user)
 ):
     """Delete a facility photo (admin only)"""
     result = await db.facility_photos.delete_one({"id": photo_id})
