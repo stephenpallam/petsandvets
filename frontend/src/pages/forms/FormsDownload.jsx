@@ -212,7 +212,7 @@ const FormsDownload = () => {
               <h3 className="text-lg font-bold text-gray-900 mb-2">Schedule Visit</h3>
               <p className="text-gray-700 mb-4">Book your appointment online</p>
               <Link
-                to="/message-us"
+                to="/reach-us"
                 className="inline-flex items-center justify-center px-6 py-3 rounded-lg border-2 font-semibold transition-colors duration-200"
                 style={{ borderColor: primaryColor, color: primaryColor }}
                 onMouseEnter={(e) => {
