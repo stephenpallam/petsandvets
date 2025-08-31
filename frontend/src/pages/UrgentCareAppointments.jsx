@@ -557,14 +557,24 @@ const UrgentCareAppointments = () => {
                             {appointment.pet_name} ({appointment.pet_type})
                           </p>
                         </div>
-                        <button
-                          onClick={() => fetchAppointmentDetails(appointment.id)}
-                          className="p-2 rounded hover:bg-blue-50 ml-2"
-                          style={{ color: '#29add3' }}
-                          title="View Details"
-                        >
-                          <Eye className="h-5 w-5" />
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleEditAppointment(appointment)}
+                            className="p-2 rounded hover:bg-green-50"
+                            style={{ color: '#16a34a' }}
+                            title="Edit Appointment"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => fetchAppointmentDetails(appointment.id)}
+                            className="p-2 rounded hover:bg-blue-50"
+                            style={{ color: '#29add3' }}
+                            title="View Details"
+                          >
+                            <Eye className="h-5 w-5" />
+                          </button>
+                        </div>
                       </div>
 
                       {/* Card Body */}
