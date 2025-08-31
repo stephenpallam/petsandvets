@@ -6,7 +6,11 @@ import {
   MapPin,
   Phone,
   ExternalLink,
-  MessageSquare
+  MessageSquare,
+  Facebook,
+  Instagram,
+  X,
+  MessageCircle
 } from 'lucide-react';
 import { hospitalInfo } from '../mock';
 
