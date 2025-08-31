@@ -504,7 +504,7 @@ const Header = () => {
               </div>
               <div className="flex items-center space-x-1">
                 <Clock className="h-3 w-3" />
-                <span>GP:</span>
+                <span>General Practice:</span>
                 <span style={getStatusStyling(getGeneralPracticeStatus())}>
                   {getGeneralPracticeStatus()}
                 </span>
