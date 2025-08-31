@@ -73,16 +73,16 @@ const MessageUs = () => {
       title: "Phone Call",
       description: "Speak directly with our team for immediate assistance",
       icon: Phone,
-      action: `tel:${hospitalInfo.phone}`,
-      actionText: hospitalInfo.phone,
+      action: `tel:${currentBusinessInfo.phone}`,
+      actionText: currentBusinessInfo.phone,
       color: "#10b981"
     },
     {
       title: "Email",
       description: "Send us an email for non-urgent questions",
       icon: Mail,
-      action: `mailto:${hospitalInfo.email}`,
-      actionText: hospitalInfo.email,
+      action: `mailto:${currentBusinessInfo.email}`,
+      actionText: currentBusinessInfo.email,
       color: "#29add3"
     },
     {
