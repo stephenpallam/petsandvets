@@ -166,7 +166,7 @@ const UserManagement = () => {
     
     try {
       const updateData = {};
-      if (editForm.fullName) updateData.fullName = editForm.fullName;
+      if (editForm.fullName) updateData.full_name = editForm.fullName;
       if (editForm.password) updateData.password = editForm.password;
       if (editForm.role && user?.role === 'admin') updateData.role = editForm.role;
 
