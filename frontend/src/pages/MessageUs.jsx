@@ -123,7 +123,6 @@ const MessageUs = () => {
           </h1>
           <div className="mb-6">
             <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
-              <MessageSquare className="mr-2 h-4 w-4" />
               Your Voice Matters to Us
             </span>
           </div>
