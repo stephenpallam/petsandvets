@@ -423,7 +423,12 @@ const UrgentCareBooking = () => {
               <div>
                 <div className="mb-6">
                   <h2 className="text-xl font-semibold text-gray-900 mb-2">Pet Owner Information</h2>
-                  <p className="text-gray-600">Please provide your contact information</p>
+                  <p className="text-gray-600">
+                    {isStaffMember 
+                      ? "Enter client contact information (only name and phone required for staff)" 
+                      : "Please provide your contact information"
+                    }
+                  </p>
                 </div>
                 
                 <div className="space-y-6">
