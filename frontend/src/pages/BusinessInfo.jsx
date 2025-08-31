@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Building, Save, RefreshCw, Globe, Phone, Mail, MapPin, Facebook, Instagram, Twitter, MessageCircle, ExternalLink, AlertCircle, CheckCircle, Star } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import axios from 'axios';
 
 const BusinessInfo = () => {
   const [activeTab, setActiveTab] = useState('business');
