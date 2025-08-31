@@ -845,7 +845,7 @@ async def get_special_hours():
 @api_router.post("/special-hours", response_model=SpecialHours)
 async def create_special_hours(
     special_data: SpecialHoursCreate,
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_manager_or_admin_user)
 ):
     # Check if special hours already exist for this date
     existing = await db.special_hours.find_one({"date": special_data.date})
