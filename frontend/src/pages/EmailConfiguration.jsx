@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, Send, Settings, CheckCircle, AlertCircle, Eye, EyeOff, Info } from 'lucide-react';
+import { Mail, Send, Settings, CheckCircle, AlertCircle, Eye, EyeOff, Info, Cog, TestTube } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 const EmailConfiguration = () => {
+  const [activeTab, setActiveTab] = useState('general');
   const [emailConfig, setEmailConfig] = useState({
     notification_email: '',
     email_provider: 'gmail', // 'gmail' or 'sendgrid'
@@ -25,6 +26,12 @@ const EmailConfiguration = () => {
 
   const { user, token, isAdmin, canAccessManager, loading: authLoading } = useAuth();
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+
+  const tabs = [
+    { id: 'general', name: 'General Settings', icon: Settings },
+    { id: 'provider', name: 'Email Provider', icon: Mail },
+    { id: 'test', name: 'Test & Verify', icon: TestTube }
+  ];
 
   const fetchEmailConfig = async () => {
     try {
@@ -132,17 +139,20 @@ const EmailConfiguration = () => {
   if (authLoading || loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: '#29add3' }}></div>
       </div>
     );
   }
 
   if (error && !canAccessManager()) {
     return (
-      <div className="min-h-screen bg-gray-50 p-6">
+      <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
         <div className="max-w-4xl mx-auto">
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-            {error}
+            <div className="flex items-center">
+              <AlertCircle className="h-5 w-5 mr-3" />
+              {error}
+            </div>
           </div>
         </div>
       </div>
@@ -150,50 +160,85 @@ const EmailConfiguration = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-          <div className="px-6 py-4 border-b border-gray-200">
+          <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
             <div className="flex items-center">
-              <Mail className="h-8 w-8 text-blue-600 mr-3" />
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Email Configuration</h1>
-                <p className="text-gray-600 mt-1">Configure email notifications for appointments and contact forms</p>
+              <Mail className="h-6 sm:h-8 w-6 sm:w-8 mr-3" style={{ color: '#29add3' }} />
+              <div className="min-w-0 flex-1">
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">Email Configuration</h1>
+                <p className="text-sm sm:text-base text-gray-600 mt-1">Configure email notifications for appointments and contact forms</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Content Area */}
+        {/* Main Content */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-6">
-            {/* Success Alert */}
-            {success && (
-              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center">
-                <CheckCircle className="h-5 w-5 mr-3" />
-                {success}
-              </div>
-            )}
+          {/* Success Alert */}
+          {success && (
+            <div className="mx-4 sm:mx-6 mt-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center">
+              <CheckCircle className="h-5 w-5 mr-3 flex-shrink-0" />
+              <span className="text-sm sm:text-base">{success}</span>
+            </div>
+          )}
 
-            {/* Error Alert */}
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center">
-                <AlertCircle className="h-5 w-5 mr-3" />
-                {error}
-              </div>
-            )}
+          {/* Error Alert */}
+          {error && (
+            <div className="mx-4 sm:mx-6 mt-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center">
+              <AlertCircle className="h-5 w-5 mr-3 flex-shrink-0" />
+              <span className="text-sm sm:text-base">{error}</span>
+            </div>
+          )}
 
-            <form onSubmit={handleSubmit} className="space-y-8">
-              {/* General Settings */}
-              <div>
-                <h3 className="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2 mb-4">
-                  General Settings
-                </h3>
-                
-                <div className="space-y-4">
+          {/* Tabs */}
+          <div className="border-b border-gray-200 mt-6">
+            <nav className="flex flex-col sm:flex-row sm:space-x-8 px-3 sm:px-6" aria-label="Tabs">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className="w-full sm:w-auto py-3 sm:py-4 px-3 sm:px-1 border-b-2 font-medium text-sm flex items-center justify-center sm:justify-start transition-colors border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50 sm:hover:bg-transparent"
+                    style={{
+                      borderBottomColor: activeTab === tab.id ? '#29add3' : 'transparent',
+                      color: activeTab === tab.id ? '#29add3' : undefined,
+                      backgroundColor: activeTab === tab.id ? '#f3f4f6' : undefined
+                    }}
+                    onMouseEnter={(e) => {
+                      if (activeTab !== tab.id) {
+                        e.target.style.backgroundColor = '#f9fafb';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (activeTab !== tab.id) {
+                        e.target.style.backgroundColor = 'transparent';
+                      } else {
+                        e.target.style.backgroundColor = '#f3f4f6';
+                      }
+                    }}
+                  >
+                    <Icon className="h-5 w-5 mr-2" />
+                    {tab.name}
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
+
+          {/* Tab Content */}
+          <form onSubmit={handleSubmit} className="p-4 sm:p-6">
+            {/* General Settings Tab */}
+            <div className={activeTab === 'general' ? 'block' : 'hidden'}>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">General Settings</h3>
+                  
                   {/* Enable Email Notifications */}
-                  <div className="flex items-center">
+                  <div className="flex items-center mb-6">
                     <input
                       type="checkbox"
                       name="is_enabled"
@@ -202,7 +247,7 @@ const EmailConfiguration = () => {
                       onChange={handleInputChange}
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
-                    <label htmlFor="is_enabled" className="ml-2 block text-sm text-gray-900">
+                    <label htmlFor="is_enabled" className="ml-3 text-sm sm:text-base text-gray-900">
                       Enable email notifications
                     </label>
                   </div>
@@ -211,7 +256,7 @@ const EmailConfiguration = () => {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       <Mail className="h-4 w-4 inline mr-2" />
-                      Notification Email Address
+                      Notification Email Address *
                     </label>
                     <input
                       type="email"
@@ -219,29 +264,29 @@ const EmailConfiguration = () => {
                       value={emailConfig.notification_email}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
                       placeholder="notifications@yourpractice.com"
                     />
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-xs sm:text-sm text-gray-500 mt-2">
                       This email will receive appointment and contact form notifications
                     </p>
                   </div>
                 </div>
               </div>
+            </div>
 
-              {/* Email Provider Selection */}
-              <div>
-                <h3 className="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2 mb-4">
-                  Email Provider
-                </h3>
-                
-                <div className="space-y-4">
+            {/* Email Provider Tab */}
+            <div className={activeTab === 'provider' ? 'block' : 'hidden'}>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Email Provider</h3>
+                  
                   {/* Provider Selection */}
-                  <div>
+                  <div className="mb-6">
                     <label className="block text-sm font-medium text-gray-700 mb-3">
                       Choose Email Service Provider
                     </label>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       <div className="flex items-center">
                         <input
                           type="radio"
@@ -252,8 +297,8 @@ const EmailConfiguration = () => {
                           onChange={handleInputChange}
                           className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                         />
-                        <label htmlFor="gmail" className="ml-2 block text-sm text-gray-900">
-                          Gmail SMTP (Recommended for small practices)
+                        <label htmlFor="gmail" className="ml-3 text-sm sm:text-base text-gray-900">
+                          Gmail SMTP <span className="text-sm text-gray-500">(Recommended for small practices)</span>
                         </label>
                       </div>
                       <div className="flex items-center">
@@ -266,179 +311,225 @@ const EmailConfiguration = () => {
                           onChange={handleInputChange}
                           className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                         />
-                        <label htmlFor="sendgrid" className="ml-2 block text-sm text-gray-900">
-                          SendGrid (Recommended for high volume)
+                        <label htmlFor="sendgrid" className="ml-3 text-sm sm:text-base text-gray-900">
+                          SendGrid <span className="text-sm text-gray-500">(Recommended for high volume)</span>
                         </label>
                       </div>
                     </div>
                   </div>
+
+                  {/* Gmail SMTP Configuration */}
+                  {emailConfig.email_provider === 'gmail' && (
+                    <div className="space-y-4">
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <div className="flex items-start">
+                          <Info className="h-5 w-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
+                          <div className="text-sm text-blue-800">
+                            <p className="font-medium mb-2">Gmail Setup Instructions:</p>
+                            <ol className="list-decimal list-inside space-y-1">
+                              <li>Enable 2-factor authentication on your Gmail account</li>
+                              <li>Go to Google Account settings → Security → App passwords</li>
+                              <li>Generate an app password for "Mail"</li>
+                              <li>Use your Gmail address and the generated app password below</li>
+                            </ol>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Gmail Email Address *
+                          </label>
+                          <input
+                            type="email"
+                            name="smtp_email"
+                            value={emailConfig.smtp_email}
+                            onChange={handleInputChange}
+                            required={emailConfig.email_provider === 'gmail'}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                            placeholder="your-email@gmail.com"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Gmail App Password *
+                          </label>
+                          <div className="relative">
+                            <input
+                              type={showPassword ? "text" : "password"}
+                              name="smtp_password"
+                              value={emailConfig.smtp_password}
+                              onChange={handleInputChange}
+                              required={emailConfig.email_provider === 'gmail'}
+                              className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                              placeholder="16-character app password"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowPassword(!showPassword)}
+                              className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                            >
+                              {showPassword ? (
+                                <EyeOff className="h-4 w-4 text-gray-400" />
+                              ) : (
+                                <Eye className="h-4 w-4 text-gray-400" />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* SendGrid Configuration */}
+                  {emailConfig.email_provider === 'sendgrid' && (
+                    <div className="space-y-4">
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <div className="flex items-start">
+                          <Info className="h-5 w-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
+                          <div className="text-sm text-blue-800">
+                            <p className="font-medium mb-2">SendGrid Setup Instructions:</p>
+                            <ol className="list-decimal list-inside space-y-1">
+                              <li>Create account at <a href="https://sendgrid.com" target="_blank" rel="noopener noreferrer" className="underline">sendgrid.com</a></li>
+                              <li>Go to Settings → API Keys</li>
+                              <li>Create API key with "Full Access" permissions</li>
+                              <li>Verify a sender email address in SendGrid</li>
+                            </ol>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            SendGrid API Key *
+                          </label>
+                          <div className="relative">
+                            <input
+                              type={showApiKey ? "text" : "password"}
+                              name="sendgrid_api_key"
+                              value={emailConfig.sendgrid_api_key}
+                              onChange={handleInputChange}
+                              required={emailConfig.email_provider === 'sendgrid'}
+                              className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                              placeholder="SG.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowApiKey(!showApiKey)}
+                              className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                            >
+                              {showApiKey ? (
+                                <EyeOff className="h-4 w-4 text-gray-400" />
+                              ) : (
+                                <Eye className="h-4 w-4 text-gray-400" />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Verified Sender Email *
+                          </label>
+                          <input
+                            type="email"
+                            name="sender_email"
+                            value={emailConfig.sender_email}
+                            onChange={handleInputChange}
+                            required={emailConfig.email_provider === 'sendgrid'}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                            placeholder="noreply@yourpractice.com"
+                          />
+                          <p className="text-xs sm:text-sm text-gray-500 mt-2">
+                            Must be verified in your SendGrid account
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
+            </div>
 
-              {/* Gmail SMTP Configuration */}
-              {emailConfig.email_provider === 'gmail' && (
+            {/* Test & Verify Tab */}
+            <div className={activeTab === 'test' ? 'block' : 'hidden'}>
+              <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2 mb-4">
-                    Gmail SMTP Settings
-                  </h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Test & Verify</h3>
                   
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                    <div className="flex items-start">
-                      <Info className="h-5 w-5 text-blue-600 mr-3 mt-0.5" />
-                      <div className="text-sm text-blue-800">
-                        <p className="font-medium mb-1">Setup Instructions:</p>
-                        <ol className="list-decimal list-inside space-y-1">
-                          <li>Enable 2-factor authentication on your Gmail account</li>
-                          <li>Go to Google Account settings → Security → App passwords</li>
-                          <li>Generate an app password for "Mail"</li>
-                          <li>Use your Gmail address and the generated app password below</li>
-                        </ol>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Gmail Email Address
-                      </label>
-                      <input
-                        type="email"
-                        name="smtp_email"
-                        value={emailConfig.smtp_email}
-                        onChange={handleInputChange}
-                        required={emailConfig.email_provider === 'gmail'}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="your-email@gmail.com"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Gmail App Password
-                      </label>
-                      <div className="relative">
-                        <input
-                          type={showPassword ? "text" : "password"}
-                          name="smtp_password"
-                          value={emailConfig.smtp_password}
-                          onChange={handleInputChange}
-                          required={emailConfig.email_provider === 'gmail'}
-                          className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="16-character app password"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                        >
-                          {showPassword ? (
-                            <EyeOff className="h-4 w-4 text-gray-400" />
-                          ) : (
-                            <Eye className="h-4 w-4 text-gray-400" />
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* SendGrid Configuration */}
-              {emailConfig.email_provider === 'sendgrid' && (
-                <div>
-                  <h3 className="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2 mb-4">
-                    SendGrid Settings
-                  </h3>
-                  
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                    <div className="flex items-start">
-                      <Info className="h-5 w-5 text-blue-600 mr-3 mt-0.5" />
-                      <div className="text-sm text-blue-800">
-                        <p className="font-medium mb-1">Setup Instructions:</p>
-                        <ol className="list-decimal list-inside space-y-1">
-                          <li>Create account at <a href="https://sendgrid.com" target="_blank" rel="noopener noreferrer" className="underline">sendgrid.com</a></li>
-                          <li>Go to Settings → API Keys</li>
-                          <li>Create API key with "Full Access" permissions</li>
-                          <li>Verify a sender email address in SendGrid</li>
-                        </ol>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        SendGrid API Key
-                      </label>
-                      <div className="relative">
-                        <input
-                          type={showApiKey ? "text" : "password"}
-                          name="sendgrid_api_key"
-                          value={emailConfig.sendgrid_api_key}
-                          onChange={handleInputChange}
-                          required={emailConfig.email_provider === 'sendgrid'}
-                          className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="SG.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowApiKey(!showApiKey)}
-                          className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                        >
-                          {showApiKey ? (
-                            <EyeOff className="h-4 w-4 text-gray-400" />
-                          ) : (
-                            <Eye className="h-4 w-4 text-gray-400" />
-                          )}
-                        </button>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Verified Sender Email
-                      </label>
-                      <input
-                        type="email"
-                        name="sender_email"
-                        value={emailConfig.sender_email}
-                        onChange={handleInputChange}
-                        required={emailConfig.email_provider === 'sendgrid'}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="noreply@yourpractice.com"
-                      />
-                      <p className="text-sm text-gray-500 mt-1">
-                        Must be verified in your SendGrid account
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-6">
+                    <div className="text-center">
+                      <TestTube className="h-12 w-12 mx-auto mb-4" style={{ color: '#29add3' }} />
+                      <h4 className="text-lg font-medium text-gray-900 mb-2">Test Email Configuration</h4>
+                      <p className="text-sm sm:text-base text-gray-600 mb-6">
+                        Send a test email to verify your configuration is working correctly.
                       </p>
+                      
+                      {emailConfig.notification_email && emailConfig.is_enabled ? (
+                        <div className="space-y-4">
+                          <p className="text-sm text-gray-700">
+                            Test email will be sent to: <strong>{emailConfig.notification_email}</strong>
+                          </p>
+                          <button
+                            type="button"
+                            onClick={handleTestEmail}
+                            disabled={testing}
+                            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white transition-colors disabled:opacity-50"
+                            style={{ backgroundColor: testing ? '#94a3b8' : '#29add3' }}
+                            onMouseEnter={(e) => {
+                              if (!testing) e.target.style.backgroundColor = '#2196c7';
+                            }}
+                            onMouseLeave={(e) => {
+                              if (!testing) e.target.style.backgroundColor = '#29add3';
+                            }}
+                          >
+                            <Send className="h-5 w-5 mr-2" />
+                            {testing ? 'Sending...' : 'Send Test Email'}
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="text-center">
+                          <p className="text-sm text-red-600 mb-4">
+                            Please configure and enable email notifications first.
+                          </p>
+                          <div className="text-xs text-gray-500">
+                            <p>Required:</p>
+                            <ul className="list-disc list-inside mt-1 space-y-1">
+                              <li>Enable email notifications</li>
+                              <li>Set notification email address</li>
+                              <li>Configure email provider settings</li>
+                            </ul>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
-              )}
-
-              {/* Action Buttons */}
-              <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-                <button
-                  type="button"
-                  onClick={handleTestEmail}
-                  disabled={testing || !emailConfig.notification_email || !emailConfig.is_enabled}
-                  className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-                >
-                  <Send className="h-4 w-4 mr-2" />
-                  {testing ? 'Sending...' : 'Send Test Email'}
-                </button>
-
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-                >
-                  <Settings className="h-4 w-4 mr-2" />
-                  {saving ? 'Saving...' : 'Save Configuration'}
-                </button>
               </div>
-            </form>
-          </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-6 border-t border-gray-200 mt-8">
+              <button
+                type="submit"
+                disabled={saving}
+                className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white transition-colors disabled:opacity-50"
+                style={{ backgroundColor: saving ? '#94a3b8' : '#29add3' }}
+                onMouseEnter={(e) => {
+                  if (!saving) e.target.style.backgroundColor = '#2196c7';
+                }}
+                onMouseLeave={(e) => {
+                  if (!saving) e.target.style.backgroundColor = '#29add3';
+                }}
+              >
+                <Settings className="h-5 w-5 mr-2" />
+                {saving ? 'Saving...' : 'Save Configuration'}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
