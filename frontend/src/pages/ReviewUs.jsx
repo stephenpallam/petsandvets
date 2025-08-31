@@ -220,6 +220,41 @@ const ReviewUs = () => {
         </section>
       )}
 
+      {/* Social Media Follow Section */}
+      {getConfiguredSocialPlatforms().length > 0 && (
+        <section className="bg-white py-6">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-xl font-bold text-gray-900 mb-8 text-center">
+              Follow Us
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 w-full">
+              {getConfiguredSocialPlatforms().map((platform, index) => (
+                <div key={index} className="p-4 rounded-lg shadow-md text-center border border-gray-200 hover:border-gray-300 transition-colors bg-white">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-3" style={{ backgroundColor: platform.bgColor }}>
+                    <platform.icon className="h-6 w-6" style={{ color: platform.color }} />
+                  </div>
+                  <h3 className="text-base font-semibold text-gray-900 mb-2">{platform.name}</h3>
+                  <p className="text-gray-600 text-xs leading-relaxed mb-3">{platform.description}</p>
+                  <a
+                    href={platform.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center px-4 py-2 rounded-md font-medium transition-colors duration-200 text-white text-sm"
+                    style={{ backgroundColor: platform.color }}
+                    onMouseEnter={(e) => e.target.style.opacity = '0.9'}
+                    onMouseLeave={(e) => e.target.style.opacity = '1'}
+                  >
+                    {platform.buttonText}
+                    <ExternalLink className="ml-1 h-3 w-3" />
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Service Areas */}
       <section className="bg-white py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
