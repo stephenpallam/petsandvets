@@ -179,7 +179,7 @@ const ReachUs = () => {
             <div className="mt-4 p-4 rounded-lg" style={{ backgroundColor: '#f8f9fa' }}>
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="font-semibold text-gray-900">{hospitalInfo.address}</p>
+                  <p className="font-semibold text-gray-900">{currentBusinessInfo.address}</p>
                   <p className="text-sm text-gray-600 mt-1">Located beside Sweet Frog in Peacock Market Plaza</p>
                 </div>
                 <button 
