@@ -251,7 +251,11 @@ const EmailConfiguration = () => {
                           id="is_enabled"
                           checked={emailConfig.is_enabled}
                           onChange={handleInputChange}
-                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          className="h-4 w-4 border-gray-300 rounded"
+                          style={{ 
+                            accentColor: '#29add3',
+                            color: '#29add3'
+                          }}
                         />
                         <label htmlFor="is_enabled" className="ml-3 text-sm sm:text-base text-gray-900">
                           Enable email notifications
