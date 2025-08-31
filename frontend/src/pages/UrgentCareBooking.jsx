@@ -24,6 +24,7 @@ const UrgentCareBooking = () => {
   const [timeSlots, setTimeSlots] = useState([]);
   const [availableToday, setAvailableToday] = useState(true);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [todayHours, setTodayHours] = useState(null);
   const { user } = useAuth(); // Get authentication context
   
   // Helper function to check if user is staff member
