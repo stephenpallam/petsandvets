@@ -57,7 +57,7 @@ const MessageUs = () => {
       icon: Mail,
       action: `mailto:${hospitalInfo.email}`,
       actionText: hospitalInfo.email,
-      color: "#3b82f6"
+      color: "#29add3"
     },
     {
       title: "Contact Form",
