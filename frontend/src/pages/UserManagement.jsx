@@ -113,13 +113,21 @@ const UserManagement = () => {
     e.preventDefault();
     
     try {
+      // Map camelCase to snake_case for backend
+      const userData = {
+        email: createForm.email,
+        password: createForm.password,
+        full_name: createForm.fullName,
+        role: createForm.role
+      };
+
       const response = await fetch(`${API_BASE_URL}/api/register`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(createForm),
+        body: JSON.stringify(userData),
       });
 
       if (response.ok) {
