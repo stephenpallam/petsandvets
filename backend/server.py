@@ -1752,10 +1752,14 @@ async def update_business_info(
         update_data["instagram_link"] = business_data.instagram_link
     if business_data.twitter_link is not None:
         update_data["twitter_link"] = business_data.twitter_link
+    if business_data.whatsapp_group_link is not None:
+        update_data["whatsapp_group_link"] = business_data.whatsapp_group_link
     if business_data.google_reviews_link is not None:
         update_data["google_reviews_link"] = business_data.google_reviews_link
     if business_data.yelp_reviews_link is not None:
         update_data["yelp_reviews_link"] = business_data.yelp_reviews_link
+    if business_data.facebook_reviews_link is not None:
+        update_data["facebook_reviews_link"] = business_data.facebook_reviews_link
     if business_data.hero_images is not None:
         update_data["hero_images"] = business_data.hero_images
     
