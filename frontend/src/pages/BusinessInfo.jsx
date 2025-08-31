@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 
 const BusinessInfo = () => {
+  const [activeTab, setActiveTab] = useState('business');
   const [businessInfo, setBusinessInfo] = useState({
     hospital_name: '',
     tagline: '',
