@@ -1466,7 +1466,7 @@ async def update_review(
 
 
 @api_router.delete("/reviews/{review_id}")
-async def delete_review(review_id: str, current_user: User = Depends(get_admin_user)):
+async def delete_review(review_id: str, current_user: User = Depends(get_manager_or_admin_user)):
     """Delete a review (admin only)"""
     result = await db.reviews.delete_one({"id": review_id})
     if result.deleted_count == 0:
