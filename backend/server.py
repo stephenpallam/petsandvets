@@ -1615,7 +1615,7 @@ def validate_file(file: UploadFile, category: str) -> str:
 async def upload_file(
     category: str,
     file: UploadFile = File(...),
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_manager_or_admin_user)
 ):
     """Upload a file to specified category folder (admin only)"""
     
