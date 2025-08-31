@@ -896,6 +896,227 @@ const UrgentCareAppointments = () => {
         </div>
       )}
 
+      {/* Edit Appointment Modal */}
+      {showEditModal && editingAppointment && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            {/* Header */}
+            <div className="p-6 border-b border-gray-200 rounded-t-xl" style={{ backgroundColor: primaryColor }}>
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-white">Edit Appointment</h3>
+                <button
+                  onClick={() => {
+                    setShowEditModal(false);
+                    setEditingAppointment(null);
+                    setEditFormData({});
+                  }}
+                  className="text-white hover:text-gray-200 transition-colors"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+            
+            {/* Content */}
+            <div className="p-6">
+              {/* Owner Information */}
+              <div className="mb-6">
+                <h4 className="text-lg font-medium text-gray-900 mb-4">Owner Information</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      First Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="owner_first_name"
+                      value={editFormData.owner_first_name}
+                      onChange={handleEditFormChange}
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Last Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="owner_last_name"
+                      value={editFormData.owner_last_name}
+                      onChange={handleEditFormChange}
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Phone Number *
+                    </label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={editFormData.phone}
+                      onChange={handleEditFormChange}
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={editFormData.email}
+                      onChange={handleEditFormChange}
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Pet Information */}
+              <div className="mb-6">
+                <h4 className="text-lg font-medium text-gray-900 mb-4">Pet Information</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Pet Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="pet_name"
+                      value={editFormData.pet_name}
+                      onChange={handleEditFormChange}
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Pet Type *
+                    </label>
+                    <select
+                      name="pet_type"
+                      value={editFormData.pet_type}
+                      onChange={handleEditFormChange}
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">Select Pet Type</option>
+                      <option value="Dog">Dog</option>
+                      <option value="Cat">Cat</option>
+                      <option value="Bird">Bird</option>
+                      <option value="Rabbit">Rabbit</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Pet Age
+                    </label>
+                    <input
+                      type="text"
+                      name="pet_age"
+                      value={editFormData.pet_age}
+                      onChange={handleEditFormChange}
+                      placeholder="e.g., 2 years, 6 months"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Appointment Information */}
+              <div className="mb-6">
+                <h4 className="text-lg font-medium text-gray-900 mb-4">Appointment Information</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Appointment Date *
+                    </label>
+                    <input
+                      type="date"
+                      name="appointment_date"
+                      value={editFormData.appointment_date}
+                      onChange={handleEditFormChange}
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Appointment Time *
+                    </label>
+                    <input
+                      type="time"
+                      name="appointment_time"
+                      value={editFormData.appointment_time}
+                      onChange={handleEditFormChange}
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Reason for Visit *
+                  </label>
+                  <textarea
+                    name="reason_for_visit"
+                    value={editFormData.reason_for_visit}
+                    onChange={handleEditFormChange}
+                    required
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Please describe the reason for the urgent care visit..."
+                  />
+                </div>
+                <div className="mt-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Additional Notes
+                  </label>
+                  <textarea
+                    name="additional_notes"
+                    value={editFormData.additional_notes}
+                    onChange={handleEditFormChange}
+                    rows={2}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Any additional information..."
+                  />
+                </div>
+              </div>
+            </div>
+              
+            {/* Footer */}
+            <div className="px-6 py-4 bg-gray-100 border-t border-gray-200 flex justify-end gap-3 rounded-b-xl">
+              <button
+                onClick={() => {
+                  setShowEditModal(false);
+                  setEditingAppointment(null);
+                  setEditFormData({});
+                }}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveEdit}
+                className="px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md transition-colors"
+                style={{ backgroundColor: primaryColor }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = primaryColor}
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && appointmentToDelete && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
