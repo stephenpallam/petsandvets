@@ -65,6 +65,17 @@ const ReviewUs = () => {
       });
     }
     
+    if (businessInfo.facebook_reviews_link && businessInfo.facebook_reviews_link.trim()) {
+      platforms.push({
+        name: 'Facebook Reviews',
+        description: 'Share your experience with our Facebook community',
+        icon: Globe,
+        link: businessInfo.facebook_reviews_link,
+        color: '#1877f2',
+        bgColor: '#e3f2fd'
+      });
+    }
+    
     return platforms;
   };
 
