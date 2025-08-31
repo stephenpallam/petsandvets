@@ -577,6 +577,7 @@ class BusinessInfoUpdate(BaseModel):
     phone: Optional[str] = None
     email: Optional[str] = None
     address: Optional[str] = None
+    timezone: Optional[str] = None
     facebook_link: Optional[str] = None
     instagram_link: Optional[str] = None
     twitter_link: Optional[str] = None
