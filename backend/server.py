@@ -1179,6 +1179,48 @@ async def update_appointment_status(
     }
 
 
+@api_router.put("/urgent-care-appointments/{appointment_id}", response_model=UrgentCareAppointment)
+async def update_appointment(
+    appointment_id: str,
+    appointment_data: UrgentCareAppointmentCreate,
+    current_user: User = Depends(get_staff_user)
+):
+    """Update an existing urgent care appointment"""
+    
+    # Check if appointment exists
+    existing_appointment = await db.urgent_care_appointments.find_one({"id": appointment_id})
+    if not existing_appointment:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+    
+    # Prepare update data
+    update_data = {
+        "owner_first_name": appointment_data.owner_first_name,
+        "owner_last_name": appointment_data.owner_last_name,
+        "phone": appointment_data.phone,
+        "email": appointment_data.email,
+        "pet_name": appointment_data.pet_name,
+        "pet_type": appointment_data.pet_type,
+        "pet_age": appointment_data.pet_age,
+        "reason_for_visit": appointment_data.reason_for_visit,
+        "appointment_time": appointment_data.appointment_time,
+        "additional_notes": appointment_data.additional_notes,
+        "updated_at": datetime.utcnow()
+    }
+    
+    # Update the appointment
+    result = await db.urgent_care_appointments.update_one(
+        {"id": appointment_id},
+        {"$set": update_data}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=400, detail="Failed to update appointment")
+    
+    # Fetch and return the updated appointment
+    updated_appointment = await db.urgent_care_appointments.find_one({"id": appointment_id})
+    return UrgentCareAppointment(**updated_appointment)
+
+
 @api_router.get("/urgent-care-time-slots/{date}")
 async def get_available_time_slots(date: str):
     """Get available time slots for urgent care booking for a specific date"""
