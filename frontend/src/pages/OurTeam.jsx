@@ -204,7 +204,7 @@ const OurTeam = () => {
             We're always looking for passionate veterinary professionals who share our commitment to exceptional pet care
           </p>
           <Link
-            to="/contact"
+            to="/reach-us"
             className="inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
             style={{ backgroundColor: primaryColor, color: 'white' }}
             onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
