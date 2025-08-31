@@ -340,12 +340,12 @@ const EmailConfiguration = () => {
                       {/* Gmail SMTP Configuration */}
                       {emailConfig.email_provider === 'gmail' && (
                         <div className="space-y-4">
-                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                             <div className="flex items-start">
-                              <Info className="h-5 w-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
-                              <div className="text-sm text-blue-800">
-                                <p className="font-medium mb-2">Gmail Setup Instructions:</p>
-                                <ol className="list-decimal list-inside space-y-1">
+                              <Info className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0" style={{ color: '#29add3' }} />
+                              <div className="text-sm text-gray-800">
+                                <p className="font-medium mb-2 text-gray-900">Gmail Setup Instructions:</p>
+                                <ol className="list-decimal list-inside space-y-1 text-gray-700">
                                   <li>Enable 2-factor authentication on your Gmail account</li>
                                   <li>Go to Google Account settings → Security → App passwords</li>
                                   <li>Generate an app password for "Mail"</li>
