@@ -114,9 +114,6 @@ const UrgentCareBooking = () => {
   };
 
   const validateCurrentTab = () => {
-    // Check if user is logged in (staff member)
-    const isStaffMember = user && user.role && (user.role === 'manager' || user.role === 'technician' || user.role === 'admin');
-    
     switch (currentTab) {
       case 0:
         return formData.appointment_time !== '';
