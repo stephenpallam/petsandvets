@@ -1118,6 +1118,313 @@ def test_time_slots_exclude_booked():
         return False
 
 # ============================================================================
+# STAFF URGENT CARE BOOKING FORM VALIDATION TESTS - NEW FEATURES
+# ============================================================================
+
+def test_staff_booking_minimal_fields_technician():
+    """Test urgent care booking with minimal required fields for staff (technician)"""
+    if not technician_token:
+        results.log_failure("Staff Booking Minimal Fields (Technician)", "No technician token available")
+        return False
+    
+    try:
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=20)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T10:00"
+        
+        # Staff should only need: appointment_time, owner_first_name, owner_last_name, phone
+        minimal_staff_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "Sarah",
+            "owner_last_name": "Johnson",
+            "phone": "(555) 123-4567"
+            # Missing: email, pet_name, pet_type, reason_for_visit (should be optional for staff)
+        }
+        
+        headers = {"Authorization": f"Bearer {technician_token}"}
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=minimal_staff_data, headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("owner_first_name") == "Sarah" and 
+                data.get("owner_last_name") == "Johnson" and 
+                data.get("phone") == "(555) 123-4567" and
+                data.get("appointment_time") == appointment_time):
+                results.log_success("Staff Booking Minimal Fields (Technician)")
+                return True
+        elif response.status_code == 422:
+            # This is expected if staff validation is not implemented yet
+            results.log_failure("Staff Booking Minimal Fields (Technician)", "Staff-specific validation not implemented - all fields still required")
+            return False
+        results.log_failure("Staff Booking Minimal Fields (Technician)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Staff Booking Minimal Fields (Technician)", str(e))
+        return False
+
+def test_staff_booking_minimal_fields_manager():
+    """Test urgent care booking with minimal required fields for staff (manager)"""
+    if not manager_token:
+        results.log_failure("Staff Booking Minimal Fields (Manager)", "No manager token available")
+        return False
+    
+    try:
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=21)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T11:00"
+        
+        # Staff should only need: appointment_time, owner_first_name, owner_last_name, phone
+        minimal_staff_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "Michael",
+            "owner_last_name": "Chen",
+            "phone": "(555) 987-6543"
+            # Missing: email, pet_name, pet_type, reason_for_visit (should be optional for staff)
+        }
+        
+        headers = {"Authorization": f"Bearer {manager_token}"}
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=minimal_staff_data, headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("owner_first_name") == "Michael" and 
+                data.get("owner_last_name") == "Chen" and 
+                data.get("phone") == "(555) 987-6543" and
+                data.get("appointment_time") == appointment_time):
+                results.log_success("Staff Booking Minimal Fields (Manager)")
+                return True
+        elif response.status_code == 422:
+            # This is expected if staff validation is not implemented yet
+            results.log_failure("Staff Booking Minimal Fields (Manager)", "Staff-specific validation not implemented - all fields still required")
+            return False
+        results.log_failure("Staff Booking Minimal Fields (Manager)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Staff Booking Minimal Fields (Manager)", str(e))
+        return False
+
+def test_staff_booking_optional_fields_technician():
+    """Test that optional fields work for staff (technician) when provided"""
+    if not technician_token:
+        results.log_failure("Staff Booking Optional Fields (Technician)", "No technician token available")
+        return False
+    
+    try:
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=22)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T12:00"
+        
+        # Staff with some optional fields provided
+        staff_data_with_optional = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "Jennifer",
+            "owner_last_name": "Williams",
+            "phone": "(555) 456-7890",
+            "email": "jennifer.williams@email.com",  # Optional for staff
+            "pet_name": "Buddy",  # Optional for staff
+            # Missing: pet_type, reason_for_visit (should still be optional)
+        }
+        
+        headers = {"Authorization": f"Bearer {technician_token}"}
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=staff_data_with_optional, headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("owner_first_name") == "Jennifer" and 
+                data.get("email") == "jennifer.williams@email.com" and
+                data.get("pet_name") == "Buddy"):
+                results.log_success("Staff Booking Optional Fields (Technician)")
+                return True
+        elif response.status_code == 422:
+            # This is expected if staff validation is not implemented yet
+            results.log_failure("Staff Booking Optional Fields (Technician)", "Staff-specific validation not implemented - all fields still required")
+            return False
+        results.log_failure("Staff Booking Optional Fields (Technician)", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Staff Booking Optional Fields (Technician)", str(e))
+        return False
+
+def test_regular_user_booking_all_fields_required():
+    """Test that regular users (non-staff) still need all original required fields"""
+    try:
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=23)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T13:00"
+        
+        # Regular user with minimal fields (should fail)
+        minimal_regular_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "David",
+            "owner_last_name": "Brown",
+            "phone": "(555) 321-0987"
+            # Missing: email, pet_name, pet_type, reason_for_visit (should be required for regular users)
+        }
+        
+        # No authentication header (regular user)
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=minimal_regular_data)
+        
+        if response.status_code == 422:
+            # This is expected - regular users should need all fields
+            results.log_success("Regular User Booking All Fields Required (Validation Error)")
+            return True
+        elif response.status_code == 200:
+            # If this succeeds, it means staff validation is not implemented
+            results.log_failure("Regular User Booking All Fields Required", "Staff-specific validation not implemented - regular users can book with minimal fields")
+            return False
+        results.log_failure("Regular User Booking All Fields Required", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Regular User Booking All Fields Required", str(e))
+        return False
+
+def test_regular_user_booking_complete_fields():
+    """Test that regular users can book with all required fields"""
+    try:
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=24)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T14:00"
+        
+        # Regular user with all required fields
+        complete_regular_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "Lisa",
+            "owner_last_name": "Davis",
+            "email": "lisa.davis@email.com",
+            "phone": "(555) 654-3210",
+            "pet_name": "Whiskers",
+            "pet_type": "cat",
+            "reason_for_visit": "Cat seems lethargic and not eating",
+            "primary_vet_hospital": "Downtown Animal Clinic",
+            "how_heard_about_us": "Google search"
+        }
+        
+        # No authentication header (regular user)
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=complete_regular_data)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("owner_first_name") == "Lisa" and 
+                data.get("pet_name") == "Whiskers" and
+                data.get("reason_for_visit") == "Cat seems lethargic and not eating"):
+                results.log_success("Regular User Booking Complete Fields")
+                return True
+        results.log_failure("Regular User Booking Complete Fields", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Regular User Booking Complete Fields", str(e))
+        return False
+
+def test_staff_booking_missing_required_fields():
+    """Test that staff still get validation errors for truly required fields"""
+    if not technician_token:
+        results.log_failure("Staff Booking Missing Required Fields", "No technician token available")
+        return False
+    
+    try:
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=25)).strftime("%Y-%m-%d")
+        
+        # Staff missing required fields (appointment_time, owner_first_name, owner_last_name, phone)
+        invalid_staff_data = {
+            "appointment_time": f"{future_date}T15:00",
+            "owner_first_name": "John",
+            # Missing: owner_last_name, phone (should be required even for staff)
+            "email": "john@email.com",
+            "pet_name": "Rex"
+        }
+        
+        headers = {"Authorization": f"Bearer {technician_token}"}
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=invalid_staff_data, headers=headers)
+        
+        if response.status_code == 422:
+            # This is expected - staff should still need the core required fields
+            results.log_success("Staff Booking Missing Required Fields (Validation Error)")
+            return True
+        results.log_failure("Staff Booking Missing Required Fields", f"Expected 422, got {response.status_code}")
+        return False
+    except Exception as e:
+        results.log_failure("Staff Booking Missing Required Fields", str(e))
+        return False
+
+def test_admin_booking_minimal_fields():
+    """Test urgent care booking with minimal required fields for admin (should work like staff)"""
+    if not admin_token:
+        results.log_failure("Admin Booking Minimal Fields", "No admin token available")
+        return False
+    
+    try:
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=26)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T16:00"
+        
+        # Admin should have same privileges as staff
+        minimal_admin_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "Robert",
+            "owner_last_name": "Wilson",
+            "phone": "(555) 789-0123"
+            # Missing: email, pet_name, pet_type, reason_for_visit (should be optional for admin)
+        }
+        
+        headers = {"Authorization": f"Bearer {admin_token}"}
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=minimal_admin_data, headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if (data.get("owner_first_name") == "Robert" and 
+                data.get("owner_last_name") == "Wilson" and 
+                data.get("phone") == "(555) 789-0123"):
+                results.log_success("Admin Booking Minimal Fields")
+                return True
+        elif response.status_code == 422:
+            # This is expected if staff validation is not implemented yet
+            results.log_failure("Admin Booking Minimal Fields", "Staff-specific validation not implemented - all fields still required")
+            return False
+        results.log_failure("Admin Booking Minimal Fields", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Admin Booking Minimal Fields", str(e))
+        return False
+
+def test_regular_user_role_booking_all_fields_required():
+    """Test that users with 'user' role still need all original required fields"""
+    if not user_token:
+        results.log_failure("Regular User Role Booking All Fields Required", "No user token available")
+        return False
+    
+    try:
+        from datetime import timedelta
+        future_date = (datetime.now() + timedelta(days=27)).strftime("%Y-%m-%d")
+        appointment_time = f"{future_date}T17:00"
+        
+        # User role with minimal fields (should fail)
+        minimal_user_data = {
+            "appointment_time": appointment_time,
+            "owner_first_name": "Amanda",
+            "owner_last_name": "Taylor",
+            "phone": "(555) 111-2222"
+            # Missing: email, pet_name, pet_type, reason_for_visit (should be required for user role)
+        }
+        
+        headers = {"Authorization": f"Bearer {user_token}"}
+        response = requests.post(f"{API_URL}/urgent-care-appointments", json=minimal_user_data, headers=headers)
+        
+        if response.status_code == 422:
+            # This is expected - user role should need all fields
+            results.log_success("Regular User Role Booking All Fields Required (Validation Error)")
+            return True
+        elif response.status_code == 200:
+            # If this succeeds, it means staff validation is not implemented
+            results.log_failure("Regular User Role Booking All Fields Required", "Staff-specific validation not implemented - user role can book with minimal fields")
+            return False
+        results.log_failure("Regular User Role Booking All Fields Required", f"Status: {response.status_code}, Response: {response.text}")
+        return False
+    except Exception as e:
+        results.log_failure("Regular User Role Booking All Fields Required", str(e))
+        return False
+
+# ============================================================================
 # APPOINTMENT EDIT FUNCTIONALITY TESTS - NEW FEATURES
 # ============================================================================
 
