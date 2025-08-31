@@ -269,7 +269,7 @@ const Footer = () => {
                   <span className="text-white font-medium">{defaultHours.urgentCare.everyday}</span>
                 </div>
               )}
-              <p className="text-blue-400 text-xs mt-2">By Appointment Only</p>
+              <p className="text-red-400 text-xs mt-2">Check In Online or Call Now</p>
             </div>
           </div>
         </div>
