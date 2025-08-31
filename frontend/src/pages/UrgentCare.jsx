@@ -52,7 +52,8 @@ import {
   Wind,
   Star,
   Navigation,
-  Info
+  Info,
+  ArrowRight
 } from 'lucide-react';
 import { hospitalInfo } from '../mock';
 
