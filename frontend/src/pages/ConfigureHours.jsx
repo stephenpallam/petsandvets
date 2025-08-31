@@ -736,6 +736,129 @@ const ConfigureHours = () => {
               </div>
             )}
 
+            {/* Appointment Slots Tab */}
+            {activeTab === 'slots' && (
+              <div className="space-y-6">
+                <div className="bg-white p-6 rounded-lg border border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Appointment Slot Configuration</h3>
+                  <p className="text-gray-600 mb-6">Configure how appointment time slots are generated for urgent care bookings.</p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Slot Interval */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Slot Interval
+                      </label>
+                      <select
+                        value={appointmentSlotConfig.slot_interval_minutes}
+                        onChange={(e) => handleSlotConfigChange('slot_interval_minutes', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                        style={{ "--tw-ring-color": "#29add3" }}
+                      >
+                        <option value={15}>15 minutes</option>
+                        <option value={30}>30 minutes</option>
+                        <option value={45}>45 minutes</option>
+                        <option value={60}>1 hour</option>
+                      </select>
+                      <p className="mt-1 text-xs text-gray-500">
+                        Time between appointment slots
+                      </p>
+                    </div>
+
+                    {/* First Appointment Delay */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        First Appointment Delay
+                      </label>
+                      <select
+                        value={appointmentSlotConfig.first_appointment_delay_minutes}
+                        onChange={(e) => handleSlotConfigChange('first_appointment_delay_minutes', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                        style={{ "--tw-ring-color": "#29add3" }}
+                      >
+                        <option value={0}>Immediately at opening</option>
+                        <option value={15}>15 minutes after opening</option>
+                        <option value={30}>30 minutes after opening</option>
+                        <option value={45}>45 minutes after opening</option>
+                        <option value={60}>1 hour after opening</option>
+                      </select>
+                      <p className="mt-1 text-xs text-gray-500">
+                        When first appointment can be scheduled
+                      </p>
+                    </div>
+
+                    {/* Last Appointment Cutoff */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Last Appointment Cutoff
+                      </label>
+                      <select
+                        value={appointmentSlotConfig.last_appointment_cutoff_minutes}
+                        onChange={(e) => handleSlotConfigChange('last_appointment_cutoff_minutes', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                        style={{ "--tw-ring-color": "#29add3" }}
+                      >
+                        <option value={15}>15 minutes before closing</option>
+                        <option value={30}>30 minutes before closing</option>
+                        <option value={45}>45 minutes before closing</option>
+                        <option value={60}>1 hour before closing</option>
+                      </select>
+                      <p className="mt-1 text-xs text-gray-500">
+                        How early to stop accepting appointments
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 flex justify-end">
+                    <button
+                      onClick={saveAppointmentSlotConfig}
+                      disabled={loading}
+                      className="text-white px-6 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 flex items-center"
+                      style={{ backgroundColor: '#29add3' }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
+                    >
+                      <Save className="h-4 w-4 mr-2" />
+                      {loading ? 'Saving...' : 'Save Configuration'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Preview Section */}
+                <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                  <h4 className="text-lg font-semibold text-blue-900 mb-3">Current Configuration Preview</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div className="bg-white p-3 rounded border">
+                      <span className="font-medium text-gray-700">Slot Duration:</span>
+                      <div className="text-blue-700 font-semibold">
+                        {appointmentSlotConfig.slot_interval_minutes} minutes
+                      </div>
+                    </div>
+                    <div className="bg-white p-3 rounded border">
+                      <span className="font-medium text-gray-700">First Slot:</span>
+                      <div className="text-blue-700 font-semibold">
+                        {appointmentSlotConfig.first_appointment_delay_minutes === 0 
+                          ? "At opening time" 
+                          : `${appointmentSlotConfig.first_appointment_delay_minutes} min after opening`}
+                      </div>
+                    </div>
+                    <div className="bg-white p-3 rounded border">
+                      <span className="font-medium text-gray-700">Last Slot:</span>
+                      <div className="text-blue-700 font-semibold">
+                        {appointmentSlotConfig.last_appointment_cutoff_minutes} min before closing
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
+                    <p className="text-yellow-800 text-sm">
+                      <strong>Note:</strong> Changes will take effect immediately for new appointment bookings. 
+                      Existing appointments will not be affected.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Special Holidays Tab */}
             {activeTab === 'special' && (
               <div className="space-y-6">
