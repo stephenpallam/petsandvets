@@ -16,7 +16,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const DogDietNutrition = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();

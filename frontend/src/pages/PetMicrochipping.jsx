@@ -20,7 +20,7 @@ import {
   Star
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const PetMicrochipping = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();

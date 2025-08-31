@@ -9,7 +9,7 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const OurMission = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();

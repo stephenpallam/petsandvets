@@ -32,7 +32,7 @@ import {
   Bone
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const DigitalVeterinaryXRays = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();

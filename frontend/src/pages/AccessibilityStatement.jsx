@@ -20,7 +20,7 @@ import {
   MousePointer
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const AccessibilityStatement = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();

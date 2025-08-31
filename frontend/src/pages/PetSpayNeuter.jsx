@@ -40,7 +40,7 @@ import {
   MinusCircle
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const PetSpayNeuter = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();

@@ -16,7 +16,7 @@ import {
   Users
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const DogSurgeries = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();

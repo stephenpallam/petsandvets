@@ -34,7 +34,7 @@ import {
   Scissors
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const DentalCleanings = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();

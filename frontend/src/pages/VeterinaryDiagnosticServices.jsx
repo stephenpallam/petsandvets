@@ -27,7 +27,7 @@ import {
   Brain
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const VeterinaryDiagnosticServices = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();

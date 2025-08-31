@@ -15,7 +15,7 @@ import {
   Check
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 import { useAuth } from '../contexts/AuthContext';
 
 const UrgentCareBooking = () => {

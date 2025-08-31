@@ -23,7 +23,7 @@ import {
   Globe
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const TermsOfService = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();

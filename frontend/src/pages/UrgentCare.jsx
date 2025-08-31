@@ -56,7 +56,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const UrgentCare = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();

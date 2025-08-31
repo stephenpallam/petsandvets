@@ -17,7 +17,7 @@ import {
   Thermometer
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const DogSkinCare = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();

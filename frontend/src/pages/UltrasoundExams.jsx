@@ -20,7 +20,7 @@ import {
   TrendingUp
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const UltrasoundExams = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();

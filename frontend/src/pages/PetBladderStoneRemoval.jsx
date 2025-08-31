@@ -38,7 +38,7 @@ import {
   Leaf
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const PetBladderStoneRemoval = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();

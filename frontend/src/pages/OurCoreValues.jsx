@@ -11,7 +11,7 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const OurCoreValues = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();

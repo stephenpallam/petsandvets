@@ -39,7 +39,7 @@ import {
   Cat
 } from 'lucide-react';
 import { hospitalInfo }
-import { useBusinessInfo } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
 
 const BlockedCatsUrgentCare = () => {
   const { businessInfo: currentBusinessInfo } = useBusinessInfo();
