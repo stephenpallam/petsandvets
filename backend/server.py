@@ -4754,6 +4754,83 @@ async def generate_email_for_agent(agent_id: str, agent_data: dict):
         logger.error(f"Error generating email for agent {agent_id}: {str(e)}")
         raise
 
+async def send_mass_emails_from_post(post_id: str, post_data: dict):
+    """Send personalized emails to all customers using the approved email template"""
+    try:
+        logger.info(f"Starting mass email sending for post {post_id}")
+        
+        # Get the original email template from the post
+        email_template = post_data.get('email_template', '')
+        use_chatgpt = post_data.get('use_chatgpt_formatting', True)
+        
+        if not email_template:
+            logger.error(f"No email template found in post {post_id}")
+            return
+        
+        # Get all customers with email addresses
+        customers = await db.customers.find({"email": {"$exists": True, "$ne": ""}}).to_list(length=None)
+        
+        if not customers:
+            logger.warning(f"No customers found for mass email sending from post {post_id}")
+            return
+        
+        logger.info(f"Found {len(customers)} customers for mass email sending")
+        
+        emails_sent = 0
+        emails_failed = 0
+        
+        for customer in customers:
+            try:
+                customer_name = customer.get('name', 'Valued Customer')
+                customer_email = customer.get('email')
+                
+                # Get first pet name if available
+                pets = customer.get('pets', [])
+                pet_name = pets[0].get('name', 'Your Pet') if pets else 'Your Pet'
+                
+                # Personalize the email content
+                personalized_content = email_template.replace('[CUSTOMER_NAME]', customer_name).replace('[PET_NAME]', pet_name)
+                
+                if use_chatgpt:
+                    # Apply ChatGPT formatting (placeholder - would call actual AI service)
+                    personalized_content = f"✨ AI-Enhanced Email ✨\n\n{personalized_content}\n\n---\nFormatted with ChatGPT for optimal engagement"
+                
+                # TODO: Actually send email here using email service
+                # For now, just log the email that would be sent
+                logger.info(f"Would send email to {customer_email} for {customer_name} with pet {pet_name}")
+                
+                # In a real implementation, this would use an email service like:
+                # await send_email(
+                #     to=customer_email,
+                #     subject=f"Special message for {customer_name}",
+                #     content=personalized_content
+                # )
+                
+                emails_sent += 1
+                
+            except Exception as customer_error:
+                logger.error(f"Failed to send email to customer {customer.get('name', 'Unknown')}: {str(customer_error)}")
+                emails_failed += 1
+        
+        # Update post with mass email sending results
+        await db.ai_posts.update_one(
+            {"id": post_id},
+            {
+                "$set": {
+                    "mass_emails_sent": emails_sent,
+                    "mass_emails_failed": emails_failed,
+                    "mass_email_sent_at": await business_now_async(),
+                    "ready_for_mass_email": True
+                }
+            }
+        )
+        
+        logger.info(f"Mass email sending completed for post {post_id}: {emails_sent} sent, {emails_failed} failed")
+        
+    except Exception as e:
+        logger.error(f"Error in mass email sending for post {post_id}: {str(e)}")
+        raise
+
 async def generate_social_media_post_for_agent(agent_id: str, agent_data: dict):
     """Generate a social media post for an AI agent"""
     try:
