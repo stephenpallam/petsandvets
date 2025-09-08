@@ -4742,18 +4742,14 @@ async def generate_email_for_agent(agent_id: str, agent_data: dict):
             customer_name = customer.get('name', 'Valued Customer')
             customer_email = customer.get('email', 'customer@example.com')
             
-            # Debug: Log the full customer data structure
-            logger.info(f"DEBUG - Full customer data structure: {customer}")
+            # Get pet name(s) for this customer - handle both data structures
+            pet_names = "your pet"  # Default fallback
             
-            # Get all pet names for this customer
+            # Check for pets array structure (new format)
             pets = customer.get('pets', [])
-            logger.info(f"DEBUG - Found pets data: {pets}")
-            
             if pets:
-                # Extract pet names, filtering out empty/None names
+                # Extract pet names from pets array
                 valid_pet_names = [pet.get('name', '').strip() for pet in pets if pet.get('name', '').strip()]
-                logger.info(f"DEBUG - Valid pet names extracted: {valid_pet_names}")
-                
                 if valid_pet_names:
                     if len(valid_pet_names) == 1:
                         pet_names = valid_pet_names[0]
@@ -4762,14 +4758,12 @@ async def generate_email_for_agent(agent_id: str, agent_data: dict):
                     else:
                         # For 3+ pets: "Buddy, Max, and Luna"
                         pet_names = ", ".join(valid_pet_names[:-1]) + f", and {valid_pet_names[-1]}"
-                else:
-                    pet_names = "your pet"
-                    logger.warning(f"DEBUG - No valid pet names found, using fallback: {pet_names}")
-            else:
-                pet_names = "your pet"
-                logger.warning(f"DEBUG - No pets found for customer, using fallback: {pet_names}")
             
-            logger.info(f"Using customer {customer_name} with pets: {pet_names} for email preview")
+            # Check for single pet_name field (current format)
+            elif customer.get('pet_name', '').strip():
+                pet_names = customer.get('pet_name').strip()
+            
+            logger.info(f"Using customer {customer_name} with pet(s): {pet_names} for email preview")
         
         # Create holiday-specific content using the template
         # Replace all placeholders: customer, pets, and holiday context
