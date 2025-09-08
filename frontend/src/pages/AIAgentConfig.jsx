@@ -508,7 +508,8 @@ The Veterinary Care Team`,
                 wordCount: agentData.word_count?.toString() || '150',
                 postTime: agentData.post_time || '09:00',
                 useChatGPTFormatting: agentData.use_chatgpt_formatting !== undefined ? agentData.use_chatgpt_formatting : true,
-                postDestination: agentData.post_destination || 'in_review'
+                postDestination: agentData.post_destination || 'in_review',
+                emailContentTemplate: agentData.email_content_template || agentData.email_template || ''
               });
             } else if (agentData.mode === 'recurring') {
               // This is a recurring email agent (topic-based)
