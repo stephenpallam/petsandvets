@@ -4675,7 +4675,7 @@ async def email_timesheet_report_post(post_id: str, email_data: dict):
         raise
 
 async def generate_email_for_agent(agent_id: str, agent_data: dict):
-    """Generate an email for an AI email agent"""
+    """Generate an email for an AI email agent using real customer data"""
     try:
         # Create initial post record for email preview
         post_id = str(uuid.uuid4())
@@ -4691,14 +4691,27 @@ async def generate_email_for_agent(agent_id: str, agent_data: dict):
             logger.error(f"No email template found for agent {agent_id}")
             return
         
-        # For now, create a sample email with placeholder data
-        # In a real implementation, this would:
-        # 1. Get customer data from database
-        # 2. Process email template with customer/pet names
-        # 3. Apply ChatGPT formatting if enabled
-        # 4. Create email posts for review
+        # Get a random customer from the database for preview
+        customers_cursor = db.customers.aggregate([{"$sample": {"size": 1}}])
+        customers_list = await customers_cursor.to_list(length=1)
         
-        sample_content = email_template.replace('[CUSTOMER_NAME]', 'John Smith').replace('[PET_NAME]', 'Buddy')
+        if not customers_list:
+            logger.warning(f"No customers found in database for agent {agent_id}, using placeholder data")
+            customer_name = "John Smith"
+            pet_name = "Buddy"
+            customer_email = "customer@example.com"
+        else:
+            customer = customers_list[0]
+            customer_name = customer.get('name', 'Valued Customer')
+            # Get first pet name if available
+            pets = customer.get('pets', [])
+            pet_name = pets[0].get('name', 'Your Pet') if pets else 'Your Pet'
+            customer_email = customer.get('email', 'customer@example.com')
+            
+            logger.info(f"Using customer {customer_name} with pet {pet_name} for email preview")
+        
+        # Process email template with real customer data
+        sample_content = email_template.replace('[CUSTOMER_NAME]', customer_name).replace('[PET_NAME]', pet_name)
         
         if use_chatgpt:
             # Apply ChatGPT formatting (placeholder - would call actual AI service)
