@@ -1714,8 +1714,8 @@ The Veterinary Care Team`,
                   {tabs.map((tab) => {
                     const Icon = tab.icon;
                     const isActive = activeTab === tab.id;
-                    // In edit mode, only disable tabs that don't match the agent type (not the mode)
-                    const isDisabled = false; // Allow all tabs to be accessible in edit mode
+                    // In edit mode, disable tabs that don't match the agent being edited
+                    const isDisabled = isEditMode && editingAgentMode && tab.id !== activeTab;
                     
                     return (
                       <button
