@@ -243,6 +243,48 @@ POST /api/holidays/reset-and-initialize
 
 **Result:** ✅ Users can now update existing 2024 holidays to current 2025/2026 dates with one click
 
+## SMART FEATURE - Refresh Dates Button Added (NEW)
+
+**Feature:** Dynamic "Refresh Dates" button that intelligently updates holiday dates based on current date.
+
+**Smart Logic:**
+- **Passed holidays** → Move to next year
+- **Upcoming holidays** → Keep in current year  
+- **Year labels** → Auto-update in holiday names
+
+**Example Scenario:**
+```
+Today: January 2nd, 2026
+- New Year's Day 2026 (Jan 1) → Already passed → Update to Jan 1, 2027
+- Christmas Day 2026 (Dec 25) → Not yet → Keep as Dec 25, 2026
+- Valentine's Day 2026 (Feb 14) → Not yet → Keep as Feb 14, 2026
+```
+
+**Backend Implementation:**
+- **New Endpoint:** `POST /api/holidays/refresh-dates`
+- **Date Calculation:** Compares each holiday with current date
+- **Smart Naming:** Updates year numbers in holiday names
+- **Error Handling:** Reports specific issues per holiday
+- **Access Control:** Admin/Manager only
+
+**Frontend Features:**
+- **Green "Refresh Dates" button** with Calendar icon
+- **Confirmation dialog** with clear explanation
+- **Detailed success messages** showing update counts
+- **Loading state** with button disable
+- **Error reporting** for any failed updates
+
+**How It Works:**
+1. Analyzes current date vs each holiday date
+2. If holiday passed this year → moves to next year
+3. If holiday upcoming this year → keeps current year
+4. Updates holiday names to reflect correct year
+5. Shows exactly how many holidays were updated
+
+**Button Location:** Holiday Management page, next to "Add Holiday"
+
+**Result:** ✅ Smart date management that automatically keeps holidays current without manual date calculation
+
 ## LATEST FIX - Timesheet Agent "Field Required" Error (RESOLVED)
 
 **Issue:** User reported "body: Field required" error when creating adhoc timesheet agents
