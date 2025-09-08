@@ -4908,8 +4908,12 @@ Example:
             <div className="flex items-center space-x-3">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
               <div>
-                <h3 className="text-lg font-medium text-gray-900">Updating Agent</h3>
-                <p className="text-sm text-gray-600">Saving changes and redirecting...</p>
+                <h3 className="text-lg font-medium text-gray-900">
+                  {isEditMode ? 'Updating Agent' : 'Creating Agent'}
+                </h3>
+                <p className="text-sm text-gray-600">
+                  {isEditMode ? 'Saving changes and redirecting...' : 'Setting up your agent and redirecting...'}
+                </p>
               </div>
             </div>
           </div>
