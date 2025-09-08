@@ -1557,9 +1557,9 @@ const AIAgentsDashboard = () => {
                                         </p>
                                       </div>
                                       <div className="flex flex-col">
-                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Next Scheduled Run</span>
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Workflow Mode</span>
                                         <p className="text-sm text-gray-900 mt-1">
-                                          {getNextScheduledHoliday(agent)}
+                                          {getWorkflowMode(agent)}
                                         </p>
                                       </div>
                                     </div>
