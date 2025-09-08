@@ -4897,11 +4897,12 @@ async def send_mass_emails_from_post(post_id: str, post_data: dict):
                 else:
                     pet_names = "your pet"
                 
-                # Personalize the email content
-                # Support both [PET_NAME] (legacy) and [PET_NAMES] (new)
+                # Personalize the email content with customer, pet, and holiday context
                 personalized_content = email_template.replace('[CUSTOMER_NAME]', customer_name)
                 personalized_content = personalized_content.replace('[PET_NAME]', pet_names)
                 personalized_content = personalized_content.replace('[PET_NAMES]', pet_names)
+                personalized_content = personalized_content.replace('[HOLIDAY_NAME]', holiday_name)
+                personalized_content = personalized_content.replace('[HOLIDAY_DATE]', holiday_date)
                 
                 if use_chatgpt:
                     # Apply ChatGPT formatting (placeholder - would call actual AI service)
