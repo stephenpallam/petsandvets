@@ -53,6 +53,7 @@ const AIAgentsDashboard = () => {
   const [showDuplicateTimesheetModal, setShowDuplicateTimesheetModal] = useState(false);
   const [duplicateTimesheetInfo, setDuplicateTimesheetInfo] = useState(null);
   const [pendingAgentRun, setPendingAgentRun] = useState(null);
+  const [holidays, setHolidays] = useState([]);
 
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL || window.location.origin;
 
