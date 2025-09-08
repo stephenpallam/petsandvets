@@ -661,10 +661,11 @@ The Veterinary Care Team`,
   // Handle agent type changes and set correct default tab
   useEffect(() => {
     const agentType = searchParams.get('agent_type');
-    const agentId = searchParams.get('agent_id');
+    const agentId = searchParams.get('id'); // Fixed: use 'id' not 'agent_id'
+    const mode = searchParams.get('mode');
     
-    // Only set default tab if we're not editing an existing agent
-    if (!agentId) {
+    // Only set default tab if we're not editing/running an existing agent
+    if (!agentId && mode !== 'edit' && mode !== 'run') {
       if (agentType === 'email') {
         setActiveTab('email-scheduled');
       } else if (agentType === 'time_sheet') {
