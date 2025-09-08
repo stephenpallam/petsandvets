@@ -355,6 +355,7 @@ The Veterinary Care Team`,
           // Set the active tab based on agent mode and agent type
           // Handle legacy "auto" mode by mapping it to "recurring"
           const tabMode = agentData.mode === 'auto' ? 'recurring' : agentData.mode;
+          console.log('Tab mode (after auto->recurring mapping):', tabMode);
           
           // Determine the correct tab ID based on agent type and mode
           let correctTabId;
