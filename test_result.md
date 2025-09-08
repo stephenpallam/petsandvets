@@ -646,6 +646,57 @@ else:
 
 **Result:** ✅ Email agents now show all pet names with proper grammar and realistic customer data
 
+## CRITICAL FIX - Holiday-Specific Email Generation (RESOLVED)
+
+**Issues Fixed:**
+1. **Missing pet names**: Placeholder replacement wasn't working correctly
+2. **Generic content**: Email wasn't specific to the selected holiday
+
+**Holiday-Aware Email Generation:**
+
+**Holiday Context Integration:**
+- ✅ **Determines Next Holiday**: Finds upcoming holiday from selected holidays
+- ✅ **Holiday-Specific Content**: Email content tailored to the specific holiday
+- ✅ **Date-Aware**: Uses actual holiday dates for context
+
+**Enhanced Template Placeholders:**
+- **`[CUSTOMER_NAME]`** → Customer's actual name
+- **`[PET_NAME]` / `[PET_NAMES]`** → All pet names with proper grammar
+- **`[HOLIDAY_NAME]`** → Specific holiday name (e.g., "Christmas Day 2025")
+- **`[HOLIDAY_DATE]`** → Holiday date (e.g., "2025-12-25")
+
+**ChatGPT Enhancement for Holidays:**
+```
+🎉 Happy [HOLIDAY_NAME], [CUSTOMER_NAME]!
+
+[Your personalized template content with pet names]
+
+This [HOLIDAY_NAME] season, we're thinking of you and [PET_NAMES]. 
+We hope you both have a wonderful [HOLIDAY_NAME]!
+
+Best wishes from our veterinary family to yours,
+[Your Veterinary Clinic]
+```
+
+**Smart Holiday Selection:**
+1. **Finds upcoming holiday** from agent's selected holidays
+2. **Uses holiday context** for email generation
+3. **Fallback logic** if no upcoming holidays
+4. **Real holiday data** from holidays database
+
+**Applied Throughout:**
+- ✅ **Preview Generation**: Shows holiday-specific email in review
+- ✅ **Mass Email Sending**: Each customer gets holiday-appropriate content
+- ✅ **Post Metadata**: Stores holiday context for campaign tracking
+
+**Example Output:**
+Instead of generic "Your Pet" content, now generates:
+- "🎉 Happy Christmas Day 2025, John Smith!"
+- "This Christmas season, we're thinking of you and Buddy, Max, and Luna"
+- Specific holiday messaging throughout the email
+
+**Result:** ✅ Email agents now generate holiday-specific, fully personalized emails with correct pet names and holiday context
+
 ## LATEST FIX - Timesheet Agent "Field Required" Error (RESOLVED)
 
 **Issue:** User reported "body: Field required" error when creating adhoc timesheet agents
