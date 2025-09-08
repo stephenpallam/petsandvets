@@ -70,6 +70,23 @@ if (!agentId && mode !== 'edit' && mode !== 'run') { // Proper condition
 - Missing report_period validation error
 - "Field required" errors for properly filled forms
 
+## ADDITIONAL FIX - Tab Logic Error (RESOLVED)
+
+**Issue:** Frontend save logic was using wrong tab condition causing timesheet data to be processed as social media agent.
+
+**Root Cause:** Save logic condition `activeTab === 'adhoc'` instead of `activeTab === 'timesheet-adhoc'`
+
+**Solution:** Fixed tab condition in saveAgent function:
+```javascript
+// Before (wrong):
+} else if (activeTab === 'adhoc') {
+
+// After (correct):
+} else if (activeTab === 'timesheet-adhoc') {
+```
+
+**Result:** ✅ Timesheet adhoc agents now use correct tab-specific logic instead of falling through to social media validation
+
 ## LATEST FIX - Timesheet Agent "Field Required" Error (RESOLVED)
 
 **Issue:** User reported "body: Field required" error when creating adhoc timesheet agents
