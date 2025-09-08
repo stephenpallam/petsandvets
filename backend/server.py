@@ -396,10 +396,14 @@ class Token(BaseModel):
     token_type: str
 
 
+class Pet(BaseModel):
+    name: str
+
 class Customer(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
-    pet_name: Optional[str] = None
+    pets: Optional[List[Pet]] = []  # New structured pets array
+    pet_name: Optional[str] = None  # Legacy field for backward compatibility
     phone: Optional[str] = None
     email: Optional[str] = None
     sms_opt_in: bool = True
