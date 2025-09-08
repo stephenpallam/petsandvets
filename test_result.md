@@ -1162,8 +1162,58 @@ test_plan:
   test_all: false
   test_priority: "high_first"
 
+  - task: "Holiday Selection Fix for Email Agents - Thanksgiving Date Correction"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ CRITICAL FIX VERIFIED: Thanksgiving 2025 date correctly stored as 2025-11-27 in database (was previously 2025-11-28). Database verification confirms proper date correction."
+
+  - task: "Holiday Selection Fix for Email Agents - Holiday Selection Logic"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ HOLIDAY SELECTION LOGIC WORKING: Email agent with both National Cat Day (2025-10-29) and Thanksgiving (2025-11-27) correctly selects National Cat Day as next upcoming holiday. Logic properly sorts holidays by date and selects earliest upcoming holiday (51 days vs 80 days from current date)."
+
+  - task: "Holiday Selection Fix for Email Agents - Email Generation Function"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ EMAIL GENERATION WORKING: generate_email_for_agent function successfully generates email posts with correct holiday context. Function returns proper post_id and creates email post with status 'in_review'."
+
+  - task: "Holiday Selection Fix for Email Agents - Content Verification"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ CONTENT VERIFICATION PASSED: Generated email content correctly references 'National Cat Day' (4 mentions) and contains zero 'Thanksgiving' mentions. Holiday name field properly set to 'National Cat Day 2025'. Email content is holiday-specific and personalized with real customer data (Stephen Pallam, pets: Molly and Dolly)."
+
 agent_communication:
   - agent: "testing"
     message: "✅ COMPREHENSIVE TESTING COMPLETED: All enhanced social media agent functionality working correctly. Key findings: 1) Post title support implemented and working, 2) AI title generation handles empty titles properly, 3) All social media platforms (Facebook, Instagram, Twitter, WhatsApp) supported consistently, 4) All modes (write, adhoc, recurring) working correctly, 5) Backend validation working (minor: returns 500 instead of 400 for validation errors), 6) AI post generation active with 10 posts in review queue, 7) All API endpoints functional. Ready for production use."
   - agent: "testing"
     message: "📋 TIMESHEET AGENT VALIDATION TESTING COMPLETED: Found 1 critical issue requiring immediate attention. Key findings: 1) ✅ Agent name validation working correctly, 2) ✅ Custom period date requirement validation working, 3) ❌ CRITICAL BUG: Invalid date range validation missing - system allows start date after end date, 4) ✅ Recurring mode frequency validation working, 5) ✅ Valid cases create successfully, 6) Email validation is lenient (allows invalid formats and empty recipients). PRIORITY: Fix date range validation in timesheet agent creation endpoint."
+  - agent: "testing"
+    message: "🎉 HOLIDAY SELECTION FIX VERIFICATION COMPLETED: ALL TESTS PASSED! Critical fix for email agent holiday selection successfully verified. Key findings: 1) ✅ Thanksgiving 2025 date correctly stored as 2025-11-27 (was previously 2025-11-28), 2) ✅ Holiday selection logic correctly identifies National Cat Day (2025-10-29) as next upcoming holiday over Thanksgiving (2025-11-27), 3) ✅ generate_email_for_agent function working correctly with proper holiday context, 4) ✅ Generated email content references 'National Cat Day' (4 mentions) with zero 'Thanksgiving' mentions, 5) ✅ Email personalization working with real customer data. The critical issue where email agents configured for National Cat Day were generating Thanksgiving content has been RESOLVED."
