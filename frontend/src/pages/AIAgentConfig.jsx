@@ -1507,9 +1507,10 @@ The Veterinary Care Team`,
           }, 1500);
         } else {
           // For new agents, show success message briefly then redirect to dashboard
+          // Add longer delay to ensure database write completes before dashboard loads
           setTimeout(() => {
             navigate('/ai-agents-dashboard');
-          }, 1500);
+          }, 2500);
         }
         
         // Reset form only when creating new agents (not when editing)
