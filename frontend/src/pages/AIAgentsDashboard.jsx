@@ -1628,7 +1628,7 @@ const AIAgentsDashboard = () => {
                                     {/* Row 2: ChatGPT Formatting and Next Scheduled Run */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                       <div className="flex flex-col">
-                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">ChatGPT Formatting</span>
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Use ChatGPT to Format Email</span>
                                         <p className="text-sm text-gray-900 mt-1">
                                           {formatChatGPTStatus(agent)}
                                         </p>
