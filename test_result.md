@@ -697,6 +697,46 @@ Instead of generic "Your Pet" content, now generates:
 
 **Result:** ✅ Email agents now generate holiday-specific, fully personalized emails with correct pet names and holiday context
 
+## DATABASE SCHEMA FIX - Pet Name Extraction (RESOLVED)
+
+**Issue Found:** Pet names still showing as "your pet" despite fixes due to incorrect database schema assumption.
+
+**Root Cause:** Code was looking for `pets` array structure, but actual database uses single `pet_name` field.
+
+**Database Schema Discovery:**
+```json
+// Actual customer structure in database:
+{
+  "name": "Stephen Pallam",
+  "pet_name": "Mickey, Dolly",  // Single field with comma-separated names
+  "email": "stephenpallamshop@gmail.com"
+}
+
+// Code was expecting:
+{
+  "pets": [{"name": "Mickey"}, {"name": "Dolly"}]  // Array structure
+}
+```
+
+**Dual Schema Support Implemented:**
+```python
+# Handle both current and future formats
+if pets:  # Array format (future)
+    valid_pet_names = [pet.get('name', '').strip() for pet in pets]
+elif customer.get('pet_name', '').strip():  # Current format
+    pet_names = customer.get('pet_name').strip()
+```
+
+**Stephen Pallam Example:**
+- **Before**: "We hope you and your pet are doing well!"
+- **After**: "We hope you and Mickey, Dolly are doing well!"
+
+**Applied to Both:**
+- ✅ **Preview Generation**: Uses real pet names from database
+- ✅ **Mass Email Sending**: Each customer gets their actual pet names
+
+**Result:** ✅ Pet names now correctly extracted from actual database schema and displayed in emails
+
 ## LATEST FIX - Timesheet Agent "Field Required" Error (RESOLVED)
 
 **Issue:** User reported "body: Field required" error when creating adhoc timesheet agents
