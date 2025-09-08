@@ -1317,6 +1317,17 @@ const AIReadyToPublish = () => {
                                   </div>
                                 </div>
                               </div>
+                            ) : post.agent_type === 'email' ? (
+                              /* Email Post Content - Match review page styling */
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-900 mb-2">Content:</h4>
+                                <p className="text-gray-700 whitespace-pre-wrap text-sm leading-relaxed">
+                                  {post.content}
+                                </p>
+                                <div className="mt-2 text-xs text-gray-500">
+                                  {post.content.split(' ').length} words
+                                </div>
+                              </div>
                             ) : (
                               /* Regular Social Media Post Content */
                               <div>
