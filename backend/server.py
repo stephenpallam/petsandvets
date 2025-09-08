@@ -4742,11 +4742,17 @@ async def generate_email_for_agent(agent_id: str, agent_data: dict):
             customer_name = customer.get('name', 'Valued Customer')
             customer_email = customer.get('email', 'customer@example.com')
             
+            # Debug: Log the full customer data structure
+            logger.info(f"DEBUG - Full customer data structure: {customer}")
+            
             # Get all pet names for this customer
             pets = customer.get('pets', [])
+            logger.info(f"DEBUG - Found pets data: {pets}")
+            
             if pets:
                 # Extract pet names, filtering out empty/None names
                 valid_pet_names = [pet.get('name', '').strip() for pet in pets if pet.get('name', '').strip()]
+                logger.info(f"DEBUG - Valid pet names extracted: {valid_pet_names}")
                 
                 if valid_pet_names:
                     if len(valid_pet_names) == 1:
@@ -4758,8 +4764,10 @@ async def generate_email_for_agent(agent_id: str, agent_data: dict):
                         pet_names = ", ".join(valid_pet_names[:-1]) + f", and {valid_pet_names[-1]}"
                 else:
                     pet_names = "your pet"
+                    logger.warning(f"DEBUG - No valid pet names found, using fallback: {pet_names}")
             else:
                 pet_names = "your pet"
+                logger.warning(f"DEBUG - No pets found for customer, using fallback: {pet_names}")
             
             logger.info(f"Using customer {customer_name} with pets: {pet_names} for email preview")
         
