@@ -316,6 +316,56 @@ Today: January 2nd, 2026
 
 **Result:** ✅ Professional, themed confirmation experience that clearly explains the refresh functionality
 
+## ENHANCEMENT - Smart Holiday Display in Dashboard (RESOLVED)
+
+**Issue:** Email scheduled agents showing generic "Next holiday at 09:00 (10 holidays selected)" instead of actual holiday information.
+
+**Enhancement:** Dynamic holiday name and user-friendly date display in dashboard.
+
+**New Smart Display:**
+- **Before**: "Next Holiday Run" + "Next holiday at 09:00 (10 holidays selected)"
+- **After**: "Christmas Day 2025" + "Dec 25th, 2025 at 09:00"
+
+**Implementation:**
+
+**1. Holiday Data Integration:**
+- Added `holidays` state to dashboard
+- Added `fetchHolidays()` function to load holiday data
+- Integrated holiday fetching into dashboard initialization
+
+**2. Enhanced getNextScheduledHoliday Function:**
+```javascript
+// Smart holiday calculation
+- Fetches actual holiday data from database
+- Matches agent's selected_holidays with real holiday records
+- Calculates next upcoming holiday based on current date
+- Formats date in user-friendly format (Nov 23rd, 2025)
+- Returns holiday name and formatted date/time
+```
+
+**3. User-Friendly Date Formatting:**
+- **Format**: "Nov 23rd, 2025 at 09:00"
+- **Ordinal suffixes**: 1st, 2nd, 3rd, 4th, etc.
+- **Month abbreviations**: Jan, Feb, Mar, etc.
+- **Full year display**: Always shows 4-digit year
+
+**4. Dynamic Label Display:**
+- **Label shows holiday name**: "Christmas Day 2025" instead of "Next Holiday Run"
+- **Fallback**: Shows "Next Holiday Run" if no holiday name available
+- **Loading state**: Shows "Loading holidays..." while fetching data
+
+**Dashboard Display Examples:**
+- **Christmas**: "Christmas Day 2025" → "Dec 25th, 2025 at 09:00"
+- **Thanksgiving**: "Thanksgiving 2025" → "Nov 27th, 2025 at 09:00"
+- **New Year**: "New Year's Day 2026" → "Jan 1st, 2026 at 09:00"
+
+**Error Handling:**
+- No holidays selected → "No holidays selected"
+- No upcoming holidays → "No upcoming holidays this year (X selected)"
+- Loading state → "Loading holidays..."
+
+**Result:** ✅ Email scheduled agents now show actual upcoming holiday names and user-friendly dates instead of generic placeholder text
+
 ## LATEST FIX - Timesheet Agent "Field Required" Error (RESOLVED)
 
 **Issue:** User reported "body: Field required" error when creating adhoc timesheet agents
