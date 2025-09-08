@@ -47,6 +47,32 @@ const Customers = () => {
   // Import states
   const [csvFile, setCsvFile] = useState(null);
   const [importing, setImporting] = useState(false);
+  
+  // Pet management functions
+  const addPet = () => {
+    setFormData({
+      ...formData,
+      pets: [...formData.pets, { name: '' }]
+    });
+  };
+  
+  const removePet = (index) => {
+    const newPets = formData.pets.filter((_, i) => i !== index);
+    // Ensure at least one pet entry remains
+    setFormData({
+      ...formData,
+      pets: newPets.length > 0 ? newPets : [{ name: '' }]
+    });
+  };
+  
+  const updatePetName = (index, name) => {
+    const newPets = [...formData.pets];
+    newPets[index] = { name };
+    setFormData({
+      ...formData,
+      pets: newPets
+    });
+  };
 
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL || window.location.origin;
 
