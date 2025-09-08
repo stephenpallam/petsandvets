@@ -1703,7 +1703,7 @@ const AIAgentsDashboard = () => {
                                     {/* Right Column */}
                                     <div className="space-y-3">
                                       <div className="flex flex-col">
-                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">ChatGPT Formatting</span>
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Use ChatGPT to Format Email</span>
                                         <p className="text-sm text-gray-900 mt-1">
                                           {formatChatGPTStatus(agent)}
                                         </p>
