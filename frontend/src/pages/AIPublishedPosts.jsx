@@ -693,20 +693,21 @@ const AIPublishedPosts = () => {
                           </div>
                         ) : post.agent_type === 'email' ? (
                           // Email Post Rendering - Match review page styling exactly
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {/* Text Content */}
-                            <div className="md:col-span-2">
-                              <h4 className="font-medium mb-2">Content:</h4>
-                              <div className="bg-gray-50 rounded-lg p-4">
-                                <p className="text-gray-900 whitespace-pre-wrap">{post.content}</p>
-                                <div className="mt-2 text-xs text-gray-500">
-                                  {post.content.split(' ').length} words
+                          post.image_url ? (
+                            // Email with image - use grid layout
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                              {/* Text Content */}
+                              <div className="md:col-span-2">
+                                <h4 className="font-medium mb-2">Content:</h4>
+                                <div className="bg-gray-50 rounded-lg p-4">
+                                  <p className="text-gray-900 whitespace-pre-wrap">{post.content}</p>
+                                  <div className="mt-2 text-xs text-gray-500">
+                                    {post.content.split(' ').length} words
+                                  </div>
                                 </div>
                               </div>
-                            </div>
 
-                            {/* Image area - only show if email has image */}
-                            {post.image_url && (
+                              {/* Image area */}
                               <div>
                                 <div className="relative mb-4">
                                   <img 
@@ -721,8 +722,19 @@ const AIPublishedPosts = () => {
                                   )}
                                 </div>
                               </div>
-                            )}
-                          </div>
+                            </div>
+                          ) : (
+                            // Email without image - use full width like review page
+                            <div>
+                              <h4 className="font-medium mb-2">Content:</h4>
+                              <div className="bg-gray-50 rounded-lg p-4">
+                                <p className="text-gray-900 whitespace-pre-wrap">{post.content}</p>
+                                <div className="mt-2 text-xs text-gray-500">
+                                  {post.content.split(' ').length} words
+                                </div>
+                              </div>
+                            </div>
+                          )
                         ) : (
                           // Regular Social Media Post Rendering  
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
