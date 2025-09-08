@@ -5019,6 +5019,14 @@ async def update_ai_agent(
         
         # Timesheet agent specific validation
         if agent_data.agent_type == AIAgentType.TIME_SHEET:
+            # Agent name is required for timesheet agents
+            if not agent_data.agent_name:
+                raise HTTPException(status_code=400, detail="Agent name is required")
+            
+            # Report period is required for adhoc timesheet agents
+            if agent_data.mode == AIAgentMode.ADHOC and not hasattr(agent_data, 'report_period'):
+                raise HTTPException(status_code=400, detail="Report period is required for adhoc timesheet agents")
+            
             # Validate custom date range for timesheet agents
             if hasattr(agent_data, 'report_period') and agent_data.report_period == 'custom':
                 if not agent_data.custom_start_date or not agent_data.custom_end_date:
