@@ -3949,6 +3949,13 @@ class AIAgent(BaseModel):
     last_manual_run: Optional[datetime] = None  # Track when agent was last run manually
     # Email agent specific fields
     selected_holidays: Optional[List[str]] = []  # Holiday IDs for scheduled email agents
+    email_content_template: Optional[str] = ""  # Email template content for scheduled emails
+    email_subject: Optional[str] = ""  # Email subject for write mode emails
+    email_content: Optional[str] = ""  # Email content for write mode emails
+    use_chatgpt_formatting: Optional[bool] = True  # Whether to use ChatGPT for email formatting
+    use_customer_database: Optional[bool] = True  # Use customer database for email recipients
+    email_type: Optional[str] = "bulk"  # bulk or single email
+    selected_customer: Optional[str] = ""  # Customer ID for single emails
     # Agent metadata
     created_at: datetime = Field(default_factory=business_now)
     updated_at: datetime = Field(default_factory=business_now)
