@@ -716,8 +716,30 @@ const AIAgentsDashboard = () => {
       return 'Text only post';
     }
     
+    // For email agents, show "Text only email" when no image is selected
+    if (agent.agent_type === 'email' && agent.image_option === 'none') {
+      return 'Text only email';
+    }
+    
     // For other cases, format normally
     return agent.image_option.replace('_', ' ');
+  };
+
+  // Helper function to get next scheduled holiday for email agents
+  const getNextScheduledHoliday = (agent) => {
+    if (agent.agent_type !== 'email' || !agent.selected_holidays || agent.selected_holidays.length === 0) {
+      return 'No holidays selected';
+    }
+    
+    // This would ideally fetch the actual holiday dates from the backend
+    // For now, return a placeholder
+    const postTime = agent.post_time || '09:00';
+    return `Next holiday at ${postTime}`;
+  };
+
+  // Helper function to format ChatGPT enabled status
+  const formatChatGPTStatus = (agent) => {
+    return agent.use_chatgpt_formatting ? 'Yes' : 'No';
   };
 
   // Fetch employees for name mapping
