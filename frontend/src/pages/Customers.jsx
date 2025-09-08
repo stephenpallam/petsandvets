@@ -1013,8 +1013,14 @@ const Customers = () => {
                         </div>
                         <div>
                           <p className="font-medium text-gray-900">{selectedCustomer.name}</p>
-                          {selectedCustomer.pet_name && (
-                            <p className="text-sm text-gray-500">Pet: {selectedCustomer.pet_name}</p>
+                          {((selectedCustomer.pets && selectedCustomer.pets.length > 0) || selectedCustomer.pet_name) && (
+                            <p className="text-sm text-gray-500">
+                              Pet(s): {
+                                selectedCustomer.pets && selectedCustomer.pets.length > 0 
+                                  ? selectedCustomer.pets.map(pet => pet.name).filter(name => name).join(', ')
+                                  : selectedCustomer.pet_name
+                              }
+                            </p>
                           )}
                         </div>
                       </div>
