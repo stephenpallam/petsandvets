@@ -731,18 +731,28 @@ const AIAgentsDashboard = () => {
       return { nextRun: 'No holidays selected', holidayName: '' };
     }
     
-    // Holiday dates for 2024/2025 (this should ideally come from backend)
+    // Holiday dates for 2025/2026 (this should ideally come from backend)
     const holidays = {
-      'new_year': { name: 'New Year\'s Day', date: '2025-01-01' },
-      'martin_luther_king_jr': { name: 'Martin Luther King Jr. Day', date: '2025-01-20' },
-      'presidents_day': { name: 'Presidents\' Day', date: '2025-02-17' },
-      'memorial_day': { name: 'Memorial Day', date: '2025-05-26' },
-      'independence_day': { name: 'Independence Day', date: '2025-07-04' },
-      'labor_day': { name: 'Labor Day', date: '2025-09-01' },
-      'columbus_day': { name: 'Columbus Day', date: '2025-10-13' },
-      'veterans_day': { name: 'Veterans Day', date: '2025-11-11' },
-      'thanksgiving': { name: 'Thanksgiving', date: '2025-11-27' },
-      'christmas': { name: 'Christmas Day', date: '2025-12-25' }
+      'new_year_2025': { name: 'New Year\'s Day 2025', date: '2025-01-01' },
+      'martin_luther_king_jr_2025': { name: 'Martin Luther King Jr. Day 2025', date: '2025-01-20' },
+      'presidents_day_2025': { name: 'Presidents\' Day 2025', date: '2025-02-17' },
+      'memorial_day_2025': { name: 'Memorial Day 2025', date: '2025-05-26' },
+      'independence_day_2025': { name: 'Independence Day 2025', date: '2025-07-04' },
+      'labor_day_2025': { name: 'Labor Day 2025', date: '2025-09-01' },
+      'columbus_day_2025': { name: 'Columbus Day 2025', date: '2025-10-13' },
+      'veterans_day_2025': { name: 'Veterans Day 2025', date: '2025-11-11' },
+      'thanksgiving_2025': { name: 'Thanksgiving 2025', date: '2025-11-27' },
+      'christmas_2025': { name: 'Christmas Day 2025', date: '2025-12-25' },
+      'new_year_2026': { name: 'New Year\'s Day 2026', date: '2026-01-01' },
+      'martin_luther_king_jr_2026': { name: 'Martin Luther King Jr. Day 2026', date: '2026-01-19' },
+      'presidents_day_2026': { name: 'Presidents\' Day 2026', date: '2026-02-16' },
+      'memorial_day_2026': { name: 'Memorial Day 2026', date: '2026-05-25' },
+      'independence_day_2026': { name: 'Independence Day 2026', date: '2026-07-04' },
+      'labor_day_2026': { name: 'Labor Day 2026', date: '2026-09-07' },
+      'columbus_day_2026': { name: 'Columbus Day 2026', date: '2026-10-12' },
+      'veterans_day_2026': { name: 'Veterans Day 2026', date: '2026-11-11' },
+      'thanksgiving_2026': { name: 'Thanksgiving 2026', date: '2026-11-26' },
+      'christmas_2026': { name: 'Christmas Day 2026', date: '2026-12-25' }
     };
     
     const today = new Date();
