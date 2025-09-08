@@ -1262,10 +1262,8 @@ The Veterinary Care Team`,
   const saveAgent = async () => {
     setLoading(true);
     
-    // Show loading modal for edit mode
-    if (isEditMode) {
-      setShowSaveModal(true);
-    }
+    // Show loading modal for both create and edit modes
+    setShowSaveModal(true);
     setMessage({ type: '', text: '' });
 
     try {
