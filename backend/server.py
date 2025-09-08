@@ -4696,6 +4696,38 @@ async def generate_email_for_agent(agent_id: str, agent_data: dict):
             logger.error(f"No holidays selected for email agent {agent_id}")
             return
         
+        # Get holiday information for context
+        holidays_cursor = db.holidays.find({"id": {"$in": selected_holidays}})
+        holidays_list = await holidays_cursor.to_list(length=None)
+        
+        if not holidays_list:
+            logger.error(f"No holiday data found for selected holidays {selected_holidays}")
+            return
+        
+        # Find the next upcoming holiday or use the first one
+        from datetime import datetime
+        today = datetime.now().date()
+        
+        # Sort holidays by date and find next upcoming one
+        upcoming_holiday = None
+        for holiday in holidays_list:
+            try:
+                holiday_date = datetime.strptime(holiday['date'], '%Y-%m-%d').date()
+                if holiday_date >= today:
+                    upcoming_holiday = holiday
+                    break
+            except:
+                continue
+        
+        # If no upcoming holiday found, use the first selected holiday
+        if not upcoming_holiday:
+            upcoming_holiday = holidays_list[0]
+        
+        holiday_name = upcoming_holiday.get('name', 'Holiday')
+        holiday_date = upcoming_holiday.get('date', '')
+        
+        logger.info(f"Using holiday context: {holiday_name} ({holiday_date})")
+        
         # Get a random customer from the database for preview
         customers_cursor = db.customers.aggregate([{"$sample": {"size": 1}}])
         customers_list = await customers_cursor.to_list(length=1)
