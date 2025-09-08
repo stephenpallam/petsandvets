@@ -816,8 +816,8 @@ const AIAgentsDashboard = () => {
 
   // Helper function to format ChatGPT enabled status
   const formatChatGPTStatus = (agent) => {
-    // Check multiple possible field names for ChatGPT formatting
-    return (agent.use_chatgpt_formatting || agent.useChatGPTFormatting || agent.use_chatgpt_email_formatting) ? 'Yes' : 'No';
+    // Check all possible field names for ChatGPT formatting (prioritize email-specific field)
+    return (agent.use_chatgpt_email_formatting || agent.useChatGPTFormatting || agent.use_chatgpt_formatting) ? 'Yes' : 'No';
   };
 
   // Fetch employees for name mapping
