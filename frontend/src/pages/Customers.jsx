@@ -763,28 +763,54 @@ const Customers = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Pet Name
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.pet_name}
-                      onChange={(e) => setFormData({ ...formData, pet_name: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none transition-colors"
-                      style={{ 
-                        '--tw-ring-color': 'rgb(41, 173, 211)',
-                        '--tw-border-opacity': '1'
-                      }}
-                      onFocus={(e) => {
-                        e.target.style.borderColor = 'rgb(41, 173, 211)';
-                        e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
-                      }}
-                      onBlur={(e) => {
-                        e.target.style.borderColor = '#d1d5db';
-                        e.target.style.boxShadow = 'none';
-                      }}
-                      placeholder="Enter pet name"
-                    />
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="block text-sm font-semibold text-gray-700">
+                        Pet Names
+                      </label>
+                      <button
+                        type="button"
+                        onClick={addPet}
+                        className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
+                      >
+                        <Plus className="h-4 w-4 mr-1" />
+                        Add Pet
+                      </button>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      {formData.pets.map((pet, index) => (
+                        <div key={index} className="flex items-center space-x-2">
+                          <input
+                            type="text"
+                            value={pet.name}
+                            onChange={(e) => updatePetName(index, e.target.value)}
+                            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none transition-colors"
+                            style={{ 
+                              '--tw-ring-color': 'rgb(41, 173, 211)',
+                              '--tw-border-opacity': '1'
+                            }}
+                            onFocus={(e) => {
+                              e.target.style.borderColor = 'rgb(41, 173, 211)';
+                              e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
+                            }}
+                            onBlur={(e) => {
+                              e.target.style.borderColor = '#d1d5db';
+                              e.target.style.boxShadow = 'none';
+                            }}
+                            placeholder={`Pet ${index + 1} name`}
+                          />
+                          {formData.pets.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => removePet(index)}
+                              className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   <div>
