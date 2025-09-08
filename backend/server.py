@@ -4780,38 +4780,31 @@ async def generate_email_for_agent(agent_id: str, agent_data: dict):
         holiday_specific_content = holiday_specific_content.replace('[HOLIDAY_DATE]', holiday_date)
         
         if use_chatgpt:
-            # Generate holiday-specific, personalized email content
-            holiday_prompt = f"""
-            Create a warm, professional email for a veterinary clinic about {holiday_name}.
-            
-            Base template: {holiday_specific_content}
-            
-            Customer: {customer_name}
-            Pet(s): {pet_names}
-            Holiday: {holiday_name} ({holiday_date})
-            
-            Make this email:
-            1. Specific to {holiday_name}
-            2. Warm and personal for {customer_name} and {pet_names}
-            3. Professional veterinary tone
-            4. Include holiday-appropriate messaging
-            5. Keep the core message from the template but enhance it
-            
-            Generate a complete email that feels personal and holiday-appropriate.
-            """
-            
-            # For now, create enhanced content (in real implementation, would call ChatGPT API)
-            holiday_specific_content = f"""🎉 Happy {holiday_name}, {customer_name}!
+            # Call actual ChatGPT API to format the email professionally
+            try:
+                from ai_service import format_email_content
+                
+                holiday_specific_content = await format_email_content(
+                    template=holiday_specific_content,
+                    customer_name=customer_name,
+                    pet_names=pet_names,
+                    holiday_name=holiday_name,
+                    holiday_date=holiday_date
+                )
+                
+                logger.info(f"ChatGPT formatting applied for email agent {agent_id}")
+                
+            except Exception as e:
+                logger.error(f"ChatGPT formatting failed for agent {agent_id}: {str(e)}")
+                # Fallback to basic formatting if ChatGPT fails
+                holiday_specific_content = f"""Dear {customer_name},
 
 {holiday_specific_content}
 
-This {holiday_name} season, we're thinking of you and {pet_names}. We hope you both have a wonderful {holiday_name}!
+Wishing you and {pet_names} a wonderful {holiday_name}!
 
-Best wishes from our veterinary family to yours,
-[Your Veterinary Clinic]
-
----
-✨ This email was personalized for {customer_name} and {pet_names} for {holiday_name} {holiday_date}"""
+Warm regards,
+The Veterinary Care Team"""
         
         sample_content = holiday_specific_content
         
