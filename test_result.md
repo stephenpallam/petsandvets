@@ -178,6 +178,42 @@ agent.use_chatgpt_formatting ? 'Yes' : 'No'
 - **Exact holiday dates** with day, date, time, and holiday name
 - **Proper scheduling information** for email vs social media agents
 
+## LATEST FIX - Holiday Dates Updated to 2025/2026 (RESOLVED)
+
+**Issue:** Holiday Management page showing 2024 dates instead of current 2025/2026 years.
+
+**Solution:** Updated backend holiday initialization with comprehensive 2025/2026 dates:
+
+**2025 Holidays Added:**
+- New Year's Day 2025 (2025-01-01)
+- Martin Luther King Jr. Day 2025 (2025-01-20)
+- Presidents' Day 2025 (2025-02-17)
+- Easter Sunday 2025 (2025-04-20) - *corrected date*
+- Mother's Day 2025 (2025-05-11) - *corrected date*
+- Memorial Day 2025 (2025-05-26)
+- Father's Day 2025 (2025-06-15) - *corrected date*
+- Independence Day 2025 (2025-07-04)
+- Labor Day 2025 (2025-09-01)
+- Columbus Day 2025 (2025-10-13)
+- Veterans Day 2025 (2025-11-11)
+- Thanksgiving 2025 (2025-11-27) - *corrected date*
+- Christmas Day 2025 (2025-12-25)
+
+**2026 Holidays Added:**
+- All major holidays with correct 2026 dates
+- Pet-related days for both years
+- Veterinary observance days for both years
+
+**Key Improvements:**
+- ✅ **Accurate Variable Dates**: Fixed Easter, Mother's Day, Father's Day, Thanksgiving with correct 2025/2026 dates
+- ✅ **Comprehensive Coverage**: Added federal holidays like MLK Day, Presidents' Day, Memorial Day, Labor Day, Columbus Day, Veterans Day
+- ✅ **Veterinary Focus**: Updated pet and veterinary days for 2025/2026
+- ✅ **Year-Specific Names**: Holiday names include year for clarity
+
+**Backend Changes:** Updated `initialize_default_holidays()` function in server.py with 45+ holidays across 2025/2026.
+
+**Result:** ✅ Holiday Management now shows current 2025/2026 dates instead of outdated 2024 dates
+
 ## LATEST FIX - Timesheet Agent "Field Required" Error (RESOLVED)
 
 **Issue:** User reported "body: Field required" error when creating adhoc timesheet agents
