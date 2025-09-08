@@ -1,4 +1,4 @@
-user_problem_statement: "Enhanced social media agent functionality and fixed timesheet agent validation error"
+user_problem_statement: "Fixed edit mode tab selection bug - adhoc and write mode agents now open correct tabs instead of defaulting to recurring mode"
 
 ## LATEST FIX - Timesheet Agent "Field Required" Error (RESOLVED)
 
