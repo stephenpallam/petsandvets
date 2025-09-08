@@ -1,0 +1,528 @@
+import React, { useState, useCallback } from 'react';
+import { 
+  FileText, 
+  User, 
+  Heart, 
+  Stethoscope, 
+  Phone,
+  Mail,
+  MapPin,
+  Download,
+  Send,
+  AlertCircle,
+  CheckCircle,
+  Loader,
+  Plus,
+  Minus,
+  PawPrint,
+  ChevronDown,
+  ChevronUp
+} from 'lucide-react';
+
+const PatientRegistrationPDF = () => {
+  const [formData, setFormData] = useState({
+    // Owner Information
+    owner_first_name: '',
+    owner_last_name: '',
+    address: '',
+    city: '',
+    state: '',
+    zip_code: '',
+    email: '',
+    phone: '',
+    emergency_contact_name: '',
+    emergency_contact_phone: '',
+    
+    // Multiple Pets Information
+    pets: [{
+      pet_name: '',
+      pet_species: '',
+      pet_breed: '',
+      pet_gender: '',
+      pet_age: '',
+      pet_weight: '',
+      pet_color: '',
+      spayed_neutered: '',
+      current_medications: '',
+      allergies: '',
+      vaccination_history: '',
+      medical_conditions: ''
+    }],
+    
+    // Veterinary History (shared)
+    previous_vet: '',
+    previous_vet_phone: '',
+    last_visit_date: '',
+    
+    // Additional Information
+    how_heard_about_us: '',
+    preferred_appointment_type: '',
+    special_instructions: ''
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ type: '', text: '' });
+
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL || window.location.origin;
+  const primaryColor = '#29add3';
+
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handlePetChange = (petIndex, field, value) => {
+    setFormData(prevData => {
+      const newPets = [...prevData.pets];
+      newPets[petIndex] = { ...newPets[petIndex], [field]: value };
+      return { ...prevData, pets: newPets };
+    });
+  };
+
+  const addPet = () => {
+    if (formData.pets.length < 4) {
+      setFormData(prev => ({
+        ...prev,
+        pets: [...prev.pets, {
+          pet_name: '',
+          pet_species: '',
+          pet_breed: '',
+          pet_gender: '',
+          pet_age: '',
+          pet_weight: '',
+          pet_color: '',
+          spayed_neutered: '',
+          current_medications: '',
+          allergies: '',
+          vaccination_history: '',
+          medical_conditions: ''
+        }]
+      }));
+    }
+  };
+
+  const removePet = (petIndex) => {
+    if (formData.pets.length > 1) {
+      setFormData(prev => ({
+        ...prev,
+        pets: prev.pets.filter((_, index) => index !== petIndex)
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    // Check required owner fields
+    const requiredOwnerFields = [
+      'owner_first_name', 'owner_last_name', 'address', 'city', 'state', 
+      'zip_code', 'email', 'phone'
+    ];
+    
+    for (let field of requiredOwnerFields) {
+      if (!formData[field].trim()) {
+        return false;
+      }
+    }
+    
+    // Check required pet fields for each pet
+    const requiredPetFields = ['pet_name', 'pet_species', 'pet_gender', 'pet_age'];
+    
+    for (let petIndex = 0; petIndex < formData.pets.length; petIndex++) {
+      const pet = formData.pets[petIndex];
+      for (let field of requiredPetFields) {
+        if (!pet[field].trim()) {
+          return false;
+        }
+      }
+    }
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      return false;
+    }
+    
+    return true;
+  };
+
+  const submitForm = async (generatePDF = false) => {
+    if (!validateForm()) {
+      setMessage({ type: 'error', text: 'Please fill all required fields with valid information for all pets.' });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const endpoint = generatePDF ? '/api/patient-registration/pdf' : '/api/patient-registration';
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        if (generatePDF) {
+          // Handle PDF download
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          a.download = `patient_registration_${formData.owner_last_name}_${Date.now()}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          setMessage({ type: 'success', text: `Registration for ${formData.pets.length} pet${formData.pets.length > 1 ? 's' : ''} submitted and PDF downloaded successfully!` });
+        } else {
+          const data = await response.json();
+          setMessage({ type: 'success', text: `Registration for ${formData.pets.length} pet${formData.pets.length > 1 ? 's' : ''} submitted successfully!` });
+        }
+        
+        // Reset form
+        setFormData({
+          owner_first_name: '', owner_last_name: '', address: '', city: '', state: '',
+          zip_code: '', email: '', phone: '', emergency_contact_name: '', emergency_contact_phone: '',
+          pets: [{
+            pet_name: '', pet_species: '', pet_breed: '', pet_gender: '', pet_age: '',
+            pet_weight: '', pet_color: '', spayed_neutered: '', current_medications: '',
+            allergies: '', vaccination_history: '', medical_conditions: ''
+          }],
+          previous_vet: '', previous_vet_phone: '', last_visit_date: '',
+          how_heard_about_us: '', preferred_appointment_type: '', special_instructions: ''
+        });
+      } else {
+        const errorData = await response.json();
+        setMessage({ type: 'error', text: errorData.detail || 'Failed to submit registration' });
+      }
+    } catch (error) {
+      console.error('Error submitting registration:', error);
+      setMessage({ type: 'error', text: 'Unable to submit registration. Please try again.' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center">
+            <FileText className="h-8 w-8 mr-3" style={{ color: primaryColor }} />
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">New Patient Registration</h1>
+              <p className="text-gray-600">Complete this form to register as a new patient (up to 4 pets)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Messages */}
+        {message.text && (
+          <div className={`mb-6 p-4 rounded-lg flex items-center ${
+            message.type === 'success' ? 'bg-blue-50 border border-blue-200' : 'bg-red-50 border border-red-200'
+          }`}>
+            {message.type === 'success' ? (
+              <CheckCircle className="h-5 w-5 mr-3 text-blue-600" />
+            ) : (
+              <AlertCircle className="h-5 w-5 mr-3 text-red-600" />
+            )}
+            <p className={message.type === 'success' ? 'text-blue-800' : 'text-red-800'}>
+              {message.text}
+            </p>
+          </div>
+        )}
+
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
+          {/* Simple Layout without Accordion for Testing */}
+          
+          {/* Pet Owner Information */}
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <div className="flex items-center mb-6">
+              <User className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
+              <h2 className="text-xl font-semibold text-gray-900">Pet Owner Information</h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
+                <input
+                  id="owner_first_name"
+                  name="owner_first_name"
+                  type="text"
+                  value={formData.owner_first_name}
+                  onChange={(e) => handleInputChange('owner_first_name', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
+                <input
+                  type="text"
+                  value={formData.owner_last_name}
+                  onChange={(e) => handleInputChange('owner_last_name', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Address *</label>
+                <input
+                  type="text"
+                  value={formData.address}
+                  onChange={(e) => handleInputChange('address', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">City *</label>
+                <input
+                  type="text"
+                  value={formData.city}
+                  onChange={(e) => handleInputChange('city', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">State *</label>
+                <input
+                  type="text"
+                  value={formData.state}
+                  onChange={(e) => handleInputChange('state', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">ZIP Code *</label>
+                <input
+                  type="text"
+                  value={formData.zip_code}
+                  onChange={(e) => handleInputChange('zip_code', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Phone *</label>
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Pet Information */}
+          <div className="bg-gray-50 rounded-xl shadow-lg p-8">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center">
+                <Heart className="h-6 w-6 mr-3 text-red-500" />
+                <h2 className="text-xl font-semibold text-gray-900">Pet Information</h2>
+                <span className="ml-3 text-sm text-gray-500">({formData.pets.length} of 4 pets)</span>
+              </div>
+              {formData.pets.length < 4 && (
+                <button
+                  type="button"
+                  onClick={addPet}
+                  className="flex items-center px-4 py-2 border border-transparent rounded-lg font-medium text-white bg-blue-600 hover:bg-blue-700 transition-all duration-200"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Pet
+                </button>
+              )}
+            </div>
+            
+            {formData.pets.map((pet, petIndex) => (
+              <div key={petIndex} className="mb-8 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center">
+                    <PawPrint className="h-5 w-5 mr-2 text-blue-600" />
+                    <h3 className="text-lg font-medium text-gray-900">Pet {petIndex + 1}</h3>
+                    {pet.pet_name && <span className="ml-2 text-sm text-gray-600">- {pet.pet_name}</span>}
+                  </div>
+                  {formData.pets.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removePet(petIndex)}
+                      className="flex items-center px-3 py-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md transition-all duration-200"
+                    >
+                      <Minus className="h-4 w-4 mr-1" />
+                      Remove
+                    </button>
+                  )}
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Pet Name *</label>
+                    <input
+                      id={`pet_${petIndex}_name`}
+                      name={`pet_${petIndex}_name`}
+                      type="text"
+                      value={pet.pet_name}
+                      onChange={(e) => handlePetChange(petIndex, 'pet_name', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Species *</label>
+                    <select
+                      value={pet.pet_species}
+                      onChange={(e) => handlePetChange(petIndex, 'pet_species', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
+                      required
+                    >
+                      <option value="">Select species</option>
+                      <option value="Dog">Dog</option>
+                      <option value="Cat">Cat</option>
+                      <option value="Bird">Bird</option>
+                      <option value="Rabbit">Rabbit</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Breed</label>
+                    <input
+                      type="text"
+                      value={pet.pet_breed}
+                      onChange={(e) => handlePetChange(petIndex, 'pet_breed', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
+                      placeholder="e.g., Golden Retriever"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Gender *</label>
+                    <select
+                      value={pet.pet_gender}
+                      onChange={(e) => handlePetChange(petIndex, 'pet_gender', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
+                      required
+                    >
+                      <option value="">Select gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Age *</label>
+                    <input
+                      type="text"
+                      value={pet.pet_age}
+                      onChange={(e) => handlePetChange(petIndex, 'pet_age', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
+                      placeholder="e.g., 2 years, 6 months"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Spayed/Neutered</label>
+                    <select
+                      value={pet.spayed_neutered}
+                      onChange={(e) => handlePetChange(petIndex, 'spayed_neutered', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
+                    >
+                      <option value="">Select option</option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                      <option value="Unknown">Unknown</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Veterinary History Section */}
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <div className="flex items-center mb-6">
+              <Stethoscope className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
+              <h2 className="text-xl font-semibold text-gray-900">Veterinary History</h2>
+              <span className="ml-3 text-sm text-gray-500">(Shared across all pets)</span>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Previous Veterinarian</label>
+                <input
+                  type="text"
+                  value={formData.previous_vet}
+                  onChange={(e) => handleInputChange('previous_vet', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
+                  placeholder="Name of previous vet clinic"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Previous Vet Phone</label>
+                <input
+                  type="tel"
+                  value={formData.previous_vet_phone}
+                  onChange={(e) => handleInputChange('previous_vet_phone', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent focus:ring-blue-500"
+                  placeholder="(555) 123-4567"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Submit Buttons */}
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                type="button"
+                onClick={() => submitForm(false)}
+                disabled={loading}
+                className="flex items-center justify-center px-8 py-4 border-2 border-blue-600 text-blue-600 rounded-lg font-semibold hover:bg-blue-600 hover:text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <Loader className="h-5 w-5 mr-2 animate-spin" />
+                ) : (
+                  <Send className="h-5 w-5 mr-2" />
+                )}
+                Submit Registration
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => submitForm(true)}
+                disabled={loading}
+                className="flex items-center justify-center px-8 py-4 text-white font-semibold rounded-lg shadow-lg bg-blue-600 hover:bg-blue-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <Loader className="h-5 w-5 mr-2 animate-spin" />
+                ) : (
+                  <Download className="h-5 w-5 mr-2" />
+                )}
+                Submit & Download PDF
+              </button>
+            </div>
+            
+            <p className="text-center text-sm text-gray-500 mt-4">
+              * Required fields. Your information is secure and will be used only for veterinary care purposes.
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default PatientRegistrationPDF;

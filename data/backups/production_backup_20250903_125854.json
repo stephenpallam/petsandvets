@@ -1,0 +1,301 @@
+{
+  "backup_timestamp": "20250903_125854",
+  "backup_date": "2025-09-03T12:58:54.291336",
+  "database_name": "animal_hospital_db",
+  "collections": {
+    "business_info": [
+      {
+        "_id": "68b83b8eaa3d567486dad3de",
+        "id": "8351ba67-5db2-4e72-8207-8dad202ec4be",
+        "hospital_name": "Pets and Vets Animal Hospital & Urgent Care",
+        "tagline": "Compassionate Care for Your Beloved Pets",
+        "phone": "(703) 957-3297",
+        "email": "vet@petsandvetsanimalhospital.com",
+        "address": "43114 Peacock Market Plaza, Suite F110, South Riding, VA 20152",
+        "timezone": "America/New_York",
+        "referral_hospital_name": "VCA SouthPaws",
+        "referral_hospital_phone": "(703) 752-9100",
+        "facebook_link": "",
+        "instagram_link": "",
+        "twitter_link": "",
+        "whatsapp_group_link": "",
+        "google_reviews_link": "",
+        "yelp_reviews_link": "",
+        "facebook_reviews_link": "",
+        "hero_images": [
+          "https://customer-assets.emergentagent.com/job_peacock-pet-care/artifacts/ulwulpak_emilee.png",
+          "https://customer-assets.emergentagent.com/job_peacock-pet-care/artifacts/ej59vv47_vanama.png"
+        ],
+        "created_at": "2025-09-03 12:55:42.083000",
+        "updated_at": "2025-09-03 12:55:42.083000"
+      }
+    ],
+    "users": [
+      {
+        "_id": "68b83b8eaa3d567486dad3df",
+        "id": "118f4a9a-ed90-4958-ab23-08c9da0a2369",
+        "email": "admin@hospital.com",
+        "full_name": "Hospital Administrator",
+        "role": "admin",
+        "is_active": true,
+        "created_at": "2025-08-27 14:58:40.963000",
+        "password_hash": "$2b$12$K1UXmnFXdR4J1hAVs3z2KeK0JlZCjn6HgotyCWy7C55h/S0Mxp6fe"
+      },
+      {
+        "_id": "68b83b8eaa3d567486dad3e0",
+        "id": "54f33c4b-bd57-4fd3-b748-b420e417a83f",
+        "email": "vet@petsandvetsanimalhospital.com",
+        "full_name": "Technician",
+        "role": "technician",
+        "is_active": true,
+        "created_at": "2025-08-30 18:13:15.712000",
+        "password_hash": "$2b$12$pERv8UCl/mEBiiW.eK3Zq.ojyjTmbI/id5Ju//a74TsSM21Vn3ME.",
+        "updatedAt": "2025-08-31T00:41:17.250727"
+      },
+      {
+        "_id": "68b83b8eaa3d567486dad3e1",
+        "id": "f763c809-f046-4bec-9592-f078076d8f6a",
+        "email": "support@petsandvetsanimalhospital.com",
+        "full_name": "Manager",
+        "role": "manager",
+        "is_active": true,
+        "created_at": "2025-08-30 18:22:27.728000",
+        "password_hash": "$2b$12$LohwjzJzjGWX0vAUqpnCTuqp/myBH55AblzP.RzyTtv5EuBjScW0e"
+      },
+      {
+        "_id": "68b83b8eaa3d567486dad3e2",
+        "id": "6df16525-222b-49cb-b690-f27045200794",
+        "email": "admin@primepixel.com",
+        "full_name": "Stephen Pallam",
+        "role": "admin",
+        "is_active": true,
+        "created_at": "2025-08-31 00:17:30.912000",
+        "password_hash": "$2b$12$SMUvgrD3O.UEK/KGtlBgxeXzp/KDwhVDZTUfIgKQfHr4F40Kk3BC6"
+      },
+      {
+        "_id": "68b83b8eaa3d567486dad3e3",
+        "id": "70e0e346-01c6-4ab5-9e53-1d0f5053afcd",
+        "email": "testuser@veterinary.com",
+        "full_name": "Dr. Sarah Johnson",
+        "role": "user",
+        "is_active": true,
+        "created_at": "2025-08-31 23:08:13.547000",
+        "password_hash": "$2b$12$k7F/9N17jgPn0KpaXxKCFu3WfTOKhwu96ZpKlRUrHTK2Lhrc1aEy."
+      },
+      {
+        "_id": "68b83b8eaa3d567486dad3e4",
+        "id": "07fd5fe0-b753-4ca0-8110-731b86d7efce",
+        "email": "technician@veterinary.com",
+        "full_name": "Alex Thompson",
+        "role": "technician",
+        "is_active": true,
+        "created_at": "2025-08-31 23:08:14.583000",
+        "password_hash": "$2b$12$OXis66jTh1YCf1ZLCvmzbup9oZ79QM.SDkb/OxxGMofnBU2C.rqxW"
+      },
+      {
+        "_id": "68b83b8eaa3d567486dad3e5",
+        "id": "b99415d6-fd00-48d7-9ae0-77a333c9dd68",
+        "email": "manager@veterinary.com",
+        "full_name": "Dr. Maria Garcia",
+        "role": "manager",
+        "is_active": true,
+        "created_at": "2025-08-31 23:08:14.871000",
+        "password_hash": "$2b$12$NyLQTIP.Fu6jjhBrQEYPve6rgwa8ysFGWwAAyKEAgLFqJE8.qreyu"
+      },
+      {
+        "_id": "68b83b8eaa3d567486dad3e6",
+        "id": "51d2886a-1297-404f-a4a0-58bea0beab86",
+        "email": "newadmin@veterinary.com",
+        "full_name": "Dr. John Smith",
+        "role": "admin",
+        "is_active": true,
+        "created_at": "2025-08-31 23:08:15.157000",
+        "password_hash": "$2b$12$JImucEITzc8qMsyj6Snwv.sZcywks7DRayItQ4d9iJdk0yV5EFk8G"
+      },
+      {
+        "_id": "68b83b8eaa3d567486dad3e7",
+        "id": "5078926a-0038-476b-b2f2-ecf32792be80",
+        "email": "cantdelete@veterinary.com",
+        "full_name": "Cant Delete User",
+        "role": "user",
+        "is_active": true,
+        "created_at": "2025-08-31 23:08:25.843000",
+        "password_hash": "$2b$12$mALvZ/SZDCb9faS/7C5pqesBf5LZAyVbOmScA/tfPigmV3.LMnTsO"
+      },
+      {
+        "_id": "68b83b8eaa3d567486dad3e8",
+        "id": "0a745994-a166-4186-9b00-429de24799e8",
+        "email": "integration@veterinary.com",
+        "full_name": "Integration Test User",
+        "role": "technician",
+        "is_active": true,
+        "created_at": "2025-08-31 23:08:26.450000",
+        "password_hash": "$2b$12$mPCTq83CSamBnk6jNSRJ2e9Dsyqd8vcPnbjk93ty1GhwNhODIdgoG"
+      }
+    ],
+    "hospital_hours": [
+      {
+        "_id": "68b83b8eaa3d567486dad3e9",
+        "id": "553628cf-3d8a-4c66-8856-2db8169f7dbd",
+        "monday": {
+          "is_open": true,
+          "open_time": "08:00",
+          "close_time": "19:00"
+        },
+        "tuesday": {
+          "is_open": true,
+          "open_time": "08:00",
+          "close_time": "19:00"
+        },
+        "wednesday": {
+          "is_open": true,
+          "open_time": "08:00",
+          "close_time": "19:00"
+        },
+        "thursday": {
+          "is_open": true,
+          "open_time": "08:00",
+          "close_time": "19:00"
+        },
+        "friday": {
+          "is_open": true,
+          "open_time": "08:00",
+          "close_time": "19:00"
+        },
+        "saturday": {
+          "is_open": true,
+          "open_time": "09:00",
+          "close_time": "17:00"
+        },
+        "sunday": {
+          "is_open": false,
+          "open_time": null,
+          "close_time": null
+        },
+        "updated_at": "2025-09-03 00:30:41.834000",
+        "updated_by": "118f4a9a-ed90-4958-ab23-08c9da0a2369"
+      }
+    ],
+    "urgent_care_hours": [
+      {
+        "_id": "68b83b8eaa3d567486dad3ea",
+        "id": "421e5a0c-cee0-4080-880f-9461106d9b7c",
+        "monday": {
+          "is_open": true,
+          "open_time": "14:00",
+          "close_time": "23:00"
+        },
+        "tuesday": {
+          "is_open": true,
+          "open_time": "14:00",
+          "close_time": "23:00"
+        },
+        "wednesday": {
+          "is_open": true,
+          "open_time": "14:00",
+          "close_time": "23:00"
+        },
+        "thursday": {
+          "is_open": true,
+          "open_time": "14:00",
+          "close_time": "23:00"
+        },
+        "friday": {
+          "is_open": true,
+          "open_time": "14:00",
+          "close_time": "23:00"
+        },
+        "saturday": {
+          "is_open": true,
+          "open_time": "14:00",
+          "close_time": "23:00"
+        },
+        "sunday": {
+          "is_open": true,
+          "open_time": "14:00",
+          "close_time": "23:00"
+        },
+        "updated_at": "2025-09-03 00:30:41.950000",
+        "updated_by": "118f4a9a-ed90-4958-ab23-08c9da0a2369"
+      }
+    ],
+    "reviews": [
+      {
+        "_id": "68b83b8eaa3d567486dad3eb",
+        "id": "28ab8535-7076-48f1-b531-5e044d14d160",
+        "text": "I cannot speak highly enough about Dr. Vanama and the team at Pets and Vets Animal Hospital. Our dog has been patient of Dr Vanama for 6 years. We are always greeted with warmth and genuine concern for our furry baby's well-being. Dr. Vanama is incredibly knowledgeable and took the time to explain every step of the treatment process, making sure we felt comfortable and informed.",
+        "pet_name": "S Gill",
+        "owner_name": "Surinder Bhambra",
+        "rating": 5,
+        "created_at": "2025-08-30 12:36:30.929000",
+        "updated_at": "2025-08-30 12:36:30.929000"
+      },
+      {
+        "_id": "68b83b8eaa3d567486dad3ec",
+        "id": "f0a84b21-b0c1-4afa-b351-93a05beb44d7",
+        "text": "Dr. Vanama and her staff are highly educated, attentive, caring, and professional. I have personally taken my cats and dogs to her facility for over 5 years now and have never been dissatisfied and I have felt that my animals were always getting the care they deserved.",
+        "pet_name": "Dog",
+        "owner_name": "Zach Smith",
+        "rating": 5,
+        "created_at": "2025-08-30 12:37:45.633000",
+        "updated_at": "2025-08-30 12:37:45.633000"
+      },
+      {
+        "_id": "68b83b8eaa3d567486dad3ed",
+        "id": "599ece7d-171e-4445-a8c8-11bde9a08c49",
+        "text": "We recently got a Corgi puppy and have been bringing her here for the past couple of months. Dr. Vanama and Katie are both so nice and knowledgeable about what our pup needs to live a healthy life. We really appreciated all the info about what food/treats and toys are best. We can\u2019t recommend them highly enough",
+        "pet_name": "Corgi",
+        "owner_name": " Stephen Reiter",
+        "rating": 5,
+        "created_at": "2025-08-30 12:39:19.777000",
+        "updated_at": "2025-08-30 12:39:19.777000"
+      }
+    ],
+    "ai_settings": [
+      {
+        "_id": "68b83b8eaa3d567486dad3ee",
+        "id": "d3325eac-6856-4bd7-b7f1-98d3b1594907",
+        "llm_settings": {
+          "provider": "emergent",
+          "model": "gpt-4o-mini",
+          "temperature": 0.8,
+          "max_tokens": 1200
+        },
+        "image_settings": {
+          "provider": "openai",
+          "model": "dall-e-3",
+          "quality": "hd",
+          "size": "1024x1024"
+        },
+        "social_settings": {
+          "facebook": {
+            "app_id": "test_app_id",
+            "app_secret": "test_secret",
+            "access_token": "test_token",
+            "page_id": "test_page"
+          }
+        },
+        "news_settings": {
+          "update_frequency": "3"
+        },
+        "created_at": "2025-09-01 14:21:28.204000",
+        "updated_at": "2025-09-03 00:31:14.085000"
+      }
+    ],
+    "email_config": [
+      {
+        "_id": "68b83b8eaa3d567486dad3ef",
+        "id": "e657c109-0bc3-430b-9b7e-1437c306bb28",
+        "notification_email": "invalid-email-format",
+        "email_provider": "gmail",
+        "is_enabled": true,
+        "smtp_email": "ZW5jcnlwdGlvbi10ZXN0QGdtYWlsLmNvbQ==",
+        "smtp_password": "dmVyeV9zZWNyZXRfcGFzc3dvcmRfMTIz",
+        "sendgrid_api_key": "U0cudGVzdF9hcGlfa2V5XzEyMzQ1Njc4OQ==",
+        "sender_email": "noreply@veterinary.com",
+        "created_at": "2025-08-31 13:55:15.733000",
+        "updated_at": "2025-09-03 00:30:48.315000"
+      }
+    ]
+  }
+}

@@ -1,0 +1,169 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { 
+  Heart, 
+  MapPin,
+  Phone,
+  Star,
+  Target,
+  CheckCircle
+} from 'lucide-react';
+import { hospitalInfo } from '../mock';
+import { useBusinessInfo } from '../hooks/useBusinessInfo';
+
+const OurMission = () => {
+  const { businessInfo: currentBusinessInfo } = useBusinessInfo();
+  const primaryColor = '#29add3';
+  const primaryLight = '#5bc0db';
+  const primaryBg = '#e6f7fb';
+
+  const serviceAreas = [
+    "South Riding", "Chantilly", "Aldie", "Ashburn", "Herndon", "Centreville", "Fairfax"
+  ];
+
+  const missionPoints = [
+    {
+      title: "Quality Pet Care for All",
+      description: "We believe quality pet care, food, medicines, and pet supplies should be available to all caring and responsible pet owners",
+      icon: Heart
+    },
+    {
+      title: "State-of-the-Art Facility",
+      description: "Provide high-quality treatment options in our modern facility equipped with the latest veterinary technologies",
+      icon: Star
+    },
+    {
+      title: "Comprehensive Services",
+      description: "Our licensed veterinarians provide vaccinations, parasite control, and comprehensive care to keep your pets healthy",
+      icon: CheckCircle
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="bg-white">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '30px', paddingBottom: '15px' }}>
+          <h1 className="text-xl font-bold text-gray-900 mb-6">
+            Our Mission
+          </h1>
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white" style={{ backgroundColor: primaryColor }}>
+              Excellent Modern Care for the Modern Pet
+            </span>
+          </div>
+          <p className="text-base text-gray-600 leading-relaxed max-w-3xl mx-auto">
+            Pets & Vets Animal Hospital is pleased to deliver the very best veterinary care to your pets residing in 
+            South Riding, Chantilly, Aldie, Ashburn, Herndon, Centreville, and Fairfax in Northern Virginia. Our team 
+            of licensed veterinarians and support staff provides vaccinations, parasite control, and comprehensive care 
+            to ensure your family pets stay healthy.
+          </p>
+        </div>
+      </section>
+
+      {/* Mission Statement */}
+      <section className="bg-[#f8f9fa] py-6">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="space-y-6">
+            <p className="text-base text-gray-600 leading-relaxed text-center">
+              We believe quality pet care, food, medicines, and pet supplies should be available to all caring and 
+              responsible pet owners. It is our mission to provide high-quality treatment options for your pets in our 
+              state-of-the-art facility, which is equipped with the latest veterinary technologies.
+            </p>
+            
+            <div className="p-8 rounded-xl border-l-4 bg-white" style={{ borderColor: primaryColor }}>
+              <div className="flex items-center justify-center mb-4">
+                <Heart className="h-6 w-6 mr-3" style={{ color: primaryColor }} />
+                <h3 className="text-xl font-semibold text-gray-900">Our Promise</h3>
+              </div>
+              <p className="font-medium italic text-gray-800 text-center" style={{ fontSize: '1rem' }}>
+                "We strive to provide excellent modern care for the modern pet, because every pet deserves the best possible care."
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Mission Points */}
+      <section className="bg-white py-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-xl font-bold text-gray-900 mb-8 text-center">
+            How We Fulfill Our Mission
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {missionPoints.map((point, index) => (
+              <div key={index} className="bg-gray-50 p-6 rounded-xl shadow-md text-center">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-4" style={{ backgroundColor: `${primaryColor}15` }}>
+                  <point.icon className="h-6 w-6" style={{ color: primaryColor }} />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">{point.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{point.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Service Areas */}
+      <section className="bg-[#f8f9fa] py-6">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-xl font-bold text-gray-900 mb-6">
+            Proudly Serving Northern Virginia
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Delivering exceptional veterinary care across these communities:
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            {serviceAreas.map((area, index) => (
+              <span key={index} className="px-4 py-2 rounded-full text-white font-medium" style={{ backgroundColor: primaryColor }}>
+                {area}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact CTA */}
+      <section style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, #2196c7 100%)`, paddingTop: '30px', paddingBottom: '30px' }}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="font-bold text-white mb-4" style={{ fontSize: '1rem' }}>
+            Experience Our Mission in Action
+          </h2>
+          <p className="mb-8" style={{ color: 'white', fontSize: '1rem' }}>
+            Contact us today to schedule an appointment and see how we put our mission into practice
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href={`tel:${currentBusinessInfo.phone}`}
+              className="inline-flex items-center justify-center bg-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
+              style={{ color: primaryColor }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+            >
+              <Phone className="mr-2 h-5 w-5" />
+              Call Now: {currentBusinessInfo.phone}
+            </a>
+            <Link
+              to="/reach-us"
+              className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = 'white';
+                e.target.style.color = primaryColor;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'transparent';  
+                e.target.style.color = 'white';
+              }}
+            >
+              Schedule Visit
+              <MapPin className="ml-2 h-5 w-5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default OurMission;

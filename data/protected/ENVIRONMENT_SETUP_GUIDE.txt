@@ -1,0 +1,57 @@
+/
+🏥 VETERINARY HOSPITAL - NEW ENVIRONMENT SETUP GUIDE
+====================================================
+
+🗄️  DATABASE CONFIGURATION:
+   - Database Name: animal_hospital_db
+   - Connection: mongodb://localhost:27017
+   - Total Documents: 226 (verified)
+   - Backup Location: /app/data/backups/
+
+🔧 ENVIRONMENT VARIABLES:
+   Backend (.env):
+   - MONGO_URL="mongodb://localhost:27017"
+   - DB_NAME="animal_hospital_db" 
+   - JWT_SECRET_KEY="your-very-secret-jwt-key-change-this-in-production"
+   - EMERGENT_LLM_KEY=sk-emergent-9778d9c09Fa02D6D8F
+
+📦 PRODUCTION DATA VERIFIED:
+   ✅ Business Information: 1 document
+   ✅ User Accounts: 10 users
+   ✅ AI Agents: 4 agents (adhoc: 1, write: 1, auto: 2)
+   ✅ Hospital Hours: 1 document
+   ✅ Urgent Care Hours: 1 document
+   ✅ Customer Reviews: 3 reviews
+   ✅ AI Settings: 1 configuration
+   ✅ Appointment Config: 1 document
+   ✅ Facility Photos: 10 images
+   ✅ Team Members: 2 members
+   ✅ Urgent Care Appointments: 187 appointments
+
+🛡️  DATA PROTECTION MEASURES:
+   ✅ Test isolation configured
+   ✅ Startup data protection active
+   ✅ Production backup created
+   ✅ Environment configs backed up
+
+🚀 NEW ENVIRONMENT SETUP STEPS:
+   1. Ensure MongoDB is running
+   2. Restore environment files from backup
+   3. Verify database connection to animal_hospital_db
+   4. Run startup data manager
+   5. Test all endpoints
+   6. Verify AI agents and settings
+
+⚠️  CRITICAL WARNINGS:
+   - NEVER run test scripts against animal_hospital_db
+   - ALWAYS use test_db_config.py for testing
+   - VERIFY database name before any operations
+   - BACKUP before any major changes
+
+📞 Business Information:
+   - Name: Pets and Vets Animal Hospital & Urgent Care
+   - Phone: (703) 957-7387
+   - Admin Users: 10 accounts configured
+   - AI Agents: 4 production agents ready
+   
+Generated: 2025-09-04T00:18:50.049717

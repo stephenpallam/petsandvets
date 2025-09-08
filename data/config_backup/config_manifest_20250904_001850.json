@@ -1,0 +1,35 @@
+{
+  "timestamp": "20250904_001850",
+  "configs": {
+    "backend_env": {
+      "source": "/app/backend/.env",
+      "backup": "/app/data/config_backup/backend_env_20250904_001850.backup",
+      "exists": true
+    },
+    "frontend_env": {
+      "source": "/app/frontend/.env",
+      "backup": "/app/data/config_backup/frontend_env_20250904_001850.backup",
+      "exists": true
+    },
+    "server_config": {
+      "source": "/app/backend/server.py",
+      "backup": "/app/data/config_backup/server_config_20250904_001850.backup",
+      "exists": true
+    },
+    "data_manager": {
+      "source": "/app/backend/data_manager.py",
+      "backup": "/app/data/config_backup/data_manager_20250904_001850.backup",
+      "exists": true
+    },
+    "startup_manager": {
+      "source": "/app/startup_data_manager.py",
+      "backup": "/app/data/config_backup/startup_manager_20250904_001850.backup",
+      "exists": true
+    },
+    "test_isolation": {
+      "source": "/app/backend/test_db_config.py",
+      "backup": "/app/data/config_backup/test_isolation_20250904_001850.backup",
+      "exists": true
+    }
+  }
+}
