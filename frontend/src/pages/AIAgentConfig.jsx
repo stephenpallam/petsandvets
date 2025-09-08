@@ -1465,6 +1465,13 @@ The Veterinary Care Team`,
       // Debug: Log the data being sent
       console.log('Sending agent data:', agentData);
       console.log('Agent type:', agentType);
+      
+      // Specific debug for email agents
+      if (agentType === 'email' && agentData.use_chatgpt_formatting !== undefined) {
+        console.log('EMAIL AGENT DEBUG - Fields being sent:');
+        console.log('- use_chatgpt_formatting:', agentData.use_chatgpt_formatting);
+        console.log('- email_content_template:', agentData.email_content_template);
+      }
 
       // Determine if we're in edit mode and get agent ID
       const urlParams = new URLSearchParams(window.location.search);
