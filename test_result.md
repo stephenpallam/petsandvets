@@ -87,6 +87,48 @@ if (!agentId && mode !== 'edit' && mode !== 'run') { // Proper condition
 
 **Result:** ✅ Timesheet adhoc agents now use correct tab-specific logic instead of falling through to social media validation
 
+## LATEST FIX - Email Agent Dashboard Display & Edit Mode (RESOLVED)
+
+**Issues:** 
+1. Email scheduled agents showing wrong fields in dashboard (Social Media Platforms instead of Email info)
+2. Email agents not pre-populating form fields correctly in edit mode
+
+**Dashboard Display Fixes:**
+
+**Before (incorrect for email agents):**
+- Topic field (not relevant for scheduled emails)
+- Social Media Platforms (not applicable to emails)
+
+**After (correct for email agents):**
+- **Email:** "Opt In Customers" (shows email recipients)
+- **ChatGPT Formatting:** Yes/No (instead of Topic)
+- **Image Option:** Shows "Text only email" when none selected
+- **Next Scheduled Run:** Shows next holiday date with post time
+
+**Edit Mode Fix:**
+Added missing logic to pre-populate email agent forms with existing data:
+```javascript
+// Handle email agent data prepopulation
+if (agentData.agent_type === 'email') {
+  if (agentData.mode === 'recurring' && agentData.selected_holidays?.length > 0) {
+    // Scheduled email agent (holiday-based)
+    setEmailScheduledMode({ ...agentData });
+  } else if (agentData.mode === 'recurring') {
+    // Recurring email agent (topic-based)  
+    setEmailRecurringMode({ ...agentData });
+  } else if (agentData.mode === 'write') {
+    // Write mode email agent
+    setEmailWriteMode({ ...agentData });
+  }
+}
+```
+
+**Result:** ✅ Email agents now:
+- Display correct fields in dashboard (Email, ChatGPT, Image options)
+- Show "Text only email" for none image option
+- Pre-populate all form fields correctly in edit mode
+- Show appropriate information for email vs social media agents
+
 ## LATEST FIX - Timesheet Agent "Field Required" Error (RESOLVED)
 
 **Issue:** User reported "body: Field required" error when creating adhoc timesheet agents
