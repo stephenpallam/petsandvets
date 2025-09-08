@@ -420,7 +420,7 @@ const AIPublishedPosts = () => {
                                   key={platform} 
                                   className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700"
                                 >
-                                  {getPlatformIcon(platform)} {platform}
+                                  {getPlatformIcon(platform)} {platform.charAt(0).toUpperCase() + platform.slice(1)}
                                 </span>
                               ))}
                             </div>
