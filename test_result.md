@@ -214,6 +214,35 @@ agent.use_chatgpt_formatting ? 'Yes' : 'No'
 
 **Result:** ✅ Holiday Management now shows current 2025/2026 dates instead of outdated 2024 dates
 
+## CRITICAL FIX - Holiday Update Button Added (RESOLVED)
+
+**Issue:** Even after updating backend holiday dates, frontend still showed 2024 dates because existing holidays in database weren't updated.
+
+**Root Cause:** `initialize_default_holidays` only runs when NO holidays exist, but old 2024 holidays were already in database.
+
+**Solution:** Created new endpoint and UI button to reset existing holidays:
+
+**New Backend Endpoint:**
+```javascript
+POST /api/holidays/reset-and-initialize
+```
+- Deletes all existing holidays
+- Creates new 2025/2026 holidays  
+- Returns count of deleted/created holidays
+
+**New Frontend Feature:**
+- **"Update to 2025/2026" button** appears when holidays exist
+- **Confirmation dialog** before deletion
+- **Success message** showing update counts
+
+**How to Use:**
+1. Go to Holiday Management page
+2. Click **"Update to 2025/2026"** button (orange color)
+3. Confirm deletion of old holidays
+4. New 2025/2026 holidays are created automatically
+
+**Result:** ✅ Users can now update existing 2024 holidays to current 2025/2026 dates with one click
+
 ## LATEST FIX - Timesheet Agent "Field Required" Error (RESOLVED)
 
 **Issue:** User reported "body: Field required" error when creating adhoc timesheet agents
