@@ -4959,6 +4959,11 @@ async def create_ai_agent(
         
         logger.info(f"Created AI agent: {agent.id} with mode: {agent.mode} and type: {agent.agent_type}")
         
+        # Debug logging for email agents
+        if agent.agent_type == AIAgentType.EMAIL_AGENT:
+            logger.info(f"Email agent debug - use_chatgpt_formatting: {agent_dict.get('use_chatgpt_formatting')}")
+            logger.info(f"Email agent debug - email_content_template: {agent_dict.get('email_content_template', 'NOT_FOUND')}")
+        
         # Trigger post generation based on mode
         if agent.mode == AIAgentMode.ADHOC and agent.immediate:
             # Trigger immediate post generation in background
