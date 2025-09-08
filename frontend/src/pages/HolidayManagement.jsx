@@ -27,6 +27,7 @@ const HolidayManagement = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showRefreshModal, setShowRefreshModal] = useState(false);
   const [selectedHoliday, setSelectedHoliday] = useState(null);
   
   // Form states
