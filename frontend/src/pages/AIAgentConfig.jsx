@@ -340,10 +340,7 @@ The Veterinary Care Team`,
         try {
           const agentData = JSON.parse(editingAgent);
           console.log('Parsed agent data:', agentData);
-          console.log('Agent type:', agentData.agent_type);
-          console.log('Agent mode:', agentData.mode);
           
-          // Set mode states
           if (mode === 'edit') {
             setIsEditMode(true);
           } else if (mode === 'run') {
@@ -355,7 +352,6 @@ The Veterinary Care Team`,
           // Set the active tab based on agent mode and agent type
           // Handle legacy "auto" mode by mapping it to "recurring"
           const tabMode = agentData.mode === 'auto' ? 'recurring' : agentData.mode;
-          console.log('Tab mode (after auto->recurring mapping):', tabMode);
           
           // Determine the correct tab ID based on agent type and mode
           let correctTabId;
@@ -374,9 +370,7 @@ The Veterinary Care Team`,
             correctTabId = `social-media-${tabMode}`;
           }
           
-          console.log('Calculated correct tab ID:', correctTabId);
           setActiveTab(correctTabId);
-          console.log('Active tab set to:', correctTabId);
           
           // Pre-populate form fields based on agent mode
           if (agentData.mode === 'auto' || agentData.mode === 'recurring') {
