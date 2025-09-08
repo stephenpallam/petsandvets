@@ -30,6 +30,46 @@ if (!agentId && mode !== 'edit' && mode !== 'run') { // Proper condition
 - Recurring agents → recurring tab
 - All other tabs properly disabled in edit mode
 
+## LATEST FIX - Adhoc Timesheet Agent "Field Required" Error (RESOLVED)
+
+**Issue:** User getting "body: Field required" error when creating adhoc timesheet agents, plus missing validation for required fields.
+
+**Root Causes Found:**
+1. **Topic validation**: Backend was requiring `topic` field for ALL agent types including timesheet agents
+2. **Missing report_period validation**: Backend wasn't validating that `report_period` is required for adhoc timesheet agents  
+3. **Incorrect hasattr() usage**: Using `hasattr(agent_data, 'report_period')` doesn't work properly with Pydantic models
+
+**Solutions Applied:**
+1. **Fixed topic validation**: Changed from requiring topic for all agents to only requiring it for social media agents:
+   ```python
+   # Before: Required topic for all agent types (incorrect)
+   if agent_data.mode in [ADHOC, AUTO, RECURRING] and not agent_data.topic:
+   
+   # After: Only require topic for social media agents (correct)
+   if (agent_data.mode in [ADHOC, AUTO, RECURRING] 
+       and not agent_data.topic 
+       and agent_data.agent_type == SOCIAL_MEDIA):
+   ```
+
+2. **Added missing validations for timesheet agents**:
+   ```python
+   if agent_data.agent_type == TIME_SHEET:
+       # Agent name is required
+       if not agent_data.agent_name:
+           raise HTTPException(400, "Agent name is required")
+       
+       # Report period is required for adhoc mode
+       if agent_data.mode == ADHOC and not agent_data.report_period:
+           raise HTTPException(400, "Report period is required for adhoc timesheet agents")
+   ```
+
+3. **Fixed Pydantic model validation**: Replaced `hasattr()` with direct attribute access
+
+**Result:** ✅ Adhoc timesheet agents can now be created successfully without:
+- Unnecessary topic field requirement  
+- Missing report_period validation error
+- "Field required" errors for properly filled forms
+
 ## LATEST FIX - Timesheet Agent "Field Required" Error (RESOLVED)
 
 **Issue:** User reported "body: Field required" error when creating adhoc timesheet agents
