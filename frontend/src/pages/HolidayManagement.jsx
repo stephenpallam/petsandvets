@@ -117,40 +117,7 @@ const HolidayManagement = () => {
     }
   };
 
-  // Reset and reinitialize holidays with updated dates
-  const resetAndInitialize = async () => {
-    if (!window.confirm('This will delete all existing holidays and create new ones with 2025/2026 dates. Are you sure?')) {
-      return;
-    }
-    
-    try {
-      setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/api/holidays/reset-and-initialize`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
 
-      if (response.ok) {
-        const result = await response.json();
-        setMessage({ 
-          type: 'success', 
-          text: `Successfully updated holidays! Deleted ${result.deleted_count} old holidays and created ${result.created_count} new ones.` 
-        });
-        fetchHolidays();
-      } else {
-        const errorData = await response.json();
-        setMessage({ type: 'error', text: errorData.detail || 'Failed to reset holidays.' });
-      }
-    } catch (error) {
-      console.error('Error resetting holidays:', error);
-      setMessage({ type: 'error', text: 'Network error. Please try again.' });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Refresh holiday dates based on current date
   const refreshDates = async () => {
