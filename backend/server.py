@@ -4674,6 +4674,66 @@ async def email_timesheet_report_post(post_id: str, email_data: dict):
         logger.error(f"Error emailing timesheet report post: {str(e)}")
         raise
 
+async def generate_email_for_agent(agent_id: str, agent_data: dict):
+    """Generate an email for an AI email agent"""
+    try:
+        # Create initial post record for email preview
+        post_id = str(uuid.uuid4())
+        now = await business_now_async()
+        
+        logger.info(f"Generating email for agent {agent_id}")
+        
+        # Get email template and formatting preference
+        email_template = agent_data.get('email_content_template', '')
+        use_chatgpt = agent_data.get('use_chatgpt_formatting', True)
+        
+        if not email_template:
+            logger.error(f"No email template found for agent {agent_id}")
+            return
+        
+        # For now, create a sample email with placeholder data
+        # In a real implementation, this would:
+        # 1. Get customer data from database
+        # 2. Process email template with customer/pet names
+        # 3. Apply ChatGPT formatting if enabled
+        # 4. Create email posts for review
+        
+        sample_content = email_template.replace('[CUSTOMER_NAME]', 'John Smith').replace('[PET_NAME]', 'Buddy')
+        
+        if use_chatgpt:
+            # Apply ChatGPT formatting (placeholder - would call actual AI service)
+            sample_content = f"✨ AI-Enhanced Email ✨\n\n{sample_content}\n\n---\nFormatted with ChatGPT for optimal engagement"
+        
+        # Create post record for email preview
+        post_data = {
+            "id": post_id,
+            "agent_id": agent_id,
+            "agent_name": agent_data.get('agent_name', 'Email Agent'),
+            "topic": f"Holiday Email - {agent_data.get('agent_name', 'Email Agent')}",
+            "content": sample_content,
+            "image_url": "",
+            "image_option": agent_data.get('image_option', 'none'),
+            "platforms": ["email"],  # Email-specific platform
+            "status": agent_data.get('post_destination', 'in_review'),
+            "agent_type": "email",
+            "created_at": now,
+            "updated_at": now,
+            "is_active": True,
+            "word_count": str(len(sample_content.split())),
+            "use_chatgpt_formatting": use_chatgpt
+        }
+        
+        # Insert post into database
+        await db.ai_posts.insert_one(post_data)
+        
+        logger.info(f"Created email post {post_id} for agent {agent_id} with status: {post_data['status']}")
+        
+        return {"post_id": post_id, "status": "completed"}
+        
+    except Exception as e:
+        logger.error(f"Error generating email for agent {agent_id}: {str(e)}")
+        raise
+
 async def generate_social_media_post_for_agent(agent_id: str, agent_data: dict):
     """Generate a social media post for an AI agent"""
     try:
