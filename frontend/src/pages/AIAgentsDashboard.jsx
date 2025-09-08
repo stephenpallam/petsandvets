@@ -1529,44 +1529,80 @@ const AIAgentsDashboard = () => {
                               )}
                             </div>
                           ) : (
-                            // Social Media Agent Display (original logic for all non-timesheet agents)
+                            // Email vs Social Media Agent Display
                             <>
-                              {(agent.mode === 'auto' || agent.mode === 'recurring') && (
-                                <div className="space-y-4">
-                                  {/* Row 1: Topic and Image Option */}
-                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="flex flex-col">
-                                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Topic</span>
-                                      <p className="text-sm text-gray-900 mt-1">{agent.topic}</p>
+                              {agent.agent_type === 'email' ? (
+                                // Email Agent Display (scheduled mode)
+                                (agent.mode === 'auto' || agent.mode === 'recurring') && (
+                                  <div className="space-y-4">
+                                    {/* Row 1: Email/ChatGPT and Image Option */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email</span>
+                                        <p className="text-sm text-gray-900 mt-1">Opt In Customers</p>
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Image Option</span>
+                                        <p className="text-sm text-gray-900 mt-1 capitalize">{formatImageOption(agent)}</p>
+                                      </div>
                                     </div>
-                                    <div className="flex flex-col">
-                                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Image Option</span>
-                                      <p className="text-sm text-gray-900 mt-1 capitalize">{formatImageOption(agent)}</p>
-                                    </div>
-                                  </div>
-                                  
-                                  {/* Row 2: Workflow Mode and Social Media Platforms */}
-                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="flex flex-col">
-                                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Workflow Mode</span>
-                                      <p className="text-sm text-gray-900 mt-1">
-                                        {getWorkflowMode(agent)}
-                                      </p>
-                                    </div>
-                                    <div className="flex flex-col">
-                                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Social Media Platforms</span>
-                                      <p className="text-sm text-gray-900 mt-1">
-                                        {getEnabledPlatforms(agent.social_platforms).length > 0 ? (
-                                          getEnabledPlatforms(agent.social_platforms)
-                                            .map(platform => platform === 'twitter' ? 'X (Twitter)' : platform.charAt(0).toUpperCase() + platform.slice(1))
-                                            .join(', ')
-                                        ) : (
-                                          'None selected'
-                                        )}
-                                      </p>
+                                    
+                                    {/* Row 2: ChatGPT Formatting and Next Scheduled Run */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">ChatGPT Formatting</span>
+                                        <p className="text-sm text-gray-900 mt-1">
+                                          {formatChatGPTStatus(agent)}
+                                        </p>
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Next Scheduled Run</span>
+                                        <p className="text-sm text-gray-900 mt-1">
+                                          {getNextScheduledHoliday(agent)}
+                                        </p>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
+                                )
+                              ) : (
+                                // Social Media Agent Display (original logic)
+                                (agent.mode === 'auto' || agent.mode === 'recurring') && (
+                                  <div className="space-y-4">
+                                    {/* Row 1: Topic and Image Option */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Topic</span>
+                                        <p className="text-sm text-gray-900 mt-1">{agent.topic}</p>
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Image Option</span>
+                                        <p className="text-sm text-gray-900 mt-1 capitalize">{formatImageOption(agent)}</p>
+                                      </div>
+                                    </div>
+                                    
+                                    {/* Row 2: Workflow Mode and Social Media Platforms */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Workflow Mode</span>
+                                        <p className="text-sm text-gray-900 mt-1">
+                                          {getWorkflowMode(agent)}
+                                        </p>
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Social Media Platforms</span>
+                                        <p className="text-sm text-gray-900 mt-1">
+                                          {getEnabledPlatforms(agent.social_platforms).length > 0 ? (
+                                            getEnabledPlatforms(agent.social_platforms)
+                                              .map(platform => platform === 'twitter' ? 'X (Twitter)' : platform.charAt(0).toUpperCase() + platform.slice(1))
+                                              .join(', ')
+                                          ) : (
+                                            'None selected'
+                                          )}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )
                               )}
                           
                               {agent.mode === 'adhoc' && (
