@@ -248,7 +248,7 @@ const Customers = () => {
   const resetForm = () => {
     setFormData({
       name: '',
-      pet_name: '',
+      pets: [{ name: '' }], // Reset to one empty pet
       phone: '',
       email: '',
       sms_opt_in: true,
