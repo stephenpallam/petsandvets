@@ -4880,12 +4880,14 @@ async def send_mass_emails_from_post(post_id: str, post_data: dict):
                 customer_name = customer.get('name', 'Valued Customer')
                 customer_email = customer.get('email')
                 
-                # Get all pet names for this customer
+                # Get pet name(s) for this customer - handle both data structures
+                pet_names = "your pet"  # Default fallback
+                
+                # Check for pets array structure (new format)
                 pets = customer.get('pets', [])
                 if pets:
-                    # Extract pet names, filtering out empty/None names
+                    # Extract pet names from pets array
                     valid_pet_names = [pet.get('name', '').strip() for pet in pets if pet.get('name', '').strip()]
-                    
                     if valid_pet_names:
                         if len(valid_pet_names) == 1:
                             pet_names = valid_pet_names[0]
@@ -4894,10 +4896,10 @@ async def send_mass_emails_from_post(post_id: str, post_data: dict):
                         else:
                             # For 3+ pets: "Buddy, Max, and Luna"
                             pet_names = ", ".join(valid_pet_names[:-1]) + f", and {valid_pet_names[-1]}"
-                    else:
-                        pet_names = "your pet"
-                else:
-                    pet_names = "your pet"
+                
+                # Check for single pet_name field (current format)
+                elif customer.get('pet_name', '').strip():
+                    pet_names = customer.get('pet_name').strip()
                 
                 # Personalize the email content with customer, pet, and holiday context
                 personalized_content = email_template.replace('[CUSTOMER_NAME]', customer_name)
