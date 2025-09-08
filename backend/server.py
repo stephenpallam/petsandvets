@@ -9025,6 +9025,91 @@ async def reset_and_initialize_holidays(current_user: User = Depends(get_current
     }
 
 
+# Smart refresh holidays based on current date
+@api_router.post("/holidays/refresh-dates")
+async def refresh_holiday_dates(current_user: User = Depends(get_current_user)):
+    """Refresh holiday dates based on current date - move passed holidays to next year (Admin/Manager only)"""
+    if current_user.role not in ['admin', 'manager']:
+        raise HTTPException(status_code=403, detail="Access denied. Admin or Manager privileges required.")
+    
+    # Get current date
+    current_date = datetime.now().date()
+    current_year = current_date.year
+    next_year = current_year + 1
+    
+    # Fetch all holidays
+    holidays = await db.holidays.find({}).to_list(length=None)
+    
+    if not holidays:
+        raise HTTPException(status_code=404, detail="No holidays found to refresh")
+    
+    updated_count = 0
+    errors = []
+    
+    for holiday in holidays:
+        try:
+            # Parse the current holiday date
+            holiday_date = datetime.strptime(holiday['date'], '%Y-%m-%d').date()
+            month_day = holiday.get('month_day', holiday_date.strftime('%m-%d'))
+            
+            # Check if holiday has passed this year
+            holiday_this_year = datetime.strptime(f"{current_year}-{month_day}", '%Y-%m-%d').date()
+            
+            new_date = None
+            new_name = holiday['name']
+            
+            if holiday_this_year < current_date:
+                # Holiday has passed, move to next year
+                new_date = datetime.strptime(f"{next_year}-{month_day}", '%Y-%m-%d').date()
+                # Update name to reflect new year if it contains a year
+                if str(current_year) in new_name:
+                    new_name = new_name.replace(str(current_year), str(next_year))
+                elif str(current_year - 1) in new_name:
+                    new_name = new_name.replace(str(current_year - 1), str(next_year))
+                elif not any(year_str in new_name for year_str in [str(y) for y in range(2020, 2030)]):
+                    # Add year if no year is present
+                    new_name = f"{new_name} {next_year}"
+            else:
+                # Holiday hasn't passed, keep in current year but update if year is wrong
+                new_date = holiday_this_year
+                if str(current_year - 1) in new_name:
+                    new_name = new_name.replace(str(current_year - 1), str(current_year))
+                elif str(current_year + 1) in new_name:
+                    new_name = new_name.replace(str(current_year + 1), str(current_year))
+                elif not any(year_str in new_name for year_str in [str(y) for y in range(2020, 2030)]):
+                    # Add year if no year is present
+                    new_name = f"{new_name} {current_year}"
+            
+            # Update the holiday if date or name changed
+            if new_date and (new_date.strftime('%Y-%m-%d') != holiday['date'] or new_name != holiday['name']):
+                await db.holidays.update_one(
+                    {"_id": holiday['_id']},
+                    {
+                        "$set": {
+                            "name": new_name,
+                            "date": new_date.strftime('%Y-%m-%d'),
+                            "month_day": new_date.strftime('%m-%d')
+                        }
+                    }
+                )
+                updated_count += 1
+                
+        except Exception as e:
+            errors.append(f"Error updating {holiday.get('name', 'Unknown')}: {str(e)}")
+    
+    result = {
+        "message": f"Successfully refreshed holiday dates",
+        "updated_count": updated_count,
+        "total_holidays": len(holidays),
+        "current_date": current_date.strftime('%Y-%m-%d')
+    }
+    
+    if errors:
+        result["errors"] = errors
+    
+    return result
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
