@@ -4834,7 +4834,7 @@ async def send_mass_emails_from_post(post_id: str, post_data: dict):
                 
                 # TODO: Actually send email here using email service
                 # For now, just log the email that would be sent
-                logger.info(f"Would send email to {customer_email} for {customer_name} with pet {pet_name}")
+                logger.info(f"Would send email to {customer_email} for {customer_name} with pets: {pet_names}")
                 
                 # In a real implementation, this would use an email service like:
                 # await send_email(
