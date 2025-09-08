@@ -350,10 +350,28 @@ The Veterinary Care Team`,
           setEditingAgentMode(agentData.mode);
           setEditingAgentData(agentData);
           
-          // Set the active tab based on agent mode and disable others
+          // Set the active tab based on agent mode and agent type
           // Handle legacy "auto" mode by mapping it to "recurring"
           const tabMode = agentData.mode === 'auto' ? 'recurring' : agentData.mode;
-          setActiveTab(tabMode);
+          
+          // Determine the correct tab ID based on agent type and mode
+          let correctTabId;
+          if (agentData.agent_type === 'time_sheet') {
+            correctTabId = tabMode === 'adhoc' ? 'timesheet-adhoc' : 'timesheet-recurring';
+          } else if (agentData.agent_type === 'email') {
+            if (tabMode === 'write') {
+              correctTabId = 'email-write';
+            } else if (tabMode === 'recurring' && agentData.selected_holidays?.length > 0) {
+              correctTabId = 'email-scheduled'; // Holiday-based emails use scheduled tab
+            } else {
+              correctTabId = 'email-recurring'; // Topic-based recurring emails
+            }
+          } else {
+            // Social media agents
+            correctTabId = `social-media-${tabMode}`;
+          }
+          
+          setActiveTab(correctTabId);
           
           // Pre-populate form fields based on agent mode
           if (agentData.mode === 'auto' || agentData.mode === 'recurring') {
