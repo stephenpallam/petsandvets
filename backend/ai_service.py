@@ -614,16 +614,16 @@ Please create a complete, polished email that a veterinary clinic would be proud
 Make sure there are no duplicate signatures or redundant messages."""
 
             # Call ChatGPT using Emergent integrations
-            llm_chat = LlmChat(api_key=self.emergent_key)
+            chat = LlmChat(
+                api_key=self.emergent_key,
+                session_id=f"email_format_{uuid.uuid4()}",
+                system_message="You are a professional email formatter for a veterinary clinic."
+            ).with_model("openai", "gpt-4o-mini")
             
-            response = await llm_chat.chat_completion(
-                messages=[UserMessage(content=email_prompt)],
-                model="gpt-4o-mini",
-                max_tokens=1000,
-                temperature=0.7
-            )
+            user_message = UserMessage(text=email_prompt)
+            response = await chat.send_message(user_message)
             
-            formatted_email = response.content.strip()
+            formatted_email = response.strip()
             
             # Log the API usage (will be imported from server)
             try:
