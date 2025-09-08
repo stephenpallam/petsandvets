@@ -151,6 +151,42 @@ const HolidayManagement = () => {
     }
   };
 
+  // Refresh holiday dates based on current date
+  const refreshDates = async () => {
+    if (!window.confirm('This will update holiday dates based on today\'s date. Passed holidays will move to next year. Continue?')) {
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_BASE_URL}/api/holidays/refresh-dates`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        let message = `Successfully refreshed holiday dates! Updated ${result.updated_count} of ${result.total_holidays} holidays.`;
+        if (result.errors && result.errors.length > 0) {
+          message += ` Some errors occurred: ${result.errors.join(', ')}`;
+        }
+        setMessage({ type: 'success', text: message });
+        fetchHolidays();
+      } else {
+        const errorData = await response.json();
+        setMessage({ type: 'error', text: errorData.detail || 'Failed to refresh holiday dates.' });
+      }
+    } catch (error) {
+      console.error('Error refreshing holiday dates:', error);
+      setMessage({ type: 'error', text: 'Network error. Please try again.' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
