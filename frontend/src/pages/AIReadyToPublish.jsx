@@ -1331,10 +1331,10 @@ const AIReadyToPublish = () => {
                                 </div>
                               </div>
                             ) : (
-                              /* Regular Social Media Post Content */
+                              /* Regular Social Media Post Content - Match review page styling */
                               <div>
                                 <h4 className="text-sm font-medium text-gray-900 mb-2">Content:</h4>
-                                <p className="text-gray-700 whitespace-pre-wrap text-sm leading-relaxed">
+                                <p className="text-gray-900 whitespace-pre-wrap leading-relaxed">
                                   {post.content}
                                 </p>
                               </div>
