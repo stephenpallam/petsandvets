@@ -452,6 +452,47 @@ setEmailScheduledMode({
 - Dashboard reflects actual saved settings
 - Complete email agent data integrity maintained
 
+## ADDITIONAL DEBUGGING & TIMING FIXES (IN PROGRESS)
+
+**Remaining Issues Identified:**
+1. **Email template not showing in edit mode**: Template field empty despite being saved
+2. **Initial creation showing "No"**: ChatGPT formatting shows "No" on first creation but correct after editing
+
+**Debugging Steps Applied:**
+1. **Added Debug Logging**: 
+   - Console logging in save function to see data being sent
+   - Console logging in edit mode to see data being loaded
+   - Verify field mapping between frontend and backend
+
+2. **Timing Issue Fixes**:
+   - **Increased redirect delay**: 1500ms → 2500ms after agent creation
+   - **Added window focus listener**: Auto-refresh dashboard when window gains focus
+   - **Enhanced data refresh**: Ensures latest data is always loaded
+
+**Debug Code Added:**
+```javascript
+// Save function logging
+console.log('Email scheduled mode data being saved:', {
+  useChatGPTFormatting: emailScheduledMode.useChatGPTFormatting,
+  emailContentTemplate: emailScheduledMode.emailContentTemplate
+});
+
+// Edit mode logging  
+console.log('Email scheduled agent data for edit mode:', {
+  use_chatgpt_formatting: agentData.use_chatgpt_formatting,
+  email_content_template: agentData.email_content_template
+});
+```
+
+**Next Steps for Testing:**
+1. Create new email scheduled agent with template and ChatGPT enabled
+2. Check browser console logs for data being saved
+3. Navigate to dashboard and verify display
+4. Edit the agent and check console logs for data being loaded
+5. Verify template field population and ChatGPT setting
+
+**Expected Resolution**: Debug logs will reveal exact field mapping issues and timing problems for final fix
+
 ## LATEST FIX - Timesheet Agent "Field Required" Error (RESOLVED)
 
 **Issue:** User reported "body: Field required" error when creating adhoc timesheet agents
