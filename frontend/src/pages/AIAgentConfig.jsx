@@ -1256,7 +1256,7 @@ The Veterinary Care Team`,
             word_count: '100',
             post_destination: timesheetRecurringMode.initialStatus
           };
-        } else if (activeTab === 'adhoc') {
+        } else if (activeTab === 'timesheet-adhoc') {
           // Validate timesheet adhoc mode
           const validationErrors = validateTimesheetAdhocMode();
           if (validationErrors.length > 0) {
