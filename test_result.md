@@ -366,6 +366,42 @@ Today: January 2nd, 2026
 
 **Result:** ✅ Email scheduled agents now show actual upcoming holiday names and user-friendly dates instead of generic placeholder text
 
+## FIX - ChatGPT Formatting Label & Field Mapping (RESOLVED)
+
+**Issues Fixed:**
+1. **Label Update**: "ChatGPT Formatting" → "Use ChatGPT to Format Email" (more descriptive)
+2. **Field Mapping Bug**: ChatGPT Formatting showing "No" despite being enabled in form
+
+**Root Cause:** Field name mismatch between form submission and dashboard display:
+- **Form saves as**: `use_chatgpt_formatting` (from `emailScheduledMode.useChatGPTFormatting`)
+- **Dashboard was checking**: `use_chatgpt_email_formatting` first (wrong priority)
+
+**Solution Applied:**
+
+**1. Label Enhancement:**
+```javascript
+// Before: "ChatGPT Formatting"
+// After: "Use ChatGPT to Format Email"
+```
+
+**2. Field Priority Fix:**
+```javascript
+// Before (wrong priority):
+(agent.use_chatgpt_email_formatting || agent.useChatGPTFormatting || agent.use_chatgpt_formatting)
+
+// After (correct priority):
+(agent.use_chatgpt_formatting || agent.useChatGPTFormatting || agent.use_chatgpt_email_formatting)
+```
+
+**Form Field Mapping:**
+- **Email Scheduled Form**: `emailScheduledMode.useChatGPTFormatting` → **Saves as**: `use_chatgpt_formatting`
+- **Dashboard Display**: Now correctly reads `use_chatgpt_formatting` field first
+
+**Result:** ✅ Email scheduled agents now:
+- Show descriptive label: "Use ChatGPT to Format Email"
+- Display correct status: "Yes" when ChatGPT formatting is enabled
+- Properly reflect form settings in dashboard display
+
 ## LATEST FIX - Timesheet Agent "Field Required" Error (RESOLVED)
 
 **Issue:** User reported "body: Field required" error when creating adhoc timesheet agents
