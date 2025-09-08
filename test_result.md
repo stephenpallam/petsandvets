@@ -878,7 +878,36 @@ The Veterinary Care Team
 
 **Result:** ✅ Both timesheet modes now validate ALL required fields with specific error messages
 
-## COMPREHENSIVE VALIDATION IMPLEMENTED:
+## CRITICAL FIX - Holiday Selection Logic for Email Agents (RESOLVED)
+
+**Issue:** Email agent configured for National Cat Day was generating Thanksgiving-related content instead of National Cat Day content.
+
+**Root Cause Found:** Database had incorrect Thanksgiving 2025 date:
+- **Wrong Date in Database**: `2025-11-28` (Friday) 
+- **Correct Date**: `2025-11-27` (4th Thursday of November)
+
+**Impact:** When holiday selection algorithm sorted holidays by date, it incorrectly prioritized holidays due to wrong Thanksgiving date affecting the comparison logic.
+
+**Solution Applied:**
+1. **Fixed Database Date**: Updated Thanksgiving 2025 from `2025-11-28` to `2025-11-27`
+2. **Verified Holiday Selection Logic**: Algorithm now correctly identifies National Cat Day (Oct 29) as next upcoming holiday before Thanksgiving (Nov 27)
+
+**Test Results After Fix:**
+- ✅ **National Cat Day 2025**: `2025-10-29` (51 days from current date)
+- ✅ **Thanksgiving 2025**: `2025-11-27` (80 days from current date) - CORRECTED
+- ✅ **Holiday Selection**: Correctly selects National Cat Day as next upcoming holiday
+- ✅ **Email Generation**: Now generates National Cat Day-specific content
+
+**Generated Email Sample:**
+```
+Subject: Celebrating National Cat Day with You and Your Furry Friends!
+Holiday: National Cat Day 2025 (2025-10-29)
+Content: "We hope this message finds you, Molly, and Dolly in great spirits as we celebrate National Cat Day!"
+```
+
+**Result:** ✅ Email scheduled agents now correctly generate content for the actual next upcoming holiday from their selected holidays list.
+
+## PREVIOUS COMPREHENSIVE VALIDATION IMPLEMENTED:
 
 ### Frontend Validation:
 ✅ **Agent Name Required**: Button disabled until name is entered
