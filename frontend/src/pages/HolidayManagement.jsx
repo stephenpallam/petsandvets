@@ -688,6 +688,102 @@ const HolidayManagement = () => {
             </div>
           </div>
         )}
+
+        {/* Refresh Dates Confirmation Modal */}
+        {showRefreshModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl max-w-lg w-full overflow-hidden shadow-2xl">
+              {/* Header */}
+              <div className="px-6 py-4 bg-gradient-to-r from-green-50 to-emerald-50 border-b border-green-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-green-100 rounded-full">
+                      <Calendar className="h-5 w-5 text-green-600" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Refresh Holiday Dates
+                    </h3>
+                  </div>
+                  <button
+                    onClick={() => setShowRefreshModal(false)}
+                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="p-6">
+                <div className="mb-4">
+                  <div className="flex items-start space-x-3">
+                    <div className="flex-shrink-0 mt-1">
+                      <AlertCircle className="h-5 w-5 text-amber-500" />
+                    </div>
+                    <div>
+                      <h4 className="text-base font-medium text-gray-900 mb-2">
+                        Smart Date Update
+                      </h4>
+                      <p className="text-gray-600 mb-3">
+                        This will automatically update holiday dates based on today's date:
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-red-400 rounded-full"></div>
+                      <span className="text-gray-700">
+                        <strong>Passed holidays</strong> will move to next year
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                      <span className="text-gray-700">
+                        <strong>Upcoming holidays</strong> will stay in current year
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                      <span className="text-gray-700">
+                        <strong>Holiday names</strong> will update with correct years
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-end space-x-3">
+                  <button
+                    onClick={() => setShowRefreshModal(false)}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={refreshDates}
+                    disabled={loading}
+                    className="px-6 py-2 text-sm font-medium text-white rounded-lg transition-colors hover:opacity-90 disabled:opacity-50 flex items-center space-x-2"
+                    style={{ backgroundColor: '#10b981' }}
+                  >
+                    {loading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        <span>Updating...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Calendar className="h-4 w-4" />
+                        <span>Refresh Dates</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
