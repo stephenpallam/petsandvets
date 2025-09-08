@@ -4923,7 +4923,7 @@ async def create_ai_agent(
                 raise HTTPException(status_code=400, detail="Agent name is required")
             
             # Report period is required for adhoc timesheet agents
-            if agent_data.mode == AIAgentMode.ADHOC and not hasattr(agent_data, 'report_period'):
+            if agent_data.mode == AIAgentMode.ADHOC and not agent_data.report_period:
                 raise HTTPException(status_code=400, detail="Report period is required for adhoc timesheet agents")
             
             # Validate custom date range for timesheet agents
