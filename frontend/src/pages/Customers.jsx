@@ -262,9 +262,22 @@ const Customers = () => {
   // Open edit modal
   const openEditModal = (customer) => {
     setSelectedCustomer(customer);
+    
+    // Convert existing pet_name to pets array or use existing pets array
+    let pets = [{ name: '' }]; // Default to one empty pet
+    
+    if (customer.pets && Array.isArray(customer.pets)) {
+      // Customer already has pets array (new format)
+      pets = customer.pets.length > 0 ? customer.pets : [{ name: '' }];
+    } else if (customer.pet_name) {
+      // Customer has old pet_name format - convert to array
+      const petNames = customer.pet_name.split(',').map(name => name.trim()).filter(name => name);
+      pets = petNames.length > 0 ? petNames.map(name => ({ name })) : [{ name: '' }];
+    }
+    
     setFormData({
       name: customer.name || '',
-      pet_name: customer.pet_name || '',
+      pets: pets,
       phone: customer.phone || '',
       email: customer.email || '',
       sms_opt_in: customer.sms_opt_in,
