@@ -737,6 +737,62 @@ elif customer.get('pet_name', '').strip():  # Current format
 
 **Result:** ✅ Pet names now correctly extracted from actual database schema and displayed in emails
 
+## MAJOR UPGRADE - Standardized Customer Pet Management (IMPLEMENTED)
+
+**Enhancement:** Upgraded customer form from single comma-separated pet_name field to proper pets array structure with full backward compatibility.
+
+**New Customer Form Features:**
+
+**Multi-Pet Management:**
+- ✅ **Dynamic Pet Entries**: Add/remove individual pet input fields
+- ✅ **Individual Pet Names**: Each pet has its own input field
+- ✅ **Add Pet Button**: Easy addition of multiple pets
+- ✅ **Remove Pet Button**: Remove individual pets (minimum 1 remains)
+- ✅ **Intuitive UI**: Clear labels like "Pet 1 name", "Pet 2 name", etc.
+
+**Backend Data Structure Standardization:**
+
+**New Pet Model:**
+```python
+class Pet(BaseModel):
+    name: str
+
+class Customer(BaseModel):
+    pets: Optional[List[Pet]] = []  # Primary structured format
+    pet_name: Optional[str] = None  # Legacy compatibility
+```
+
+**Bidirectional Conversion Logic:**
+```python
+# Frontend sends pets array → Backend creates pet_name backup
+if pets: pet_name = ', '.join([pet.name for pet in pets])
+
+# Frontend sends pet_name → Backend creates pets array
+if pet_name: pets = [{'name': name} for name in pet_name.split(',')]
+```
+
+**Full Backward Compatibility:**
+- ✅ **Existing Data**: Old customers with pet_name still display correctly
+- ✅ **Legacy Forms**: Systems using pet_name continue to work
+- ✅ **Data Migration**: Automatic conversion between formats
+- ✅ **Display Logic**: UI shows pets from either format seamlessly
+
+**Customer Form UI Updates:**
+- **Before**: Single "Pet Name" text input (comma-separated)
+- **After**: Dynamic "Pet Names" section with individual inputs and add/remove controls
+
+**Email Agent Integration:**
+- ✅ **Smart Detection**: Handles both pets array and pet_name formats
+- ✅ **Proper Grammar**: "Mickey and Dolly" for 2 pets, "Mickey, Dolly, and Luna" for 3+
+- ✅ **Real Data**: Uses actual customer pet names in personalized emails
+
+**CSV Import Support:**
+- ✅ **New Format**: Supports pets JSON array in CSV
+- ✅ **Legacy Format**: Still accepts pet_name field
+- ✅ **Auto-Conversion**: Backend converts between formats automatically
+
+**Result:** ✅ Professional multi-pet customer management with structured data while maintaining complete backward compatibility
+
 ## LATEST FIX - Timesheet Agent "Field Required" Error (RESOLVED)
 
 **Issue:** User reported "body: Field required" error when creating adhoc timesheet agents
