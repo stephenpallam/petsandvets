@@ -1882,30 +1882,51 @@ const AIAgentsDashboard = () => {
                                 {/* Left Column: Next Run Info */}
                                 <div className="p-3 bg-green-50 border border-green-200 rounded-md">
                                   {(() => {
-                                    const runInfo = calculateNextRunForRecurringAgent(agent);
-                                    if (!runInfo) return null;
-                                    
-                                    return (
-                                      <div className="space-y-2">
-                                        <div>
-                                          <label className="text-xs font-semibold text-green-700 uppercase tracking-wide">Next Scheduled Run</label>
-                                          <p className="text-sm font-medium text-green-900">
-                                            {runInfo.nextRunDate}
-                                          </p>
-                                        </div>
-                                        {runInfo.selectedDays && (
+                                    if (agent.agent_type === 'email' && agent.selected_holidays && agent.selected_holidays.length > 0) {
+                                      // Email agent with holidays - show next holiday
+                                      const holidayInfo = getNextScheduledHoliday(agent);
+                                      return (
+                                        <div className="space-y-2">
                                           <div>
-                                            <label className="text-xs font-semibold text-green-700 uppercase tracking-wide">Scheduled Days</label>
+                                            <label className="text-xs font-semibold text-green-700 uppercase tracking-wide">Next Holiday Run</label>
                                             <p className="text-sm font-medium text-green-900">
-                                              {runInfo.selectedDays}
+                                              {holidayInfo.nextRun}
                                             </p>
-                                            <p className="text-xs text-green-600 mt-1">
-                                              At {agent.post_time || '09:00'}
+                                            {holidayInfo.holidayName && (
+                                              <p className="text-xs text-green-600 mt-1">
+                                                {holidayInfo.holidayName}
+                                              </p>
+                                            )}
+                                          </div>
+                                        </div>
+                                      );
+                                    } else {
+                                      // Regular recurring agents
+                                      const runInfo = calculateNextRunForRecurringAgent(agent);
+                                      if (!runInfo) return null;
+                                      
+                                      return (
+                                        <div className="space-y-2">
+                                          <div>
+                                            <label className="text-xs font-semibold text-green-700 uppercase tracking-wide">Next Scheduled Run</label>
+                                            <p className="text-sm font-medium text-green-900">
+                                              {runInfo.nextRunDate}
                                             </p>
                                           </div>
-                                        )}
-                                      </div>
-                                    );
+                                          {runInfo.selectedDays && (
+                                            <div>
+                                              <label className="text-xs font-semibold text-green-700 uppercase tracking-wide">Scheduled Days</label>
+                                              <p className="text-sm font-medium text-green-900">
+                                                {runInfo.selectedDays}
+                                              </p>
+                                              <p className="text-xs text-green-600 mt-1">
+                                                At {agent.post_time || '09:00'}
+                                              </p>
+                                            </div>
+                                          )}
+                                        </div>
+                                      );
+                                    }
                                   })()}
                                 </div>
                                 
