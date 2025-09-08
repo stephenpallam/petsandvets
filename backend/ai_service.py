@@ -738,3 +738,8 @@ Content:"""
             "success": False,
             "error": str(e)
         }
+
+# Function to be called from server.py
+async def format_email_content(template: str, customer_name: str, pet_names: str, holiday_name: str, holiday_date: str) -> str:
+    """Global function to format email content"""
+    return await ai_service.format_email_content(template, customer_name, pet_names, holiday_name, holiday_date)
