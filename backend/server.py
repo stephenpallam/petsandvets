@@ -4888,11 +4888,11 @@ async def create_ai_agent(
                 raise HTTPException(status_code=400, detail="Post content is required for write mode")
             # Note: post_title is optional - AI can generate if not provided
         
-        # Topic validation - not required for scheduled email agents (holiday-based)
-        if agent_data.mode in [AIAgentMode.ADHOC, AIAgentMode.AUTO, AIAgentMode.RECURRING] and not agent_data.topic:
-            # Exception: Scheduled email agents (holiday-based) don't require topic as holidays define context
-            if not (agent_data.agent_type == AIAgentType.EMAIL_AGENT and hasattr(agent_data, 'selected_holidays') and agent_data.selected_holidays):
-                raise HTTPException(status_code=400, detail="Topic is required for this mode")
+        # Topic validation - only required for social media agents
+        if (agent_data.mode in [AIAgentMode.ADHOC, AIAgentMode.AUTO, AIAgentMode.RECURRING] 
+            and not agent_data.topic 
+            and agent_data.agent_type == AIAgentType.SOCIAL_MEDIA):
+            raise HTTPException(status_code=400, detail="Topic is required for social media agents")
         
         # Only validate social platforms for social media agents
         if agent_data.agent_type == AIAgentType.SOCIAL_MEDIA:
