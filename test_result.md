@@ -493,6 +493,51 @@ console.log('Email scheduled agent data for edit mode:', {
 
 **Expected Resolution**: Debug logs will reveal exact field mapping issues and timing problems for final fix
 
+## UX IMPROVEMENT - Consistent Save Modal for Create & Edit (RESOLVED)
+
+**Issue:** Creating new agents had no loading feedback, while editing agents showed a "Updating Agent" modal.
+
+**User Experience Problem:**
+- **Create Mode**: No visual feedback during save operation
+- **Edit Mode**: Professional loading modal with progress indicator
+- **Inconsistency**: Different UX for similar operations
+
+**Solution Applied:**
+
+**1. Unified Modal Display:**
+```javascript
+// Before: Only edit mode showed modal
+if (isEditMode) {
+  setShowSaveModal(true);
+}
+
+// After: Both create and edit modes show modal
+setShowSaveModal(true);
+```
+
+**2. Dynamic Modal Content:**
+```javascript
+// Modal title changes based on mode
+{isEditMode ? 'Updating Agent' : 'Creating Agent'}
+
+// Modal message adapts to action
+{isEditMode ? 'Saving changes and redirecting...' : 'Setting up your agent and redirecting...'}
+```
+
+**New User Experience:**
+- **✅ Create Mode**: Shows "Creating Agent" modal with "Setting up your agent and redirecting..."
+- **✅ Edit Mode**: Shows "Updating Agent" modal with "Saving changes and redirecting..."
+- **✅ Consistent Timing**: Both operations show progress during 2.5 second process
+- **✅ Professional Feel**: Users see clear feedback for all save operations
+
+**Modal Features:**
+- 🔄 **Animated Spinner**: Visual progress indicator
+- 📝 **Clear Messaging**: Explains what's happening
+- ⏱️ **Appropriate Timing**: Shows during actual processing time
+- 🎨 **Professional Design**: Matches app theme and styling
+
+**Result:** ✅ Consistent and professional user experience for both creating and editing agents
+
 ## LATEST FIX - Timesheet Agent "Field Required" Error (RESOLVED)
 
 **Issue:** User reported "body: Field required" error when creating adhoc timesheet agents
