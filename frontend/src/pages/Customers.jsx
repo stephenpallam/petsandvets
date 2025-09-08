@@ -1106,7 +1106,7 @@ const Customers = () => {
                       </div>
                       <div className="flex items-center">
                         <div className="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
-                        <span><strong>Optional:</strong> pet_name, phone, email, sms_opt_in, email_subscribed</span>
+                        <span><strong>Optional:</strong> pets (JSON array) or pet_name (legacy), phone, email, sms_opt_in, email_subscribed</span>
                       </div>
                       <div className="flex items-center">
                         <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
