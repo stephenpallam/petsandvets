@@ -79,7 +79,13 @@ frontend/node_modules/
 frontend/.cache/
 **/node_modules/
 **/.cache/
--e 
-# Environment files
-*.env
-*.env.*
+
+# Additional exclusions for cache files
+node_modules/.cache/
+frontend/node_modules/.cache/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+**/__pycache__/
