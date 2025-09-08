@@ -4711,24 +4711,41 @@ async def generate_email_for_agent(agent_id: str, agent_data: dict):
             logger.error(f"No holiday data found for selected holidays {selected_holidays}")
             return
         
-        # Find the next upcoming holiday or use the first one
+        # Find the next upcoming holiday from selected holidays
         from datetime import datetime
         today = datetime.now().date()
         
-        # Sort holidays by date and find next upcoming one
-        upcoming_holiday = None
+        # Parse and sort holidays by date to find the next upcoming one
+        valid_holidays = []
         for holiday in holidays_list:
             try:
                 holiday_date = datetime.strptime(holiday['date'], '%Y-%m-%d').date()
-                if holiday_date >= today:
-                    upcoming_holiday = holiday
-                    break
-            except:
+                valid_holidays.append({
+                    'holiday_data': holiday,
+                    'parsed_date': holiday_date
+                })
+            except Exception as e:
+                logger.warning(f"Could not parse holiday date {holiday.get('date', 'unknown')}: {e}")
                 continue
         
-        # If no upcoming holiday found, use the first selected holiday
+        if not valid_holidays:
+            logger.error(f"No valid holiday dates found for agent {agent_id}")
+            return
+        
+        # Sort holidays by date
+        valid_holidays.sort(key=lambda x: x['parsed_date'])
+        
+        # Find the next upcoming holiday (today or later)
+        upcoming_holiday = None
+        for holiday_info in valid_holidays:
+            if holiday_info['parsed_date'] >= today:
+                upcoming_holiday = holiday_info['holiday_data']
+                break
+        
+        # If no upcoming holiday found, use the earliest holiday (for past year wrap-around)
         if not upcoming_holiday:
-            upcoming_holiday = holidays_list[0]
+            upcoming_holiday = valid_holidays[0]['holiday_data']
+            logger.info(f"No upcoming holidays found, using earliest selected holiday: {upcoming_holiday.get('name')}")
         
         holiday_name = upcoming_holiday.get('name', 'Holiday')
         holiday_date = upcoming_holiday.get('date', '')
