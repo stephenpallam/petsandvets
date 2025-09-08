@@ -4698,17 +4698,33 @@ async def generate_email_for_agent(agent_id: str, agent_data: dict):
         if not customers_list:
             logger.warning(f"No customers found in database for agent {agent_id}, using placeholder data")
             customer_name = "John Smith"
-            pet_name = "Buddy"
+            pet_names = "Buddy"
             customer_email = "customer@example.com"
         else:
             customer = customers_list[0]
             customer_name = customer.get('name', 'Valued Customer')
-            # Get first pet name if available
-            pets = customer.get('pets', [])
-            pet_name = pets[0].get('name', 'Your Pet') if pets else 'Your Pet'
             customer_email = customer.get('email', 'customer@example.com')
             
-            logger.info(f"Using customer {customer_name} with pet {pet_name} for email preview")
+            # Get all pet names for this customer
+            pets = customer.get('pets', [])
+            if pets:
+                # Extract pet names, filtering out empty/None names
+                valid_pet_names = [pet.get('name', '').strip() for pet in pets if pet.get('name', '').strip()]
+                
+                if valid_pet_names:
+                    if len(valid_pet_names) == 1:
+                        pet_names = valid_pet_names[0]
+                    elif len(valid_pet_names) == 2:
+                        pet_names = f"{valid_pet_names[0]} and {valid_pet_names[1]}"
+                    else:
+                        # For 3+ pets: "Buddy, Max, and Luna"
+                        pet_names = ", ".join(valid_pet_names[:-1]) + f", and {valid_pet_names[-1]}"
+                else:
+                    pet_names = "your pet"
+            else:
+                pet_names = "your pet"
+            
+            logger.info(f"Using customer {customer_name} with pets: {pet_names} for email preview")
         
         # Process email template with real customer data
         sample_content = email_template.replace('[CUSTOMER_NAME]', customer_name).replace('[PET_NAME]', pet_name)
