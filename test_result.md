@@ -285,6 +285,37 @@ Today: January 2nd, 2026
 
 **Result:** ✅ Smart date management that automatically keeps holidays current without manual date calculation
 
+## UI IMPROVEMENTS - Custom Themed Confirmation Modal (RESOLVED)
+
+**Changes Made:**
+1. **Removed** "Update to 2025/2026" button (no longer needed)
+2. **Replaced** default JavaScript confirm dialog with custom themed modal
+3. **Enhanced** user experience with professional design
+
+**New Custom Modal Features:**
+- **🎨 Themed Design**: Matches website color scheme and styling
+- **📱 Responsive**: Works on all screen sizes with proper spacing
+- **🎯 Clear Information**: Explains exactly what the refresh will do
+- **📊 Visual Indicators**: Color-coded bullets showing different actions:
+  - 🔴 **Red**: Passed holidays → move to next year
+  - 🟢 **Green**: Upcoming holidays → stay current year  
+  - 🔵 **Blue**: Holiday names → update with correct years
+- **⏳ Loading State**: Shows spinner and "Updating..." text during process
+- **❌ Easy Cancel**: Click outside modal or X button to cancel
+
+**Modal Design Elements:**
+- **Header**: Green gradient background with calendar icon
+- **Content**: Clear explanation with visual bullet points
+- **Actions**: Styled cancel and confirm buttons
+- **Loading**: Animated spinner during update process
+- **Shadows**: Professional depth with shadow effects
+
+**User Experience:**
+- **Before**: Plain JavaScript alert - unprofessional appearance
+- **After**: Beautiful themed modal - matches app design perfectly
+
+**Result:** ✅ Professional, themed confirmation experience that clearly explains the refresh functionality
+
 ## LATEST FIX - Timesheet Agent "Field Required" Error (RESOLVED)
 
 **Issue:** User reported "body: Field required" error when creating adhoc timesheet agents
