@@ -4803,12 +4803,30 @@ async def send_mass_emails_from_post(post_id: str, post_data: dict):
                 customer_name = customer.get('name', 'Valued Customer')
                 customer_email = customer.get('email')
                 
-                # Get first pet name if available
+                # Get all pet names for this customer
                 pets = customer.get('pets', [])
-                pet_name = pets[0].get('name', 'Your Pet') if pets else 'Your Pet'
+                if pets:
+                    # Extract pet names, filtering out empty/None names
+                    valid_pet_names = [pet.get('name', '').strip() for pet in pets if pet.get('name', '').strip()]
+                    
+                    if valid_pet_names:
+                        if len(valid_pet_names) == 1:
+                            pet_names = valid_pet_names[0]
+                        elif len(valid_pet_names) == 2:
+                            pet_names = f"{valid_pet_names[0]} and {valid_pet_names[1]}"
+                        else:
+                            # For 3+ pets: "Buddy, Max, and Luna"
+                            pet_names = ", ".join(valid_pet_names[:-1]) + f", and {valid_pet_names[-1]}"
+                    else:
+                        pet_names = "your pet"
+                else:
+                    pet_names = "your pet"
                 
                 # Personalize the email content
-                personalized_content = email_template.replace('[CUSTOMER_NAME]', customer_name).replace('[PET_NAME]', pet_name)
+                # Support both [PET_NAME] (legacy) and [PET_NAMES] (new)
+                personalized_content = email_template.replace('[CUSTOMER_NAME]', customer_name)
+                personalized_content = personalized_content.replace('[PET_NAME]', pet_names)
+                personalized_content = personalized_content.replace('[PET_NAMES]', pet_names)
                 
                 if use_chatgpt:
                     # Apply ChatGPT formatting (placeholder - would call actual AI service)
