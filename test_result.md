@@ -1,5 +1,35 @@
 user_problem_statement: "Fixed edit mode tab selection bug - adhoc and write mode agents now open correct tabs instead of defaulting to recurring mode"
 
+## LATEST FIX - Edit Mode Tab Selection Bug (RESOLVED)
+
+**Issue:** When clicking edit button on adhoc and "write your post" social media agents, the page was defaulting to recurring tab mode instead of opening the correct tab.
+
+**Root Cause:** Two issues in AIAgentConfig.jsx:
+1. **Wrong URL parameter**: useEffect was checking `searchParams.get('agent_id')` but the dashboard navigation uses `id` parameter
+2. **Tab override**: The useEffect was always resetting tabs to default because the condition `if (!agentId)` was always true
+
+**Solution:**
+- Fixed useEffect to check correct parameter: `searchParams.get('id')` instead of `searchParams.get('agent_id')`
+- Added mode check to prevent tab reset: `mode !== 'edit' && mode !== 'run'`
+- Enhanced tab mapping logic to properly handle agent types and modes
+
+**Fixed Code:**
+```javascript
+// Before (buggy):
+const agentId = searchParams.get('agent_id'); // Wrong parameter
+if (!agentId) { // Always true, always reset tab
+
+// After (fixed):
+const agentId = searchParams.get('id'); // Correct parameter  
+if (!agentId && mode !== 'edit' && mode !== 'run') { // Proper condition
+```
+
+**Result:** ✅ Edit mode now correctly opens:
+- Adhoc agents → adhoc tab
+- Write mode agents → write your post tab  
+- Recurring agents → recurring tab
+- All other tabs properly disabled in edit mode
+
 ## LATEST FIX - Timesheet Agent "Field Required" Error (RESOLVED)
 
 **Issue:** User reported "body: Field required" error when creating adhoc timesheet agents
