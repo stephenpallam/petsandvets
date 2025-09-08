@@ -424,7 +424,8 @@ class CustomerCreate(BaseModel):
 
 class CustomerUpdate(BaseModel):
     name: Optional[str] = None
-    pet_name: Optional[str] = None
+    pets: Optional[List[Pet]] = None  # New structured pets array
+    pet_name: Optional[str] = None  # Legacy field for backward compatibility
     phone: Optional[str] = None
     email: Optional[str] = None
     sms_opt_in: Optional[bool] = None
