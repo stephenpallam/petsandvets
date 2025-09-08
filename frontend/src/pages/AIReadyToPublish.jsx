@@ -1164,6 +1164,7 @@ const AIReadyToPublish = () => {
                                   'bg-gray-100 text-gray-700'
                                 }`}>
                                   {post.agent_type === 'social_media' ? 'Social Media' :
+                                   post.agent_type === 'email' ? 'Email' :
                                    post.agent_type === 'email_agent' ? 'Email' :
                                    post.agent_type === 'sms_agent' ? 'SMS' :
                                    post.agent_type === 'marketing_agent' ? 'Marketing' :
