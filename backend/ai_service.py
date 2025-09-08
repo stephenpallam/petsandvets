@@ -569,6 +569,84 @@ Please provide only the regenerated content without any explanations or addition
             logger.error(f"Error in regenerate_content: {str(e)}")
             return None
 
+    async def format_email_content(
+        self,
+        template: str,
+        customer_name: str,
+        pet_names: str,
+        holiday_name: str,
+        holiday_date: str
+    ) -> str:
+        """Format email content using ChatGPT for professional, grammatically correct output"""
+        
+        try:
+            if not self.emergent_key:
+                logger.error("No Emergent LLM key available for email formatting")
+                return template
+            
+            # Create a comprehensive prompt for email formatting
+            email_prompt = f"""You are a professional email formatter for a veterinary clinic. Please take the following email template and create a warm, grammatically perfect, and professionally formatted email.
+
+INSTRUCTIONS:
+1. Fix any grammatical errors
+2. Make the tone warm but professional
+3. Ensure the email flows naturally
+4. Remove any duplicate or redundant closing statements
+5. Create ONE cohesive, well-structured email
+6. Keep the core message but enhance the language
+7. Make it specific to the holiday and personal to the customer and their pets
+
+EMAIL TEMPLATE:
+{template}
+
+DETAILS:
+- Customer: {customer_name}
+- Pet(s): {pet_names}
+- Holiday: {holiday_name}
+- Date: {holiday_date}
+
+Please create a complete, polished email that a veterinary clinic would be proud to send. Include:
+- A warm greeting
+- The main message (enhanced from the template)
+- Holiday-specific well wishes
+- A single, professional closing
+
+Make sure there are no duplicate signatures or redundant messages."""
+
+            # Call ChatGPT using Emergent integrations
+            llm_chat = LlmChat(api_key=self.emergent_key)
+            
+            response = await llm_chat.chat_completion(
+                messages=[UserMessage(content=email_prompt)],
+                model="gpt-4o-mini",
+                max_tokens=1000,
+                temperature=0.7
+            )
+            
+            formatted_email = response.content.strip()
+            
+            # Log the API usage (will be imported from server)
+            try:
+                from server import log_ai_usage, calculate_text_cost, CostType
+                cost = calculate_text_cost(len(email_prompt) + len(formatted_email), "gpt-4o-mini")
+                await log_ai_usage(
+                    agent_id=None,
+                    cost_type=CostType.EMAIL_FORMATTING,
+                    cost=cost,
+                    model="gpt-4o-mini",
+                    tokens_used=len(email_prompt) + len(formatted_email)
+                )
+            except Exception as logging_error:
+                logger.warning(f"Could not log AI usage: {logging_error}")
+            
+            logger.info(f"Email formatted successfully using ChatGPT")
+            return formatted_email
+            
+        except Exception as e:
+            logger.error(f"Error formatting email with ChatGPT: {str(e)}")
+            # Return template with basic formatting if ChatGPT fails
+            return f"Dear {customer_name},\n\n{template}\n\nWarm regards,\nThe Veterinary Care Team"
+
 # Global instance
 ai_service = AIContentGenerator()
 
