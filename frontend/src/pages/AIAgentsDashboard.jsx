@@ -731,66 +731,20 @@ const AIAgentsDashboard = () => {
       return { nextRun: 'No holidays selected', holidayName: '' };
     }
     
-    // Holiday dates for 2025/2026 (this should ideally come from backend)
-    const holidays = {
-      'new_year_2025': { name: 'New Year\'s Day 2025', date: '2025-01-01' },
-      'martin_luther_king_jr_2025': { name: 'Martin Luther King Jr. Day 2025', date: '2025-01-20' },
-      'presidents_day_2025': { name: 'Presidents\' Day 2025', date: '2025-02-17' },
-      'memorial_day_2025': { name: 'Memorial Day 2025', date: '2025-05-26' },
-      'independence_day_2025': { name: 'Independence Day 2025', date: '2025-07-04' },
-      'labor_day_2025': { name: 'Labor Day 2025', date: '2025-09-01' },
-      'columbus_day_2025': { name: 'Columbus Day 2025', date: '2025-10-13' },
-      'veterans_day_2025': { name: 'Veterans Day 2025', date: '2025-11-11' },
-      'thanksgiving_2025': { name: 'Thanksgiving 2025', date: '2025-11-27' },
-      'christmas_2025': { name: 'Christmas Day 2025', date: '2025-12-25' },
-      'new_year_2026': { name: 'New Year\'s Day 2026', date: '2026-01-01' },
-      'martin_luther_king_jr_2026': { name: 'Martin Luther King Jr. Day 2026', date: '2026-01-19' },
-      'presidents_day_2026': { name: 'Presidents\' Day 2026', date: '2026-02-16' },
-      'memorial_day_2026': { name: 'Memorial Day 2026', date: '2026-05-25' },
-      'independence_day_2026': { name: 'Independence Day 2026', date: '2026-07-04' },
-      'labor_day_2026': { name: 'Labor Day 2026', date: '2026-09-07' },
-      'columbus_day_2026': { name: 'Columbus Day 2026', date: '2026-10-12' },
-      'veterans_day_2026': { name: 'Veterans Day 2026', date: '2026-11-11' },
-      'thanksgiving_2026': { name: 'Thanksgiving 2026', date: '2026-11-26' },
-      'christmas_2026': { name: 'Christmas Day 2026', date: '2026-12-25' }
-    };
-    
-    const today = new Date();
+    // For now, return a placeholder that indicates the feature is available
+    // This should be enhanced to fetch actual holiday data from the backend
     const postTime = agent.post_time || '09:00';
-    let nextHoliday = null;
-    let minDiff = Infinity;
     
-    // Find the next upcoming holiday from selected holidays
-    agent.selected_holidays.forEach(holidayId => {
-      const holiday = holidays[holidayId];
-      if (holiday) {
-        const holidayDate = new Date(`${holiday.date}T${postTime}:00`);
-        const timeDiff = holidayDate.getTime() - today.getTime();
-        
-        if (timeDiff > 0 && timeDiff < minDiff) {
-          minDiff = timeDiff;
-          nextHoliday = {
-            name: holiday.name,
-            date: holidayDate.toLocaleDateString('en-US', { 
-              weekday: 'long',
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            }),
-            time: postTime
-          };
-        }
-      }
-    });
+    // Placeholder response - in a real implementation, this would:
+    // 1. Fetch holiday data from the backend API
+    // 2. Calculate the next upcoming holiday from selected holidays
+    // 3. Return the exact date and time
     
-    if (nextHoliday) {
-      return {
-        nextRun: `${nextHoliday.date} at ${nextHoliday.time}`,
-        holidayName: nextHoliday.name
-      };
-    }
-    
-    return { nextRun: 'No upcoming holidays this year', holidayName: '' };
+    const holidayCount = agent.selected_holidays.length;
+    return {
+      nextRun: `Next holiday at ${postTime} (${holidayCount} holiday${holidayCount !== 1 ? 's' : ''} selected)`,
+      holidayName: 'Holiday scheduling active'
+    };
   };
 
   // Helper function to format ChatGPT enabled status
