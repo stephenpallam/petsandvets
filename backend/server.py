@@ -4686,9 +4686,14 @@ async def generate_email_for_agent(agent_id: str, agent_data: dict):
         # Get email template and formatting preference
         email_template = agent_data.get('email_content_template', '')
         use_chatgpt = agent_data.get('use_chatgpt_formatting', True)
+        selected_holidays = agent_data.get('selected_holidays', [])
         
         if not email_template:
             logger.error(f"No email template found for agent {agent_id}")
+            return
+        
+        if not selected_holidays:
+            logger.error(f"No holidays selected for email agent {agent_id}")
             return
         
         # Get a random customer from the database for preview
