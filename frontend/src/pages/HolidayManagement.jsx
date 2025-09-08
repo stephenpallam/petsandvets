@@ -154,12 +154,10 @@ const HolidayManagement = () => {
 
   // Refresh holiday dates based on current date
   const refreshDates = async () => {
-    if (!window.confirm('This will update holiday dates based on today\'s date. Passed holidays will move to next year. Continue?')) {
-      return;
-    }
-    
     try {
       setLoading(true);
+      setShowRefreshModal(false);
+      
       const response = await fetch(`${API_BASE_URL}/api/holidays/refresh-dates`, {
         method: 'POST',
         headers: {
