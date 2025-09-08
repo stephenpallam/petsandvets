@@ -299,7 +299,7 @@ const HolidayManagement = () => {
                 </div>
               </div>
               <div className="flex space-x-3">
-                {holidays.length === 0 && (
+                {holidays.length === 0 ? (
                   <button
                     onClick={initializeDefaults}
                     className="text-white px-4 py-2 rounded-lg transition-colors hover:opacity-90 flex items-center font-medium"
@@ -307,6 +307,15 @@ const HolidayManagement = () => {
                   >
                     <Sparkles className="h-4 w-4 mr-2" />
                     Initialize Defaults
+                  </button>
+                ) : (
+                  <button
+                    onClick={resetAndInitialize}
+                    className="text-white px-4 py-2 rounded-lg transition-colors hover:opacity-90 flex items-center font-medium"
+                    style={{ backgroundColor: '#f59e0b' }}
+                  >
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Update to 2025/2026
                   </button>
                 )}
                 <button
