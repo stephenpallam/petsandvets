@@ -499,6 +499,12 @@ The Veterinary Care Team`,
           if (agentData.agent_type === 'email') {
             if (agentData.mode === 'recurring' && agentData.selected_holidays && agentData.selected_holidays.length > 0) {
               // This is a scheduled email agent (holiday-based)
+              console.log('Email scheduled agent data for edit mode:', {
+                use_chatgpt_formatting: agentData.use_chatgpt_formatting,
+                email_content_template: agentData.email_content_template,
+                email_template: agentData.email_template
+              });
+              
               setEmailScheduledMode({
                 agentName: agentData.name || agentData.agent_name || '',
                 selectedHolidays: agentData.selected_holidays || [],
