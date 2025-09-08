@@ -73,6 +73,19 @@ const AIAgentsDashboard = () => {
     }
   }, [user, authLoading, canAccessManager, token]);
 
+  // Add window focus listener to refresh data when returning to dashboard
+  useEffect(() => {
+    const handleFocus = () => {
+      if (user && token && canAccessManager()) {
+        console.log('Window focused, refreshing agents data...');
+        fetchAgents();
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [user, token]);
+
   // Fetch holidays
   const fetchHolidays = async () => {
     try {
