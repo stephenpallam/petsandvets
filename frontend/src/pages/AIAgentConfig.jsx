@@ -495,6 +495,54 @@ The Veterinary Care Team`,
             }
           }
           
+          // Handle email agent data prepopulation
+          if (agentData.agent_type === 'email') {
+            if (agentData.mode === 'recurring' && agentData.selected_holidays && agentData.selected_holidays.length > 0) {
+              // This is a scheduled email agent (holiday-based)
+              setEmailScheduledMode({
+                agentName: agentData.name || agentData.agent_name || '',
+                selectedHolidays: agentData.selected_holidays || [],
+                imageOption: agentData.image_option || 'ai_generate',
+                uploadedImages: [],
+                imageText: agentData.image_text || '',
+                wordCount: agentData.word_count?.toString() || '150',
+                postTime: agentData.post_time || '09:00',
+                useChatGPTFormatting: agentData.use_chatgpt_formatting !== undefined ? agentData.use_chatgpt_formatting : true,
+                postDestination: agentData.post_destination || 'in_review'
+              });
+            } else if (agentData.mode === 'recurring') {
+              // This is a recurring email agent (topic-based)
+              setEmailRecurringMode({
+                agentName: agentData.name || agentData.agent_name || '',
+                topic: agentData.topic || '',
+                customTopic: agentData.custom_topic || '',
+                imageOption: agentData.image_option || 'ai_generate',
+                uploadedImages: [],
+                imageText: agentData.image_text || '',
+                wordCount: agentData.word_count?.toString() || '150',
+                frequency: agentData.frequency?.toString() || '24',
+                postTime: agentData.post_time || '09:00',
+                useChatGPTFormatting: agentData.use_chatgpt_formatting !== undefined ? agentData.use_chatgpt_formatting : true,
+                scheduleType: agentData.schedule_type || 'all_days',
+                daysOfWeek: agentData.days_of_week || { monday: true, tuesday: true, wednesday: true, thursday: true, friday: true, saturday: true, sunday: true },
+                postDestination: agentData.post_destination || 'in_review'
+              });
+            } else if (agentData.mode === 'write') {
+              // This is a write mode email agent
+              setEmailWriteMode({
+                agentName: agentData.name || agentData.agent_name || '',
+                emailContent: agentData.email_content || agentData.post_content || '',
+                emailSubject: agentData.email_subject || agentData.post_title || '',
+                imageOption: agentData.image_option || 'ai_generate',
+                uploadedImages: [],
+                imageText: agentData.image_text || '',
+                wordCount: agentData.word_count?.toString() || '150',
+                useChatGPTFormatting: agentData.use_chatgpt_formatting !== undefined ? agentData.use_chatgpt_formatting : true,
+                postDestination: agentData.post_destination || 'in_review'
+              });
+            }
+          }
+          
           setMessage({ type: 'info', text: `Editing agent: ${agentData.name || agentData.agent_name || 'Unknown Agent'}` });
         } catch (error) {
           console.error('Error parsing agent data:', error);
