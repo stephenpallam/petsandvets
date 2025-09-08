@@ -340,6 +340,8 @@ The Veterinary Care Team`,
         try {
           const agentData = JSON.parse(editingAgent);
           console.log('Parsed agent data:', agentData);
+          console.log('Agent type:', agentData.agent_type);
+          console.log('Agent mode:', agentData.mode);
           
           // Set mode states
           if (mode === 'edit') {
