@@ -689,6 +689,38 @@ const AIPublishedPosts = () => {
                                 )))}
                             </div>
                           </div>
+                        ) : post.agent_type === 'email' ? (
+                          // Email Post Rendering - Match review page styling exactly
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {/* Text Content */}
+                            <div className="md:col-span-2">
+                              <h4 className="font-medium mb-2">Content:</h4>
+                              <div className="bg-gray-50 rounded-lg p-4">
+                                <p className="text-gray-900 whitespace-pre-wrap">{post.content}</p>
+                                <div className="mt-2 text-xs text-gray-500">
+                                  {post.content.split(' ').length} words
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Image area - only show if email has image */}
+                            {post.image_url && (
+                              <div>
+                                <div className="relative mb-4">
+                                  <img 
+                                    src={post.image_url} 
+                                    alt="Email content"
+                                    className="w-full h-32 object-cover rounded-lg border"
+                                  />
+                                  {post.image_text && (
+                                    <div className="absolute bottom-2 left-2 bg-black bg-opacity-75 text-white px-2 py-1 rounded text-xs">
+                                      {post.image_text}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </div>
                         ) : (
                           // Regular Social Media Post Rendering  
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
