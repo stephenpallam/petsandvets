@@ -4763,15 +4763,49 @@ async def generate_email_for_agent(agent_id: str, agent_data: dict):
             
             logger.info(f"Using customer {customer_name} with pets: {pet_names} for email preview")
         
-        # Process email template with real customer data
-        # Support both [PET_NAME] (legacy) and [PET_NAMES] (new, for multiple pets)
-        sample_content = email_template.replace('[CUSTOMER_NAME]', customer_name)
-        sample_content = sample_content.replace('[PET_NAME]', pet_names)  # Legacy support
-        sample_content = sample_content.replace('[PET_NAMES]', pet_names)  # New plural support
+        # Create holiday-specific content using the template
+        # Replace all placeholders: customer, pets, and holiday context
+        holiday_specific_content = email_template.replace('[CUSTOMER_NAME]', customer_name)
+        holiday_specific_content = holiday_specific_content.replace('[PET_NAME]', pet_names)  # Legacy support
+        holiday_specific_content = holiday_specific_content.replace('[PET_NAMES]', pet_names)  # New plural support
+        holiday_specific_content = holiday_specific_content.replace('[HOLIDAY_NAME]', holiday_name)
+        holiday_specific_content = holiday_specific_content.replace('[HOLIDAY_DATE]', holiday_date)
         
         if use_chatgpt:
-            # Apply ChatGPT formatting (placeholder - would call actual AI service)
-            sample_content = f"✨ AI-Enhanced Email ✨\n\n{sample_content}\n\n---\nFormatted with ChatGPT for optimal engagement"
+            # Generate holiday-specific, personalized email content
+            holiday_prompt = f"""
+            Create a warm, professional email for a veterinary clinic about {holiday_name}.
+            
+            Base template: {holiday_specific_content}
+            
+            Customer: {customer_name}
+            Pet(s): {pet_names}
+            Holiday: {holiday_name} ({holiday_date})
+            
+            Make this email:
+            1. Specific to {holiday_name}
+            2. Warm and personal for {customer_name} and {pet_names}
+            3. Professional veterinary tone
+            4. Include holiday-appropriate messaging
+            5. Keep the core message from the template but enhance it
+            
+            Generate a complete email that feels personal and holiday-appropriate.
+            """
+            
+            # For now, create enhanced content (in real implementation, would call ChatGPT API)
+            holiday_specific_content = f"""🎉 Happy {holiday_name}, {customer_name}!
+
+{holiday_specific_content}
+
+This {holiday_name} season, we're thinking of you and {pet_names}. We hope you both have a wonderful {holiday_name}!
+
+Best wishes from our veterinary family to yours,
+[Your Veterinary Clinic]
+
+---
+✨ This email was personalized for {customer_name} and {pet_names} for {holiday_name} {holiday_date}"""
+        
+        sample_content = holiday_specific_content
         
         # Create post record for email preview
         post_data = {
