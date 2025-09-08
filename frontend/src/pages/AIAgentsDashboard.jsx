@@ -63,6 +63,7 @@ const AIAgentsDashboard = () => {
       console.log('Dashboard loading with token, fetching data...');
       setPageLoading(false);
       fetchAgents();
+      fetchHolidays();
       fetchEmployees();
       fetchPayPeriodSettings();
       fetchBusinessInfo(); // Fetch business timezone
