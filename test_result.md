@@ -129,6 +129,55 @@ if (agentData.agent_type === 'email') {
 - Pre-populate all form fields correctly in edit mode
 - Show appropriate information for email vs social media agents
 
+## ADDITIONAL FIXES - Email Scheduled Mode Dashboard (RESOLVED)
+
+**Issues Fixed:**
+1. "Next Scheduled Run" should be "Workflow Mode" in main display
+2. ChatGPT Formatting showing "No" even when enabled
+3. Next Run & Last Run section needs to show exact holiday dates and names
+
+**Fixes Applied:**
+
+**1. Dashboard Display Update:**
+```javascript
+// Changed from "Next Scheduled Run" to "Workflow Mode"
+<span>Workflow Mode</span>
+<p>{getWorkflowMode(agent)}</p>
+```
+
+**2. Fixed ChatGPT Detection:**
+```javascript
+// Before (only checked one field):
+agent.use_chatgpt_formatting ? 'Yes' : 'No'
+
+// After (checks multiple possible field names):
+(agent.use_chatgpt_formatting || agent.useChatGPTFormatting || agent.use_chatgpt_email_formatting) ? 'Yes' : 'No'
+```
+
+**3. Enhanced Next Run & Last Run Section:**
+- **Email agents with holidays**: Shows "Next Holiday Run" with exact date, time, and holiday name
+- **Holiday calculation**: Determines next upcoming holiday from selected holidays
+- **Date format**: "Wednesday, January 1, 2025 at 09:00"
+- **Holiday name**: Shows below date (e.g., "New Year's Day")
+
+**Holiday Data Included:**
+- New Year's Day (2025-01-01)
+- Martin Luther King Jr. Day (2025-01-20)  
+- Presidents' Day (2025-02-17)
+- Memorial Day (2025-05-26)
+- Independence Day (2025-07-04)
+- Labor Day (2025-09-01)
+- Columbus Day (2025-10-13)
+- Veterans Day (2025-11-11)
+- Thanksgiving (2025-11-27)
+- Christmas Day (2025-12-25)
+
+**Result:** ✅ Email scheduled agents now show:
+- **Workflow Mode** instead of Next Scheduled Run
+- **Correct ChatGPT status** (Yes/No based on actual setting)
+- **Exact holiday dates** with day, date, time, and holiday name
+- **Proper scheduling information** for email vs social media agents
+
 ## LATEST FIX - Timesheet Agent "Field Required" Error (RESOLVED)
 
 **Issue:** User reported "body: Field required" error when creating adhoc timesheet agents
