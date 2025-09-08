@@ -345,14 +345,25 @@ const HolidayManagement = () => {
                     Initialize Defaults
                   </button>
                 ) : (
-                  <button
-                    onClick={resetAndInitialize}
-                    className="text-white px-4 py-2 rounded-lg transition-colors hover:opacity-90 flex items-center font-medium"
-                    style={{ backgroundColor: '#f59e0b' }}
-                  >
-                    <Sparkles className="h-4 w-4 mr-2" />
-                    Update to 2025/2026
-                  </button>
+                  <>
+                    <button
+                      onClick={resetAndInitialize}
+                      className="text-white px-4 py-2 rounded-lg transition-colors hover:opacity-90 flex items-center font-medium"
+                      style={{ backgroundColor: '#f59e0b' }}
+                    >
+                      <Sparkles className="h-4 w-4 mr-2" />
+                      Update to 2025/2026
+                    </button>
+                    <button
+                      onClick={refreshDates}
+                      disabled={loading}
+                      className="text-white px-4 py-2 rounded-lg transition-colors hover:opacity-90 flex items-center font-medium disabled:opacity-50"
+                      style={{ backgroundColor: '#10b981' }}
+                    >
+                      <Calendar className="h-4 w-4 mr-2" />
+                      Refresh Dates
+                    </button>
+                  </>
                 )}
                 <button
                   onClick={() => setShowAddModal(true)}
