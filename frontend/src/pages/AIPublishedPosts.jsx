@@ -390,6 +390,7 @@ const AIPublishedPosts = () => {
                                 {post.agent_type && (
                                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium ${
                                     post.agent_type === 'social_media' ? 'bg-teal-100 text-teal-700' :
+                                    post.agent_type === 'email' ? 'bg-purple-100 text-purple-700' :
                                     post.agent_type === 'email_agent' ? 'bg-purple-100 text-purple-700' :
                                     post.agent_type === 'sms_agent' ? 'bg-orange-100 text-orange-700' :
                                     post.agent_type === 'marketing_agent' ? 'bg-pink-100 text-pink-700' :
