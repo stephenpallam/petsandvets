@@ -8867,8 +8867,22 @@ async def create_customer(
     """Create a new customer"""
     now = await business_now_async()
     
+    # Handle pets array and pet_name field conversion
+    customer_dict = customer_data.dict()
+    
+    # If pets array is provided, also create pet_name for backward compatibility
+    if customer_dict.get('pets') and len(customer_dict['pets']) > 0:
+        valid_pet_names = [pet['name'] for pet in customer_dict['pets'] if pet.get('name', '').strip()]
+        if valid_pet_names:
+            customer_dict['pet_name'] = ', '.join(valid_pet_names)
+    
+    # If pet_name is provided but no pets array, convert pet_name to pets array
+    elif customer_dict.get('pet_name') and not customer_dict.get('pets'):
+        pet_names = [name.strip() for name in customer_dict['pet_name'].split(',') if name.strip()]
+        customer_dict['pets'] = [{'name': name} for name in pet_names]
+    
     customer = Customer(
-        **customer_data.dict(),
+        **customer_dict,
         created_at=now,
         updated_at=now
     )
