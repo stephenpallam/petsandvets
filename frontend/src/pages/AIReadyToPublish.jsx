@@ -1338,7 +1338,7 @@ const AIReadyToPublish = () => {
                               </div>
                             )}
                             
-                            {/* Only show images and hashtags for non-timesheet posts */}
+                            {/* Only show images for posts that have them - email posts without images won't show image placeholder */}
                             {post.agent_type !== 'time_sheet' && post.image_url && (
                               <div>
                                 <h4 className="text-sm font-medium text-gray-900 mb-2">Image:</h4>
@@ -1356,7 +1356,8 @@ const AIReadyToPublish = () => {
                               </div>
                             )}
                             
-                            {post.agent_type !== 'time_sheet' && post.hashtags && post.hashtags.length > 0 && (
+                            {/* Only show hashtags for social media posts (not email posts) */}
+                            {post.agent_type !== 'time_sheet' && post.agent_type !== 'email' && post.hashtags && post.hashtags.length > 0 && (
                               <div>
                                 <h4 className="text-sm font-medium text-gray-900 mb-2">Hashtags:</h4>
                                 <div className="flex flex-wrap gap-1">
