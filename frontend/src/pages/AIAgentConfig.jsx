@@ -1348,6 +1348,11 @@ The Veterinary Care Team`,
       } else if (agentType === 'email') {
         // Handle email agents
         if (activeTab === 'email-scheduled') {
+          console.log('Email scheduled mode data being saved:', {
+            useChatGPTFormatting: emailScheduledMode.useChatGPTFormatting,
+            emailContentTemplate: emailScheduledMode.emailContentTemplate
+          });
+          
           agentData = {
             agent_type: 'email',
             mode: 'recurring', // Scheduled emails are recurring based on holidays
