@@ -8919,6 +8919,21 @@ async def update_customer(
     
     # Update only provided fields
     update_data = {k: v for k, v in customer_data.dict().items() if v is not None}
+    
+    # Handle pets array and pet_name field conversion
+    if 'pets' in update_data and update_data['pets']:
+        # If pets array is provided, also update pet_name for backward compatibility
+        valid_pet_names = [pet['name'] for pet in update_data['pets'] if pet.get('name', '').strip()]
+        if valid_pet_names:
+            update_data['pet_name'] = ', '.join(valid_pet_names)
+        else:
+            update_data['pet_name'] = ''
+    
+    elif 'pet_name' in update_data and update_data['pet_name'] and 'pets' not in update_data:
+        # If pet_name is provided but no pets array, convert pet_name to pets array
+        pet_names = [name.strip() for name in update_data['pet_name'].split(',') if name.strip()]
+        update_data['pets'] = [{'name': name} for name in pet_names]
+    
     update_data["updated_at"] = await business_now_async()
     
     await db.customers.update_one(
