@@ -4727,7 +4727,10 @@ async def generate_email_for_agent(agent_id: str, agent_data: dict):
             logger.info(f"Using customer {customer_name} with pets: {pet_names} for email preview")
         
         # Process email template with real customer data
-        sample_content = email_template.replace('[CUSTOMER_NAME]', customer_name).replace('[PET_NAME]', pet_name)
+        # Support both [PET_NAME] (legacy) and [PET_NAMES] (new, for multiple pets)
+        sample_content = email_template.replace('[CUSTOMER_NAME]', customer_name)
+        sample_content = sample_content.replace('[PET_NAME]', pet_names)  # Legacy support
+        sample_content = sample_content.replace('[PET_NAMES]', pet_names)  # New plural support
         
         if use_chatgpt:
             # Apply ChatGPT formatting (placeholder - would call actual AI service)
