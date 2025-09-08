@@ -609,6 +609,43 @@ personalized_content = email_template.replace('[CUSTOMER_NAME]', customer_name)
 - Full tracking and logging of email campaigns
 - Integration with existing review/approval process
 
+## ENHANCEMENT - Multiple Pet Name Support (RESOLVED)
+
+**Issues Fixed:**
+1. **"Your Pet" showing instead of actual names**: Pet name extraction logic was faulty
+2. **Single pet limitation**: Only showed first pet, ignored others
+
+**Multi-Pet Logic Implemented:**
+
+**Pet Name Formatting:**
+- **1 Pet**: "Buddy"
+- **2 Pets**: "Buddy and Max" 
+- **3+ Pets**: "Buddy, Max, and Luna"
+- **No Names**: "your pet" (graceful fallback)
+
+**Template Placeholders Enhanced:**
+- **`[CUSTOMER_NAME]`** → Customer's actual name
+- **`[PET_NAME]`** → All pet names (legacy support)
+- **`[PET_NAMES]`** → All pet names (new, recommended)
+
+**Smart Pet Name Extraction:**
+```python
+# Gets all valid pet names
+valid_pet_names = [pet.get('name', '').strip() for pet in pets if pet.get('name', '').strip()]
+
+# Formats grammatically correct lists
+if len(valid_pet_names) == 2:
+    pet_names = f"{valid_pet_names[0]} and {valid_pet_names[1]}"
+else:
+    pet_names = ", ".join(valid_pet_names[:-1]) + f", and {valid_pet_names[-1]}"
+```
+
+**Applied to Both:**
+- ✅ **Preview Generation**: Shows all pets in review email
+- ✅ **Mass Email Sending**: Personalizes each email with all customer's pets
+
+**Result:** ✅ Email agents now show all pet names with proper grammar and realistic customer data
+
 ## LATEST FIX - Timesheet Agent "Field Required" Error (RESOLVED)
 
 **Issue:** User reported "body: Field required" error when creating adhoc timesheet agents
