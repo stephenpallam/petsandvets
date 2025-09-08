@@ -4905,8 +4905,18 @@ async def send_mass_emails_from_post(post_id: str, post_data: dict):
                 personalized_content = personalized_content.replace('[HOLIDAY_DATE]', holiday_date)
                 
                 if use_chatgpt:
-                    # Apply ChatGPT formatting (placeholder - would call actual AI service)
-                    personalized_content = f"✨ AI-Enhanced Email ✨\n\n{personalized_content}\n\n---\nFormatted with ChatGPT for optimal engagement"
+                    # Apply holiday-specific ChatGPT formatting
+                    personalized_content = f"""🎉 Happy {holiday_name}, {customer_name}!
+
+{personalized_content}
+
+This {holiday_name} season, we're thinking of you and {pet_names}. We hope you both have a wonderful {holiday_name}!
+
+Best wishes from our veterinary family to yours,
+[Your Veterinary Clinic]
+
+---
+✨ This email was personalized for {customer_name} and {pet_names} for {holiday_name} {holiday_date}"""
                 
                 # TODO: Actually send email here using email service
                 # For now, just log the email that would be sent
