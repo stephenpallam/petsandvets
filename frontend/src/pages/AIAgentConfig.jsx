@@ -374,7 +374,9 @@ The Veterinary Care Team`,
             correctTabId = `social-media-${tabMode}`;
           }
           
+          console.log('Calculated correct tab ID:', correctTabId);
           setActiveTab(correctTabId);
+          console.log('Active tab set to:', correctTabId);
           
           // Pre-populate form fields based on agent mode
           if (agentData.mode === 'auto' || agentData.mode === 'recurring') {
