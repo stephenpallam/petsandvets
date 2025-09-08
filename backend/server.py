@@ -8931,6 +8931,100 @@ async def initialize_default_holidays(current_user: User = Depends(get_current_u
     return {"message": f"Successfully initialized {len(holiday_objects)} default holidays", "count": len(holiday_objects)}
 
 
+# Reset and reinitialize holidays with updated dates
+@api_router.post("/holidays/reset-and-initialize")
+async def reset_and_initialize_holidays(current_user: User = Depends(get_current_user)):
+    """Reset existing holidays and initialize with updated 2025/2026 dates (Admin only)"""
+    if current_user.role != 'admin':
+        raise HTTPException(status_code=403, detail="Access denied. Admin privileges required.")
+    
+    # Delete all existing holidays
+    delete_result = await db.holidays.delete_many({})
+    deleted_count = delete_result.deleted_count
+    
+    # Initialize new holidays with updated dates
+    default_holidays = [
+        # Major Holidays - 2025
+        {"name": "New Year's Day 2025", "month_day": "01-01", "date": "2025-01-01", "category": "general"},
+        {"name": "Martin Luther King Jr. Day 2025", "month_day": "01-20", "date": "2025-01-20", "category": "general"},
+        {"name": "Valentine's Day 2025", "month_day": "02-14", "date": "2025-02-14", "category": "general"},
+        {"name": "Presidents' Day 2025", "month_day": "02-17", "date": "2025-02-17", "category": "general"},
+        {"name": "Easter Sunday 2025", "month_day": "04-20", "date": "2025-04-20", "category": "general"},
+        {"name": "Mother's Day 2025", "month_day": "05-11", "date": "2025-05-11", "category": "family"},
+        {"name": "Memorial Day 2025", "month_day": "05-26", "date": "2025-05-26", "category": "general"},
+        {"name": "Father's Day 2025", "month_day": "06-15", "date": "2025-06-15", "category": "family"},
+        {"name": "Independence Day 2025", "month_day": "07-04", "date": "2025-07-04", "category": "general"},
+        {"name": "Labor Day 2025", "month_day": "09-01", "date": "2025-09-01", "category": "general"},
+        {"name": "Columbus Day 2025", "month_day": "10-13", "date": "2025-10-13", "category": "general"},
+        {"name": "Halloween 2025", "month_day": "10-31", "date": "2025-10-31", "category": "general"},
+        {"name": "Veterans Day 2025", "month_day": "11-11", "date": "2025-11-11", "category": "general"},
+        {"name": "Thanksgiving 2025", "month_day": "11-27", "date": "2025-11-27", "category": "general"},
+        {"name": "Christmas Day 2025", "month_day": "12-25", "date": "2025-12-25", "category": "general"},
+        
+        # Major Holidays - 2026
+        {"name": "New Year's Day 2026", "month_day": "01-01", "date": "2026-01-01", "category": "general"},
+        {"name": "Martin Luther King Jr. Day 2026", "month_day": "01-19", "date": "2026-01-19", "category": "general"},
+        {"name": "Valentine's Day 2026", "month_day": "02-14", "date": "2026-02-14", "category": "general"},
+        {"name": "Presidents' Day 2026", "month_day": "02-16", "date": "2026-02-16", "category": "general"},
+        {"name": "Easter Sunday 2026", "month_day": "04-05", "date": "2026-04-05", "category": "general"},
+        {"name": "Mother's Day 2026", "month_day": "05-10", "date": "2026-05-10", "category": "family"},
+        {"name": "Memorial Day 2026", "month_day": "05-25", "date": "2026-05-25", "category": "general"},
+        {"name": "Father's Day 2026", "month_day": "06-21", "date": "2026-06-21", "category": "family"},
+        {"name": "Independence Day 2026", "month_day": "07-04", "date": "2026-07-04", "category": "general"},
+        {"name": "Labor Day 2026", "month_day": "09-07", "date": "2026-09-07", "category": "general"},
+        {"name": "Columbus Day 2026", "month_day": "10-12", "date": "2026-10-12", "category": "general"},
+        {"name": "Halloween 2026", "month_day": "10-31", "date": "2026-10-31", "category": "general"},
+        {"name": "Veterans Day 2026", "month_day": "11-11", "date": "2026-11-11", "category": "general"},
+        {"name": "Thanksgiving 2026", "month_day": "11-26", "date": "2026-11-26", "category": "general"},
+        {"name": "Christmas Day 2026", "month_day": "12-25", "date": "2026-12-25", "category": "general"},
+        
+        # Pet-Related Days - 2025
+        {"name": "National Puppy Day 2025", "month_day": "03-23", "date": "2025-03-23", "category": "pet"},
+        {"name": "National Pet Day 2025", "month_day": "04-11", "date": "2025-04-11", "category": "pet"},
+        {"name": "National Dog Day 2025", "month_day": "08-26", "date": "2025-08-26", "category": "pet"},
+        {"name": "World Animal Day 2025", "month_day": "10-04", "date": "2025-10-04", "category": "pet"},
+        {"name": "National Cat Day 2025", "month_day": "10-29", "date": "2025-10-29", "category": "pet"},
+        
+        # Pet-Related Days - 2026
+        {"name": "National Puppy Day 2026", "month_day": "03-23", "date": "2026-03-23", "category": "pet"},
+        {"name": "National Pet Day 2026", "month_day": "04-11", "date": "2026-04-11", "category": "pet"},
+        {"name": "National Dog Day 2026", "month_day": "08-26", "date": "2026-08-26", "category": "pet"},
+        {"name": "World Animal Day 2026", "month_day": "10-04", "date": "2026-10-04", "category": "pet"},
+        {"name": "National Cat Day 2026", "month_day": "10-29", "date": "2026-10-29", "category": "pet"},
+        
+        # Veterinary Days - 2025
+        {"name": "World Veterinary Day 2025", "month_day": "04-26", "date": "2025-04-26", "category": "veterinary"},
+        {"name": "National Veterinary Technician Week 2025", "month_day": "10-12", "date": "2025-10-12", "category": "veterinary"},
+        
+        # Veterinary Days - 2026
+        {"name": "World Veterinary Day 2026", "month_day": "04-25", "date": "2026-04-25", "category": "veterinary"},
+        {"name": "National Veterinary Technician Week 2026", "month_day": "10-11", "date": "2026-10-11", "category": "veterinary"},
+    ]
+    
+    holiday_objects = []
+    now = await business_now_async()
+    
+    for holiday_data in default_holidays:
+        holiday = Holiday(
+            name=holiday_data["name"],
+            date=holiday_data["date"],
+            month_day=holiday_data["month_day"],
+            is_recurring=True,
+            is_enabled=True,
+            category=holiday_data["category"],
+            created_at=now
+        )
+        holiday_objects.append(holiday.dict())
+    
+    await db.holidays.insert_many(holiday_objects)
+    
+    return {
+        "message": f"Successfully reset and initialized holidays", 
+        "deleted_count": deleted_count,
+        "created_count": len(holiday_objects)
+    }
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
