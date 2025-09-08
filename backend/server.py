@@ -4851,9 +4851,11 @@ async def send_mass_emails_from_post(post_id: str, post_data: dict):
     try:
         logger.info(f"Starting mass email sending for post {post_id}")
         
-        # Get the original email template from the post
+        # Get the original email template and holiday context from the post
         email_template = post_data.get('email_template', '')
         use_chatgpt = post_data.get('use_chatgpt_formatting', True)
+        holiday_name = post_data.get('holiday_name', 'Holiday')
+        holiday_date = post_data.get('holiday_date', '')
         
         if not email_template:
             logger.error(f"No email template found in post {post_id}")
