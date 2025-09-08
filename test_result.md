@@ -402,6 +402,56 @@ Today: January 2nd, 2026
 - Display correct status: "Yes" when ChatGPT formatting is enabled
 - Properly reflect form settings in dashboard display
 
+## CRITICAL FIX - Email Agent Backend Model & Edit Mode Issues (RESOLVED)
+
+**Issues Fixed:**
+1. **Checkbox not saving**: "Use ChatGPT Email Formatting" checkbox changes not persisting
+2. **Email template missing in edit mode**: Template field showing placeholder instead of saved content
+3. **Backend model incomplete**: Missing email-specific fields causing data loss
+
+**Root Cause:** Backend AIAgentCreate model was missing critical email agent fields, causing frontend data to be ignored/lost during save operations.
+
+**Backend Model Enhancements:**
+Added missing fields to `AIAgentCreate` class in `/app/backend/server.py`:
+```python
+# Email agent specific fields
+email_content_template: Optional[str] = ""     # Email template content  
+email_subject: Optional[str] = ""              # Email subject for write mode
+email_content: Optional[str] = ""              # Email content for write mode  
+use_chatgpt_formatting: Optional[bool] = True  # ChatGPT formatting toggle
+use_customer_database: Optional[bool] = True   # Customer database usage
+email_type: Optional[str] = "bulk"            # bulk or single email
+selected_customer: Optional[str] = ""          # Customer ID for single emails
+```
+
+**Frontend Edit Mode Fix:**
+Enhanced email scheduled mode pre-population in `/app/frontend/src/pages/AIAgentConfig.jsx`:
+```javascript
+setEmailScheduledMode({
+  // ... existing fields ...
+  emailContentTemplate: agentData.email_content_template || agentData.email_template || '',
+  useChatGPTFormatting: agentData.use_chatgpt_formatting !== undefined ? agentData.use_chatgpt_formatting : true
+});
+```
+
+**Data Flow Verification:**
+- **Form Input**: `emailScheduledMode.useChatGPTFormatting` (true/false)
+- **Save to Backend**: `use_chatgpt_formatting` field (now exists in model)
+- **Database Storage**: Field properly saved and retrievable
+- **Edit Mode Load**: Field properly populated from saved data
+- **Dashboard Display**: Correctly shows "Yes/No" based on saved value
+
+**Business Logic Implementation:**
+- **When checked**: ChatGPT formats email content with personalization
+- **When unchecked**: Email sent as-is with only dynamic customer/pet name replacement
+- **Template Field**: Now properly saves and loads email template content
+
+**Result:** ✅ Email agent functionality now fully operational:
+- Checkbox changes save and persist correctly
+- Email templates pre-populate in edit mode
+- Dashboard reflects actual saved settings
+- Complete email agent data integrity maintained
+
 ## LATEST FIX - Timesheet Agent "Field Required" Error (RESOLVED)
 
 **Issue:** User reported "body: Field required" error when creating adhoc timesheet agents
