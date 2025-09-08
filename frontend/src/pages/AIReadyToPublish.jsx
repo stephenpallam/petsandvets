@@ -1320,10 +1320,10 @@ const AIReadyToPublish = () => {
                                 </div>
                               </div>
                             ) : post.agent_type === 'email' ? (
-                              /* Email Post Content - Match review page styling */
+                              /* Email Post Content - Match review page styling exactly */
                               <div>
                                 <h4 className="text-sm font-medium text-gray-900 mb-2">Content:</h4>
-                                <p className="text-gray-700 whitespace-pre-wrap text-sm leading-relaxed">
+                                <p className="text-gray-900 whitespace-pre-wrap leading-relaxed">
                                   {post.content}
                                 </p>
                                 <div className="mt-2 text-xs text-gray-500">
