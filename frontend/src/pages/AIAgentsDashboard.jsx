@@ -751,19 +751,66 @@ const AIAgentsDashboard = () => {
       return { nextRun: 'No holidays selected', holidayName: '' };
     }
     
-    // For now, return a placeholder that indicates the feature is available
-    // This should be enhanced to fetch actual holiday data from the backend
-    const postTime = agent.post_time || '09:00';
+    if (!holidays || holidays.length === 0) {
+      return { nextRun: 'Loading holidays...', holidayName: '' };
+    }
     
-    // Placeholder response - in a real implementation, this would:
-    // 1. Fetch holiday data from the backend API
-    // 2. Calculate the next upcoming holiday from selected holidays
-    // 3. Return the exact date and time
+    const today = new Date();
+    const postTime = agent.post_time || '09:00';
+    let nextHoliday = null;
+    let minDiff = Infinity;
+    
+    // Find the next upcoming holiday from selected holidays
+    agent.selected_holidays.forEach(holidayId => {
+      const holiday = holidays.find(h => h.id === holidayId);
+      if (holiday) {
+        const holidayDate = new Date(`${holiday.date}T${postTime}:00`);
+        const timeDiff = holidayDate.getTime() - today.getTime();
+        
+        if (timeDiff > 0 && timeDiff < minDiff) {
+          minDiff = timeDiff;
+          nextHoliday = {
+            name: holiday.name,
+            date: holidayDate,
+            postTime: postTime
+          };
+        }
+      }
+    });
+    
+    if (nextHoliday) {
+      // Format date in user-friendly format like "Nov 23rd, 2025"
+      const formatDate = (date) => {
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const day = date.getDate();
+        const month = months[date.getMonth()];
+        const year = date.getFullYear();
+        
+        // Add ordinal suffix (st, nd, rd, th)
+        const getOrdinalSuffix = (day) => {
+          if (day > 3 && day < 21) return 'th';
+          switch (day % 10) {
+            case 1: return 'st';
+            case 2: return 'nd';
+            case 3: return 'rd';
+            default: return 'th';
+          }
+        };
+        
+        return `${month} ${day}${getOrdinalSuffix(day)}, ${year}`;
+      };
+      
+      return {
+        nextRun: `${formatDate(nextHoliday.date)} at ${nextHoliday.postTime}`,
+        holidayName: nextHoliday.name
+      };
+    }
     
     const holidayCount = agent.selected_holidays.length;
-    return {
-      nextRun: `Next holiday at ${postTime} (${holidayCount} holiday${holidayCount !== 1 ? 's' : ''} selected)`,
-      holidayName: 'Holiday scheduling active'
+    return { 
+      nextRun: `No upcoming holidays this year (${holidayCount} selected)`, 
+      holidayName: '' 
     };
   };
 
