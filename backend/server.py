@@ -4260,6 +4260,7 @@ class TimesheetReportUpdate(BaseModel):
 class CostType(str, Enum):
     TEXT_GENERATION = "text_generation"
     IMAGE_GENERATION = "image_generation"
+    EMAIL_FORMATTING = "email_formatting"
 
 class AIUsageLog(BaseModel):
     id: str
