@@ -1800,15 +1800,12 @@ const AIAgentsDashboard = () => {
                                           return (
                                             <div className="space-y-2">
                                               <div>
-                                                <label className="text-xs font-semibold text-green-700 uppercase tracking-wide">Next Holiday Run</label>
+                                                <label className="text-xs font-semibold text-green-700 uppercase tracking-wide">
+                                                  {holidayInfo.holidayName || 'Next Holiday Run'}
+                                                </label>
                                                 <p className="text-sm font-medium text-green-900">
                                                   {holidayInfo.nextRun}
                                                 </p>
-                                                {holidayInfo.holidayName && (
-                                                  <p className="text-xs text-green-600 mt-1">
-                                                    {holidayInfo.holidayName}
-                                                  </p>
-                                                )}
                                               </div>
                                             </div>
                                           );
