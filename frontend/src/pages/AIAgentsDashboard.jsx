@@ -728,13 +728,59 @@ const AIAgentsDashboard = () => {
   // Helper function to get next scheduled holiday for email agents
   const getNextScheduledHoliday = (agent) => {
     if (agent.agent_type !== 'email' || !agent.selected_holidays || agent.selected_holidays.length === 0) {
-      return 'No holidays selected';
+      return { nextRun: 'No holidays selected', holidayName: '' };
     }
     
-    // This would ideally fetch the actual holiday dates from the backend
-    // For now, return a placeholder
+    // Holiday dates for 2024/2025 (this should ideally come from backend)
+    const holidays = {
+      'new_year': { name: 'New Year\'s Day', date: '2025-01-01' },
+      'martin_luther_king_jr': { name: 'Martin Luther King Jr. Day', date: '2025-01-20' },
+      'presidents_day': { name: 'Presidents\' Day', date: '2025-02-17' },
+      'memorial_day': { name: 'Memorial Day', date: '2025-05-26' },
+      'independence_day': { name: 'Independence Day', date: '2025-07-04' },
+      'labor_day': { name: 'Labor Day', date: '2025-09-01' },
+      'columbus_day': { name: 'Columbus Day', date: '2025-10-13' },
+      'veterans_day': { name: 'Veterans Day', date: '2025-11-11' },
+      'thanksgiving': { name: 'Thanksgiving', date: '2025-11-27' },
+      'christmas': { name: 'Christmas Day', date: '2025-12-25' }
+    };
+    
+    const today = new Date();
     const postTime = agent.post_time || '09:00';
-    return `Next holiday at ${postTime}`;
+    let nextHoliday = null;
+    let minDiff = Infinity;
+    
+    // Find the next upcoming holiday from selected holidays
+    agent.selected_holidays.forEach(holidayId => {
+      const holiday = holidays[holidayId];
+      if (holiday) {
+        const holidayDate = new Date(`${holiday.date}T${postTime}:00`);
+        const timeDiff = holidayDate.getTime() - today.getTime();
+        
+        if (timeDiff > 0 && timeDiff < minDiff) {
+          minDiff = timeDiff;
+          nextHoliday = {
+            name: holiday.name,
+            date: holidayDate.toLocaleDateString('en-US', { 
+              weekday: 'long',
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric' 
+            }),
+            time: postTime
+          };
+        }
+      }
+    });
+    
+    if (nextHoliday) {
+      return {
+        nextRun: `${nextHoliday.date} at ${nextHoliday.time}`,
+        holidayName: nextHoliday.name
+      };
+    }
+    
+    return { nextRun: 'No upcoming holidays this year', holidayName: '' };
   };
 
   // Helper function to format ChatGPT enabled status
