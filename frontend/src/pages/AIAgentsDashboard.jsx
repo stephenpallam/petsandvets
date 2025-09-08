@@ -72,6 +72,24 @@ const AIAgentsDashboard = () => {
     }
   }, [user, authLoading, canAccessManager, token]);
 
+  // Fetch holidays
+  const fetchHolidays = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/holidays`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setHolidays(data);
+      } else {
+        console.error('Failed to fetch holidays');
+      }
+    } catch (error) {
+      console.error('Error fetching holidays:', error);
+    }
+  };
+
   const fetchAgents = async () => {
     setLoading(true);
     try {
