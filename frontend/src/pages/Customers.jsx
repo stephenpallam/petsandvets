@@ -37,7 +37,7 @@ const Customers = () => {
   // Form states
   const [formData, setFormData] = useState({
     name: '',
-    pet_name: '',
+    pets: [{ name: '' }], // Array of pets, start with one empty pet
     phone: '',
     email: '',
     sms_opt_in: true,
