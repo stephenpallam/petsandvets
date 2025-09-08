@@ -1714,7 +1714,8 @@ The Veterinary Care Team`,
                   {tabs.map((tab) => {
                     const Icon = tab.icon;
                     const isActive = activeTab === tab.id;
-                    const isDisabled = isEditMode && editingAgentMode && tab.id !== editingAgentMode;
+                    // In edit mode, check if this tab matches the agent being edited
+                    const isDisabled = isEditMode && editingAgentMode && !tab.id.endsWith(editingAgentMode === 'auto' ? 'recurring' : editingAgentMode);
                     
                     return (
                       <button
