@@ -4830,6 +4830,8 @@ Best wishes from our veterinary family to yours,
             "sample_pet_names": pet_names,  # Pet(s) used for preview
             "sample_customer_email": customer_email,  # Email used for preview
             "selected_holidays": agent_data.get('selected_holidays', []),  # Holiday context
+            "holiday_name": holiday_name,  # Current holiday name
+            "holiday_date": holiday_date,  # Current holiday date
             "ready_for_mass_email": False  # Will be set to True when published
         }
         
