@@ -5860,9 +5860,16 @@ async def approve_post(
         if result.matched_count == 0:
             raise HTTPException(status_code=404, detail="Post not found or not ready for approval")
         
-        # TODO: Actually publish to social media platforms here
+        # Get the published post to check if it's an email
+        published_post = await db.ai_posts.find_one({"id": post_id})
         
-        return {"message": "Post approved and published successfully"}
+        if published_post and published_post.get("agent_type") == "email":
+            # This is an email post - trigger mass email sending
+            await send_mass_emails_from_post(post_id, published_post)
+            return {"message": "Email post approved and mass emails are being sent to customers"}
+        else:
+            # TODO: Actually publish to social media platforms here
+            return {"message": "Post approved and published successfully"}
         
     except HTTPException:
         raise
