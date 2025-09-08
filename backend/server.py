@@ -4756,7 +4756,7 @@ async def generate_email_for_agent(agent_id: str, agent_data: dict):
             # Store email-specific metadata for mass sending
             "email_template": email_template,  # Original template with placeholders
             "sample_customer_name": customer_name,  # Customer used for preview
-            "sample_pet_name": pet_name,  # Pet used for preview
+            "sample_pet_names": pet_names,  # Pet(s) used for preview
             "sample_customer_email": customer_email,  # Email used for preview
             "selected_holidays": agent_data.get('selected_holidays', []),  # Holiday context
             "ready_for_mass_email": False  # Will be set to True when published
