@@ -276,8 +276,8 @@ class SMSAgentFixesTester:
             )
             
             if response.status_code == 200:
-                agent_data = response.json()
-                agent_id = agent_data.get("id")
+                create_response = response.json()
+                agent_id = create_response.get("agent_id")
                 
                 # Run the agent to generate a post
                 run_response = requests.post(
