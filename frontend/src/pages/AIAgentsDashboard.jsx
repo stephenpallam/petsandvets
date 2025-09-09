@@ -1877,122 +1877,6 @@ const AIAgentsDashboard = () => {
                           
                           {/* Next Run & Last Run for Recurring Agents */}
                           {(agent.mode === 'auto' || agent.mode === 'recurring') && (
-                                <div className="flex flex-col pt-3 border-t border-gray-100">
-                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Next Run & Last Run</span>
-                                  <div className="mt-1 grid grid-cols-1 lg:grid-cols-2 gap-4">
-                                    {/* Left Column: Next Run Info */}
-                                    <div className="p-3 bg-green-50 border border-green-200 rounded-md">
-                                      {(() => {
-                                        if (agent.agent_type === 'email' && agent.selected_holidays && agent.selected_holidays.length > 0) {
-                                          // Email agent with holidays - show next holiday
-                                          const holidayInfo = getNextScheduledHoliday(agent);
-                                          return (
-                                            <div className="space-y-2">
-                                              <div>
-                                                <label className="text-xs font-semibold text-green-700 uppercase tracking-wide">
-                                                  {holidayInfo.holidayName || 'Next Holiday Run'}
-                                                </label>
-                                                <p className="text-sm font-medium text-green-900">
-                                                  {holidayInfo.nextRun}
-                                                </p>
-                                              </div>
-                                            </div>
-                                          );
-                                        } else {
-                                          // Regular recurring agents
-                                          const runInfo = calculateNextRunForRecurringAgent(agent);
-                                          if (!runInfo) return null;
-                                          
-                                          return (
-                                            <div className="space-y-2">
-                                              <div>
-                                                <label className="text-xs font-semibold text-green-700 uppercase tracking-wide">Next Scheduled Run</label>
-                                                <p className="text-sm font-medium text-green-900">
-                                                  {runInfo.nextRunDate}
-                                                </p>
-                                              </div>
-                                              {runInfo.selectedDays && (
-                                                <div>
-                                                  <label className="text-xs font-semibold text-green-700 uppercase tracking-wide">Scheduled Days</label>
-                                                  <p className="text-sm font-medium text-green-900">
-                                                    {runInfo.selectedDays}
-                                                  </p>
-                                                  <p className="text-xs text-green-600 mt-1">
-                                                    At {agent.post_time || '09:00'}
-                                                  </p>
-                                                </div>
-                                              )}
-                                            </div>
-                                          );
-                                        }
-                                      })()}
-                                    </div>
-                                    
-                                    {/* Right Column: Last Run */}
-                                    <div className="p-3 bg-gray-50 border border-gray-200 rounded-md">
-                                      <div className="space-y-2">
-                                        <div>
-                                          <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Last Manual Run</label>
-                                          <p className="text-sm font-medium text-gray-900">
-                                            {agent.last_manual_run ? formatDate(agent.last_manual_run) : 'Never run manually'}
-                                          </p>
-                                        </div>
-                                        <div>
-                                          <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Run Status</label>
-                                          <p className="text-sm font-medium text-gray-900">
-                                            {agent.last_manual_run ? 'Completed' : 'Not run yet'}
-                                          </p>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
-                              
-                              {/* Bottom Row - Two Columns */}
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="flex flex-col">
-                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Web Research</span>
-                                  <p className="text-sm text-gray-900 mt-1">
-                                    <span className={`inline-flex items-center px-3 py-1 rounded text-xs font-medium ${
-                                      agent.use_web_research ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
-                                    }`}>
-                                      {agent.use_web_research ? 'Enabled' : 'Disabled'}
-                                    </span>
-                                  </p>
-                                </div>
-                                <div className="flex flex-col">
-                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Schedule</span>
-                                  <p className="text-sm text-gray-900 mt-1">
-                                    {formatAgentSchedule(agent)}
-                                  </p>
-                                  {isReadyForNextPost(agent) && (
-                                    <p className="text-xs text-green-600 mt-1 italic">
-                                      This agent is ready to create your next post. Click 'Run Agent' to generate new content.
-                                    </p>
-                                  )}
-                                </div>
-
-                              </div>
-
-                              {/* Social Media Platforms Row */}
-                              <div className="flex flex-col pt-3 border-t border-gray-100">
-                                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Social Media Platforms</span>
-                                <p className="text-sm text-gray-900 mt-1">
-                                  {getEnabledPlatforms(agent.social_platforms).length > 0 ? (
-                                    getEnabledPlatforms(agent.social_platforms)
-                                      .map(platform => platform === 'twitter' ? 'X (Twitter)' : platform.charAt(0).toUpperCase() + platform.slice(1))
-                                      .join(', ')
-                                  ) : (
-                                    'None selected'
-                                  )}
-                                </p>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Next Run & Last Run for Recurring Agents */}
-                          {(agent.mode === 'auto' || agent.mode === 'recurring') && (
                             <div className="flex flex-col pt-3 border-t border-gray-100">
                               <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Next Run & Last Run</span>
                               <div className="mt-1 grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -2064,6 +1948,45 @@ const AIAgentsDashboard = () => {
                               </div>
                             </div>
                           )}
+                          
+                          {/* Bottom Row - Two Columns */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="flex flex-col">
+                              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Web Research</span>
+                              <p className="text-sm text-gray-900 mt-1">
+                                <span className={`inline-flex items-center px-3 py-1 rounded text-xs font-medium ${
+                                  agent.use_web_research ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
+                                }`}>
+                                  {agent.use_web_research ? 'Enabled' : 'Disabled'}
+                                </span>
+                              </p>
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Schedule</span>
+                              <p className="text-sm text-gray-900 mt-1">
+                                {formatAgentSchedule(agent)}
+                              </p>
+                              {isReadyForNextPost(agent) && (
+                                <p className="text-xs text-green-600 mt-1 italic">
+                                  This agent is ready to create your next post. Click 'Run Agent' to generate new content.
+                                </p>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Social Media Platforms Row */}
+                          <div className="flex flex-col pt-3 border-t border-gray-100">
+                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Social Media Platforms</span>
+                            <p className="text-sm text-gray-900 mt-1">
+                              {getEnabledPlatforms(agent.social_platforms).length > 0 ? (
+                                getEnabledPlatforms(agent.social_platforms)
+                                  .map(platform => platform === 'twitter' ? 'X (Twitter)' : platform.charAt(0).toUpperCase() + platform.slice(1))
+                                  .join(', ')
+                              ) : (
+                                'None selected'
+                              )}
+                            </p>
+                          </div>
                             </>
                           )}
                         </div>
