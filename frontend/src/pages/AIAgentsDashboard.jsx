@@ -1632,14 +1632,23 @@ const AIAgentsDashboard = () => {
                             // Email vs Social Media Agent Display
                             <>
                               {agent.agent_type === 'email' ? (
-                                // Email Agent Display (scheduled mode)
+                                // Email Agent Display (scheduled and recurring modes)
                                 (agent.mode === 'auto' || agent.mode === 'recurring') && (
                                   <div className="space-y-4">
-                                    {/* Row 1: Email/ChatGPT and Image Option */}
+                                    {/* Row 1: Email/Topic and Image Option */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                       <div className="flex flex-col">
-                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email</span>
-                                        <p className="text-sm text-gray-900 mt-1">Opt In Customers</p>
+                                        {agent.mode === 'recurring' ? (
+                                          <>
+                                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Topic</span>
+                                            <p className="text-sm text-gray-900 mt-1">{agent.topic || 'No topic specified'}</p>
+                                          </>
+                                        ) : (
+                                          <>
+                                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email</span>
+                                            <p className="text-sm text-gray-900 mt-1">Opt In Customers</p>
+                                          </>
+                                        )}
                                       </div>
                                       <div className="flex flex-col">
                                         <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Image Option</span>
@@ -1647,19 +1656,35 @@ const AIAgentsDashboard = () => {
                                       </div>
                                     </div>
                                     
-                                    {/* Row 2: ChatGPT Formatting and Next Scheduled Run */}
+                                    {/* Row 2: Workflow Mode and Schedule Info */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                      <div className="flex flex-col">
-                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Use ChatGPT to Format Email</span>
-                                        <p className="text-sm text-gray-900 mt-1">
-                                          {formatChatGPTStatus(agent)}
-                                        </p>
-                                      </div>
                                       <div className="flex flex-col">
                                         <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Workflow Mode</span>
                                         <p className="text-sm text-gray-900 mt-1">
                                           {getWorkflowMode(agent)}
                                         </p>
+                                      </div>
+                                      <div className="flex flex-col">
+                                        {agent.mode === 'recurring' ? (
+                                          <>
+                                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Schedule</span>
+                                            <p className="text-sm text-gray-900 mt-1 capitalize">
+                                              {agent.schedule_type || 'Weekly'}
+                                              {agent.schedule_type === 'weekly' && agent.days_of_week 
+                                                ? ` (${Object.entries(agent.days_of_week)
+                                                    .filter(([_, selected]) => selected)
+                                                    .map(([day, _]) => day.charAt(0).toUpperCase() + day.slice(1, 3))
+                                                    .join(', ')})` 
+                                                : ''}
+                                              {agent.schedule_type === 'monthly' ? ' (1st of month)' : ''}
+                                            </p>
+                                          </>
+                                        ) : (
+                                          <>
+                                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Type</span>
+                                            <p className="text-sm text-gray-900 mt-1">Holiday-based</p>
+                                          </>
+                                        )}
                                       </div>
                                     </div>
                                   </div>
