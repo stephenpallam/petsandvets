@@ -4055,13 +4055,44 @@ Example:
                             </label>
                             <input
                               type="text"
-                              value={emailWriteMode.agentName}
-                              onChange={(e) => handleEmailWriteModeChange('agentName', e.target.value)}
+                              value={emailRecurringMode.agentName}
+                              onChange={(e) => handleEmailRecurringModeChange('agentName', e.target.value)}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="e.g., Custom Email Agent"
+                              placeholder="e.g., Weekly Pet Care Email Agent"
                               required
                             />
                           </div>
+
+                          {/* Topic Selection */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              <Target className="h-4 w-4 inline mr-2" />
+                              Select Topic *
+                            </label>
+                            <select
+                              value={emailRecurringMode.topic}
+                              onChange={(e) => handleEmailRecurringModeChange('topic', e.target.value)}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              required
+                            >
+                              <option value="">Select a topic...</option>
+                              {topicOptions.map(topic => (
+                                <option key={topic} value={topic}>{topic}</option>
+                              ))}
+                            </select>
+                            {emailRecurringMode.topic === 'Custom' && (
+                              <input
+                                type="text"
+                                value={emailRecurringMode.customTopic}
+                                onChange={(e) => handleEmailRecurringModeChange('customTopic', e.target.value)}
+                                className="w-full mt-2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter custom topic..."
+                              />
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                            {/* Word Count */}
                                                     <div>
                                                       <label className="block text-sm font-medium text-gray-700 mb-2">
