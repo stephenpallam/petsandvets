@@ -562,7 +562,12 @@ const AIAgentsDashboard = () => {
     return colors[mode] || '#29add3';
   };
 
-  const getModeLabel = (mode) => {
+  const getModeLabel = (mode, agentType, selectedHolidays) => {
+    // Special case for SMS agents with holidays (scheduled mode)
+    if (agentType === 'sms_agent' && mode === 'recurring' && selectedHolidays && selectedHolidays.length > 0) {
+      return 'Scheduled Mode';
+    }
+    
     const labels = {
       auto: 'Recurring Mode',  // Legacy support
       recurring: 'Recurring Mode',
