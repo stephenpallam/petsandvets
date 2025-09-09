@@ -1946,7 +1946,7 @@ const AIAgentsDashboard = () => {
                           )}
                           
                           {/* Bottom Row - Only show for social media agents */}
-                          {agent.agent_type !== 'email' && (
+                          {agent.agent_type !== 'email' && agent.agent_type !== 'time_sheet' && (
                             <>
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="flex flex-col">
