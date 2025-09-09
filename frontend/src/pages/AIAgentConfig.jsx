@@ -4456,6 +4456,7 @@ Example:
                                                         console.log('🔍 Email Recurring Mode Validation Debug:');
                                                         console.log('  agentName:', emailRecurringMode.agentName);
                                                         console.log('  topic:', emailRecurringMode.topic);
+                                                        console.log('  customTopic:', emailRecurringMode.customTopic);
                                                         console.log('  scheduleType:', emailRecurringMode.scheduleType);
                                                         if (emailRecurringMode.scheduleType === 'weekly') {
                                                           console.log('  daysOfWeek:', emailRecurringMode.daysOfWeek);
