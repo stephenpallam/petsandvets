@@ -5745,7 +5745,7 @@ async def create_ai_agent(
             
             # Validate SMS content length (160 character limit)
             if agent_data.mode == AIAgentMode.WRITE and agent_data.sms_content:
-                if len(agent_data.sms_content) > agent_data.sms_character_limit or 160:
+                if len(agent_data.sms_content) > (agent_data.sms_character_limit or 160):
                     raise HTTPException(status_code=400, detail=f"SMS content exceeds {agent_data.sms_character_limit or 160} character limit")
             
             # Validate SMS provider
