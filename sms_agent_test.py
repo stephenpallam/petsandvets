@@ -662,10 +662,13 @@ class SMSAgentTester:
             ready_success = False
             
             if review_response.status_code == 200:
-                review_posts = review_response.json()
-                # Handle both list and dict responses
-                if isinstance(review_posts, list):
+                review_data = review_response.json()
+                # Handle API response format with 'posts' key
+                if isinstance(review_data, dict) and 'posts' in review_data:
+                    review_posts = review_data['posts']
                     sms_review_posts = [post for post in review_posts if isinstance(post, dict) and post.get('agent_type') == 'sms_agent']
+                elif isinstance(review_data, list):
+                    sms_review_posts = [post for post in review_data if isinstance(post, dict) and post.get('agent_type') == 'sms_agent']
                 else:
                     sms_review_posts = []
                 
@@ -674,10 +677,13 @@ class SMSAgentTester:
                     print(f"   Found {len(sms_review_posts)} SMS posts in review")
             
             if ready_response.status_code == 200:
-                ready_posts = ready_response.json()
-                # Handle both list and dict responses
-                if isinstance(ready_posts, list):
+                ready_data = ready_response.json()
+                # Handle API response format with 'posts' key
+                if isinstance(ready_data, dict) and 'posts' in ready_data:
+                    ready_posts = ready_data['posts']
                     sms_ready_posts = [post for post in ready_posts if isinstance(post, dict) and post.get('agent_type') == 'sms_agent']
+                elif isinstance(ready_data, list):
+                    sms_ready_posts = [post for post in ready_data if isinstance(post, dict) and post.get('agent_type') == 'sms_agent']
                 else:
                     sms_ready_posts = []
                 
