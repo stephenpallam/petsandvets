@@ -2009,8 +2009,9 @@ const AIAgentsDashboard = () => {
                                                 }
                                               }
                                               
-                                              // Fallback to original logic
-                                              return agent.last_run ? formatDate(agent.last_run) : 'Never run';
+                                              // Fallback to original logic - check last_manual_run first, then last_run
+                                              return agent.last_manual_run ? formatDate(agent.last_manual_run) : 
+                                                     (agent.last_run ? formatDate(agent.last_run) : 'Never run');
                                             })()}
                                           </p>
                                         </div>
