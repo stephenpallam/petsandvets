@@ -1899,7 +1899,7 @@ const AIAgentsDashboard = () => {
                                       </p>
                                     </div>
                                     <div className="flex flex-col">
-                                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Last Run</span>
+                                      <span className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Last Run</span>
                                       <p className="text-sm text-gray-900 mt-1">
                                         {agent.last_run ? formatDate(agent.last_run) : 'Never run'}
                                       </p>
