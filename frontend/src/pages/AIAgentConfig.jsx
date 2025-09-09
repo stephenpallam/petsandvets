@@ -50,6 +50,8 @@ const AIAgentConfig = () => {
     const agentType = searchParams.get('agent_type');
     if (agentType === 'email') {
       return 'email-scheduled'; // Default to scheduled for email agents
+    } else if (agentType === 'sms_agent') {
+      return 'sms-scheduled'; // Default to scheduled for SMS agents
     } else if (agentType === 'time_sheet') {
       return 'timesheet-recurring'; // Default to recurring for timesheet agents
     }
