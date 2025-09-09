@@ -269,7 +269,7 @@ class SchedulerTester:
             
             # Try to trigger the scheduler manually by calling the run endpoint
             try:
-                response = requests.post(f"{self.api_base}/ai-agents/{agent_id}/run", timeout=30)
+                response = requests.post(f"{self.api_base}/ai-agents/{agent_id}/run", headers=self.get_auth_headers(), timeout=30)
                 if response.status_code == 200:
                     result = response.json()
                     print(f"✅ Manual run successful: {result}")
