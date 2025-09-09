@@ -627,8 +627,8 @@ class SMSAgentTester:
         
         try:
             # Test in-review endpoint
-            review_response = requests.get(f"{self.api_base}/ai-posts/in-review")
-            ready_response = requests.get(f"{self.api_base}/ai-posts/ready-to-publish")
+            review_response = requests.get(f"{self.api_base}/ai-posts/in-review", headers=self.headers)
+            ready_response = requests.get(f"{self.api_base}/ai-posts/ready-to-publish", headers=self.headers)
             
             review_success = False
             ready_success = False
