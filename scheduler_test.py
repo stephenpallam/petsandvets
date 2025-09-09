@@ -406,6 +406,9 @@ class SchedulerTester:
             # Step 1: Test API Connection
             test_results['api_connection'] = self.test_api_connection()
             
+            # Step 1.5: Authenticate
+            test_results['authentication'] = self.authenticate()
+            
             # Step 2: Create Write Mode Social Media Agent (Future Date)
             print(f"\n" + "=" * 50)
             print("STEP 2: CREATE FUTURE DATE AGENT")
