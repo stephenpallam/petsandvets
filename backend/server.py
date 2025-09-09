@@ -5678,10 +5678,13 @@ async def create_ai_agent(
             raise HTTPException(status_code=400, detail="Agent name is required for recurring mode")
         
         if agent_data.mode == AIAgentMode.WRITE:
-            # For email agents, check email_content; for others, check post_content
+            # For email agents, check email_content; for SMS agents, check sms_content; for others, check post_content
             if agent_data.agent_type == AIAgentType.EMAIL_AGENT:
                 if not agent_data.email_content:
                     raise HTTPException(status_code=400, detail="Email content is required for email write mode")
+            elif agent_data.agent_type == AIAgentType.SMS_AGENT:
+                if not agent_data.sms_content:
+                    raise HTTPException(status_code=400, detail="SMS content is required for SMS write mode")
             else:
                 if not agent_data.post_content:
                     raise HTTPException(status_code=400, detail="Post content is required for write mode")
