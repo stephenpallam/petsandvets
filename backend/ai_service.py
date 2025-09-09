@@ -569,6 +569,72 @@ Please provide only the regenerated content without any explanations or addition
             logger.error(f"Error in regenerate_content: {str(e)}")
             return None
 
+    async def format_topic_email_content(
+        self,
+        template: str,
+        customer_name: str,
+        pet_names: str,
+        topic: str
+    ) -> str:
+        """Format topic-based email content using ChatGPT for professional, relevant output"""
+        
+        try:
+            if not self.emergent_key:
+                logger.error("No Emergent LLM key available for email formatting")
+                return template
+            
+            # Create a comprehensive prompt for topic-based email formatting
+            email_prompt = f"""You are a professional email writer for a veterinary clinic. Create a warm, informative, and professionally formatted email based on the topic and template provided.
+
+INSTRUCTIONS:
+1. Create email content focused on the specified topic: "{topic}"
+2. Use the provided template as a foundation but enhance it significantly
+3. Make the content relevant to the topic - include useful information, tips, or updates related to "{topic}"
+4. Personalize it for the customer and their pet(s)
+5. Fix any grammatical errors and duplicate content
+6. Ensure the email flows naturally with proper structure
+7. Remove any redundant or duplicate sections (especially greetings and closings)
+8. Make the tone warm but professional
+9. Include practical, valuable information related to the topic
+
+EMAIL TEMPLATE (use as foundation, but enhance):
+{template}
+
+PERSONALIZATION:
+- Customer: {customer_name}
+- Pet(s): {pet_names}
+- Topic Focus: {topic}
+
+Please create a complete, valuable email about "{topic}" that:
+- Starts with a warm, personal greeting (only once)
+- Provides useful information about the topic
+- Makes it relevant to {pet_names}'s care
+- Includes practical tips or insights
+- Ends with a single, professional closing
+- Contains NO duplicate greetings, signatures, or redundant content
+
+The email should be informative and valuable to pet owners, not just generic promotional content."""
+
+            # Call ChatGPT using Emergent integrations
+            chat = LlmChat(
+                api_key=self.emergent_key,
+                session_id=f"topic_email_format_{uuid.uuid4()}",
+                system_message="You are a professional email writer for a veterinary clinic specializing in informative, topic-based communications."
+            )
+            
+            formatted_content = await chat.send_message(email_prompt)
+            
+            if formatted_content and formatted_content.strip():
+                logger.info(f"Successfully formatted topic-based email using ChatGPT for topic: {topic}")
+                return formatted_content.strip()
+            else:
+                logger.warning("ChatGPT returned empty response for topic email formatting")
+                return template
+                
+        except Exception as e:
+            logger.error(f"Error in format_topic_email_content: {str(e)}")
+            return template
+
     async def format_email_content(
         self,
         template: str,
