@@ -121,7 +121,7 @@ class SMSAgentTester:
             }
             
             # Make API request
-            response = requests.post(f"{self.api_base}/ai-agents", json=sms_agent_data)
+            response = requests.post(f"{self.api_base}/ai-agents", json=sms_agent_data, headers=self.headers)
             
             if response.status_code == 200:
                 agent_data = response.json()
