@@ -6128,6 +6128,14 @@ async def get_posts_ready_to_publish(
         
         for post in posts:
             post['_id'] = str(post['_id'])
+            # Ensure published_at is properly formatted for frontend
+            if post.get('published_at'):
+                post['published_at'] = post['published_at'].isoformat() if hasattr(post['published_at'], 'isoformat') else str(post['published_at'])
+            # Also ensure created_at and updated_at are properly formatted
+            if post.get('created_at'):
+                post['created_at'] = post['created_at'].isoformat() if hasattr(post['created_at'], 'isoformat') else str(post['created_at'])
+            if post.get('updated_at'):
+                post['updated_at'] = post['updated_at'].isoformat() if hasattr(post['updated_at'], 'isoformat') else str(post['updated_at'])
         
         return {
             "posts": posts,
