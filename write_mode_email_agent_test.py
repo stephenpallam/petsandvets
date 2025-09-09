@@ -338,7 +338,7 @@ class WriteEmailAgentTester:
             print(f"Creating social media agent with data: {json.dumps(social_agent_data, indent=2)}")
             
             # Make API call to create agent
-            response = requests.post(f"{self.api_url}/ai-agents", json=social_agent_data)
+            response = requests.post(f"{self.api_url}/ai-agents", json=social_agent_data, headers=self.get_headers())
             
             if response.status_code == 200:
                 created_agent = response.json()
