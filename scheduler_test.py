@@ -388,6 +388,7 @@ class SchedulerTester:
         
         test_results = {
             'api_connection': False,
+            'authentication': False,
             'future_agent_creation': False,
             'future_agent_verification': False,
             'scheduler_background': False,
