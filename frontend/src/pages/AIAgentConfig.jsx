@@ -4146,7 +4146,7 @@ Example:
                                                       />
                                                       <div className="ml-3">
                                                         <span className="text-sm font-medium text-gray-900">Monthly Schedule</span>
-                                                        <p className="text-xs text-gray-600">Send emails on a specific day of the month</p>
+                                                        <p className="text-xs text-gray-600">1st of every month this agent will run</p>
                                                       </div>
                                                     </label>
                                                   </div>
