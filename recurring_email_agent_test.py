@@ -47,7 +47,7 @@ class RecurringEmailAgentTester:
                         self.backend_url = line.split('=', 1)[1].strip()
                         break
         else:
-            self.backend_url = "https://aigentvets.preview.emergentagent.com"
+            self.backend_url = "https://smartpetsai.preview.emergentagent.com"
         
         self.api_base = f"{self.backend_url}/api"
         print(f"Using API base URL: {self.api_base}")
