@@ -1798,18 +1798,68 @@ const AIAgentsDashboard = () => {
                                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div className="flex flex-col">
                                           <span className="text-xs font-semibold text-green-700 uppercase tracking-wide">Next Run</span>
-                                          <p className="text-sm text-gray-900 mt-1">
-                                            {isReadyForNextPost(agent) ? (
-                                              <span className="text-green-700 font-medium">Ready for Next Post</span>
+                                          <div className="mt-1">
+                                            {agent.post_date && agent.post_time ? (
+                                              // Agent has scheduled date/time - show formatted date with past date logic
+                                              (() => {
+                                                try {
+                                                  const date = new Date(agent.post_date);
+                                                  const [hours, minutes] = agent.post_time.split(':');
+                                                  date.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+                                                  const now = new Date();
+                                                  
+                                                  const formattedDate = date.toLocaleDateString('en-US', {
+                                                    weekday: 'short',
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                    year: 'numeric'
+                                                  });
+                                                  
+                                                  if (date < now) {
+                                                    // Past date - show suggestion message
+                                                    return (
+                                                      <div>
+                                                        <p className="text-sm text-gray-500 line-through">
+                                                          {formattedDate} at {formatTime(agent.post_time)}
+                                                        </p>
+                                                        <p className="text-xs text-amber-600 mt-1 italic">
+                                                          Schedule your next run or run it adhoc when you need
+                                                        </p>
+                                                      </div>
+                                                    );
+                                                  } else {
+                                                    // Future date - show normally
+                                                    return (
+                                                      <p className="text-sm text-gray-900">
+                                                        {formattedDate} at {formatTime(agent.post_time)}
+                                                      </p>
+                                                    );
+                                                  }
+                                                } catch (error) {
+                                                  console.error('Error formatting date:', error);
+                                                  return (
+                                                    <p className="text-sm text-gray-900">
+                                                      {agent.post_date} at {formatTime(agent.post_time)}
+                                                    </p>
+                                                  );
+                                                }
+                                              })()
                                             ) : (
-                                              'Manual trigger only'
+                                              // No scheduled date/time - show manual options
+                                              <div>
+                                                {isReadyForNextPost(agent) ? (
+                                                  <div>
+                                                    <span className="text-sm text-green-700 font-medium">Ready for Next Post</span>
+                                                    <p className="text-xs text-green-600 mt-1 italic">
+                                                      Ready to create your next post. Click 'Run Agent' to generate new content.
+                                                    </p>
+                                                  </div>
+                                                ) : (
+                                                  <p className="text-sm text-gray-900">Manual trigger only</p>
+                                                )}
+                                              </div>
                                             )}
-                                          </p>
-                                          {isReadyForNextPost(agent) && (
-                                            <p className="text-xs text-green-600 mt-1 italic">
-                                              Ready to create your next post. Click 'Run Agent' to generate new content.
-                                            </p>
-                                          )}
+                                          </div>
                                         </div>
                                         <div className="flex flex-col">
                                           <span className="text-xs font-semibold text-green-700 uppercase tracking-wide">Last Run</span>
