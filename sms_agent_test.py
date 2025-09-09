@@ -606,9 +606,11 @@ class SMSAgentTester:
             return
         
         try:
-            # Update SMS agent data
+            # Update SMS agent data - include required fields
             update_data = {
                 "agent_name": "Updated SMS Agent Name",
+                "mode": "write",  # Required field
+                "agent_type": "sms_agent",  # Required field
                 "sms_content": "Updated SMS content for testing purposes. This is a shorter message.",
                 "sms_provider": "sendgrid"
             }
