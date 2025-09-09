@@ -1322,6 +1322,42 @@ test_plan:
         agent: "testing"
         comment: "✅ PAST DATE HANDLING WORKING: Created agent with past date '2025-09-08' and time '09:00' successfully. Agent ID 6c9fe5bb-d0d8-43ce-820f-8929c86dc653 created and post 8e918bad-e03c-430b-9254-1275a50037e9 generated. System handles past dates by processing them immediately rather than scheduling for future."
 
+  - task: "Social Media Agent last_manual_run Field Update - Adhoc Mode"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ ADHOC AGENT last_manual_run UPDATE WORKING: Created adhoc social media agent 'Test Adhoc Last Run' with topic 'Pet health tips' and Facebook platform. Verified last_manual_run field is null initially. After running agent via /api/ai-agents/{id}/run endpoint, last_manual_run field correctly updated to timestamp 2025-09-09 14:52:07.264000. Posts created successfully (IDs: abf28b47-a880-4aeb-bbf7-8220d4a295ce, 05ddec25-4033-449b-8385-e65c8c2c6080) with status 'in_review'."
+
+  - task: "Social Media Agent last_manual_run Field Update - Write Mode"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ WRITE MODE AGENT last_manual_run UPDATE WORKING: Created write mode social media agent 'Test Write Mode Last Run' with custom post title and content. Verified last_manual_run field is null initially. After running agent via /api/ai-agents/{id}/run endpoint, last_manual_run field correctly updated to timestamp 2025-09-09 14:52:13.452000. Posts created successfully (IDs: 3a329250-d17f-49f5-85cf-4ba0e43646f9, 5bab87da-d86a-4681-b606-dc22fa8e0bdf) with status 'in_review'."
+
+  - task: "Social Media Agent last_manual_run Field Update - Timestamp Format Verification"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ TIMESTAMP FORMAT VERIFICATION PASSED: last_manual_run field stores datetime objects correctly in database. Timestamps are in business timezone format (Eastern Time) and properly updated when agents are executed. Field type verification confirms datetime.datetime objects with microsecond precision. Timezone handling working correctly between UTC API calls and business timezone storage."
+
 agent_communication:
   - agent: "testing"
     message: "✅ COMPREHENSIVE TESTING COMPLETED: All enhanced social media agent functionality working correctly. Key findings: 1) Post title support implemented and working, 2) AI title generation handles empty titles properly, 3) All social media platforms (Facebook, Instagram, Twitter, WhatsApp) supported consistently, 4) All modes (write, adhoc, recurring) working correctly, 5) Backend validation working (minor: returns 500 instead of 400 for validation errors), 6) AI post generation active with 10 posts in review queue, 7) All API endpoints functional. Ready for production use."
@@ -1333,3 +1369,5 @@ agent_communication:
     message: "📧 WRITE YOUR EMAIL AGENT TESTING COMPLETED: ALL TESTS PASSED! Comprehensive testing of 'Write Your Email' agent save and update functionality successfully completed. Key findings: 1) ✅ Agent creation working correctly with all specified fields (agent_name, email_subject, email_content, post_date, post_time, image_option, use_chatgpt_formatting), 2) ✅ post_date and post_time fields properly saved during creation (verified: post_date='2025-09-15', post_time='14:30'), 3) ✅ Agent update functionality working correctly via PUT /ai-agents/{agent_id} endpoint, 4) ✅ Updated post_date and post_time values correctly persisted (verified: post_date='2025-09-20', post_time='10:00'), 5) ✅ All CRUD operations for write mode email agents functioning properly. The 'Write Your Email' agent save and update functionality is working as expected."
   - agent: "testing"
     message: "🕐 SCHEDULER FUNCTIONALITY TESTING COMPLETED: ALL TESTS PASSED! Comprehensive testing of scheduler functionality for custom post mode social media agents successfully completed. Key findings: 1) ✅ Background scheduler running every minute (confirmed via logs), 2) ✅ Write mode social media agents created successfully with scheduling parameters (post_date, post_time, social_platforms), 3) ✅ Automatic post creation working - generated posts with 'in_review' status, 4) ✅ Past date handling working - processes immediately rather than scheduling, 5) ✅ Scheduler functions implemented and configured for automatic startup, 6) ✅ API authentication working, 7) ✅ Database operations successful. The scheduling system for custom post mode social media agents is FULLY FUNCTIONAL and ready for production use."
+  - agent: "testing"
+    message: "🎯 LAST_MANUAL_RUN FIELD UPDATE TESTING COMPLETED: ALL TESTS PASSED! Comprehensive testing of last_manual_run field update functionality for social media agents successfully completed. Key findings: 1) ✅ Adhoc social media agent creation and execution working correctly - last_manual_run field properly updated from null to timestamp after running, 2) ✅ Write mode social media agent creation and execution working correctly - last_manual_run field properly updated from null to timestamp after running, 3) ✅ Timestamp format verification passed - field stores datetime objects with microsecond precision in business timezone, 4) ✅ Post creation verified - all test runs generated posts successfully with 'in_review' status, 5) ✅ API authentication and endpoints working correctly, 6) ✅ Database operations successful for both agent updates and post creation. The last_manual_run field update functionality is FULLY FUNCTIONAL and working as expected for both adhoc and write mode social media agents."
