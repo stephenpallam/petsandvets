@@ -1979,13 +1979,12 @@ const AIAgentsDashboard = () => {
                                 {getEnabledPlatforms(agent.social_platforms).length > 0 ? (
                                   getEnabledPlatforms(agent.social_platforms)
                                     .map(platform => platform === 'twitter' ? 'X (Twitter)' : platform.charAt(0).toUpperCase() + platform.slice(1))
-                                  .join(', ')
-                              ) : (
-                                'None selected'
-                              )}
-                            </p>
-                          </div>
-                            </>
+                                    .join(', ')
+                                ) : (
+                                  'None selected'
+                                )}
+                              </p>
+                            </div>
                           )}
                         </div>
 
