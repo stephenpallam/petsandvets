@@ -136,6 +136,16 @@ const AIAgentsDashboard = () => {
     }
   };
 
+  // Format time from 24-hour to 12-hour AM/PM format
+  const formatTime = (time24) => {
+    if (!time24) return '';
+    const [hours, minutes] = time24.split(':');
+    const hour24 = parseInt(hours);
+    const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
+    const ampm = hour24 >= 12 ? 'PM' : 'AM';
+    return `${hour12}:${minutes} ${ampm}`;
+  };
+
   const handleStatusFilterChange = (newFilter) => {
     setStatusFilter(newFilter);
     
