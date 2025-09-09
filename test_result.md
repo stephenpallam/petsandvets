@@ -1,3 +1,29 @@
+## LATEST FIXES - SMS Agent Issues (IN PROGRESS)
+
+**Issues Being Fixed:**
+1. **SMS Agent Dashboard Display**: Fixed getModeLabel function in AIAgentsDashboard.jsx to correctly display mode for SMS scheduled agents
+2. **SMS Agent Edit Mode**: Fixed disabled tabs in AIAgentConfig.jsx by adding missing SMS agent tab mapping logic
+3. **Backend SMS Link Placeholder**: Updated backend SMS generation to replace [LINK] placeholder with actual URL from sms_link field
+
+**Fixes Applied:**
+
+**1. Dashboard Display Fix:**
+- Updated getModeLabel function calls to pass all required parameters (mode, agent_type, selected_holidays)
+- Fixed lines 1509, 1519, 2543, and 2763 in AIAgentsDashboard.jsx
+- Now SMS scheduled agents should display "Scheduled Mode" instead of "Recurring Mode"
+
+**2. Edit Mode Tab Fix:**
+- Added missing SMS agent case in tab mapping logic (lines 429-435 in AIAgentConfig.jsx)
+- Added proper SMS tab mapping for all modes (scheduled, recurring, write)
+- SMS agent data prepopulation was already implemented, issue was only tab mapping
+
+**3. Backend Link Placeholder Fix:**
+- Added [LINK] placeholder replacement in send_mass_sms_from_post function
+- Added sms_link field to post data during SMS generation
+- [LINK] placeholder now replaced with actual sms_link value during mass SMS sending
+
+**Status:** Fixes implemented, ready for testing
+
 user_problem_statement: "Fixed edit mode tab selection bug - adhoc and write mode agents now open correct tabs instead of defaulting to recurring mode"
 
 ## LATEST FIX - Edit Mode Tab Selection Bug (RESOLVED)
