@@ -2181,7 +2181,7 @@ const AIAgentsDashboard = () => {
                     <div className="flex items-center space-x-2 mt-1">
                       <span className="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-white bg-opacity-20 text-white">
                         {selectedAgent.agent_type === 'time_sheet' ? 'Time Sheet Agent' : 
-                         selectedAgent.agent_type === 'email_agent' ? 'Email Agent' :
+                         selectedAgent.agent_type === 'email' || selectedAgent.agent_type === 'email_agent' ? 'Email Agent' :
                          selectedAgent.agent_type === 'sms_agent' ? 'SMS Agent' :
                          selectedAgent.agent_type === 'marketing_agent' ? 'Marketing Agent' :
                          'Social Media Agent'}
