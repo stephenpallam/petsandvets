@@ -5525,21 +5525,9 @@ Example:
                               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             />
                           </div>
-
-                          {/* SMS Provider */}
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              SMS Provider
-                            </label>
-                            <select
-                              value={smsWriteMode.smsProvider}
-                              onChange={(e) => setSmsWriteMode(prev => ({ ...prev, smsProvider: e.target.value }))}
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            >
-                              <option value="twilio">Twilio</option>
-                              <option value="sendgrid">SendGrid</option>
-                            </select>
-                          </div>
+                          
+                          {/* Empty div to maintain grid layout */}
+                          <div></div>
                         </div>
 
                         {/* SMS Subject (Optional) */}
