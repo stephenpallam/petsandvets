@@ -5515,6 +5515,144 @@ async def generate_social_media_post_for_agent(agent_id: str, agent_data: dict):
     except Exception as e:
         logger.error(f"Error in generate_post_for_agent: {str(e)}")
 
+async def generate_sms_for_agent(agent_id: str, agent_data: dict):
+    """Generate SMS content for an AI SMS agent"""
+    try:
+        # Create initial SMS record
+        sms_id = str(uuid.uuid4())
+        now = await business_now_async()
+        
+        logger.info(f"Generating SMS for agent {agent_id}")
+        
+        # Get agent mode
+        agent_mode = agent_data.get('mode', 'scheduled')
+        
+        # Create SMS record with generating status
+        sms_data = {
+            "id": sms_id,
+            "agent_id": agent_id,
+            "agent_name": agent_data.get('agent_name', 'SMS Agent'),
+            "content": "",
+            "status": "generating",
+            "scheduled_for": None,
+            "sent_at": None,
+            "error_message": "",
+            "created_at": now,
+            "updated_at": now
+        }
+        
+        # Insert initial SMS record
+        await db.ai_sms.insert_one(sms_data)
+        
+        try:
+            # Generate SMS content based on mode
+            if agent_mode == 'write':
+                # Use provided SMS content
+                sms_content = agent_data.get('sms_content', '')
+                if not sms_content:
+                    raise Exception("No SMS content provided for write mode")
+                content_result = {"content": sms_content}
+            else:
+                # Generate SMS content using AI service
+                topic = agent_data.get('topic', 'General SMS')
+                content_result = await ai_service.generate_sms_content(
+                    topic=topic,
+                    custom_topic=agent_data.get('custom_topic'),
+                    track_usage=True,
+                    user_id="admin",  # TODO: Get actual user ID
+                    agent_id=agent_id
+                )
+                
+                # Log text generation cost if available
+                if content_result.get('usage_info') and content_result.get('track_usage'):
+                    usage_info = content_result['usage_info']
+                    track_info = content_result['track_usage']
+                    
+                    cost = calculate_text_cost(
+                        track_info['provider'], 
+                        track_info['model'], 
+                        usage_info.get('prompt_tokens', 0),
+                        usage_info.get('completion_tokens', 0)
+                    )
+                    
+                    await log_ai_usage(
+                        cost_type=CostType.TEXT_GENERATION,
+                        provider=track_info['provider'],
+                        model=track_info['model'],
+                        cost_usd=cost,
+                        user_id=track_info['user_id'],
+                        agent_id=track_info['agent_id'],
+                        tokens_used=usage_info.get('total_tokens', 0),
+                        prompt_tokens=usage_info.get('prompt_tokens', 0),
+                        completion_tokens=usage_info.get('completion_tokens', 0),
+                        request_details={'topic': topic}
+                    )
+            
+            # Update SMS with generated content
+            update_data = {
+                "content": content_result.get('content', ''),
+                "status": "ready",
+                "updated_at": await business_now_async()
+            }
+            
+            # Handle SMS destination and scheduling
+            sms_destination = agent_data.get('sms_destination', 'in_review')
+            
+            if sms_destination == 'auto_send':
+                # Handle auto send - could be immediate or scheduled
+                if agent_data.get('mode') == 'adhoc' and agent_data.get('send_date') and agent_data.get('send_time'):
+                    # Scheduled auto send for adhoc mode
+                    scheduled_datetime = await calculate_scheduled_datetime(
+                        agent_data.get('send_date'), 
+                        agent_data.get('send_time')
+                    )
+                    
+                    if scheduled_datetime and scheduled_datetime > await business_now_async():
+                        # Schedule for future sending
+                        update_data["status"] = "scheduled"
+                        update_data["scheduled_for"] = scheduled_datetime
+                        logger.info(f"SMS {sms_id} scheduled for {scheduled_datetime} (business timezone)")
+                    else:
+                        # Send immediately (past time or invalid date)
+                        update_data["status"] = "sent"
+                        update_data["sent_at"] = await business_now_async()
+                        logger.info(f"SMS {sms_id} sent immediately (past scheduled time)")
+                else:
+                    # Immediate auto send (for auto mode or adhoc without date/time)
+                    update_data["status"] = "sent"
+                    update_data["sent_at"] = await business_now_async()
+                    logger.info(f"SMS {sms_id} sent immediately")
+                # TODO: Actually send SMS via SMS service
+            else:
+                # Respect the sms_destination setting for review workflow
+                if sms_destination == 'in_review':
+                    update_data["status"] = "in_review"
+                else:  # Default to 'ready_to_send'
+                    update_data["status"] = "ready"
+            
+            # Update SMS record
+            await db.ai_sms.update_one(
+                {"id": sms_id},
+                {"$set": update_data}
+            )
+            
+            logger.info(f"Successfully generated SMS {sms_id} for agent {agent_id}")
+            
+        except Exception as content_error:
+            # Update SMS with error status
+            await db.ai_sms.update_one(
+                {"id": sms_id},
+                {"$set": {
+                    "status": "failed",
+                    "error_message": str(content_error),
+                    "updated_at": await business_now_async()
+                }}
+            )
+            logger.error(f"Error generating SMS content for {sms_id}: {str(content_error)}")
+            
+    except Exception as e:
+        logger.error(f"Error in generate_sms_for_agent: {str(e)}")
+
 async def schedule_post_generation(agent_id: str, agent_data: dict):
     """Schedule post generation for later (placeholder for now)"""
     # For now, we'll just generate immediately
