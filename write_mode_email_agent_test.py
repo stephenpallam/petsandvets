@@ -333,7 +333,7 @@ class WriteEmailAgentTester:
                 "post_content": "This is test social media content for write mode",
                 "word_count": "150",
                 "image_option": "none",
-                "social_platforms": ["facebook", "instagram"]
+                "social_platforms": {"facebook": True, "instagram": True}
             }
             
             print(f"Creating social media agent with data: {json.dumps(social_agent_data, indent=2)}")
