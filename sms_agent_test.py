@@ -822,6 +822,11 @@ class SMSAgentTester:
         try:
             await self.connect()
             
+            # Authenticate first
+            if not await self.authenticate():
+                print("❌ Authentication failed - cannot proceed with tests")
+                return
+            
             # Test 1: SMS Agent Creation Tests
             print("\n📝 TESTING SMS AGENT CREATION...")
             write_agent_id = await self.test_sms_agent_creation_write_mode()
