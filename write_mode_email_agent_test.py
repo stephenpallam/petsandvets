@@ -111,7 +111,8 @@ class WriteEmailAgentTester:
                 "word_count": "150",
                 "image_option": "none",
                 "use_chatgpt_formatting": True,
-                "email_type": "bulk"
+                "email_type": "bulk",
+                "use_customer_database": True
             }
             
             print(f"Creating email agent with data: {json.dumps(agent_data, indent=2)}")
