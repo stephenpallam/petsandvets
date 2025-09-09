@@ -5836,6 +5836,7 @@ async def generate_sms_for_agent(agent_id: str, agent_data: dict):
             update_data = {
                 "content": content_result.get('content', ''),
                 "sms_template": content_result.get('content', ''),  # Store template for mass sending
+                "sms_link": agent_data.get('sms_link', 'https://petsandvetsanimalhospital.com'),  # Store link for placeholder replacement
                 "status": "in_review",  # Default to review workflow like email agents
                 "updated_at": await business_now_async()
             }
