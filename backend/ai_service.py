@@ -712,6 +712,85 @@ Make sure there are no duplicate signatures or redundant messages."""
             logger.error(f"Error formatting email with ChatGPT: {str(e)}")
             # Return template with basic formatting if ChatGPT fails
             return f"Dear {customer_name},\n\n{template}\n\nWarm regards,\nThe Veterinary Care Team"
+    
+    async def generate_sms_content(
+        self,
+        topic: str,
+        custom_topic: Optional[str] = None,
+        track_usage: bool = False,
+        user_id: Optional[str] = None,
+        agent_id: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """Generate SMS content using AI based on topic"""
+        
+        try:
+            # Use custom topic if provided, otherwise use main topic
+            content_topic = custom_topic if custom_topic else topic
+            
+            # Create SMS generation prompt
+            sms_prompt = f"""
+            You are a professional SMS content creator for a veterinary clinic.
+            
+            Topic: {content_topic}
+            
+            Create a short, engaging SMS message for customers about this topic.
+            
+            Requirements:
+            - Keep it under 160 characters (SMS limit)
+            - Use warm but professional tone
+            - Include placeholders [CUSTOMER_NAME] and [PET_NAME] for personalization
+            - Make it relevant to pet owners and veterinary care
+            - End with the clinic signature
+            
+            Generate only the SMS content, no additional text or explanations.
+            """
+            
+            # Generate SMS content
+            chat = LlmChat(api_key=self.emergent_key)
+            
+            messages = [UserMessage(content=sms_prompt)]
+            response = await chat.chat_async(messages=messages, model="gpt-4o-mini")
+            
+            sms_content = response.message.content.strip()
+            
+            # Ensure SMS is within character limit
+            if len(sms_content) > 160:
+                # Truncate and add "..."
+                sms_content = sms_content[:157] + "..."
+            
+            result = {
+                "content": sms_content,
+                "character_count": len(sms_content)
+            }
+            
+            # Add tracking info if requested
+            if track_usage:
+                result.update({
+                    "track_usage": {
+                        "provider": "openai",
+                        "model": "gpt-4o-mini", 
+                        "user_id": user_id,
+                        "agent_id": agent_id
+                    },
+                    "usage_info": {
+                        "prompt_tokens": response.usage.prompt_tokens if hasattr(response, 'usage') else 0,
+                        "completion_tokens": response.usage.completion_tokens if hasattr(response, 'usage') else 0,
+                        "total_tokens": response.usage.total_tokens if hasattr(response, 'usage') else 0
+                    }
+                })
+            
+            logger.info(f"SMS content generated successfully for topic: {content_topic}")
+            return result
+            
+        except Exception as e:
+            logger.error(f"Error generating SMS content: {str(e)}")
+            # Return fallback SMS content
+            fallback_content = f"Hi [CUSTOMER_NAME]! We hope [PET_NAME] is doing well. - Your Vet Team"
+            return {
+                "content": fallback_content,
+                "character_count": len(fallback_content),
+                "error": str(e)
+            }
 
 # Global instance
 ai_service = AIContentGenerator()
