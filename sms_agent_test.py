@@ -631,22 +631,25 @@ class SMSAgentTester:
             response = requests.put(f"{self.api_base}/ai-agents/{agent_id}", json=update_data, headers=self.headers)
             
             if response.status_code == 200:
-                updated_agent = response.json()
+                response_data = response.json()
                 
-                # Verify updates were applied
-                if (updated_agent.get('agent_name') == update_data['agent_name'] and
-                    updated_agent.get('sms_provider') == update_data['sms_provider']):
+                # Check database to verify updates were applied
+                agent_doc = await self.db.ai_agents.find_one({"id": agent_id})
+                
+                if (agent_doc and 
+                    agent_doc.get('agent_name') == update_data['agent_name'] and
+                    agent_doc.get('sms_provider') == update_data['sms_provider']):
                     
                     self.log_test_result(
                         "SMS Agent Endpoints - PUT", 
                         True, 
-                        "SMS agent updated successfully"
+                        "SMS agent updated successfully in database"
                     )
                 else:
                     self.log_test_result(
                         "SMS Agent Endpoints - PUT", 
                         False, 
-                        f"Update failed - fields not updated correctly: {updated_agent}"
+                        f"Update failed - fields not updated in database. Current: {agent_doc.get('agent_name', 'N/A')}, {agent_doc.get('sms_provider', 'N/A')}"
                     )
             else:
                 self.log_test_result(
