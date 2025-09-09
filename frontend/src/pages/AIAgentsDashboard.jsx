@@ -1956,7 +1956,33 @@ const AIAgentsDashboard = () => {
                                     <div className="flex flex-col">
                                       <span className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Last Run</span>
                                       <p className="text-sm text-gray-900 mt-1">
-                                        {agent.last_run ? formatDate(agent.last_run) : 'Never run'}
+                                        {(() => {
+                                          // If agent has a scheduled date/time in the past, it likely ran
+                                          if (agent.post_date && agent.post_time) {
+                                            try {
+                                              const scheduledDate = new Date(agent.post_date);
+                                              const [hours, minutes] = agent.post_time.split(':');
+                                              scheduledDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+                                              const now = new Date();
+                                              
+                                              if (scheduledDate < now) {
+                                                // Past scheduled date - show as last run
+                                                const formattedDate = scheduledDate.toLocaleDateString('en-US', {
+                                                  weekday: 'short',
+                                                  month: 'short',
+                                                  day: 'numeric',
+                                                  year: 'numeric'
+                                                });
+                                                return `${formattedDate} at ${formatTime(agent.post_time)}`;
+                                              }
+                                            } catch (error) {
+                                              console.error('Error parsing scheduled date:', error);
+                                            }
+                                          }
+                                          
+                                          // Fallback to original logic
+                                          return agent.last_run ? formatDate(agent.last_run) : 'Never run';
+                                        })()}
                                       </p>
                                     </div>
                                   </div>
