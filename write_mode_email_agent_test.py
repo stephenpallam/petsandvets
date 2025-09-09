@@ -48,6 +48,35 @@ class WriteEmailAgentTester:
         self.client = AsyncIOMotorClient(self.mongo_url)
         self.db = self.client[self.db_name]
         
+    async def authenticate(self):
+        """Authenticate with the API"""
+        try:
+            login_data = {
+                "email": "admin@hospital.com",
+                "password": "admin123"
+            }
+            
+            response = requests.post(f"{self.api_url}/login", json=login_data)
+            
+            if response.status_code == 200:
+                token_data = response.json()
+                self.auth_token = token_data.get('access_token')
+                print(f"✅ Authentication successful")
+                return True
+            else:
+                print(f"❌ Authentication failed: {response.status_code} - {response.text}")
+                return False
+                
+        except Exception as e:
+            print(f"❌ Authentication error: {str(e)}")
+            return False
+    
+    def get_headers(self):
+        """Get headers with authentication"""
+        if self.auth_token:
+            return {"Authorization": f"Bearer {self.auth_token}"}
+        return {}
+        
     async def disconnect(self):
         """Disconnect from MongoDB"""
         if self.client:
