@@ -1945,24 +1945,25 @@ const AIAgentsDashboard = () => {
                             </div>
                           )}
                           
-                          {/* Bottom Row - Two Columns */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="flex flex-col">
-                              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Web Research</span>
-                              <p className="text-sm text-gray-900 mt-1">
-                                <span className={`inline-flex items-center px-3 py-1 rounded text-xs font-medium ${
-                                  agent.use_web_research ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
-                                }`}>
-                                  {agent.use_web_research ? 'Enabled' : 'Disabled'}
-                                </span>
-                              </p>
-                            </div>
-                            <div className="flex flex-col">
-                              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Schedule</span>
-                              <p className="text-sm text-gray-900 mt-1">
-                                {formatAgentSchedule(agent)}
-                              </p>
-                              {isReadyForNextPost(agent) && (
+                          {/* Bottom Row - Two Columns (only for non-email agents) */}
+                          {agent.agent_type !== 'email' && (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              <div className="flex flex-col">
+                                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Web Research</span>
+                                <p className="text-sm text-gray-900 mt-1">
+                                  <span className={`inline-flex items-center px-3 py-1 rounded text-xs font-medium ${
+                                    agent.use_web_research ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
+                                  }`}>
+                                    {agent.use_web_research ? 'Enabled' : 'Disabled'}
+                                  </span>
+                                </p>
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Schedule</span>
+                                <p className="text-sm text-gray-900 mt-1">
+                                  {formatAgentSchedule(agent)}
+                                </p>
+                                {isReadyForNextPost(agent) && (
                                 <p className="text-xs text-green-600 mt-1 italic">
                                   This agent is ready to create your next post. Click 'Run Agent' to generate new content.
                                 </p>
