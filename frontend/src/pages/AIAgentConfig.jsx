@@ -628,7 +628,6 @@ Best regards,
               setSmsScheduledMode({
                 agentName: agentData.name || agentData.agent_name || '',
                 selectedHolidays: agentData.selected_holidays || [],
-                smsProvider: agentData.sms_provider || 'twilio',
                 useSMSChatGPTFormatting: agentData.use_sms_chatgpt_formatting !== undefined ? agentData.use_sms_chatgpt_formatting : true,
                 smsContentTemplate: agentData.sms_template || agentData.sms_content_template || '',
                 postTime: agentData.post_time || '09:00',
