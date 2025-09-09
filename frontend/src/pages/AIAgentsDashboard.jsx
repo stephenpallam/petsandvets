@@ -2037,7 +2037,6 @@ const AIAgentsDashboard = () => {
                                   )}
                                 </p>
                               </div>
-                              </div>
                             </>
                           )}
                         </div>
