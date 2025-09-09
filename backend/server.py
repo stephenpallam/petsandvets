@@ -3009,6 +3009,86 @@ async def test_email_config(
         raise HTTPException(status_code=500, detail=f"Test email failed: {str(e)}")
 
 
+# SMS Configuration endpoints
+class TestSMSRequest(BaseModel):
+    test_phone: str
+
+@api_router.get("/sms-config", response_model=SMSConfig)
+async def get_sms_config(current_user: User = Depends(get_manager_or_admin_user)):
+    """Get SMS configuration (manager/admin only)"""
+    
+    config = await db.sms_config.find_one({})
+    if not config:
+        # Return default configuration if none exists
+        return SMSConfig()
+    
+    # Convert MongoDB document to SMSConfig model
+    config.pop('_id', None)  # Remove MongoDB _id field
+    return SMSConfig(**config)
+
+@api_router.post("/sms-config", response_model=dict)
+async def update_sms_config(
+    config: SMSConfig,
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Update SMS configuration (manager/admin only)"""
+    
+    # Convert to dict and prepare for MongoDB
+    config_data = config.dict()
+    
+    # Add metadata
+    config_data["updated_by"] = current_user.email
+    config_data["updated_at"] = datetime.utcnow()
+    
+    # Check if configuration exists
+    existing_config = await db.sms_config.find_one({})
+    
+    if existing_config:
+        # Update existing configuration
+        await db.sms_config.update_one({}, {"$set": config_data})
+    else:
+        # Create new configuration
+        config_data["created_at"] = datetime.utcnow()
+        await db.sms_config.insert_one(config_data)
+    
+    return {"message": "SMS configuration updated successfully"}
+
+@api_router.post("/sms-config/test", response_model=dict)
+async def test_sms_config(
+    test_request: TestSMSRequest,
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Send test SMS to verify configuration (manager/admin only)"""
+    
+    try:
+        # Get SMS configuration
+        config = await db.sms_config.find_one({})
+        if not config or not config.get('is_enabled'):
+            raise HTTPException(status_code=400, detail="SMS is not enabled")
+        
+        sms_content = f"SMS Configuration Test - This is a test message to verify your SMS configuration is working correctly. Configured by {current_user.full_name} at {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')} UTC"
+        
+        # Send SMS based on provider
+        if config.get('sms_provider') == 'sendgrid':
+            result = await send_sms_via_sendgrid(test_request.test_phone, sms_content, config.get('sendgrid_api_key'))
+        else:  # Default to Twilio
+            result = await send_sms_via_twilio(
+                test_request.test_phone, 
+                sms_content, 
+                config.get('twilio_account_sid'),
+                config.get('twilio_auth_token'),
+                config.get('twilio_phone_number')
+            )
+        
+        if result.get('success'):
+            return {"message": "Test SMS sent successfully!"}
+        else:
+            raise HTTPException(status_code=500, detail=f"Failed to send test SMS: {result.get('error')}")
+            
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Test SMS failed: {str(e)}")
+
+
 # File Upload API endpoints
 UPLOAD_DIR = Path("/app/data/upload/photos")
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
