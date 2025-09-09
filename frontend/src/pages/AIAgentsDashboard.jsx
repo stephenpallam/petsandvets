@@ -1880,7 +1880,21 @@ const AIAgentsDashboard = () => {
                                     <div className="flex flex-col">
                                       <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Next Run</span>
                                       <p className="text-sm text-gray-900 mt-1">
-                                        {formatDate(agent.post_date)} at {formatTime(agent.post_time)}
+                                        {(() => {
+                                          try {
+                                            const date = new Date(agent.post_date);
+                                            const formattedDate = date.toLocaleDateString('en-US', {
+                                              weekday: 'short',
+                                              month: 'short',
+                                              day: 'numeric',
+                                              year: 'numeric'
+                                            });
+                                            return `${formattedDate} at ${formatTime(agent.post_time)}`;
+                                          } catch (error) {
+                                            console.error('Error formatting date:', error);
+                                            return `${agent.post_date} at ${formatTime(agent.post_time)}`;
+                                          }
+                                        })()}
                                       </p>
                                     </div>
                                     <div className="flex flex-col">
