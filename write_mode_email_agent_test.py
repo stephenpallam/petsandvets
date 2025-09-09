@@ -117,7 +117,7 @@ class WriteEmailAgentTester:
             print(f"Creating email agent with data: {json.dumps(agent_data, indent=2)}")
             
             # Make API call to create agent
-            response = requests.post(f"{self.api_url}/ai-agents", json=agent_data)
+            response = requests.post(f"{self.api_url}/ai-agents", json=agent_data, headers=self.get_headers())
             
             if response.status_code == 200:
                 created_agent = response.json()
