@@ -1430,7 +1430,7 @@ const AIAgentsDashboard = () => {
                     <div className="ml-3">
                       <p className="text-sm font-medium text-purple-600">Adhoc Agents</p>
                       <p className="text-2xl font-bold text-purple-900">
-                        {allAgents.filter(agent => agent.mode === 'adhoc').length}
+                        {allAgents.filter(agent => agent.mode === 'adhoc' || agent.mode === 'write').length}
                       </p>
                     </div>
                   </div>
