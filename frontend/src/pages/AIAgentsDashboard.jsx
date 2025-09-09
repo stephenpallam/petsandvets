@@ -1910,9 +1910,9 @@ const AIAgentsDashboard = () => {
                               
                               {/* Last Manual Run - Only for Email Write Agents without scheduled date/time */}
                               {agent.agent_type === 'email' && (!agent.post_date || !agent.post_time) && (
-                                <div className="pt-2 border-t border-gray-100">
+                                <div className="bg-gradient-to-r from-gray-50 to-slate-50 border border-gray-200 rounded-lg p-4">
                                   <div className="flex flex-col">
-                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Last Manual Run</span>
+                                    <span className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Last Manual Run</span>
                                     <p className="text-sm text-gray-900 mt-1">
                                       {agent.last_manual_run ? formatDate(agent.last_manual_run) : 'Never run manually'}
                                     </p>
