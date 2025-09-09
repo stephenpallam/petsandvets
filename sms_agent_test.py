@@ -761,8 +761,8 @@ class SMSAgentTester:
             response = requests.post(f"{self.api_base}/ai-agents", json=sms_agent_data, headers=self.headers)
             
             if response.status_code == 200:
-                agent_data = response.json()
-                agent_id = agent_data.get('id')
+                response_data = response.json()
+                agent_id = response_data.get('agent_id')
                 
                 # Run the agent to generate SMS content
                 run_response = requests.post(f"{self.api_base}/ai-agents/{agent_id}/run", headers=self.headers)
