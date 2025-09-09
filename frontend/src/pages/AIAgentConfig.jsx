@@ -1928,18 +1928,24 @@ Best regards,
                           ? 'Make changes and run your timesheet agent' 
                           : agentType === 'email'
                           ? 'Make changes and run your email agent'
+                          : agentType === 'sms_agent'
+                          ? 'Make changes and run your SMS agent'
                           : 'Make changes and run your social media agent';
                       } else if (isEditMode) {
                         return agentType === 'time_sheet'
                           ? 'Modify your timesheet agent settings'
                           : agentType === 'email'
                           ? 'Modify your email agent settings'
+                          : agentType === 'sms_agent'
+                          ? 'Modify your SMS agent settings'
                           : 'Modify your social media agent settings';
                       } else {
                         return agentType === 'time_sheet'
                           ? 'Configure automated timesheet generation with AI-powered reporting'
                           : agentType === 'email'
                           ? 'Configure AI agents for automated email campaigns and customer communication'
+                          : agentType === 'sms_agent'
+                          ? 'Configure AI agents for automated SMS campaigns and customer communication'
                           : 'Configure AI agents for automated social media posting';
                       }
                     })()}
