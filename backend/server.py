@@ -4027,6 +4027,15 @@ class AIAgentCreate(BaseModel):
     use_customer_database: Optional[bool] = True  # Use customer database for email recipients
     email_type: Optional[str] = "bulk"  # bulk or single email
     selected_customer: Optional[str] = ""  # Customer ID for single emails
+    # SMS agent specific fields
+    sms_template: Optional[str] = ""  # SMS template content
+    sms_subject: Optional[str] = ""  # SMS subject/title for write mode SMS
+    sms_content: Optional[str] = ""  # SMS content for write mode SMS
+    sms_provider: Optional[str] = "twilio"  # twilio or sendgrid
+    use_sms_chatgpt_formatting: Optional[bool] = True  # Whether to use ChatGPT for SMS formatting
+    sms_type: Optional[str] = "bulk"  # bulk or single SMS
+    selected_sms_customer: Optional[str] = ""  # Customer ID for single SMS
+    sms_character_limit: Optional[int] = 160  # SMS character limit
 
 class AIAgentUpdate(BaseModel):
     agent_name: Optional[str] = None
