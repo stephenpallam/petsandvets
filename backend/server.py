@@ -4734,29 +4734,33 @@ async def generate_recurring_email_for_agent(agent_id: str, agent_data: dict, po
         topic_specific_content = topic_specific_content.replace('[TOPIC]', topic)
         
         if use_chatgpt:
-            # Call actual ChatGPT API to format the email professionally
+            # Call actual ChatGPT API to format the email professionally with topic focus
             try:
-                from ai_service import format_email_content
+                from ai_service import format_topic_email_content
                 
-                topic_specific_content = await format_email_content(
+                topic_specific_content = await format_topic_email_content(
                     template=topic_specific_content,
                     customer_name=customer_name,
                     pet_names=pet_names,
                     topic=topic
                 )
                 
-                logger.info(f"ChatGPT formatting applied for recurring email agent {agent_id}")
+                logger.info(f"ChatGPT topic-based formatting applied for recurring email agent {agent_id}")
                 
             except Exception as e:
-                logger.error(f"ChatGPT formatting failed for agent {agent_id}: {str(e)}")
-                # Fallback to basic formatting if ChatGPT fails
+                logger.error(f"ChatGPT topic formatting failed for agent {agent_id}: {str(e)}")
+                # Fallback to topic-enhanced basic formatting if ChatGPT fails
                 topic_specific_content = f"""Dear {customer_name},
+
+I hope this message finds you and {pet_names} in great health!
+
+{topic}: Here's what every pet owner should know about this important topic for {pet_names}'s wellbeing.
 
 {topic_specific_content}
 
-Thank you for trusting us with {pet_names}'s care!
+If you have any questions about {topic} or {pet_names}'s care, please don't hesitate to reach out.
 
-Warm regards,
+Best regards,
 The Veterinary Care Team"""
         
         sample_content = topic_specific_content
