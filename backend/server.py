@@ -4726,12 +4726,27 @@ async def generate_recurring_email_for_agent(agent_id: str, agent_data: dict, po
             
             logger.info(f"Using customer {customer_name} with pet(s): {pet_names} for email preview")
         
-        # Create topic-specific content using the template
-        # Replace all placeholders: customer, pets, and topic context
-        topic_specific_content = email_template.replace('[CUSTOMER_NAME]', customer_name)
+        # Create topic-specific content using the template as a base
+        # Start with a topic-focused introduction
+        topic_introduction = f"""Dear [CUSTOMER_NAME],
+
+I hope this message finds you and [PET_NAMES] in excellent health!
+
+Our latest {topic} update includes important information that can help keep [PET_NAMES] healthy and happy. As your trusted veterinary team, we want to share these valuable insights with you."""
+
+        # Replace all placeholders in both the introduction and template
+        topic_specific_content = topic_introduction.replace('[CUSTOMER_NAME]', customer_name)
         topic_specific_content = topic_specific_content.replace('[PET_NAME]', pet_names)  # Legacy support
         topic_specific_content = topic_specific_content.replace('[PET_NAMES]', pet_names)  # New plural support
-        topic_specific_content = topic_specific_content.replace('[TOPIC]', topic)
+        
+        # Append a simplified version of the template (without greeting/closing as ChatGPT will handle structure)
+        base_template = email_template.replace('Dear [CUSTOMER_NAME],', '').replace('Warm regards,\nThe Veterinary Care Team', '').strip()
+        base_template = base_template.replace('[CUSTOMER_NAME]', customer_name)
+        base_template = base_template.replace('[PET_NAME]', pet_names)
+        base_template = base_template.replace('[PET_NAMES]', pet_names)
+        
+        # Combine topic introduction with base service information
+        topic_specific_content = f"{topic_specific_content}\n\n{base_template}"
         
         if use_chatgpt:
             # Call actual ChatGPT API to format the email professionally with topic focus
