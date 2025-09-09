@@ -383,55 +383,59 @@ class SMSAgentFixesTester:
                             retrieved_agent = agent
                             break
                     
-                    # Check if all SMS-specific fields are present for edit mode
-                    required_fields = [
-                        "agent_name", "mode", "agent_type", "sms_link", 
-                        "sms_provider", "sms_content", "sms_template"
-                    ]
-                    
-                    missing_fields = []
-                    present_fields = []
-                    
-                    for field in required_fields:
-                        if field in retrieved_agent and retrieved_agent[field] is not None:
-                            present_fields.append(field)
+                    if retrieved_agent:
+                        # Check if all SMS-specific fields are present for edit mode
+                        required_fields = [
+                            "agent_name", "mode", "agent_type", "sms_link", 
+                            "sms_provider", "sms_content", "sms_template"
+                        ]
+                        
+                        missing_fields = []
+                        present_fields = []
+                        
+                        for field in required_fields:
+                            if field in retrieved_agent and retrieved_agent[field] is not None:
+                                present_fields.append(field)
+                            else:
+                                missing_fields.append(field)
+                        
+                        if not missing_fields:
+                            print(f"✅ {agent_name}: All required fields present for edit mode")
+                            self.test_results.append(f"✅ SMS Edit Mode Fix - {agent_name}: All required fields present")
                         else:
-                            missing_fields.append(field)
-                    
-                    if not missing_fields:
-                        print(f"✅ {agent_name}: All required fields present for edit mode")
-                        self.test_results.append(f"✅ SMS Edit Mode Fix - {agent_name}: All required fields present")
-                    else:
-                        print(f"❌ {agent_name}: Missing fields for edit mode: {missing_fields}")
-                        self.test_results.append(f"❌ SMS Edit Mode Fix - {agent_name}: Missing fields: {missing_fields}")
-                    
-                    # Verify mode is correctly stored for tab mapping
-                    actual_mode = retrieved_agent.get("mode")
-                    if actual_mode:
-                        print(f"✅ {agent_name}: Mode correctly stored ({actual_mode}) for tab mapping")
-                        self.test_results.append(f"✅ SMS Edit Mode Fix - {agent_name}: Mode stored correctly for tab mapping")
-                    else:
-                        print(f"❌ {agent_name}: Mode not stored correctly")
-                        self.test_results.append(f"❌ SMS Edit Mode Fix - {agent_name}: Mode not stored correctly")
-                    
-                    # Verify agent_type is correctly stored
-                    agent_type = retrieved_agent.get("agent_type")
-                    if agent_type == "sms_agent":
-                        print(f"✅ {agent_name}: agent_type correctly stored (sms_agent) for tab mapping")
-                        self.test_results.append(f"✅ SMS Edit Mode Fix - {agent_name}: agent_type stored correctly")
-                    else:
-                        print(f"❌ {agent_name}: agent_type incorrect ({agent_type})")
-                        self.test_results.append(f"❌ SMS Edit Mode Fix - {agent_name}: agent_type incorrect")
-                    
-                    # For scheduled mode agents (with holidays), verify selected_holidays field
-                    if actual_mode == "recurring" and "selected_holidays" in agent["data"]:
-                        selected_holidays = retrieved_agent.get("selected_holidays")
-                        if selected_holidays:
-                            print(f"✅ {agent_name}: selected_holidays field present for scheduled mode display")
-                            self.test_results.append(f"✅ SMS Dashboard Display Fix - {agent_name}: selected_holidays field present")
+                            print(f"❌ {agent_name}: Missing fields for edit mode: {missing_fields}")
+                            self.test_results.append(f"❌ SMS Edit Mode Fix - {agent_name}: Missing fields: {missing_fields}")
+                        
+                        # Verify mode is correctly stored for tab mapping
+                        actual_mode = retrieved_agent.get("mode")
+                        if actual_mode:
+                            print(f"✅ {agent_name}: Mode correctly stored ({actual_mode}) for tab mapping")
+                            self.test_results.append(f"✅ SMS Edit Mode Fix - {agent_name}: Mode stored correctly for tab mapping")
                         else:
-                            print(f"❌ {agent_name}: selected_holidays field missing for scheduled mode")
-                            self.test_results.append(f"❌ SMS Dashboard Display Fix - {agent_name}: selected_holidays field missing")
+                            print(f"❌ {agent_name}: Mode not stored correctly")
+                            self.test_results.append(f"❌ SMS Edit Mode Fix - {agent_name}: Mode not stored correctly")
+                        
+                        # Verify agent_type is correctly stored
+                        agent_type = retrieved_agent.get("agent_type")
+                        if agent_type == "sms_agent":
+                            print(f"✅ {agent_name}: agent_type correctly stored (sms_agent) for tab mapping")
+                            self.test_results.append(f"✅ SMS Edit Mode Fix - {agent_name}: agent_type stored correctly")
+                        else:
+                            print(f"❌ {agent_name}: agent_type incorrect ({agent_type})")
+                            self.test_results.append(f"❌ SMS Edit Mode Fix - {agent_name}: agent_type incorrect")
+                        
+                        # For scheduled mode agents (with holidays), verify selected_holidays field
+                        if actual_mode == "recurring" and "selected_holidays" in agent["data"]:
+                            selected_holidays = retrieved_agent.get("selected_holidays")
+                            if selected_holidays:
+                                print(f"✅ {agent_name}: selected_holidays field present for scheduled mode display")
+                                self.test_results.append(f"✅ SMS Dashboard Display Fix - {agent_name}: selected_holidays field present")
+                            else:
+                                print(f"❌ {agent_name}: selected_holidays field missing for scheduled mode")
+                                self.test_results.append(f"❌ SMS Dashboard Display Fix - {agent_name}: selected_holidays field missing")
+                    else:
+                        print(f"❌ {agent_name}: Agent not found in agents list")
+                        self.test_results.append(f"❌ SMS Edit Mode Fix - {agent_name}: Agent not found in list")
                     
                 else:
                     print(f"❌ {agent_name}: Failed to retrieve agent for edit mode ({response.status_code})")
