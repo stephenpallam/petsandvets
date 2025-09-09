@@ -108,31 +108,58 @@ class SMSAgentFixesTester:
                 )
                 
                 if response.status_code == 200:
-                    agent_data = response.json()
-                    agent_id = agent_data.get("id")
-                    created_agents.append({
-                        "id": agent_id,
-                        "name": test_case["name"],
-                        "expected_mode": test_case["expected_mode_display"],
-                        "data": agent_data
-                    })
+                    create_response = response.json()
+                    agent_id = create_response.get("agent_id")
                     
-                    # Verify sms_link field is stored
-                    expected_link = test_case["data"].get("sms_link")
-                    actual_link = agent_data.get("sms_link")
-                    
-                    if actual_link == expected_link:
-                        print(f"✅ {test_case['name']}: sms_link field correctly stored ({actual_link})")
-                        self.test_results.append(f"✅ SMS Link Backend Fix - {test_case['name']}: sms_link field stored correctly")
+                    if agent_id:
+                        # Retrieve the created agent to verify fields
+                        get_response = requests.get(
+                            f"{BACKEND_URL}/ai-agents",
+                            headers=self.get_headers()
+                        )
+                        
+                        if get_response.status_code == 200:
+                            agents_list = get_response.json()
+                            # Find our created agent
+                            created_agent = None
+                            for agent in agents_list:
+                                if agent.get("id") == agent_id:
+                                    created_agent = agent
+                                    break
+                            
+                            if created_agent:
+                                created_agents.append({
+                                    "id": agent_id,
+                                    "name": test_case["name"],
+                                    "expected_mode": test_case["expected_mode_display"],
+                                    "data": created_agent
+                                })
+                                
+                                # Verify sms_link field is stored
+                                expected_link = test_case["data"].get("sms_link")
+                                actual_link = created_agent.get("sms_link")
+                                
+                                if actual_link == expected_link:
+                                    print(f"✅ {test_case['name']}: sms_link field correctly stored ({actual_link})")
+                                    self.test_results.append(f"✅ SMS Link Backend Fix - {test_case['name']}: sms_link field stored correctly")
+                                else:
+                                    print(f"❌ {test_case['name']}: sms_link mismatch. Expected: {expected_link}, Got: {actual_link}")
+                                    self.test_results.append(f"❌ SMS Link Backend Fix - {test_case['name']}: sms_link field not stored correctly")
+                                
+                                # Verify agent_type is correctly set
+                                if created_agent.get("agent_type") == "sms_agent":
+                                    print(f"✅ {test_case['name']}: agent_type correctly set to 'sms_agent'")
+                                else:
+                                    print(f"❌ {test_case['name']}: agent_type incorrect: {created_agent.get('agent_type')}")
+                            else:
+                                print(f"❌ {test_case['name']}: Created agent not found in agents list")
+                                self.test_results.append(f"❌ SMS Link Backend Fix - {test_case['name']}: Created agent not found")
+                        else:
+                            print(f"❌ {test_case['name']}: Failed to retrieve agents list ({get_response.status_code})")
+                            self.test_results.append(f"❌ SMS Link Backend Fix - {test_case['name']}: Failed to retrieve agents list")
                     else:
-                        print(f"❌ {test_case['name']}: sms_link mismatch. Expected: {expected_link}, Got: {actual_link}")
-                        self.test_results.append(f"❌ SMS Link Backend Fix - {test_case['name']}: sms_link field not stored correctly")
-                    
-                    # Verify agent_type is correctly set
-                    if agent_data.get("agent_type") == "sms_agent":
-                        print(f"✅ {test_case['name']}: agent_type correctly set to 'sms_agent'")
-                    else:
-                        print(f"❌ {test_case['name']}: agent_type incorrect: {agent_data.get('agent_type')}")
+                        print(f"❌ {test_case['name']}: No agent_id returned from creation")
+                        self.test_results.append(f"❌ SMS Link Backend Fix - {test_case['name']}: No agent_id returned")
                         
                 else:
                     error_text = response.text
