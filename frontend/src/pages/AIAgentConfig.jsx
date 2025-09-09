@@ -519,19 +519,28 @@ The Veterinary Care Team`,
               });
             } else if (agentData.mode === 'recurring') {
               // This is a recurring email agent (topic-based)
+              const isCustomTopic = !['Trending Pet Health News', 'Trending Pet Food News', 'Pet Care Tips', 'Veterinary Updates', 'Pet Safety Alerts', 'Seasonal Pet Care', 'Pet Training Tips', 'Pet Nutrition Advice'].includes(agentData.topic);
               setEmailRecurringMode({
                 agentName: agentData.name || agentData.agent_name || '',
-                topic: agentData.topic || '',
-                customTopic: agentData.custom_topic || '',
-                imageOption: agentData.image_option || 'ai_generate',
-                uploadedImages: [],
-                imageText: agentData.image_text || '',
-                wordCount: agentData.word_count?.toString() || '150',
-                frequency: agentData.frequency?.toString() || '24',
+                topic: isCustomTopic ? 'Custom' : (agentData.topic || ''),
+                customTopic: isCustomTopic ? agentData.topic : '',
+                wordCount: agentData.word_count?.toString() || '100',
+                scheduleType: agentData.schedule_type || 'weekly',
+                daysOfWeek: agentData.days_of_week || { monday: false, tuesday: false, wednesday: false, thursday: false, friday: false, saturday: false, sunday: false },
+                monthlySchedule: agentData.monthly_schedule || '1st',
+                emailContentTemplate: agentData.email_content_template || `Dear [CUSTOMER_NAME],
+
+Hope this message finds you and [PET_NAME] doing well!
+
+[Your business information and content will be inserted here]
+
+Best regards,
+[Your Business Name]`,
                 postTime: agentData.post_time || '09:00',
-                useChatGPTFormatting: agentData.use_chatgpt_formatting !== undefined ? agentData.use_chatgpt_formatting : true,
-                scheduleType: agentData.schedule_type || 'all_days',
-                daysOfWeek: agentData.days_of_week || { monday: true, tuesday: true, wednesday: true, thursday: true, friday: true, saturday: true, sunday: true },
+                imageOption: agentData.image_option || 'no_images',
+                uploadedImages: [],
+                selectedImageUrls: agentData.uploaded_images || [],
+                imageText: agentData.image_text || '',
                 postDestination: agentData.post_destination || 'in_review'
               });
             } else if (agentData.mode === 'write') {
