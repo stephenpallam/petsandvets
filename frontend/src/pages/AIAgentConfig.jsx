@@ -5625,8 +5625,29 @@ Example:
                             <div className="flex flex-wrap gap-2">
                               <code className="bg-white px-2 py-1 rounded text-xs">[CUSTOMER_NAME]</code>
                               <code className="bg-white px-2 py-1 rounded text-xs">[PET_NAME]</code>
+                              <code className="bg-white px-2 py-1 rounded text-xs">[LINK]</code>
                             </div>
                           </div>
+                        </div>
+
+                        {/* SMS Link */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <svg className="h-4 w-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            </svg>
+                            Website Link
+                          </label>
+                          <input
+                            type="url"
+                            value={smsWriteMode.smsLink}
+                            onChange={(e) => setSmsWriteMode(prev => ({ ...prev, smsLink: e.target.value }))}
+                            placeholder="https://petsandvetsanimalhospital.com"
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          />
+                          <p className="text-xs text-gray-500 mt-1">
+                            This link will be included in your SMS messages. Use [LINK] placeholder in your content above.
+                          </p>
                         </div>
 
                         {/* Send Date and Time */}
