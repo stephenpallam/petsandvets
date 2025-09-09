@@ -4436,6 +4436,9 @@ async def generate_post_for_agent(agent_id: str, agent_data: dict):
         elif agent_type == AIAgentType.EMAIL_AGENT:
             # Handle email agent - generate email content
             return await generate_email_for_agent(agent_id, agent_data)
+        elif agent_type == AIAgentType.SMS_AGENT:
+            # Handle SMS agent - generate SMS content
+            return await generate_sms_for_agent(agent_id, agent_data)
         else:
             # Handle social media agent - existing logic
             return await generate_social_media_post_for_agent(agent_id, agent_data)
