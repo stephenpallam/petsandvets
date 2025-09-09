@@ -37,6 +37,7 @@ const AIAgentsDashboard = () => {
   const [selectedAgent, setSelectedAgent] = useState(null);
   const [processingAgent, setProcessingAgent] = useState(null);
   const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'active', 'paused'
+  const [agentTypeFilter, setAgentTypeFilter] = useState('all'); // 'all', 'time_sheet', 'email', 'social_media'
   const [showAgentTypeModal, setShowAgentTypeModal] = useState(false);
   const [agentTypes, setAgentTypes] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
