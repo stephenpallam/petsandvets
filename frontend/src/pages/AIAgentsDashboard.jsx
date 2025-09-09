@@ -1969,15 +1969,16 @@ const AIAgentsDashboard = () => {
                                 </p>
                               )}
                             </div>
-                          </div>
+                          )}
 
-                          {/* Social Media Platforms Row */}
-                          <div className="flex flex-col pt-3 border-t border-gray-100">
-                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Social Media Platforms</span>
-                            <p className="text-sm text-gray-900 mt-1">
-                              {getEnabledPlatforms(agent.social_platforms).length > 0 ? (
-                                getEnabledPlatforms(agent.social_platforms)
-                                  .map(platform => platform === 'twitter' ? 'X (Twitter)' : platform.charAt(0).toUpperCase() + platform.slice(1))
+                          {/* Social Media Platforms Row - Only for non-email agents */}
+                          {agent.agent_type !== 'email' && (
+                            <div className="flex flex-col pt-3 border-t border-gray-100">
+                              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Social Media Platforms</span>
+                              <p className="text-sm text-gray-900 mt-1">
+                                {getEnabledPlatforms(agent.social_platforms).length > 0 ? (
+                                  getEnabledPlatforms(agent.social_platforms)
+                                    .map(platform => platform === 'twitter' ? 'X (Twitter)' : platform.charAt(0).toUpperCase() + platform.slice(1))
                                   .join(', ')
                               ) : (
                                 'None selected'
