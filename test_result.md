@@ -1165,6 +1165,7 @@ test_plan:
     - "Holiday Selection Fix for Email Agents - All Tests Passed"
     - "Write Your Email Agent Save and Update Functionality - All Tests Passed"
     - "Scheduler Functionality for Write Mode Social Media Agents - All Tests Passed"
+    - "Social Media Agent last_manual_run Field Update - All Tests Passed"
 
   - task: "Holiday Selection Fix for Email Agents - Thanksgiving Date Correction"
     implemented: true
