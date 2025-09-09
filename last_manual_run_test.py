@@ -324,6 +324,11 @@ class LastManualRunTester:
         try:
             await self.connect()
             
+            # Authenticate first
+            if not self.authenticate():
+                print("❌ CRITICAL ERROR: Could not authenticate with API")
+                return False, results
+            
             # Test 1: Create and test Adhoc Social Media Agent
             print("\n" + "🎯 TEST 1: ADHOC SOCIAL MEDIA AGENT" + "\n")
             adhoc_agent_id = await self.create_adhoc_social_media_agent()
