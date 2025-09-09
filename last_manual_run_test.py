@@ -160,8 +160,9 @@ class LastManualRunTester:
             "mode": "write",
             "post_title": "Custom post title",
             "post_content": "Custom post content",
-            "social_platforms": ["facebook"],
-            "image_option": "none"  # Use text only for faster testing
+            "social_platforms": {"facebook": True},
+            "image_option": "none",  # Use text only for faster testing
+            "word_count": "short"
         }
         
         print(f"Creating write mode agent with data: {json.dumps(agent_data, indent=2)}")
