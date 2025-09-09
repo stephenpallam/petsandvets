@@ -65,6 +65,7 @@ import PatientRegistrationPDF from "./pages/forms/PatientRegistrationPDF";
 import Reviews from "./pages/Reviews";
 import BusinessInfo from "./pages/BusinessInfo";
 import EmailConfiguration from "./pages/EmailConfiguration";
+import SMSConfiguration from "./pages/SMSConfiguration";
 import PhotoManagement from "./pages/PhotoManagement";
 import LoginPage from "./pages/LoginPage";
 import GoogleIntegration from "./pages/GoogleIntegration";
