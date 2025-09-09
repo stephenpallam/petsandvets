@@ -274,6 +274,64 @@ The Veterinary Care Team`,
   const [availableHolidays, setAvailableHolidays] = useState([]);
   const [availableCustomers, setAvailableCustomers] = useState([]);
 
+  // SMS Agent - Scheduled Mode State (Holiday-based SMS)
+  const [smsScheduledMode, setSmsScheduledMode] = useState({
+    agentName: '',
+    selectedHolidays: [], // Array of holiday IDs
+    smsProvider: 'twilio', // 'twilio' or 'sendgrid'
+    useSMSChatGPTFormatting: true, // Default to true for ChatGPT formatting
+    smsContentTemplate: `Hi [CUSTOMER_NAME]! Hope [PET_NAME] is doing well. Special holiday offer - 20% off checkups this month. Call us at (555) 123-4567 to book!`,
+    postTime: '09:00',
+    postDestination: 'in_review', // 'auto_send', 'in_review', or 'ready_to_publish'
+    useCustomerDatabase: true, // Default to true for customer database integration
+    smsType: 'bulk', // 'single' or 'bulk'
+    selectedCustomer: null, // For single SMS mode
+    smsCharacterLimit: 160
+  });
+
+  // SMS Agent - Write SMS Mode State  
+  const [smsWriteMode, setSmsWriteMode] = useState({
+    agentName: '',
+    smsSubject: '', // Optional SMS title/subject
+    smsContent: `Hi [CUSTOMER_NAME]! Hope [PET_NAME] is well. Don't forget your pet's checkup. Call (555) 123-4567 to schedule. Thanks!`,
+    smsProvider: 'twilio',
+    useSMSChatGPTFormatting: true,
+    smsType: 'bulk', // 'single' or 'bulk'
+    selectedCustomer: null, // For single SMS mode
+    postDate: '',
+    postTime: '09:00',
+    postDestination: 'in_review',
+    smsCharacterLimit: 160
+  });
+
+  // SMS Agent - Recurring Mode State
+  const [smsRecurringMode, setSmsRecurringMode] = useState({
+    agentName: '',
+    topic: '', // Required for recurring SMS agents  
+    customTopic: '', // For custom topic selection
+    // Schedule Selection
+    scheduleType: 'weekly', // 'weekly' or 'monthly'
+    // Weekly schedule fields
+    daysOfWeek: {
+      monday: false,
+      tuesday: false,
+      wednesday: false,
+      thursday: false,
+      friday: false,
+      saturday: false,
+      sunday: false
+    },
+    // Monthly schedule - simplified to 1st of every month
+    monthlySchedule: '1st', // Always 1st day of month for monthly schedules
+    smsContentTemplate: `Hi [CUSTOMER_NAME]! Regular reminder about [PET_NAME]'s care. Visit us for checkups, vaccines & more. Call (555) 123-4567`,
+    postTime: '09:00',
+    postDestination: 'in_review',
+    smsProvider: 'twilio',
+    useSMSChatGPTFormatting: true,
+    smsType: 'bulk',
+    smsCharacterLimit: 160
+  });
+
   // Adhoc Mode State
   const [adhocMode, setAdhocMode] = useState({
     agentName: '',
