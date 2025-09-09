@@ -5611,7 +5611,7 @@ Example:
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               <Calendar className="h-4 w-4 inline mr-2" />
-                              Send Date (Optional)
+                              Send Date
                             </label>
                             <input
                               type="date"
