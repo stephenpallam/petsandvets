@@ -12,7 +12,7 @@ import {
   Pause, 
   AlertCircle,
   CheckCircle,
-  RefreshCw,
+
   Plus,
   BarChart3,
   Settings,
