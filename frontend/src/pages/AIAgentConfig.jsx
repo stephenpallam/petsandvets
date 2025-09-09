@@ -4444,6 +4444,7 @@ Example:
                                                       const isDisabled = loading || (!isEditMode && !isRunMode && (
                                                         !emailRecurringMode.agentName || 
                                                         !emailRecurringMode.topic || 
+                                                        (emailRecurringMode.topic === 'Custom' && !emailRecurringMode.customTopic) ||
                                                         (emailRecurringMode.scheduleType === 'weekly' && 
                                                          !Object.values(emailRecurringMode.daysOfWeek).some(day => day)) ||
                                                         (emailRecurringMode.scheduleType === 'monthly' && 
