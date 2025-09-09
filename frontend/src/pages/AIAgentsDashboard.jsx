@@ -1945,46 +1945,47 @@ const AIAgentsDashboard = () => {
                             </div>
                           )}
                           
-                          {/* Bottom Row - Two Columns (only for non-email agents) */}
+                          {/* Bottom Row - Only show for social media agents */}
                           {agent.agent_type !== 'email' && (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                              <div className="flex flex-col">
-                                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Web Research</span>
+                            <>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Web Research</span>
+                                  <p className="text-sm text-gray-900 mt-1">
+                                    <span className={`inline-flex items-center px-3 py-1 rounded text-xs font-medium ${
+                                      agent.use_web_research ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
+                                    }`}>
+                                      {agent.use_web_research ? 'Enabled' : 'Disabled'}
+                                    </span>
+                                  </p>
+                                </div>
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Schedule</span>
+                                  <p className="text-sm text-gray-900 mt-1">
+                                    {formatAgentSchedule(agent)}
+                                  </p>
+                                  {isReadyForNextPost(agent) && (
+                                    <p className="text-xs text-green-600 mt-1 italic">
+                                      This agent is ready to create your next post. Click 'Run Agent' to generate new content.
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Social Media Platforms Row */}
+                              <div className="flex flex-col pt-3 border-t border-gray-100">
+                                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Social Media Platforms</span>
                                 <p className="text-sm text-gray-900 mt-1">
-                                  <span className={`inline-flex items-center px-3 py-1 rounded text-xs font-medium ${
-                                    agent.use_web_research ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
-                                  }`}>
-                                    {agent.use_web_research ? 'Enabled' : 'Disabled'}
-                                  </span>
+                                  {getEnabledPlatforms(agent.social_platforms).length > 0 ? (
+                                    getEnabledPlatforms(agent.social_platforms)
+                                      .map(platform => platform === 'twitter' ? 'X (Twitter)' : platform.charAt(0).toUpperCase() + platform.slice(1))
+                                      .join(', ')
+                                  ) : (
+                                    'None selected'
+                                  )}
                                 </p>
                               </div>
-                              <div className="flex flex-col">
-                                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Schedule</span>
-                                <p className="text-sm text-gray-900 mt-1">
-                                  {formatAgentSchedule(agent)}
-                                </p>
-                                {isReadyForNextPost(agent) && (
-                                <p className="text-xs text-green-600 mt-1 italic">
-                                  This agent is ready to create your next post. Click 'Run Agent' to generate new content.
-                                </p>
-                              )}
-                            </div>
-                          )}
-
-                          {/* Social Media Platforms Row - Only for non-email agents */}
-                          {agent.agent_type !== 'email' && (
-                            <div className="flex flex-col pt-3 border-t border-gray-100">
-                              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Social Media Platforms</span>
-                              <p className="text-sm text-gray-900 mt-1">
-                                {getEnabledPlatforms(agent.social_platforms).length > 0 ? (
-                                  getEnabledPlatforms(agent.social_platforms)
-                                    .map(platform => platform === 'twitter' ? 'X (Twitter)' : platform.charAt(0).toUpperCase() + platform.slice(1))
-                                    .join(', ')
-                                ) : (
-                                  'None selected'
-                                )}
-                              </p>
-                            </div>
+                            </>
                           )}
                         </div>
 
