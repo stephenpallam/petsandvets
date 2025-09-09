@@ -3913,34 +3913,72 @@ Best regards,
 
                         {/* Holiday Selection */}
                         <div className="space-y-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-gray-700 mb-4">
                             <Calendar className="h-4 w-4 inline mr-2" />
                             Select Holidays for Email Campaigns *
                           </label>
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-64 overflow-y-auto border border-gray-200 rounded-lg p-4">
-                            {availableHolidays.map((holiday) => (
-                              <label key={holiday.id} className="flex items-center space-x-2 p-2 rounded hover:bg-gray-50">
-                                <input
-                                  type="checkbox"
-                                  checked={emailScheduledMode.selectedHolidays.includes(holiday.id)}
-                                  onChange={(e) => {
-                                    const selected = [...emailScheduledMode.selectedHolidays];
-                                    if (e.target.checked) {
-                                      selected.push(holiday.id);
-                                    } else {
-                                      selected.splice(selected.indexOf(holiday.id), 1);
-                                    }
-                                    handleEmailScheduledModeChange('selectedHolidays', selected);
-                                  }}
-                                  className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                />
-                                <span className="text-sm text-gray-700">{holiday.name}</span>
-                              </label>
-                            ))}
+                          <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                            <div className="flex items-start">
+                              <Calendar className="h-5 w-5 text-blue-600 mt-0.5 mr-3" />
+                              <div>
+                                <h4 className="font-medium text-blue-900">How Holiday Email Works</h4>
+                                <p className="text-sm text-blue-700 mt-1">
+                                  Your email will be sent automatically on each selected holiday using the template below. 
+                                  The email will be personalized with each customer's name and pet names.
+                                </p>
+                              </div>
+                            </div>
                           </div>
-                          {emailScheduledMode.selectedHolidays.length === 0 && (
-                            <p className="text-sm text-red-600">Please select at least one holiday.</p>
+                          
+                          {availableHolidays.length > 0 ? (
+                            <div className="max-h-60 overflow-y-auto border border-gray-200 rounded-lg p-4">
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                {availableHolidays.map((holiday) => {
+                                  const IconComponent = getCategoryIcon(holiday.category);
+                                  return (
+                                    <label key={holiday.id} className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer border">
+                                      <input
+                                        type="checkbox"
+                                        checked={emailScheduledMode.selectedHolidays.includes(holiday.id)}
+                                        onChange={(e) => {
+                                          const selected = [...emailScheduledMode.selectedHolidays];
+                                          if (e.target.checked) {
+                                            selected.push(holiday.id);
+                                          } else {
+                                            selected.splice(selected.indexOf(holiday.id), 1);
+                                          }
+                                          handleEmailScheduledModeChange('selectedHolidays', selected);
+                                        }}
+                                        className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mr-3"
+                                      />
+                                      <div className="flex-1 min-w-0">
+                                        <div className="flex items-center mb-1">
+                                          <IconComponent className="h-4 w-4 mr-2 text-gray-500 flex-shrink-0" />
+                                          <span className="text-sm font-medium text-gray-900 truncate">{holiday.name}</span>
+                                        </div>
+                                        <span className="text-xs text-gray-500 block">
+                                          {new Date(holiday.date).toLocaleDateString('en-US', { 
+                                            weekday: 'short', 
+                                            month: 'short', 
+                                            day: 'numeric',
+                                            year: 'numeric'
+                                          })}
+                                        </span>
+                                      </div>
+                                    </label>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="text-center py-4 text-gray-500">
+                              <Calendar className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                              <p>Loading holidays...</p>
+                            </div>
                           )}
+                          <p className="text-xs text-gray-500">
+                            Selected: {emailScheduledMode.selectedHolidays.length} holiday{emailScheduledMode.selectedHolidays.length !== 1 ? 's' : ''}
+                          </p>
                           <div className="mt-3 p-3 bg-blue-50 rounded-md border-l-4 border-blue-400">
                             <div className="flex">
                               <div className="flex-shrink-0">
