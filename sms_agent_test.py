@@ -49,6 +49,8 @@ class SMSAgentTester:
         
         self.api_base = f"{self.backend_url}/api"
         self.test_results = []
+        self.auth_token = None
+        self.headers = {}
         
     async def connect(self):
         """Connect to MongoDB"""
