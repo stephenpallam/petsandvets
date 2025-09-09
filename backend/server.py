@@ -4128,6 +4128,7 @@ class AIAgentCreate(BaseModel):
     sms_type: Optional[str] = "bulk"  # bulk or single SMS
     selected_sms_customer: Optional[str] = ""  # Customer ID for single SMS
     sms_character_limit: Optional[int] = 160  # SMS character limit
+    sms_link: Optional[str] = "https://petsandvetsanimalhospital.com"  # Link for [LINK] placeholder replacement
 
 class AIAgentUpdate(BaseModel):
     agent_name: Optional[str] = None
