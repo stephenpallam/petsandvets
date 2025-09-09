@@ -783,6 +783,9 @@ Best regards,
       } else if (agentType === 'email') {
         fetchAvailableHolidays();
         fetchAvailableCustomers();
+      } else if (agentType === 'sms_agent') {
+        fetchAvailableHolidays(); // SMS agents also use holidays for scheduled mode
+        fetchAvailableCustomers(); // SMS agents also use customer database
       }
     }
   }, [user, authLoading, canAccessManager, searchParams]);
