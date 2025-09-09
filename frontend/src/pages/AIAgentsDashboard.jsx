@@ -1857,21 +1857,17 @@ const AIAgentsDashboard = () => {
                                 </div>
                               </div>
                               
-                              {/* Last Manual Run and Schedule in One Row */}
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-gray-100">
-                                <div className="flex flex-col">
-                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Last Manual Run</span>
-                                  <p className="text-sm text-gray-900 mt-1">
-                                    {agent.last_manual_run ? formatDate(agent.last_manual_run) : 'Never run manually'}
-                                  </p>
+                              {/* Last Manual Run - Only for Email Write Agents */}
+                              {agent.agent_type === 'email' && (
+                                <div className="pt-2 border-t border-gray-100">
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Last Manual Run</span>
+                                    <p className="text-sm text-gray-900 mt-1">
+                                      {agent.last_manual_run ? formatDate(agent.last_manual_run) : 'Never run manually'}
+                                    </p>
+                                  </div>
                                 </div>
-                                <div className="flex flex-col">
-                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Schedule</span>
-                                  <p className="text-sm text-gray-900 mt-1">
-                                    {agent.mode === 'write' ? 'Manual Only' : 'Automated'}
-                                  </p>
-                                </div>
-                              </div>
+                              )}
                             </div>
                           )}
                           
