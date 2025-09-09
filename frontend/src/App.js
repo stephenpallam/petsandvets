@@ -173,6 +173,7 @@ function AppContent() {
           <Route path="/photo-management" element={<PhotoManagement />} />
           <Route path="/forms-download" element={<FormsDownload />} />
           <Route path="/email-configuration" element={<EmailConfiguration />} />
+          <Route path="/sms-configuration" element={<SMSConfiguration />} />
           <Route path="/your-first-visit" element={<YourFirstVisit />} />
           <Route path="/forms/new-client-form" element={<NewPatientRegistration />} />
           <Route path="/forms/new-patient-registration" element={<NewPatientRegistration />} />
