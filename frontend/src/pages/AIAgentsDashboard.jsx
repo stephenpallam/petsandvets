@@ -1817,33 +1817,39 @@ const AIAgentsDashboard = () => {
                           
                           {agent.mode === 'write' && (
                             <div className="space-y-4">
-                              {/* Row 1: ChatGPT Formatting and Email Type for Email Agents */}
+                              {/* Row 1: Email Subject and Use ChatGPT Formatting for Email Agents */}
                               {agent.agent_type === 'email' && (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                   <div className="flex flex-col">
-                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Use ChatGPT to Format Email</span>
-                                    <p className="text-sm text-gray-900 mt-1">
-                                      <span className={`inline-flex items-center px-3 py-1 rounded text-xs font-medium ${
-                                        agent.use_chatgpt_formatting ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
-                                      }`}>
-                                        {agent.use_chatgpt_formatting ? 'Yes' : 'No'}
-                                      </span>
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Subject</span>
+                                    <p className="text-sm text-gray-900 mt-1 font-medium">
+                                      {agent.email_subject || 'No subject specified'}
                                     </p>
                                   </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Use ChatGPT to Format Email</span>
+                                    <p className="text-sm text-gray-900 mt-1">
+                                      {agent.use_chatgpt_formatting ? 'Yes' : 'No'}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {/* Row 2: Email Recipients and Workflow Mode for Email Agents */}
+                              {agent.agent_type === 'email' && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                   <div className="flex flex-col">
                                     <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Recipients</span>
                                     <p className="text-sm text-gray-900 mt-1 capitalize">
                                       {agent.email_type === 'single' ? 'Single Customer' : 'Bulk Customer Emails'}
                                     </p>
                                   </div>
-                                </div>
-                              )}
-                              
-                              {/* Email Subject Line for Email Agents */}
-                              {agent.agent_type === 'email' && agent.email_subject && (
-                                <div className="flex flex-col">
-                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Subject</span>
-                                  <p className="text-sm text-gray-900 mt-1 font-medium">{agent.email_subject}</p>
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Workflow Mode</span>
+                                    <p className="text-sm text-gray-900 mt-1">
+                                      {getWorkflowMode(agent)}
+                                    </p>
+                                  </div>
                                 </div>
                               )}
                               
@@ -1857,8 +1863,28 @@ const AIAgentsDashboard = () => {
                                 </div>
                               </div>
                               
-                              {/* Last Manual Run - Only for Email Write Agents */}
-                              {agent.agent_type === 'email' && (
+                              {/* Next Run & Last Run for Scheduled Write Mode Agents */}
+                              {agent.post_date && agent.post_time && (
+                                <div className="space-y-4">
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-gray-100">
+                                    <div className="flex flex-col">
+                                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Next Run</span>
+                                      <p className="text-sm text-gray-900 mt-1">
+                                        {formatDate(agent.post_date)} at {formatTime(agent.post_time)}
+                                      </p>
+                                    </div>
+                                    <div className="flex flex-col">
+                                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Last Run</span>
+                                      <p className="text-sm text-gray-900 mt-1">
+                                        {agent.last_run ? formatDate(agent.last_run) : 'Never run'}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {/* Last Manual Run - Only for Email Write Agents without scheduled date/time */}
+                              {agent.agent_type === 'email' && (!agent.post_date || !agent.post_time) && (
                                 <div className="pt-2 border-t border-gray-100">
                                   <div className="flex flex-col">
                                     <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Last Manual Run</span>
