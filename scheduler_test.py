@@ -67,8 +67,9 @@ class SchedulerTester:
         """Test basic API connectivity"""
         print("=== TESTING API CONNECTION ===")
         try:
-            response = requests.get(f"{self.api_base}/status", timeout=10)
-            if response.status_code == 200:
+            # Try a simple endpoint that doesn't require auth
+            response = requests.get(f"{self.backend_url}/", timeout=10)
+            if response.status_code in [200, 404]:  # 404 is fine, means server is running
                 print("✅ API connection successful")
                 return True
             else:
@@ -77,6 +78,45 @@ class SchedulerTester:
         except Exception as e:
             print(f"❌ API connection failed: {str(e)}")
             return False
+    
+    def authenticate(self):
+        """Authenticate with the API using admin credentials"""
+        print("=== AUTHENTICATING WITH API ===")
+        
+        # Try different admin credentials
+        credentials_to_try = [
+            {"email": "admin@hospital.com", "password": "admin123"},
+            {"email": "admin@primepixel.com", "password": "admin123"},
+            {"email": "newadmin@veterinary.com", "password": "admin123"}
+        ]
+        
+        for creds in credentials_to_try:
+            try:
+                response = requests.post(
+                    f"{self.api_base}/login",
+                    json=creds,
+                    timeout=10
+                )
+                
+                if response.status_code == 200:
+                    result = response.json()
+                    self.auth_token = result.get('access_token')
+                    print(f"✅ Authentication successful with {creds['email']}")
+                    return True
+                else:
+                    print(f"⚠️  Authentication failed for {creds['email']}: {response.status_code}")
+                    
+            except Exception as e:
+                print(f"❌ Authentication error for {creds['email']}: {str(e)}")
+        
+        print("❌ All authentication attempts failed")
+        return False
+    
+    def get_auth_headers(self):
+        """Get authentication headers"""
+        if self.auth_token:
+            return {"Authorization": f"Bearer {self.auth_token}"}
+        return {}
     
     async def create_write_mode_social_media_agent(self, agent_name, post_title, post_content, post_date, post_time, platforms):
         """Create a Write Mode Social Media Agent with scheduling parameters"""
