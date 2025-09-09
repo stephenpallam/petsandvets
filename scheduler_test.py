@@ -143,6 +143,7 @@ class SchedulerTester:
             response = requests.post(
                 f"{self.api_base}/ai-agents",
                 json=agent_data,
+                headers=self.get_auth_headers(),
                 timeout=30
             )
             
