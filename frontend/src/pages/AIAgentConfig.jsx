@@ -4387,22 +4387,6 @@ Example:
                                                   </div>
                                                 )}
 
-                                                                        {/* Use ChatGPT Email Formatting (from scheduled mode) */}
-                        <div className="space-y-4">
-                          <label className="flex items-center p-4 bg-purple-50 rounded-lg">
-                            <input
-                              type="checkbox"
-                              checked={emailRecurringMode.useChatGPTFormatting}
-                              onChange={(e) => handleEmailRecurringModeChange('useChatGPTFormatting', e.target.checked)}
-                              className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500 mr-3"
-                            />
-                            <div>
-                              <div className="font-medium text-purple-900">Use ChatGPT Email Formatting</div>
-                              <div className="text-sm text-purple-700">Let ChatGPT format and enhance your email content. If unchecked, email content will be used exactly as written with only [CUSTOMER_NAME] and [PET_NAME] replacements.</div>
-                            </div>
-                          </label>
-                        </div>
-
                         {/* Content Review Workflow (from scheduled mode) */}
                         <div className="space-y-4">
                           <label className="block text-sm font-medium text-gray-700 mb-2">
