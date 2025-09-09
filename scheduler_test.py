@@ -127,6 +127,14 @@ class SchedulerTester:
         print(f"Post Time: {post_time}")
         print(f"Platforms: {platforms}")
         
+        # Convert platforms list to dictionary format expected by API
+        platforms_dict = {
+            "facebook": "facebook" in platforms,
+            "instagram": "instagram" in platforms,
+            "twitter": "twitter" in platforms,
+            "whatsapp": "whatsapp" in platforms
+        }
+        
         agent_data = {
             "agent_name": agent_name,
             "agent_type": "social_media",
@@ -135,7 +143,7 @@ class SchedulerTester:
             "post_content": post_content,
             "post_date": post_date,
             "post_time": post_time,
-            "social_platforms": platforms,
+            "social_platforms": platforms_dict,
             "image_option": "none"  # Use text only for faster testing
         }
         
