@@ -2523,7 +2523,7 @@ const AIAgentsDashboard = () => {
                               {getWorkflowMode(selectedAgent)}
                             </p>
                           </div>
-                          {selectedAgent.use_web_research !== undefined && (
+                          {selectedAgent.use_web_research !== undefined && selectedAgent.agent_type !== 'email' && (
                             <div>
                               <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Web Research</label>
                               <p className="text-sm text-gray-900 mt-1">
@@ -2531,6 +2531,18 @@ const AIAgentsDashboard = () => {
                                   selectedAgent.use_web_research ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
                                 }`}>
                                   {selectedAgent.use_web_research ? 'Enabled' : 'Disabled'}
+                                </span>
+                              </p>
+                            </div>
+                          )}
+                          {selectedAgent.agent_type === 'email' && selectedAgent.use_chatgpt_formatting !== undefined && (
+                            <div>
+                              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Use ChatGPT to Format Email</label>
+                              <p className="text-sm text-gray-900 mt-1">
+                                <span className={`inline-flex items-center px-3 py-1 rounded text-xs font-medium ${
+                                  selectedAgent.use_chatgpt_formatting ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
+                                }`}>
+                                  {selectedAgent.use_chatgpt_formatting ? 'Yes' : 'No'}
                                 </span>
                               </p>
                             </div>
