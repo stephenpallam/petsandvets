@@ -4181,33 +4181,16 @@ Example:
                                                     </div>
                                                   )}
                         
-                                                  {/* Monthly Schedule Selection */}
+                                                  {/* Monthly Schedule - Fixed to 1st of every month */}
                                                   {emailRecurringMode.scheduleType === 'monthly' && (
-                                                    <div className="mt-4 p-4 border border-gray-200 rounded-lg">
-                                                      <label className="block text-sm font-medium text-gray-700 mb-3">
-                                                        Select Day of Month *
-                                                      </label>
-                                                      <select
-                                                        value={emailRecurringMode.monthlySchedule}
-                                                        onChange={(e) => handleEmailRecurringModeChange('monthlySchedule', e.target.value)}
-                                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                        required
-                                                      >
-                                                        <option value="first_monday">First Monday of the month</option>
-                                                        <option value="first_tuesday">First Tuesday of the month</option>
-                                                        <option value="first_wednesday">First Wednesday of the month</option>
-                                                        <option value="first_thursday">First Thursday of the month</option>
-                                                        <option value="first_friday">First Friday of the month</option>
-                                                        <option value="first_saturday">First Saturday of the month</option>
-                                                        <option value="first_sunday">First Sunday of the month</option>
-                                                        <option value="last_monday">Last Monday of the month</option>
-                                                        <option value="last_tuesday">Last Tuesday of the month</option>
-                                                        <option value="last_wednesday">Last Wednesday of the month</option>
-                                                        <option value="last_thursday">Last Thursday of the month</option>
-                                                        <option value="last_friday">Last Friday of the month</option>
-                                                        <option value="last_saturday">Last Saturday of the month</option>
-                                                        <option value="last_sunday">Last Sunday of the month</option>
-                                                      </select>
+                                                    <div className="mt-4 p-4 border border-gray-200 rounded-lg bg-blue-50">
+                                                      <div className="flex items-center space-x-2">
+                                                        <Calendar className="h-5 w-5 text-blue-600" />
+                                                        <div>
+                                                          <p className="text-sm font-medium text-gray-900">Monthly Schedule</p>
+                                                          <p className="text-sm text-gray-600">This agent will run on the <strong>1st of every month</strong> (January 1st, February 1st, March 1st, etc.)</p>
+                                                        </div>
+                                                      </div>
                                                     </div>
                                                   )}
                                                 </div>
