@@ -814,8 +814,17 @@ const AIAgentsDashboard = () => {
         return `${month} ${day}${getOrdinalSuffix(day)}, ${year}`;
       };
       
+      // Format time from 24-hour to 12-hour AM/PM format
+      const formatTime = (time24) => {
+        const [hours, minutes] = time24.split(':');
+        const hour24 = parseInt(hours);
+        const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
+        const ampm = hour24 >= 12 ? 'PM' : 'AM';
+        return `${hour12}:${minutes} ${ampm}`;
+      };
+      
       return {
-        nextRun: `${formatDate(nextHoliday.date)} at ${nextHoliday.postTime}`,
+        nextRun: `${formatDate(nextHoliday.date)} at ${formatTime(nextHoliday.postTime)}`,
         holidayName: nextHoliday.name
       };
     }
