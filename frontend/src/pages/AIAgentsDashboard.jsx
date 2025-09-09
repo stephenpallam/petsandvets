@@ -1288,7 +1288,7 @@ const AIAgentsDashboard = () => {
                     AI Agents Dashboard
                   </h2>
                   <p className="text-sm text-gray-600">
-                    Manage and monitor your AI social media agents
+                    Manage and monitor your AI agents (Social Media, Email, Timesheet)
                   </p>
                 </div>
               </div>
