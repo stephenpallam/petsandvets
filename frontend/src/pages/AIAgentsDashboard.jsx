@@ -1515,6 +1515,533 @@ const AIAgentsDashboard = () => {
 
                         </div>
 
+                        {/* Agent Details - Improved Layout */}
+                        <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                          {agent.agent_type === 'time_sheet' ? (
+                            // Timesheet Agent Display
+                            <div className="space-y-4">
+                              {/* Row 1: Runs Every and Workflow Mode */}
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Runs Every</span>
+                                  <p className="text-sm text-gray-900 mt-1">{getRunsEveryLabel(agent)}</p>
+                                </div>
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Workflow Mode</span>
+                                  <p className="text-sm text-gray-900 mt-1">
+                                    {getWorkflowMode(agent)}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Row 2: Selected Employees and Email Recipients */}
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Selected Employees</span>
+                                  <div className="mt-1">
+                                    {agent.selected_employees && agent.selected_employees.length > 0 ? (
+                                      <div className="flex flex-wrap gap-2">
+                                        {agent.selected_employees.slice(0, 3).map((employeeId, index) => (
+                                          <span 
+                                            key={index}
+                                            className="text-sm text-gray-900"
+                                          >
+                                            {getEmployeeName(employeeId)}{index < Math.min(agent.selected_employees.length, 3) - 1 ? ',' : ''}
+                                          </span>
+                                        ))}
+                                        {agent.selected_employees.length > 3 && (
+                                          <span className="text-sm text-gray-600">
+                                            and {agent.selected_employees.length - 3} more
+                                          </span>
+                                        )}
+                                      </div>
+                                    ) : (
+                                      <span className="text-sm text-gray-600">All employees</span>
+                                    )}
+                                  </div>
+                                </div>
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Recipients</span>
+                                  <div className="mt-1">
+                                    {agent.email_recipients && agent.email_recipients.length > 0 ? (
+                                      <div className="flex flex-wrap gap-2">
+                                        {agent.email_recipients.slice(0, 2).map((email, index) => (
+                                          <span 
+                                            key={index}
+                                            className="text-sm text-gray-900"
+                                          >
+                                            {email}{index < Math.min(agent.email_recipients.length, 2) - 1 ? ',' : ''}
+                                          </span>
+                                        ))}
+                                        {agent.email_recipients.length > 2 && (
+                                          <span className="text-sm text-gray-600">
+                                            and {agent.email_recipients.length - 2} more
+                                          </span>
+                                        )}
+                                      </div>
+                                    ) : (
+                                      <span className="text-sm text-gray-600">No email recipients</span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Pay Period & Next Run - Combined with Last Manual Run */}
+                              {((agent.mode === 'auto' || agent.mode === 'recurring') && agent.agent_type === 'time_sheet') && (
+                                <div className="flex flex-col pt-3 border-t border-gray-100">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Pay Period & Next Run</span>
+                                  <div className="mt-1 grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                    {/* Left Column: Pay Period Info */}
+                                    <div className="p-3 bg-orange-50 border border-orange-200 rounded-md">
+                                      {(() => {
+                                        const periodInfo = calculatePayPeriodAndRunDate(agent);
+                                        if (!periodInfo) return null;
+                                        
+                                        return (
+                                          <div className="space-y-2">
+                                            <div>
+                                              <label className="text-xs font-semibold text-orange-700 uppercase tracking-wide">Current Pay Period</label>
+                                              <p className="text-sm font-medium text-orange-900">
+                                                {periodInfo.payPeriodRange}
+                                              </p>
+                                            </div>
+                                            <div>
+                                              <label className="text-xs font-semibold text-orange-700 uppercase tracking-wide">Next Run</label>
+                                              <p className="text-sm font-medium text-orange-900">
+                                                {periodInfo.nextRunDate}
+                                              </p>
+                                              <p className="text-xs text-orange-600 mt-1">
+                                                Run {periodInfo.daysAfter} day(s) after pay period end
+                                              </p>
+                                            </div>
+                                          </div>
+                                        );
+                                      })()}
+                                    </div>
+                                    
+                                    {/* Right Column: Last Manual Run */}
+                                    <div className="p-3 bg-gray-50 border border-gray-200 rounded-md">
+                                      <div className="space-y-2">
+                                        <div>
+                                          <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Last Manual Run</label>
+                                          <p className="text-sm font-medium text-gray-900">
+                                            {agent.last_manual_run ? formatDate(agent.last_manual_run) : 'Never run manually'}
+                                          </p>
+                                        </div>
+                                        <div>
+                                          <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Run Status</label>
+                                          <p className="text-sm font-medium text-gray-900">
+                                            {agent.last_manual_run ? 'Completed' : 'Not run yet'}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            // Email vs Social Media Agent Display
+                            <>
+                              {agent.agent_type === 'email' ? (
+                                // Email Agent Display (scheduled and recurring modes)
+                                (agent.mode === 'auto' || agent.mode === 'recurring') && (
+                                  <div className="space-y-4">
+                                    {/* Row 1: Email/Topic and Image Option */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      <div className="flex flex-col">
+                                        {agent.mode === 'recurring' ? (
+                                          <>
+                                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Topic</span>
+                                            <p className="text-sm text-gray-900 mt-1">{agent.topic || 'No topic specified'}</p>
+                                          </>
+                                        ) : (
+                                          <>
+                                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email</span>
+                                            <p className="text-sm text-gray-900 mt-1">Opt In Customers</p>
+                                          </>
+                                        )}
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Image Option</span>
+                                        <p className="text-sm text-gray-900 mt-1 capitalize">{formatImageOption(agent)}</p>
+                                      </div>
+                                    </div>
+                                    
+                                    {/* Row 2: Workflow Mode and Schedule Info */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Workflow Mode</span>
+                                        <p className="text-sm text-gray-900 mt-1">
+                                          {getWorkflowMode(agent)}
+                                        </p>
+                                      </div>
+                                      <div className="flex flex-col">
+                                        {agent.mode === 'recurring' ? (
+                                          <>
+                                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Schedule</span>
+                                            <p className="text-sm text-gray-900 mt-1 capitalize">
+                                              {agent.schedule_type || 'Weekly'}
+                                              {agent.schedule_type === 'weekly' && agent.days_of_week 
+                                                ? ` (${Object.entries(agent.days_of_week)
+                                                    .filter(([_, selected]) => selected)
+                                                    .map(([day, _]) => day.charAt(0).toUpperCase() + day.slice(1, 3))
+                                                    .join(', ')})` 
+                                                : ''}
+                                              {agent.schedule_type === 'monthly' ? ' (1st of month)' : ''}
+                                            </p>
+                                          </>
+                                        ) : (
+                                          <>
+                                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Type</span>
+                                            <p className="text-sm text-gray-900 mt-1">Holiday-based</p>
+                                          </>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                )
+                              ) : (
+                                // Social Media Agent Display (original logic)
+                                (agent.mode === 'auto' || agent.mode === 'recurring') && (
+                                  <div className="space-y-4">
+                                    {/* Row 1: Topic and Image Option */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Topic</span>
+                                        <p className="text-sm text-gray-900 mt-1">{agent.topic}</p>
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Image Option</span>
+                                        <p className="text-sm text-gray-900 mt-1 capitalize">{formatImageOption(agent)}</p>
+                                      </div>
+                                    </div>
+                                    
+                                    {/* Row 2: Workflow Mode and Social Media Platforms */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Workflow Mode</span>
+                                        <p className="text-sm text-gray-900 mt-1">
+                                          {getWorkflowMode(agent)}
+                                        </p>
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Social Media Platforms</span>
+                                        <p className="text-sm text-gray-900 mt-1">
+                                          {getEnabledPlatforms(agent.social_platforms).length > 0 ? (
+                                            getEnabledPlatforms(agent.social_platforms)
+                                              .map(platform => platform === 'twitter' ? 'X (Twitter)' : platform.charAt(0).toUpperCase() + platform.slice(1))
+                                              .join(', ')
+                                          ) : (
+                                            'None selected'
+                                          )}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )
+                              )}
+                          
+                              {agent.mode === 'adhoc' && (
+                                agent.agent_type === 'email' ? (
+                                  // Email Agent Adhoc Display
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* Left Column */}
+                                    <div className="space-y-3">
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email</span>
+                                        <p className="text-sm text-gray-900 mt-1">Opt In Customers</p>
+                                      </div>
+
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Image Option</span>
+                                        <p className="text-sm text-gray-900 mt-1 capitalize">{formatImageOption(agent)}</p>
+                                      </div>
+                                    </div>
+                                    
+                                    {/* Right Column */}
+                                    <div className="space-y-3">
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Use ChatGPT to Format Email</span>
+                                        <p className="text-sm text-gray-900 mt-1">
+                                          {formatChatGPTStatus(agent)}
+                                        </p>
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Word Count</span>
+                                        <p className="text-sm text-gray-900 mt-1">{agent.word_count || 'Not specified'}</p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  // Social Media Agent Adhoc Display
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* Left Column */}
+                                    <div className="space-y-3">
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Topic</span>
+                                        <p className="text-sm text-gray-900 mt-1">{agent.topic}</p>
+                                      </div>
+
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Image Option</span>
+                                        <p className="text-sm text-gray-900 mt-1 capitalize">{formatImageOption(agent)}</p>
+                                      </div>
+                                    </div>
+                                    
+                                    {/* Right Column */}
+                                    <div className="space-y-3">
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Schedule</span>
+                                        <p className="text-sm text-gray-900 mt-1">
+                                          {formatAgentSchedule(agent)}
+                                        </p>
+                                        {isReadyForNextPost(agent) && (
+                                          <p className="text-xs text-green-600 mt-1 italic">
+                                            This agent is ready to create your next post. Click 'Run Agent' to generate new content.
+                                          </p>
+                                        )}
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Text on Image</span>
+                                        <p className="text-sm text-gray-900 mt-1">{agent.image_text || 'None'}</p>
+                                      </div>
+                                    </div>
+
+                                    {/* Social Media Platforms Row */}
+                                    <div className="flex flex-col pt-3 border-t border-gray-100">
+                                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Social Media Platforms</span>
+                                      <p className="text-sm text-gray-900 mt-1">
+                                        {getEnabledPlatforms(agent.social_platforms).length > 0 ? (
+                                          getEnabledPlatforms(agent.social_platforms)
+                                            .map(platform => platform === 'twitter' ? 'X (Twitter)' : platform.charAt(0).toUpperCase() + platform.slice(1))
+                                            .join(', ')
+                                        ) : (
+                                          'None selected'
+                                        )}
+                                      </p>
+                                    </div>
+                                  </div>
+                                )
+                              )}
+                          
+                          {agent.mode === 'write' && (
+                            <div className="space-y-4">
+                              {/* Row 1: Email Subject and Use ChatGPT Formatting for Email Agents */}
+                              {agent.agent_type === 'email' && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Subject</span>
+                                    <p className="text-sm text-gray-900 mt-1 font-medium">
+                                      {agent.email_subject || 'No subject specified'}
+                                    </p>
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Use ChatGPT to Format Email</span>
+                                    <p className="text-sm text-gray-900 mt-1">
+                                      {agent.use_chatgpt_formatting ? 'Yes' : 'No'}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {/* Row 2: Email Recipients and Workflow Mode for Email Agents */}
+                              {agent.agent_type === 'email' && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Recipients</span>
+                                    <p className="text-sm text-gray-900 mt-1 capitalize">
+                                      {agent.email_type === 'single' ? 'Single Customer' : 'Bulk Customer Emails'}
+                                    </p>
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Workflow Mode</span>
+                                    <p className="text-sm text-gray-900 mt-1">
+                                      {getWorkflowMode(agent)}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {/* Content Preview - Full Width */}
+                              <div className="flex flex-col">
+                                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Content Preview</span>
+                                <div className="mt-2 p-3 bg-white rounded-md border border-gray-200">
+                                  <p className="text-sm text-gray-900 line-clamp-3">
+                                    {agent.agent_type === 'email' ? agent.email_content : agent.post_content}
+                                  </p>
+                                </div>
+                              </div>
+                              
+                              {/* Next Run & Last Run for Scheduled Write Mode Agents */}
+                              {agent.post_date && agent.post_time && (
+                                <div className="space-y-4">
+                                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="flex flex-col">
+                                      <span className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Next Run</span>
+                                      <p className="text-sm text-gray-900 mt-1">
+                                        {(() => {
+                                          try {
+                                            const date = new Date(agent.post_date);
+                                            const formattedDate = date.toLocaleDateString('en-US', {
+                                              weekday: 'short',
+                                              month: 'short',
+                                              day: 'numeric',
+                                              year: 'numeric'
+                                            });
+                                            return `${formattedDate} at ${formatTime(agent.post_time)}`;
+                                          } catch (error) {
+                                            console.error('Error formatting date:', error);
+                                            return `${agent.post_date} at ${formatTime(agent.post_time)}`;
+                                          }
+                                        })()}
+                                      </p>
+                                    </div>
+                                    <div className="flex flex-col">
+                                      <span className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Last Run</span>
+                                      <p className="text-sm text-gray-900 mt-1">
+                                        {agent.last_run ? formatDate(agent.last_run) : 'Never run'}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              )}
+                              
+                              {/* Last Manual Run - Only for Email Write Agents without scheduled date/time */}
+                              {agent.agent_type === 'email' && (!agent.post_date || !agent.post_time) && (
+                                <div className="bg-gradient-to-r from-gray-50 to-slate-50 border border-gray-200 rounded-lg p-4">
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Last Manual Run</span>
+                                    <p className="text-sm text-gray-900 mt-1">
+                                      {agent.last_manual_run ? formatDate(agent.last_manual_run) : 'Never run manually'}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                          
+                          {/* Next Run & Last Run for Recurring Agents */}
+                          {(agent.mode === 'auto' || agent.mode === 'recurring') && (
+                            <div className="flex flex-col pt-3 border-t border-gray-100">
+                              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Next Run & Last Run</span>
+                              <div className="mt-1 grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                {/* Left Column: Next Run Info */}
+                                <div className="p-3 bg-green-50 border border-green-200 rounded-md">
+                                  {(() => {
+                                    if (agent.agent_type === 'email' && agent.selected_holidays && agent.selected_holidays.length > 0) {
+                                      // Email agent with holidays - show next holiday
+                                      const holidayInfo = getNextScheduledHoliday(agent);
+                                      return (
+                                        <div className="space-y-2">
+                                          <div>
+                                            <label className="text-xs font-semibold text-green-700 uppercase tracking-wide">
+                                              {holidayInfo.holidayName || 'Next Holiday Run'}
+                                            </label>
+                                            <p className="text-sm font-medium text-green-900">
+                                              {holidayInfo.nextRun}
+                                            </p>
+                                          </div>
+                                        </div>
+                                      );
+                                    } else {
+                                      // Regular recurring agents
+                                      const runInfo = calculateNextRunForRecurringAgent(agent);
+                                      if (!runInfo) return null;
+                                      
+                                      return (
+                                        <div className="space-y-2">
+                                          <div>
+                                            <label className="text-xs font-semibold text-green-700 uppercase tracking-wide">Next Scheduled Run</label>
+                                            <p className="text-sm font-medium text-green-900">
+                                              {runInfo.nextRunDate}
+                                            </p>
+                                          </div>
+                                          {runInfo.selectedDays && (
+                                            <div>
+                                              <label className="text-xs font-semibold text-green-700 uppercase tracking-wide">Scheduled Days</label>
+                                              <p className="text-sm font-medium text-green-900">
+                                                {runInfo.selectedDays}
+                                              </p>
+                                              <p className="text-xs text-green-600 mt-1">
+                                                At {agent.post_time || '09:00'}
+                                              </p>
+                                            </div>
+                                          )}
+                                        </div>
+                                      );
+                                    }
+                                  })()}
+                                </div>
+                                
+                                {/* Right Column: Last Run */}
+                                <div className="p-3 bg-gray-50 border border-gray-200 rounded-md">
+                                  <div className="space-y-2">
+                                    <div>
+                                      <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Last Manual Run</label>
+                                      <p className="text-sm font-medium text-gray-900">
+                                        {agent.last_manual_run ? formatDate(agent.last_manual_run) : 'Never run manually'}
+                                      </p>
+                                    </div>
+                                    <div>
+                                      <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Run Status</label>
+                                      <p className="text-sm font-medium text-gray-900">
+                                        {agent.last_manual_run ? 'Completed' : 'Not run yet'}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          
+                          {/* Bottom Row - Only show for social media agents */}
+                          {agent.agent_type !== 'email' && agent.agent_type !== 'time_sheet' && (
+                            <>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Web Research</span>
+                                  <p className="text-sm text-gray-900 mt-1">
+                                    <span className={`inline-flex items-center px-3 py-1 rounded text-xs font-medium ${
+                                      agent.use_web_research ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
+                                    }`}>
+                                      {agent.use_web_research ? 'Enabled' : 'Disabled'}
+                                    </span>
+                                  </p>
+                                </div>
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Schedule</span>
+                                  <p className="text-sm text-gray-900 mt-1">
+                                    {formatAgentSchedule(agent)}
+                                  </p>
+                                  {isReadyForNextPost(agent) && (
+                                    <p className="text-xs text-green-600 mt-1 italic">
+                                      This agent is ready to create your next post. Click 'Run Agent' to generate new content.
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Social Media Platforms Row */}
+                              <div className="flex flex-col pt-3 border-t border-gray-100">
+                                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Social Media Platforms</span>
+                                <p className="text-sm text-gray-900 mt-1">
+                                  {getEnabledPlatforms(agent.social_platforms).length > 0 ? (
+                                    getEnabledPlatforms(agent.social_platforms)
+                                      .map(platform => platform === 'twitter' ? 'X (Twitter)' : platform.charAt(0).toUpperCase() + platform.slice(1))
+                                      .join(', ')
+                                  ) : (
+                                    'None selected'
+                                  )}
+                                </p>
+                              </div>
+                            </>
+                          )}
+                            </>
+                          )}
+                        </div>
 
                         {/* Action Buttons */}
                         <div className="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
