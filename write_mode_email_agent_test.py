@@ -380,7 +380,7 @@ class WriteEmailAgentTester:
         
         try:
             # Execute the social media agent
-            response = requests.post(f"{self.api_url}/ai-agents/{agent_id}/run")
+            response = requests.post(f"{self.api_url}/ai-agents/{agent_id}/run", headers=self.get_headers())
             
             if response.status_code == 200:
                 run_result = response.json()
