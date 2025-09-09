@@ -4681,6 +4681,125 @@ async def email_timesheet_report_post(post_id: str, email_data: dict):
         logger.error(f"Error emailing timesheet report post: {str(e)}")
         raise
 
+async def generate_recurring_email_for_agent(agent_id: str, agent_data: dict, post_id: str, now, email_template: str):
+    """Generate email for recurring (topic-based) email agent"""
+    try:
+        use_chatgpt = agent_data.get('use_chatgpt_formatting', True)
+        topic = agent_data.get('topic', 'General Update')
+        
+        logger.info(f"Generating recurring email for topic: {topic}")
+        
+        # Get a random customer from the database for preview
+        customers_cursor = db.customers.aggregate([{"$sample": {"size": 1}}])
+        customers_list = await customers_cursor.to_list(length=1)
+        
+        if not customers_list:
+            logger.warning(f"No customers found in database for agent {agent_id}, using placeholder data")
+            customer_name = "John Smith"
+            pet_names = "Buddy"
+            customer_email = "customer@example.com"
+        else:
+            customer = customers_list[0]
+            customer_name = customer.get('name', 'Valued Customer')
+            customer_email = customer.get('email', 'customer@example.com')
+            
+            # Get pet name(s) for this customer - handle both data structures
+            pet_names = "your pet"  # Default fallback
+            
+            # Check for pets array structure (new format)
+            pets = customer.get('pets', [])
+            if pets:
+                # Extract pet names from pets array
+                valid_pet_names = [pet.get('name', '').strip() for pet in pets if pet.get('name', '').strip()]
+                if valid_pet_names:
+                    if len(valid_pet_names) == 1:
+                        pet_names = valid_pet_names[0]
+                    elif len(valid_pet_names) == 2:
+                        pet_names = f"{valid_pet_names[0]} and {valid_pet_names[1]}"
+                    else:
+                        # For 3+ pets: "Buddy, Max, and Luna"
+                        pet_names = ", ".join(valid_pet_names[:-1]) + f", and {valid_pet_names[-1]}"
+            
+            # Check for single pet_name field (current format)
+            elif customer.get('pet_name', '').strip():
+                pet_names = customer.get('pet_name').strip()
+            
+            logger.info(f"Using customer {customer_name} with pet(s): {pet_names} for email preview")
+        
+        # Create topic-specific content using the template
+        # Replace all placeholders: customer, pets, and topic context
+        topic_specific_content = email_template.replace('[CUSTOMER_NAME]', customer_name)
+        topic_specific_content = topic_specific_content.replace('[PET_NAME]', pet_names)  # Legacy support
+        topic_specific_content = topic_specific_content.replace('[PET_NAMES]', pet_names)  # New plural support
+        topic_specific_content = topic_specific_content.replace('[TOPIC]', topic)
+        
+        if use_chatgpt:
+            # Call actual ChatGPT API to format the email professionally
+            try:
+                from ai_service import format_email_content
+                
+                topic_specific_content = await format_email_content(
+                    template=topic_specific_content,
+                    customer_name=customer_name,
+                    pet_names=pet_names,
+                    topic=topic
+                )
+                
+                logger.info(f"ChatGPT formatting applied for recurring email agent {agent_id}")
+                
+            except Exception as e:
+                logger.error(f"ChatGPT formatting failed for agent {agent_id}: {str(e)}")
+                # Fallback to basic formatting if ChatGPT fails
+                topic_specific_content = f"""Dear {customer_name},
+
+{topic_specific_content}
+
+Thank you for trusting us with {pet_names}'s care!
+
+Warm regards,
+The Veterinary Care Team"""
+        
+        sample_content = topic_specific_content
+        
+        # Create post record for email preview
+        post_data = {
+            "id": post_id,
+            "agent_id": agent_id,
+            "agent_name": agent_data.get('agent_name', 'Email Agent'),
+            "topic": f"{topic} - {agent_data.get('agent_name', 'Email Agent')}",
+            "content": sample_content,
+            "image_url": "",
+            "image_option": agent_data.get('image_option', 'none'),
+            "platforms": ["email"],  # Email-specific platform
+            "status": agent_data.get('post_destination', 'in_review'),
+            "agent_type": "email",
+            "created_at": now,
+            "updated_at": now,
+            "is_active": True,
+            "word_count": str(len(sample_content.split())),
+            "use_chatgpt_formatting": use_chatgpt,
+            # Store email-specific metadata for mass sending
+            "email_template": email_template,  # Original template with placeholders
+            "sample_customer_name": customer_name,  # Customer used for preview
+            "sample_pet_names": pet_names,  # Pet(s) used for preview
+            "sample_customer_email": customer_email,  # Email used for preview
+            "topic": topic,  # Topic context
+            "ready_for_mass_email": False  # Will be set to True when published
+        }
+        
+        # Insert post into database
+        await db.ai_posts.insert_one(post_data)
+        
+        logger.info(f"Created recurring email post {post_id} for agent {agent_id} with status: {post_data['status']}")
+        
+        return {"post_id": post_id, "status": "completed"}
+        
+    except Exception as e:
+        logger.error(f"Error in generate_recurring_email_for_agent: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return
+
 async def generate_email_for_agent(agent_id: str, agent_data: dict):
     """Generate an email for an AI email agent using real customer data"""
     try:
