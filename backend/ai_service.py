@@ -809,3 +809,7 @@ Content:"""
 async def format_email_content(template: str, customer_name: str, pet_names: str, holiday_name: str, holiday_date: str) -> str:
     """Global function to format email content"""
     return await ai_service.format_email_content(template, customer_name, pet_names, holiday_name, holiday_date)
+
+async def format_topic_email_content(template: str, customer_name: str, pet_names: str, topic: str) -> str:
+    """Global function to format topic-based email content"""
+    return await ai_service.format_topic_email_content(template, customer_name, pet_names, topic)
