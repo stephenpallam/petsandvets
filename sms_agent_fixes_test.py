@@ -362,10 +362,10 @@ class SMSAgentFixesTester:
         """Test SMS agent data retrieval for edit mode (tab mapping fix)"""
         print("\n🧪 Testing SMS Agent Edit Mode Data Retrieval...")
         
-        for agent in agents:
-            agent_id = agent["id"]
-            agent_name = agent["name"]
-            expected_mode = agent["expected_mode"]
+        for agent_info in agents:
+            agent_id = agent_info["id"]
+            agent_name = agent_info["name"]
+            expected_mode = agent_info["expected_mode"]
             
             try:
                 # Retrieve agent data for editing from the agents list
