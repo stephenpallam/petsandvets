@@ -1506,7 +1506,7 @@ const AIAgentsDashboard = () => {
                                 />
                                 <div className="flex flex-col">
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                    {agent.agent_name || agent.name || `${getModeLabel(agent.mode)} Agent`}
+                                    {agent.agent_name || agent.name || `${getModeLabel(agent.mode, agent.agent_type, agent.selected_holidays)} Agent`}
                                   </h3>
                                   <div className="flex items-center space-x-2 mt-1">
                                     <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${
