@@ -1879,7 +1879,7 @@ const AIAgentsDashboard = () => {
                                   <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="flex flex-col">
-                                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Next Run</span>
+                                      <span className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Next Run</span>
                                       <p className="text-sm text-gray-900 mt-1">
                                         {(() => {
                                           try {
