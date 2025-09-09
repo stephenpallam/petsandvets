@@ -5435,14 +5435,14 @@ Example:
                         <div className="flex justify-end space-x-3">
                           <button
                             onClick={isRunMode ? saveAndRunAgent : saveAgent}
-                            disabled={loading || (!isEditMode && !isRunMode && (!smsScheduledMode.agentName || smsScheduledMode.selectedHolidays.length === 0 || !smsScheduledMode.smsContentTemplate))}
+                            disabled={loading || (!isEditMode && !isRunMode && (!smsScheduledMode.agentName || smsScheduledMode.selectedHolidays.length === 0 || !smsScheduledMode.smsContentTemplate || (smsScheduledMode.smsType === 'single' && !smsScheduledMode.selectedCustomer)))}
                             className="text-white px-6 py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center font-medium"
                             style={{ 
                               backgroundColor: loading ? '#94a3b8' : 
                                             isRunMode ? '#10b981' : '#29add3'
                             }}
                             onMouseEnter={(e) => {
-                              if (!loading && ((isEditMode || isRunMode) || (smsScheduledMode.agentName && smsScheduledMode.selectedHolidays.length > 0 && smsScheduledMode.smsContentTemplate))) {
+                              if (!loading && ((isEditMode || isRunMode) || (smsScheduledMode.agentName && smsScheduledMode.selectedHolidays.length > 0 && smsScheduledMode.smsContentTemplate && (smsScheduledMode.smsType === 'bulk' || smsScheduledMode.selectedCustomer)))) {
                                 e.target.style.backgroundColor = isRunMode ? '#059669' : '#1e88e5';
                               }
                             }}
