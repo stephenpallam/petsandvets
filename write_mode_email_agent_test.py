@@ -41,6 +41,7 @@ class WriteEmailAgentTester:
         self.client = None
         self.db = None
         self.test_results = []
+        self.auth_token = None
         
     async def connect(self):
         """Connect to MongoDB"""
