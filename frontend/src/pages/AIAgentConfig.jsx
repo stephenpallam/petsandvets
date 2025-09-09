@@ -4443,7 +4443,14 @@ Example:
                                                 <div className="flex justify-end space-x-3">
                                                   <button
                                                     onClick={isRunMode ? saveAndRunAgent : saveAgent}
-                                                    disabled={loading || (!isEditMode && !isRunMode && (!emailRecurringMode.agentName || !emailRecurringMode.topic || (emailRecurringMode.scheduleType === 'weekly' && !Object.values(emailRecurringMode.daysOfWeek).some(day => day))))}
+                                                    disabled={loading || (!isEditMode && !isRunMode && (
+                                                      !emailRecurringMode.agentName || 
+                                                      !emailRecurringMode.topic || 
+                                                      (emailRecurringMode.scheduleType === 'weekly' && 
+                                                       !Object.values(emailRecurringMode.daysOfWeek).some(day => day)) ||
+                                                      (emailRecurringMode.scheduleType === 'monthly' && 
+                                                       !emailRecurringMode.monthlySchedule)
+                                                    ))}
                                                     className="text-white px-6 py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center font-medium"
                                                     style={{ 
                                                       backgroundColor: loading ? '#94a3b8' : 
