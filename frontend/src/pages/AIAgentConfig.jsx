@@ -712,6 +712,31 @@ Best regards,
           description: 'Create and send custom emails with subject and content'
         }
       ];
+    } else if (agentType === 'sms_agent') {
+      // SMS Agent tabs
+      return [
+        { 
+          id: 'sms-scheduled', 
+          label: 'Scheduled Mode', 
+          icon: Calendar, 
+          color: '#10b981',
+          description: 'Send SMS automatically on holidays with personalized content'
+        },
+        { 
+          id: 'sms-recurring', 
+          label: 'Recurring Mode', 
+          icon: RefreshCw, 
+          color: '#29add3',
+          description: 'Send SMS regularly on selected days and frequency'
+        },
+        { 
+          id: 'sms-write', 
+          label: 'Write Your SMS', 
+          icon: MessageSquare, 
+          color: '#29add3',
+          description: 'Create and send custom SMS messages with content'
+        }
+      ];
     } else {
       // Social Media Agent tabs with specific IDs to avoid conflicts
       return [
