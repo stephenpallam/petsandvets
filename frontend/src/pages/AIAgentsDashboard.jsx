@@ -1936,6 +1936,22 @@ const AIAgentsDashboard = () => {
                               </div>
                               )}
                               
+                              {/* Social Media Platforms - Only for Social Media Write Mode Agents */}
+                              {agent.agent_type !== 'email' && agent.agent_type !== 'time_sheet' && (
+                                <div className="flex flex-col pt-3 border-t border-gray-100">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Social Media Platforms</span>
+                                  <p className="text-sm text-gray-900 mt-1">
+                                    {getEnabledPlatforms(agent.social_platforms).length > 0 ? (
+                                      getEnabledPlatforms(agent.social_platforms)
+                                        .map(platform => platform === 'twitter' ? 'X (Twitter)' : platform.charAt(0).toUpperCase() + platform.slice(1))
+                                        .join(', ')
+                                    ) : (
+                                      'None selected'
+                                    )}
+                                  </p>
+                                </div>
+                              )}
+                              
                               {/* Last Manual Run - Only for Email Write Agents without scheduled date/time */}
                               {agent.agent_type === 'email' && (!agent.post_date || !agent.post_time) && (
                                 <div className="bg-gradient-to-r from-gray-50 to-slate-50 border border-gray-200 rounded-lg p-4">
