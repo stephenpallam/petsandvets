@@ -4443,14 +4443,33 @@ Example:
                                                 <div className="flex justify-end space-x-3">
                                                   <button
                                                     onClick={isRunMode ? saveAndRunAgent : saveAgent}
-                                                    disabled={loading || (!isEditMode && !isRunMode && (
-                                                      !emailRecurringMode.agentName || 
-                                                      !emailRecurringMode.topic || 
-                                                      (emailRecurringMode.scheduleType === 'weekly' && 
-                                                       !Object.values(emailRecurringMode.daysOfWeek).some(day => day)) ||
-                                                      (emailRecurringMode.scheduleType === 'monthly' && 
-                                                       !emailRecurringMode.monthlySchedule)
-                                                    ))}
+                                                    disabled={(() => {
+                                                      const isDisabled = loading || (!isEditMode && !isRunMode && (
+                                                        !emailRecurringMode.agentName || 
+                                                        !emailRecurringMode.topic || 
+                                                        (emailRecurringMode.scheduleType === 'weekly' && 
+                                                         !Object.values(emailRecurringMode.daysOfWeek).some(day => day)) ||
+                                                        (emailRecurringMode.scheduleType === 'monthly' && 
+                                                         !emailRecurringMode.monthlySchedule)
+                                                      ));
+                                                      
+                                                      // Debug logging to help identify missing fields
+                                                      if (!isEditMode && !isRunMode && isDisabled) {
+                                                        console.log('🔍 Email Recurring Mode Validation Debug:');
+                                                        console.log('  agentName:', emailRecurringMode.agentName);
+                                                        console.log('  topic:', emailRecurringMode.topic);
+                                                        console.log('  scheduleType:', emailRecurringMode.scheduleType);
+                                                        if (emailRecurringMode.scheduleType === 'weekly') {
+                                                          console.log('  daysOfWeek:', emailRecurringMode.daysOfWeek);
+                                                          console.log('  anyDaySelected:', Object.values(emailRecurringMode.daysOfWeek).some(day => day));
+                                                        }
+                                                        if (emailRecurringMode.scheduleType === 'monthly') {
+                                                          console.log('  monthlySchedule:', emailRecurringMode.monthlySchedule);
+                                                        }
+                                                      }
+                                                      
+                                                      return isDisabled;
+                                                    })()}
                                                     className="text-white px-6 py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center font-medium"
                                                     style={{ 
                                                       backgroundColor: loading ? '#94a3b8' : 
