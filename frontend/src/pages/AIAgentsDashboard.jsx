@@ -1882,6 +1882,24 @@ const AIAgentsDashboard = () => {
                                 </div>
                               </div>
                               
+                              {/* Web Research and ChatGPT Formatting for Social Media Agents */}
+                              {agent.agent_type !== 'email' && agent.agent_type !== 'time_sheet' && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Use Web Research</span>
+                                    <p className="text-sm text-gray-900 mt-1">
+                                      {agent.use_web_research ? 'Yes' : 'No'}
+                                    </p>
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Use ChatGPT for formatting</span>
+                                    <p className="text-sm text-gray-900 mt-1">
+                                      {agent.use_chatgpt_formatting ? 'Yes' : 'No'}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                              
                               {/* Next Run & Last Run for Scheduled Write Mode Agents */}
                               {agent.post_date && agent.post_time && (
                                 <div className="space-y-4">
