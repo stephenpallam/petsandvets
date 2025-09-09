@@ -515,6 +515,12 @@ class WriteEmailAgentTester:
         try:
             await self.connect()
             
+            # Authenticate first
+            auth_success = await self.authenticate()
+            if not auth_success:
+                print("❌ Cannot proceed - authentication failed")
+                return
+            
             # Test 1: Create write mode email agent
             email_agent = await self.test_1_create_write_mode_email_agent()
             if not email_agent:
