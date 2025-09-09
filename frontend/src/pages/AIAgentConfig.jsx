@@ -5288,8 +5288,22 @@ Example:
                           </div>
                         </div>
 
-                        {/* Send Time */}
+                        {/* Send Date and Time */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              <Calendar className="h-4 w-4 inline mr-2" />
+                              Scheduled Date (Optional)
+                            </label>
+                            <input
+                              type="date"
+                              value={smsScheduledMode.scheduledDate || ''}
+                              onChange={(e) => setSmsScheduledMode(prev => ({ ...prev, scheduledDate: e.target.value }))}
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                            <p className="text-xs text-gray-500 mt-1">Leave blank to send on actual holiday dates</p>
+                          </div>
+
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               <Clock className="h-4 w-4 inline mr-2" />
@@ -5307,35 +5321,72 @@ Example:
                               ))}
                             </select>
                           </div>
+                        </div>
 
-                          {/* SMS Type */}
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              SMS Type
+                        {/* SMS Type */}
+                        <div className="space-y-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            SMS Recipients
+                          </label>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <label className="flex items-center p-4 bg-gray-50 rounded-lg border cursor-pointer hover:bg-gray-100">
+                              <input
+                                type="checkbox"
+                                checked={smsScheduledMode.smsType === 'bulk'}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setSmsScheduledMode(prev => ({ ...prev, smsType: 'bulk', selectedCustomer: null }));
+                                  }
+                                }}
+                                className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mr-3"
+                              />
+                              <div>
+                                <div className="font-medium text-gray-900">Bulk SMS (All Customers)</div>
+                                <div className="text-sm text-gray-600">Send to all customers with phone numbers</div>
+                              </div>
                             </label>
-                            <select
-                              value={smsScheduledMode.smsType}
-                              onChange={(e) => setSmsScheduledMode(prev => ({ ...prev, smsType: e.target.value, selectedCustomer: e.target.value === 'single' ? prev.selectedCustomer : null }))}
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            >
-                              <option value="bulk">Bulk SMS (All Customers)</option>
-                              <option value="single">Single Customer</option>
-                            </select>
                             
-                            {/* Descriptive labels */}
-                            {smsScheduledMode.smsType === 'bulk' && (
-                              <div className="mt-2 p-3 bg-blue-50 rounded-lg">
+                            <label className="flex items-center p-4 bg-gray-50 rounded-lg border cursor-pointer hover:bg-gray-100">
+                              <input
+                                type="checkbox"
+                                checked={smsScheduledMode.smsType === 'single'}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setSmsScheduledMode(prev => ({ ...prev, smsType: 'single' }));
+                                  }
+                                }}
+                                className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mr-3"
+                              />
+                              <div>
+                                <div className="font-medium text-gray-900">Single Customer</div>
+                                <div className="text-sm text-gray-600">Send to one specific customer</div>
+                              </div>
+                            </label>
+                          </div>
+                          
+                          {/* Descriptive labels */}
+                          {smsScheduledMode.smsType === 'bulk' && (
+                            <div className="p-3 bg-blue-50 rounded-lg">
+                              <div className="flex items-start">
+                                <Users className="h-4 w-4 text-blue-600 mt-0.5 mr-2" />
+                                <p className="text-sm text-blue-700">
+                                  SMS will be sent to all customers in your customer management database who have opted in for SMS communications and have valid phone numbers.
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                          
+                          {smsScheduledMode.smsType === 'single' && (
+                            <div className="space-y-3">
+                              <div className="p-3 bg-blue-50 rounded-lg">
                                 <div className="flex items-start">
-                                  <Users className="h-4 w-4 text-blue-600 mt-0.5 mr-2" />
+                                  <User className="h-4 w-4 text-blue-600 mt-0.5 mr-2" />
                                   <p className="text-sm text-blue-700">
-                                    SMS will be sent to all customers in your customer management database who have opted in for SMS communications and have valid phone numbers.
+                                    SMS will be sent to the selected customer only.
                                   </p>
                                 </div>
                               </div>
-                            )}
-                            
-                            {smsScheduledMode.smsType === 'single' && (
-                              <div className="mt-3">
+                              <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                   <User className="h-4 w-4 inline mr-2" />
                                   Select Customer *
@@ -5348,7 +5399,7 @@ Example:
                                   <option value="">Choose a customer...</option>
                                   {availableCustomers.length > 0 ? (
                                     availableCustomers
-                                      .filter(customer => customer.phone && customer.phone.trim()) // Only show customers with phone numbers
+                                      .filter(customer => customer.phone && customer.phone.trim())
                                       .map((customer) => (
                                         <option key={customer.id} value={customer.id}>
                                           {customer.name} - {customer.phone} {customer.pets && customer.pets.length > 0 ? `(${customer.pets.map(p => p.name).join(', ')})` : ''}
@@ -5364,8 +5415,8 @@ Example:
                                   </p>
                                 )}
                               </div>
-                            )}
-                          </div>
+                            </div>
+                          )}
                         </div>
 
                         {/* ChatGPT SMS Formatting */}
