@@ -167,7 +167,7 @@ class SchedulerTester:
         
         try:
             # Check via API
-            response = requests.get(f"{self.api_base}/ai-agents", timeout=10)
+            response = requests.get(f"{self.api_base}/ai-agents", headers=self.get_auth_headers(), timeout=10)
             if response.status_code == 200:
                 agents = response.json().get('agents', [])
                 target_agent = None
