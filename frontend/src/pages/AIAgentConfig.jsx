@@ -265,7 +265,6 @@ The Veterinary Care Team`,
     imageOption: 'ai_generate', // 'ai_generate', 'upload', 'reference', 'none'
     uploadedImages: [],
     imageText: '',
-    useChatGPTFormatting: true,
     postDestination: 'in_review' // 'in_review', 'ready_to_publish', 'auto_send'
   });
 
