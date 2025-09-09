@@ -5313,6 +5313,148 @@ async def send_mass_emails_from_post(post_id: str, post_data: dict):
         logger.error(f"Error in mass email sending for post {post_id}: {str(e)}")
         raise
 
+async def send_sms_via_twilio(phone_number: str, message: str, twilio_account_sid: str = None, twilio_auth_token: str = None, twilio_phone_number: str = None):
+    """Send SMS via Twilio"""
+    try:
+        from twilio.rest import Client
+        
+        # Use environment variables if not provided
+        account_sid = twilio_account_sid or os.getenv('TWILIO_ACCOUNT_SID')
+        auth_token = twilio_auth_token or os.getenv('TWILIO_AUTH_TOKEN')
+        from_phone = twilio_phone_number or os.getenv('TWILIO_PHONE_NUMBER')
+        
+        if not all([account_sid, auth_token, from_phone]):
+            raise Exception("Missing Twilio credentials. Please provide TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, and TWILIO_PHONE_NUMBER")
+        
+        client = Client(account_sid, auth_token)
+        
+        message = client.messages.create(
+            body=message,
+            from_=from_phone,
+            to=phone_number
+        )
+        
+        logger.info(f"SMS sent successfully via Twilio to {phone_number}, SID: {message.sid}")
+        return {"success": True, "message_sid": message.sid}
+        
+    except Exception as e:
+        logger.error(f"Error sending SMS via Twilio to {phone_number}: {str(e)}")
+        return {"success": False, "error": str(e)}
+
+async def send_sms_via_sendgrid(phone_number: str, message: str, sendgrid_api_key: str = None):
+    """Send SMS via SendGrid (which uses Twilio under the hood)"""
+    try:
+        # SendGrid primarily uses Twilio for SMS, so we'll use Twilio client
+        # This is a placeholder - in production you might want to use SendGrid's SMS API
+        return await send_sms_via_twilio(phone_number, message)
+        
+    except Exception as e:
+        logger.error(f"Error sending SMS via SendGrid to {phone_number}: {str(e)}")
+        return {"success": False, "error": str(e)}
+
+async def send_mass_sms_from_post(post_id: str, post_data: dict):
+    """Send personalized SMS to all customers using the approved SMS template"""
+    try:
+        logger.info(f"Starting mass SMS sending for post {post_id}")
+        
+        # Get SMS template from post
+        sms_template = post_data.get('sms_template', post_data.get('content', ''))
+        sms_provider = post_data.get('sms_provider', 'twilio')
+        
+        if not sms_template:
+            logger.error(f"No SMS template found for post {post_id}")
+            return
+        
+        # Get all customers from database
+        customers_cursor = db.customers.find({})
+        customers_list = await customers_cursor.to_list(length=None)
+        
+        if not customers_list:
+            logger.warning("No customers found in database for mass SMS")
+            return
+        
+        sms_sent = 0
+        sms_failed = 0
+        
+        for customer in customers_list:
+            try:
+                # Skip customers without phone numbers
+                phone_number = customer.get('phone', '').strip() 
+                if not phone_number:
+                    logger.warning(f"No phone number for customer {customer.get('name', 'Unknown')}")
+                    sms_failed += 1
+                    continue
+                
+                # Get customer data
+                customer_name = customer.get('name', 'Valued Customer')
+                
+                # Handle pet names (support both pets array and pet_name field)
+                pets = customer.get('pets', [])
+                pet_names = "your pet"  # Default fallback
+                
+                if pets:
+                    # New pets array format
+                    valid_pet_names = [pet.get('name', '').strip() for pet in pets if pet.get('name', '').strip()]
+                    if valid_pet_names:
+                        if len(valid_pet_names) == 1:
+                            pet_names = valid_pet_names[0]
+                        elif len(valid_pet_names) == 2:
+                            pet_names = f"{valid_pet_names[0]} and {valid_pet_names[1]}"
+                        else:
+                            pet_names = ", ".join(valid_pet_names[:-1]) + f", and {valid_pet_names[-1]}"
+                elif customer.get('pet_name', '').strip():
+                    # Legacy pet_name field format
+                    pet_names = customer.get('pet_name').strip()
+                
+                # Personalize SMS content
+                personalized_sms = sms_template.replace('[CUSTOMER_NAME]', customer_name)
+                personalized_sms = personalized_sms.replace('[PET_NAME]', pet_names)
+                personalized_sms = personalized_sms.replace('[PET_NAMES]', pet_names)
+                
+                # Ensure SMS is within character limit
+                if len(personalized_sms) > 160:
+                    personalized_sms = personalized_sms[:157] + "..."
+                
+                # Send SMS based on provider
+                if sms_provider == 'sendgrid':
+                    result = await send_sms_via_sendgrid(phone_number, personalized_sms)
+                else:  # Default to Twilio
+                    result = await send_sms_via_twilio(phone_number, personalized_sms)
+                
+                if result.get('success'):
+                    sms_sent += 1
+                    logger.info(f"SMS sent to {customer_name} at {phone_number}")
+                else:
+                    sms_failed += 1
+                    logger.error(f"Failed to send SMS to {customer_name} at {phone_number}: {result.get('error')}")
+                
+                # Add small delay to avoid rate limiting
+                await asyncio.sleep(0.1)
+                
+            except Exception as customer_error:
+                logger.error(f"Error sending SMS to customer {customer.get('name', 'Unknown')}: {str(customer_error)}")
+                sms_failed += 1
+                continue
+        
+        # Update post with mass SMS results
+        await db.ai_posts.update_one(
+            {"id": post_id},
+            {
+                "$set": {
+                    "mass_sms_sent": sms_sent,
+                    "mass_sms_failed": sms_failed,
+                    "mass_sms_sent_at": await business_now_async(),
+                    "ready_for_mass_sms": True
+                }
+            }
+        )
+        
+        logger.info(f"Mass SMS sending completed for post {post_id}: {sms_sent} sent, {sms_failed} failed")
+        
+    except Exception as e:
+        logger.error(f"Error in mass SMS sending for post {post_id}: {str(e)}")
+        raise
+
 async def generate_social_media_post_for_agent(agent_id: str, agent_data: dict):
     """Generate a social media post for an AI agent"""
     try:
