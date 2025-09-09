@@ -818,6 +818,8 @@ Best regards,
     if (!agentId && mode !== 'edit' && mode !== 'run') {
       if (agentType === 'email') {
         setActiveTab('email-scheduled');
+      } else if (agentType === 'sms_agent') {
+        setActiveTab('sms-scheduled');
       } else if (agentType === 'time_sheet') {
         setActiveTab('timesheet-recurring');
       } else {
