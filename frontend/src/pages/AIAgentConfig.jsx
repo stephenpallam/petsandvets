@@ -280,6 +280,7 @@ The Veterinary Care Team`,
     selectedHolidays: [], // Array of holiday IDs
     useSMSChatGPTFormatting: true, // Default to true for ChatGPT formatting
     smsContentTemplate: `Hi [CUSTOMER_NAME]! Hope [PET_NAME] is doing well. Special holiday offer - 20% off checkups this month. Call us at (555) 123-4567 to book!`,
+    smsLink: 'https://petsandvetsanimalhospital.com', // Default website link
     postTime: '09:00',
     postDestination: 'in_review', // 'auto_send', 'in_review', or 'ready_to_publish'
     useCustomerDatabase: true, // Default to true for customer database integration
