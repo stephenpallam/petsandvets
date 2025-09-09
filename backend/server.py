@@ -4681,6 +4681,43 @@ async def email_timesheet_report_post(post_id: str, email_data: dict):
         logger.error(f"Error emailing timesheet report post: {str(e)}")
         raise
 
+def generate_topic_email_subject(topic: str, customer_name: str, pet_names: list) -> str:
+    """Generate a topic-specific email subject line"""
+    try:
+        # Create a personalized subject based on topic and customer info
+        if pet_names and len(pet_names) > 0:
+            if len(pet_names) == 1:
+                pet_part = pet_names[0]
+            else:
+                pet_part = f"{pet_names[0]} and {len(pet_names) - 1} other{'s' if len(pet_names) > 2 else ''}"
+        else:
+            pet_part = "your pet"
+        
+        # Topic-specific subject templates
+        topic_lower = topic.lower()
+        
+        if "vaccination" in topic_lower or "vaccine" in topic_lower:
+            return f"Important Vaccination Reminder for {pet_part}"
+        elif "dental" in topic_lower:
+            return f"Dental Health Update for {pet_part}"
+        elif "wellness" in topic_lower or "checkup" in topic_lower:
+            return f"Wellness Check Reminder for {pet_part}"
+        elif "nutrition" in topic_lower or "diet" in topic_lower:
+            return f"Nutrition Tips for {pet_part}"
+        elif "seasonal" in topic_lower or "weather" in topic_lower:
+            return f"Seasonal Care Tips for {pet_part}"
+        elif "emergency" in topic_lower or "urgent" in topic_lower:
+            return f"Important Health Alert for {pet_part}"
+        elif "holiday" in topic_lower:
+            return f"Holiday Safety Tips for {pet_part}"
+        else:
+            # Generic subject for other topics
+            return f"Important Update About {pet_part} from {customer_name.split()[0] if customer_name else 'Your'} Veterinary Team"
+            
+    except Exception as e:
+        # Fallback subject if generation fails
+        return f"Important Pet Health Update - {topic}"
+
 async def generate_recurring_email_for_agent(agent_id: str, agent_data: dict, post_id: str, now, email_template: str):
     """Generate email for recurring (topic-based) email agent"""
     try:
