@@ -675,7 +675,7 @@ class SMSAgentTester:
         
         try:
             # Check if there's a filter endpoint or if SMS agents appear in general listings
-            response = requests.get(f"{self.api_base}/ai-agents")
+            response = requests.get(f"{self.api_base}/ai-agents", headers=self.headers)
             
             if response.status_code == 200:
                 agents = response.json()
