@@ -1352,24 +1352,26 @@ const AIAgentsDashboard = () => {
                   </select>
                   
                   <div className="flex gap-3">
-                    <button
-                      onClick={() => fetchAgents()}
-                      disabled={loading}
-                      className="text-white px-4 py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center font-medium flex-1 sm:flex-initial"
+                    <select
+                      value={agentTypeFilter}
+                      onChange={(e) => handleAgentTypeFilterChange(e.target.value)}
+                      className="text-white px-4 py-2 rounded-lg transition-colors font-medium flex-1 sm:flex-initial cursor-pointer"
                       style={{ 
-                        backgroundColor: loading ? '#94a3b8' : '#29add3'
+                        backgroundColor: '#16a34a',
+                        minWidth: '160px'
                       }}
                       onMouseEnter={(e) => {
-                        if (!loading) e.target.style.backgroundColor = '#2196c7';
+                        e.target.style.backgroundColor = '#15803d';
                       }}
                       onMouseLeave={(e) => {
-                        if (!loading) e.target.style.backgroundColor = '#29add3';
+                        e.target.style.backgroundColor = '#16a34a';
                       }}
                     >
-                      <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                      <span className="hidden sm:inline">Refresh</span>
-                      <span className="sm:hidden">Refresh</span>
-                    </button>
+                      <option value="all" style={{ backgroundColor: 'white', color: 'black' }}>All Agent Types</option>
+                      <option value="time_sheet" style={{ backgroundColor: 'white', color: 'black' }}>Timesheet Agents</option>
+                      <option value="email" style={{ backgroundColor: 'white', color: 'black' }}>Email Agents</option>
+                      <option value="social_media" style={{ backgroundColor: 'white', color: 'black' }}>Social Media Agents</option>
+                    </select>
                     <button
                       onClick={handleNewAgentClick}
                       className="bg-green-600 text-white px-4 py-2 rounded-lg transition-colors hover:bg-green-700 flex items-center justify-center font-medium flex-1 sm:flex-initial"
