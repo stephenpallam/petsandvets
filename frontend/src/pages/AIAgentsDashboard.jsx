@@ -2039,7 +2039,6 @@ const AIAgentsDashboard = () => {
                               </div>
                             </>
                           )}
-                        </>
                         </div>
 
                         {/* Action Buttons */}
