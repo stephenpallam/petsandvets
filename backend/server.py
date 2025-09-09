@@ -4750,34 +4750,27 @@ Best regards,
 The Veterinary Care Team"""
         
         if use_chatgpt:
-            # Call actual ChatGPT API to format the email professionally with topic focus
+            # Try ChatGPT for minor enhancements, but don't rely on it completely
             try:
                 from ai_service import format_topic_email_content
                 
-                topic_specific_content = await format_topic_email_content(
+                enhanced_content = await format_topic_email_content(
                     template=topic_specific_content,
                     customer_name=customer_name,
                     pet_names=pet_names,
                     topic=topic
                 )
                 
-                logger.info(f"ChatGPT topic-based formatting applied for recurring email agent {agent_id}")
+                # Only use ChatGPT result if it's actually different and longer
+                if enhanced_content != topic_specific_content and len(enhanced_content) > len(topic_specific_content):
+                    logger.info(f"ChatGPT enhanced email content for agent {agent_id}")
+                    topic_specific_content = enhanced_content
+                else:
+                    logger.info(f"Using template-based content for agent {agent_id} (ChatGPT did not improve)")
                 
             except Exception as e:
-                logger.error(f"ChatGPT topic formatting failed for agent {agent_id}: {str(e)}")
-                # Fallback to topic-enhanced basic formatting if ChatGPT fails
-                topic_specific_content = f"""Dear {customer_name},
-
-I hope this message finds you and {pet_names} in great health!
-
-{topic}: Here's what every pet owner should know about this important topic for {pet_names}'s wellbeing.
-
-{topic_specific_content}
-
-If you have any questions about {topic} or {pet_names}'s care, please don't hesitate to reach out.
-
-Best regards,
-The Veterinary Care Team"""
+                logger.error(f"ChatGPT formatting failed for agent {agent_id}: {str(e)}")
+                logger.info(f"Using well-structured template-based content for agent {agent_id}")
         
         sample_content = topic_specific_content
         
