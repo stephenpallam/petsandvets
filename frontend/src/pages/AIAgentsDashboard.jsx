@@ -1906,6 +1906,7 @@ const AIAgentsDashboard = () => {
                                     </div>
                                   </div>
                                 </div>
+                              </div>
                               )}
                               
                               {/* Last Manual Run - Only for Email Write Agents without scheduled date/time */}
