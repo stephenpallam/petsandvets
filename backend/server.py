@@ -5510,8 +5510,13 @@ async def update_ai_agent(
             raise HTTPException(status_code=400, detail="Agent name is required for recurring mode")
         
         if agent_data.mode == AIAgentMode.WRITE:
-            if not agent_data.post_content:
-                raise HTTPException(status_code=400, detail="Post content is required for write mode")
+            # For email agents, check email_content; for others, check post_content
+            if agent_data.agent_type == AIAgentType.EMAIL_AGENT:
+                if not agent_data.email_content:
+                    raise HTTPException(status_code=400, detail="Email content is required for email write mode")
+            else:
+                if not agent_data.post_content:
+                    raise HTTPException(status_code=400, detail="Post content is required for write mode")
             # Note: post_title is optional - AI can generate if not provided
         
         # Topic validation - only required for social media agents
