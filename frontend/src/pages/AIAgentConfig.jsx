@@ -554,7 +554,11 @@ Best regards,
                 imageText: agentData.image_text || '',
                 wordCount: agentData.word_count?.toString() || '150',
                 useChatGPTFormatting: agentData.use_chatgpt_formatting !== undefined ? agentData.use_chatgpt_formatting : true,
-                postDestination: agentData.post_destination || 'in_review'
+                postDestination: agentData.post_destination || 'in_review',
+                postDate: agentData.post_date || '',
+                postTime: agentData.post_time || '',
+                emailType: agentData.email_type || 'bulk',
+                selectedCustomer: agentData.selected_customer || ''
               });
             }
           }
