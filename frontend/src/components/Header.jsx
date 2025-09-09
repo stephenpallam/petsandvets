@@ -345,6 +345,7 @@ const Header = () => {
             { name: 'Reviews', href: '/reviews' },
             { name: 'Business Info', href: '/business-info' },
             { name: 'Email Configuration', href: '/email-configuration' },
+            { name: 'SMS Configuration', href: '/sms-configuration' },
             { name: 'Photo Management', href: '/photo-management' },
             { name: 'User Management', href: '/user-management' }
           );
