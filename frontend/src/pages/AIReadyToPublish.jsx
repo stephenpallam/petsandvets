@@ -1440,6 +1440,14 @@ const AIReadyToPublish = () => {
                                 >
                                   Edit Content
                                 </button>
+                                
+                                <button
+                                  onClick={() => openDeleteModal(post)}
+                                  className="inline-flex items-center px-3 py-1.5 border border-red-300 text-sm leading-4 font-medium rounded-md text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                >
+                                  <Trash2 className="h-4 w-4 mr-1" />
+                                  Delete
+                                </button>
                               </>
                             )}
                           </div>
