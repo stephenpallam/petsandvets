@@ -154,18 +154,32 @@ const AIAgentsDashboard = () => {
     return `${hour12}:${minutes} ${ampm}`;
   };
 
-  const handleStatusFilterChange = (newFilter) => {
-    setStatusFilter(newFilter);
-    
-    // Filter from allAgents based on the new filter
+  const applyFilters = (newStatusFilter = statusFilter, newAgentTypeFilter = agentTypeFilter) => {
     let filteredAgents = allAgents;
-    if (newFilter === 'active') {
-      filteredAgents = allAgents.filter(agent => agent.is_active);
-    } else if (newFilter === 'paused') {
-      filteredAgents = allAgents.filter(agent => !agent.is_active);
+    
+    // Apply status filter
+    if (newStatusFilter === 'active') {
+      filteredAgents = filteredAgents.filter(agent => agent.is_active);
+    } else if (newStatusFilter === 'paused') {
+      filteredAgents = filteredAgents.filter(agent => !agent.is_active);
+    }
+    
+    // Apply agent type filter
+    if (newAgentTypeFilter !== 'all') {
+      filteredAgents = filteredAgents.filter(agent => agent.agent_type === newAgentTypeFilter);
     }
     
     setAgents(filteredAgents);
+  };
+
+  const handleStatusFilterChange = (newFilter) => {
+    setStatusFilter(newFilter);
+    applyFilters(newFilter, agentTypeFilter);
+  };
+
+  const handleAgentTypeFilterChange = (newFilter) => {
+    setAgentTypeFilter(newFilter);
+    applyFilters(statusFilter, newFilter);
   };
 
   const fetchAgentTypes = async () => {
