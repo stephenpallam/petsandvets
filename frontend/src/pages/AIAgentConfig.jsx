@@ -5148,6 +5148,507 @@ Example:
                     )}
                   </div>
                 )}
+
+                {/* SMS Scheduled Mode Tab */}
+                {activeTab === 'sms-scheduled' && (
+                  <div className="space-y-6">
+                    {searchParams.get('agent_type') === 'sms_agent' ? (
+                      // SMS Scheduled Mode Form
+                      <div className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          {/* Agent Name */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              <MessageSquare className="h-4 w-4 inline mr-2" />
+                              Agent Name *
+                            </label>
+                            <input
+                              type="text"
+                              value={smsScheduledMode.agentName}
+                              onChange={(e) => setSmsScheduledMode(prev => ({ ...prev, agentName: e.target.value }))}
+                              placeholder="My Holiday SMS Agent"
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+
+                          {/* SMS Provider */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              SMS Provider
+                            </label>
+                            <select
+                              value={smsScheduledMode.smsProvider}
+                              onChange={(e) => setSmsScheduledMode(prev => ({ ...prev, smsProvider: e.target.value }))}
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                              <option value="twilio">Twilio</option>
+                              <option value="sendgrid">SendGrid</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* Holiday Selection */}
+                        <div className="space-y-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-4">
+                            <Calendar className="h-4 w-4 inline mr-2" />
+                            Select Holidays for SMS Campaigns *
+                          </label>
+                          <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                            <div className="flex items-start">
+                              <Calendar className="h-5 w-5 text-blue-600 mt-0.5 mr-3" />
+                              <div>
+                                <h4 className="font-medium text-blue-900">How Holiday SMS Works</h4>
+                                <p className="text-sm text-blue-700 mt-1">
+                                  Your SMS will be sent automatically on each selected holiday using the template below. 
+                                  The SMS will be personalized with each customer's name and pet names.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {availableHolidays.length > 0 ? (
+                            <div className="max-h-60 overflow-y-auto border border-gray-200 rounded-lg">
+                              {availableHolidays.map((holiday) => {
+                                const IconComponent = getCategoryIcon(holiday.category);
+                                return (
+                                  <label key={holiday.id} className="flex items-center p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0">
+                                    <input
+                                      type="checkbox"
+                                      checked={smsScheduledMode.selectedHolidays.includes(holiday.id)}
+                                      onChange={() => {
+                                        setSmsScheduledMode(prev => ({
+                                          ...prev,
+                                          selectedHolidays: prev.selectedHolidays.includes(holiday.id)
+                                            ? prev.selectedHolidays.filter(id => id !== holiday.id)
+                                            : [...prev.selectedHolidays, holiday.id]
+                                        }));
+                                      }}
+                                      className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mr-3"
+                                    />
+                                    <IconComponent className="h-4 w-4 mr-2 text-gray-500" />
+                                    <div className="flex-1">
+                                      <span className="text-sm font-medium text-gray-900">{holiday.name}</span>
+                                      <span className="text-xs text-gray-500 ml-2">
+                                        {new Date(holiday.date).toLocaleDateString('en-US', { 
+                                          weekday: 'short', 
+                                          month: 'short', 
+                                          day: 'numeric',
+                                          year: 'numeric'
+                                        })}
+                                      </span>
+                                    </div>
+                                  </label>
+                                );
+                              })}
+                            </div>
+                          ) : (
+                            <div className="text-center py-4 text-gray-500">
+                              <Calendar className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                              <p>Loading holidays...</p>
+                            </div>
+                          )}
+                          <p className="text-xs text-gray-500">
+                            Selected: {smsScheduledMode.selectedHolidays.length} holiday{smsScheduledMode.selectedHolidays.length !== 1 ? 's' : ''}
+                          </p>
+                        </div>
+
+                        {/* SMS Template */}
+                        <div className="space-y-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <MessageSquare className="h-4 w-4 inline mr-2" />
+                            SMS Template * 
+                            <span className="text-xs text-gray-500 ml-2">
+                              ({smsScheduledMode.smsContentTemplate.length}/160 characters)
+                            </span>
+                          </label>
+                          <textarea
+                            value={smsScheduledMode.smsContentTemplate}
+                            onChange={(e) => {
+                              if (e.target.value.length <= 160) {
+                                setSmsScheduledMode(prev => ({ ...prev, smsContentTemplate: e.target.value }));
+                              }
+                            }}
+                            placeholder="Hi [CUSTOMER_NAME]! Hope [PET_NAME] is doing well. Special holiday offer - 20% off checkups this month. Call us at (555) 123-4567 to book!"
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                            rows="3"
+                          />
+                          <div className="bg-gray-50 p-3 rounded-lg">
+                            <p className="text-xs text-gray-600 mb-2">
+                              <strong>Available placeholders:</strong>
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                              <code className="bg-white px-2 py-1 rounded text-xs">[CUSTOMER_NAME]</code>
+                              <code className="bg-white px-2 py-1 rounded text-xs">[PET_NAME]</code>
+                              <code className="bg-white px-2 py-1 rounded text-xs">[HOLIDAY_NAME]</code>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Send Time */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              <Clock className="h-4 w-4 inline mr-2" />
+                              Send Time
+                            </label>
+                            <select
+                              value={smsScheduledMode.postTime}
+                              onChange={(e) => setSmsScheduledMode(prev => ({ ...prev, postTime: e.target.value }))}
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                              {timeOptions.map(option => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+
+                          {/* SMS Type */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              SMS Type
+                            </label>
+                            <select
+                              value={smsScheduledMode.smsType}
+                              onChange={(e) => setSmsScheduledMode(prev => ({ ...prev, smsType: e.target.value }))}
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                              <option value="bulk">Bulk SMS (All Customers)</option>
+                              <option value="single">Single Customer</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* ChatGPT SMS Formatting */}
+                        <div className="space-y-4">
+                          <label className="flex items-center p-4 bg-purple-50 rounded-lg">
+                            <input
+                              type="checkbox"
+                              checked={smsScheduledMode.useSMSChatGPTFormatting}
+                              onChange={(e) => setSmsScheduledMode(prev => ({ ...prev, useSMSChatGPTFormatting: e.target.checked }))}
+                              className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500 mr-3"
+                            />
+                            <div>
+                              <div className="font-medium text-purple-900">Use ChatGPT SMS Formatting</div>
+                              <div className="text-sm text-purple-700">Let ChatGPT enhance and format your SMS content while keeping it under 160 characters</div>
+                            </div>
+                          </label>
+                        </div>
+
+                        {/* Content Review Workflow */}
+                        <div className="space-y-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Content Review Workflow
+                          </label>
+                          <div className="space-y-3">
+                            <label className="flex items-start">
+                              <input
+                                type="radio"
+                                name="smsScheduledPostDestination"
+                                value="in_review"
+                                checked={smsScheduledMode.postDestination === 'in_review'}
+                                onChange={(e) => setSmsScheduledMode(prev => ({ ...prev, postDestination: e.target.value }))}
+                                className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                              />
+                              <div className="ml-3">
+                                <span className="text-sm font-medium text-gray-900">In Review First</span>
+                                <p className="text-xs text-gray-600">SMS goes to "In Review" → "Ready to Publish" → Sent</p>
+                              </div>
+                            </label>
+                            <label className="flex items-start">
+                              <input
+                                type="radio"
+                                name="smsScheduledPostDestination"
+                                value="ready_to_publish"
+                                checked={smsScheduledMode.postDestination === 'ready_to_publish'}
+                                onChange={(e) => setSmsScheduledMode(prev => ({ ...prev, postDestination: e.target.value }))}
+                                className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                              />
+                              <div className="ml-3">
+                                <span className="text-sm font-medium text-gray-900">Ready to Publish</span>
+                                <p className="text-xs text-gray-600">SMS goes directly to "Ready to Publish" → Sent</p>
+                              </div>
+                            </label>
+                          </div>
+                        </div>
+
+                        {/* Save/Run Button */}
+                        <div className="flex justify-end space-x-3">
+                          <button
+                            onClick={isRunMode ? saveAndRunAgent : saveAgent}
+                            disabled={loading || (!isEditMode && !isRunMode && (!smsScheduledMode.agentName || smsScheduledMode.selectedHolidays.length === 0 || !smsScheduledMode.smsContentTemplate))}
+                            className="text-white px-6 py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center font-medium"
+                            style={{ 
+                              backgroundColor: loading ? '#94a3b8' : 
+                                            isRunMode ? '#10b981' : '#29add3'
+                            }}
+                            onMouseEnter={(e) => {
+                              if (!loading && ((isEditMode || isRunMode) || (smsScheduledMode.agentName && smsScheduledMode.selectedHolidays.length > 0 && smsScheduledMode.smsContentTemplate))) {
+                                e.target.style.backgroundColor = isRunMode ? '#059669' : '#1e88e5';
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (!loading) {
+                                e.target.style.backgroundColor = isRunMode ? '#10b981' : '#29add3';
+                              }
+                            }}
+                          >
+                            {isRunMode ? <Play className="h-4 w-4 mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+                            {loading ? (isRunMode ? 'Updating & Running...' : 'Saving...') : 
+                             isRunMode ? 'Update & Run Agent' : 
+                             isEditMode ? 'Update Agent Configuration' : 'Save Agent'}
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <h3 className="text-lg font-medium text-gray-900 mb-2">SMS Scheduled Mode</h3>
+                        <p className="text-gray-600">SMS Scheduled Mode form will be available here.</p>
+                        <p className="text-sm text-gray-500 mt-2">Currently under development.</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* SMS Write Mode Tab */}
+                {activeTab === 'sms-write' && (
+                  <div className="space-y-6">
+                    {searchParams.get('agent_type') === 'sms_agent' ? (
+                      // SMS Write Mode Form
+                      <div className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          {/* Agent Name */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              <MessageSquare className="h-4 w-4 inline mr-2" />
+                              Agent Name *
+                            </label>
+                            <input
+                              type="text"
+                              value={smsWriteMode.agentName}
+                              onChange={(e) => setSmsWriteMode(prev => ({ ...prev, agentName: e.target.value }))}
+                              placeholder="My SMS Campaign"
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+
+                          {/* SMS Provider */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              SMS Provider
+                            </label>
+                            <select
+                              value={smsWriteMode.smsProvider}
+                              onChange={(e) => setSmsWriteMode(prev => ({ ...prev, smsProvider: e.target.value }))}
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                              <option value="twilio">Twilio</option>
+                              <option value="sendgrid">SendGrid</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* SMS Subject (Optional) */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <MessageSquare className="h-4 w-4 inline mr-2" />
+                            SMS Title/Subject (Optional)
+                          </label>
+                          <input
+                            type="text"
+                            value={smsWriteMode.smsSubject}
+                            onChange={(e) => setSmsWriteMode(prev => ({ ...prev, smsSubject: e.target.value }))}
+                            placeholder="Holiday Special Offer"
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          />
+                        </div>
+
+                        {/* SMS Content */}
+                        <div className="space-y-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <MessageSquare className="h-4 w-4 inline mr-2" />
+                            SMS Content * 
+                            <span className="text-xs text-gray-500 ml-2">
+                              ({smsWriteMode.smsContent.length}/160 characters)
+                            </span>
+                          </label>
+                          <textarea
+                            value={smsWriteMode.smsContent}
+                            onChange={(e) => {
+                              if (e.target.value.length <= 160) {
+                                setSmsWriteMode(prev => ({ ...prev, smsContent: e.target.value }));
+                              }
+                            }}
+                            placeholder="Hi [CUSTOMER_NAME]! Hope [PET_NAME] is well. Don't forget your pet's checkup. Call (555) 123-4567 to schedule. Thanks!"
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                            rows="3"
+                          />
+                          <div className="bg-gray-50 p-3 rounded-lg">
+                            <p className="text-xs text-gray-600 mb-2">
+                              <strong>Available placeholders:</strong>
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                              <code className="bg-white px-2 py-1 rounded text-xs">[CUSTOMER_NAME]</code>
+                              <code className="bg-white px-2 py-1 rounded text-xs">[PET_NAME]</code>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Send Date and Time */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              <Calendar className="h-4 w-4 inline mr-2" />
+                              Send Date (Optional)
+                            </label>
+                            <input
+                              type="date"
+                              value={smsWriteMode.postDate}
+                              onChange={(e) => setSmsWriteMode(prev => ({ ...prev, postDate: e.target.value }))}
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                            <p className="text-xs text-gray-500 mt-1">Leave blank to send immediately after approval</p>
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              <Clock className="h-4 w-4 inline mr-2" />
+                              Send Time
+                            </label>
+                            <select
+                              value={smsWriteMode.postTime}
+                              onChange={(e) => setSmsWriteMode(prev => ({ ...prev, postTime: e.target.value }))}
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                              {timeOptions.map(option => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* SMS Type */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            SMS Type
+                          </label>
+                          <select
+                            value={smsWriteMode.smsType}
+                            onChange={(e) => setSmsWriteMode(prev => ({ ...prev, smsType: e.target.value }))}
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          >
+                            <option value="bulk">Bulk SMS (All Customers)</option>
+                            <option value="single">Single Customer</option>
+                          </select>
+                        </div>
+
+                        {/* ChatGPT SMS Formatting */}
+                        <div className="space-y-4">
+                          <label className="flex items-center p-4 bg-purple-50 rounded-lg">
+                            <input
+                              type="checkbox"
+                              checked={smsWriteMode.useSMSChatGPTFormatting}
+                              onChange={(e) => setSmsWriteMode(prev => ({ ...prev, useSMSChatGPTFormatting: e.target.checked }))}
+                              className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500 mr-3"
+                            />
+                            <div>
+                              <div className="font-medium text-purple-900">Use ChatGPT SMS Formatting</div>
+                              <div className="text-sm text-purple-700">Let ChatGPT enhance and format your SMS content while keeping it under 160 characters</div>
+                            </div>
+                          </label>
+                        </div>
+
+                        {/* Content Review Workflow */}
+                        <div className="space-y-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Content Review Workflow
+                          </label>
+                          <div className="space-y-3">
+                            <label className="flex items-start">
+                              <input
+                                type="radio"
+                                name="smsWritePostDestination"
+                                value="in_review"
+                                checked={smsWriteMode.postDestination === 'in_review'}
+                                onChange={(e) => setSmsWriteMode(prev => ({ ...prev, postDestination: e.target.value }))}
+                                className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                              />
+                              <div className="ml-3">
+                                <span className="text-sm font-medium text-gray-900">In Review First</span>
+                                <p className="text-xs text-gray-600">SMS goes to "In Review" → "Ready to Publish" → Sent</p>
+                              </div>
+                            </label>
+                            <label className="flex items-start">
+                              <input
+                                type="radio"
+                                name="smsWritePostDestination"
+                                value="ready_to_publish"
+                                checked={smsWriteMode.postDestination === 'ready_to_publish'}
+                                onChange={(e) => setSmsWriteMode(prev => ({ ...prev, postDestination: e.target.value }))}
+                                className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                              />
+                              <div className="ml-3">
+                                <span className="text-sm font-medium text-gray-900">Ready to Publish</span>
+                                <p className="text-xs text-gray-600">SMS goes directly to "Ready to Publish" → Sent</p>
+                              </div>
+                            </label>
+                            <label className="flex items-start">
+                              <input
+                                type="radio"
+                                name="smsWritePostDestination"
+                                value="auto_post"
+                                checked={smsWriteMode.postDestination === 'auto_post'}
+                                onChange={(e) => setSmsWriteMode(prev => ({ ...prev, postDestination: e.target.value }))}
+                                className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                              />
+                              <div className="ml-3">
+                                <span className="text-sm font-medium text-gray-900">Send Immediately</span>
+                                <p className="text-xs text-gray-600">SMS is sent immediately without manual review. Send date and time settings are ignored.</p>
+                              </div>
+                            </label>
+                          </div>
+                        </div>
+
+                        {/* Save/Run Button */}
+                        <div className="flex justify-end space-x-3">
+                          <button
+                            onClick={isRunMode ? saveAndRunAgent : saveAgent}
+                            disabled={loading || (!isEditMode && !isRunMode && (!smsWriteMode.agentName || !smsWriteMode.smsContent))}
+                            className="text-white px-6 py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center font-medium"
+                            style={{ 
+                              backgroundColor: loading ? '#94a3b8' : 
+                                            isRunMode ? '#10b981' : '#29add3'
+                            }}
+                            onMouseEnter={(e) => {
+                              if (!loading && ((isEditMode || isRunMode) || (smsWriteMode.agentName && smsWriteMode.smsContent))) {
+                                e.target.style.backgroundColor = isRunMode ? '#059669' : '#1e88e5';
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (!loading) {
+                                e.target.style.backgroundColor = isRunMode ? '#10b981' : '#29add3';
+                              }
+                            }}
+                          >
+                            {isRunMode ? <Play className="h-4 w-4 mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+                            {loading ? (isRunMode ? 'Updating & Running...' : 'Saving...') : 
+                             isRunMode ? 'Update & Run Agent' : 
+                             isEditMode ? 'Update Agent Configuration' : 'Save Agent'}
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <h3 className="text-lg font-medium text-gray-900 mb-2">SMS Write Mode</h3>
+                        <p className="text-gray-600">SMS Write Mode form will be available here.</p>
+                        <p className="text-sm text-gray-500 mt-2">Currently under development.</p>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
