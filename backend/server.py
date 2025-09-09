@@ -4801,7 +4801,7 @@ The Veterinary Care Team"""
         return
 
 async def generate_email_for_agent(agent_id: str, agent_data: dict):
-    """Generate an email for an AI email agent using real customer data"""
+    """Generate an email for an AI email agent - handles both scheduled (holiday-based) and recurring (topic-based) agents"""
     try:
         # Create initial post record for email preview
         post_id = str(uuid.uuid4())
@@ -4809,17 +4809,36 @@ async def generate_email_for_agent(agent_id: str, agent_data: dict):
         
         logger.info(f"Generating email for agent {agent_id}")
         
-        # Get email template and formatting preference
+        # Get email template and agent mode
         email_template = agent_data.get('email_content_template', '')
-        use_chatgpt = agent_data.get('use_chatgpt_formatting', True)
-        selected_holidays = agent_data.get('selected_holidays', [])
+        agent_mode = agent_data.get('mode', 'scheduled')
         
         if not email_template:
             logger.error(f"No email template found for agent {agent_id}")
             return
         
+        # Handle different agent modes
+        if agent_mode == 'recurring':
+            # This is a topic-based recurring email agent
+            return await generate_recurring_email_for_agent(agent_id, agent_data, post_id, now, email_template)
+        else:
+            # This is a scheduled (holiday-based) email agent
+            return await generate_scheduled_email_for_agent(agent_id, agent_data, post_id, now, email_template)
+            
+    except Exception as e:
+        logger.error(f"Error in generate_email_for_agent: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return
+
+async def generate_scheduled_email_for_agent(agent_id: str, agent_data: dict, post_id: str, now, email_template: str):
+    """Generate email for scheduled (holiday-based) email agent"""
+    try:
+        use_chatgpt = agent_data.get('use_chatgpt_formatting', True)
+        selected_holidays = agent_data.get('selected_holidays', [])
+        
         if not selected_holidays:
-            logger.error(f"No holidays selected for email agent {agent_id}")
+            logger.error(f"No holidays selected for scheduled email agent {agent_id}")
             return
         
         # Get holiday information for context
@@ -4848,7 +4867,7 @@ async def generate_email_for_agent(agent_id: str, agent_data: dict):
                 continue
         
         if not valid_holidays:
-            logger.error(f"No valid holiday dates found for agent {agent_id}")
+            logger.error(f"No valid holiday dates found for scheduled agent {agent_id}")
             return
         
         # Sort holidays by date
