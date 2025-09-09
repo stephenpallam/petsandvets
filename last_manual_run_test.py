@@ -229,6 +229,19 @@ class LastManualRunTester:
                     print(f"✅ Post verified in database with status: {post.get('status')}")
                 else:
                     print(f"❌ Post {post_id} not found in database")
+            else:
+                # Check if posts were created by looking for recent posts from this agent
+                recent_posts = await self.db.ai_posts.find({
+                    "agent_id": agent_id,
+                    "created_at": {"$gte": before_run_time}
+                }).to_list(length=5)
+                
+                if recent_posts:
+                    print(f"📝 Found {len(recent_posts)} posts created by this agent run")
+                    for post in recent_posts:
+                        print(f"  - Post ID: {post.get('id')}, Status: {post.get('status')}")
+                else:
+                    print("⚠️ No post_id in response and no recent posts found")
             
             return True, before_run_time
         else:
