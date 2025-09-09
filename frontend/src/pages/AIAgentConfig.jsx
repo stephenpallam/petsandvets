@@ -281,6 +281,7 @@ The Veterinary Care Team`,
     smsProvider: 'twilio', // 'twilio' or 'sendgrid'
     useSMSChatGPTFormatting: true, // Default to true for ChatGPT formatting
     smsContentTemplate: `Hi [CUSTOMER_NAME]! Hope [PET_NAME] is doing well. Special holiday offer - 20% off checkups this month. Call us at (555) 123-4567 to book!`,
+    scheduledDate: '', // Optional scheduled date
     postTime: '09:00',
     postDestination: 'in_review', // 'auto_send', 'in_review', or 'ready_to_publish'
     useCustomerDatabase: true, // Default to true for customer database integration
