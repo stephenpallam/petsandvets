@@ -1679,17 +1679,8 @@ const AIAgentsDashboard = () => {
                                       <div className="flex flex-col">
                                         {agent.mode === 'recurring' ? (
                                           <>
-                                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Schedule</span>
-                                            <p className="text-sm text-gray-900 mt-1 capitalize">
-                                              {agent.schedule_type || 'Weekly'}
-                                              {agent.schedule_type === 'weekly' && agent.days_of_week 
-                                                ? ` (${Object.entries(agent.days_of_week)
-                                                    .filter(([_, selected]) => selected)
-                                                    .map(([day, _]) => day.charAt(0).toUpperCase() + day.slice(1, 3))
-                                                    .join(', ')})` 
-                                                : ''}
-                                              {agent.schedule_type === 'monthly' ? ' (1st of month)' : ''}
-                                            </p>
+                                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Use ChatGPT to create Email</span>
+                                            <p className="text-sm text-gray-900 mt-1">Yes</p>
                                           </>
                                         ) : (
                                           <>
