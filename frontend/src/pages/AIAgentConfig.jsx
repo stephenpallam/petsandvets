@@ -1564,6 +1564,62 @@ Best regards,
             use_customer_database: true, // Always use customer database for recurring emails
           };
         }
+      } else if (agentType === 'sms_agent') {
+        // Handle SMS agents
+        if (activeTab === 'sms-scheduled') {
+          agentData = {
+            agent_type: 'sms_agent',
+            mode: 'recurring', // Scheduled SMS are recurring based on holidays
+            agent_name: smsScheduledMode.agentName,
+            selected_holidays: smsScheduledMode.selectedHolidays,
+            sms_template: smsScheduledMode.smsContentTemplate,
+            sms_provider: smsScheduledMode.smsProvider,
+            use_sms_chatgpt_formatting: smsScheduledMode.useSMSChatGPTFormatting,
+            post_time: smsScheduledMode.postTime,
+            post_destination: smsScheduledMode.postDestination,
+            auto_post: smsScheduledMode.postDestination === 'auto_send',
+            use_customer_database: smsScheduledMode.useCustomerDatabase,
+            sms_type: smsScheduledMode.smsType,
+            selected_sms_customer: smsScheduledMode.selectedCustomer,
+            sms_character_limit: smsScheduledMode.smsCharacterLimit
+          };
+        } else if (activeTab === 'sms-write') {
+          agentData = {
+            agent_type: 'sms_agent',
+            mode: 'write',
+            agent_name: smsWriteMode.agentName,
+            sms_subject: smsWriteMode.smsSubject,
+            sms_content: smsWriteMode.smsContent,
+            sms_provider: smsWriteMode.smsProvider,
+            use_sms_chatgpt_formatting: smsWriteMode.useSMSChatGPTFormatting,
+            post_date: smsWriteMode.postDate,
+            post_time: smsWriteMode.postTime,
+            post_destination: smsWriteMode.postDestination,
+            auto_post: smsWriteMode.postDestination === 'auto_post',
+            sms_type: smsWriteMode.smsType,
+            selected_sms_customer: smsWriteMode.selectedCustomer,
+            sms_character_limit: smsWriteMode.smsCharacterLimit
+          };
+        } else if (activeTab === 'sms-recurring') {
+          agentData = {
+            agent_type: 'sms_agent',
+            mode: 'recurring',
+            agent_name: smsRecurringMode.agentName,
+            topic: smsRecurringMode.topic === 'Custom' ? smsRecurringMode.customTopic : smsRecurringMode.topic,
+            schedule_type: smsRecurringMode.scheduleType,
+            days_of_week: smsRecurringMode.daysOfWeek,
+            monthly_schedule: smsRecurringMode.monthlySchedule,
+            sms_template: smsRecurringMode.smsContentTemplate,
+            post_time: smsRecurringMode.postTime,
+            post_destination: smsRecurringMode.postDestination,
+            auto_post: smsRecurringMode.postDestination === 'auto_send',
+            sms_provider: smsRecurringMode.smsProvider,
+            use_sms_chatgpt_formatting: smsRecurringMode.useSMSChatGPTFormatting,
+            sms_type: smsRecurringMode.smsType,
+            sms_character_limit: smsRecurringMode.smsCharacterLimit,
+            use_customer_database: true
+          };
+        }
       } else {
         // Handle social media agents (existing logic)
         if (activeTab === 'social-media-recurring') {
