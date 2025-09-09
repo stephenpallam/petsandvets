@@ -1403,7 +1403,6 @@ The Veterinary Care Team`,
             image_option: emailRecurringMode.imageOption,
             uploaded_images: emailRecurringMode.uploadedImages,
             image_text: emailRecurringMode.imageText,
-            use_chatgpt_formatting: emailRecurringMode.useChatGPTFormatting,
             post_destination: emailRecurringMode.postDestination,
             auto_post: emailRecurringMode.postDestination === 'auto_send',
             use_customer_database: true, // Always use customer database for recurring emails
