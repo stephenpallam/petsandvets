@@ -734,6 +734,14 @@ const AIPublishedPosts = () => {
                           ) : (
                             // Email without image - use full width like review page
                             <div>
+                              {/* Email Subject Line */}
+                              {post.email_subject && (
+                                <div className="mb-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-400">
+                                  <div className="text-sm font-medium text-blue-800 mb-1">Email Subject:</div>
+                                  <div className="text-blue-900 font-semibold">{post.email_subject}</div>
+                                </div>
+                              )}
+                              
                               <h4 className="font-medium mb-2">Content:</h4>
                               <div className="bg-gray-50 rounded-lg p-4">
                                 <p className="text-gray-900 whitespace-pre-wrap">{post.content}</p>
