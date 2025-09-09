@@ -2550,11 +2550,23 @@ const AIAgentsDashboard = () => {
                         </div>
                         
                         {/* Content Preview for Write Mode */}
-                        {selectedAgent.mode === 'write' && selectedAgent.post_content && (
+                        {selectedAgent.mode === 'write' && (
                           <div>
                             <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Content Preview</label>
                             <div className="mt-2 p-3 bg-white rounded-md border border-gray-200">
-                              <p className="text-sm text-gray-900 whitespace-pre-wrap">{selectedAgent.post_content}</p>
+                              <p className="text-sm text-gray-900 whitespace-pre-wrap">
+                                {selectedAgent.agent_type === 'email' ? selectedAgent.email_content : selectedAgent.post_content}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Email Subject for Email Agents */}
+                        {selectedAgent.agent_type === 'email' && selectedAgent.email_subject && (
+                          <div>
+                            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Subject</label>
+                            <div className="mt-2 p-3 bg-blue-50 rounded-md border border-blue-200">
+                              <p className="text-sm text-blue-900 font-medium">{selectedAgent.email_subject}</p>
                             </div>
                           </div>
                         )}
