@@ -343,7 +343,7 @@ class WriteEmailAgentTester:
             
             if response.status_code == 200:
                 created_agent = response.json()
-                agent_id = created_agent.get('id')
+                agent_id = created_agent.get('agent_id') or created_agent.get('id')
                 
                 self.log_result(
                     "Create Social Media Agent",
