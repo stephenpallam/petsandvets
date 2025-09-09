@@ -282,7 +282,7 @@ class SMSAgentTester:
                 "sms_provider": "twilio"
             }
             
-            response = requests.post(f"{self.api_base}/ai-agents", json=sms_agent_data)
+            response = requests.post(f"{self.api_base}/ai-agents", json=sms_agent_data, headers=self.headers)
             
             if response.status_code == 400:
                 error_text = response.text.lower()
