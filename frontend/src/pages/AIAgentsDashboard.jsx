@@ -2760,7 +2760,7 @@ const AIAgentsDashboard = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                           <div>
                             <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Mode</label>
-                            <p className="text-sm text-gray-900 mt-1">{getModeLabel(selectedAgent.mode)}</p>
+                            <p className="text-sm text-gray-900 mt-1">{getModeLabel(selectedAgent.mode, selectedAgent.agent_type, selectedAgent.selected_holidays)}</p>
                           </div>
                           {selectedAgent.topic && (
                             <div>
