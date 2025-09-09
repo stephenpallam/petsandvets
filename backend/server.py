@@ -736,6 +736,18 @@ class EmailProvider(str, Enum):
     SENDGRID = "sendgrid"
 
 
+class SMSConfig(BaseModel):
+    notification_phone: Optional[str] = None
+    sms_provider: str = "twilio"  # 'twilio' or 'sendgrid'
+    is_enabled: bool = False
+    # Twilio fields
+    twilio_account_sid: Optional[str] = None
+    twilio_auth_token: Optional[str] = None
+    twilio_phone_number: Optional[str] = None
+    # SendGrid fields (for SMS)
+    sendgrid_api_key: Optional[str] = None
+    sender_phone: Optional[str] = None
+
 class EmailConfig(BaseModel):
     id: str
     notification_email: str
