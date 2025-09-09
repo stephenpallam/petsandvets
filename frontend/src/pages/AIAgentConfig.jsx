@@ -4406,13 +4406,13 @@ Example:
                         
                                                   {/* Weekly Schedule - Days of Week Selection */}
                                                   {emailRecurringMode.scheduleType === 'weekly' && (
-                                                    <div className="mt-4 p-4 border border-gray-200 rounded-lg">
-                                                      <label className="block text-sm font-medium text-gray-700 mb-3">
+                                                    <div className="space-y-4">
+                                                      <label className="block text-sm font-medium text-gray-700 mb-2">
                                                         Select Days of Week *
                                                       </label>
-                                                      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+                                                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                                         {Object.entries(emailRecurringMode.daysOfWeek).map(([day, selected]) => (
-                                                          <label key={day} className="flex items-center space-x-2 p-2 rounded hover:bg-gray-50 cursor-pointer">
+                                                          <label key={day} className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer">
                                                             <input
                                                               type="checkbox"
                                                               checked={selected}
@@ -4420,9 +4420,9 @@ Example:
                                                                 ...emailRecurringMode.daysOfWeek,
                                                                 [day]: e.target.checked
                                                               })}
-                                                              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                                              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mr-3"
                                                             />
-                                                            <span className="text-sm text-gray-700 capitalize">{day}</span>
+                                                            <span className="text-sm font-medium text-gray-900 capitalize">{day}</span>
                                                           </label>
                                                         ))}
                                                       </div>
