@@ -117,12 +117,19 @@ const AIAgentsDashboard = () => {
         const allAgents = await response.json();
         setAllAgents(allAgents);
         
-        // Filter agents based on current filter
+        // Filter agents based on current filters
         let filteredAgents = allAgents;
+        
+        // Apply status filter
         if (statusFilter === 'active') {
-          filteredAgents = allAgents.filter(agent => agent.is_active);
+          filteredAgents = filteredAgents.filter(agent => agent.is_active);
         } else if (statusFilter === 'paused') {
-          filteredAgents = allAgents.filter(agent => !agent.is_active);
+          filteredAgents = filteredAgents.filter(agent => !agent.is_active);
+        }
+        
+        // Apply agent type filter
+        if (agentTypeFilter !== 'all') {
+          filteredAgents = filteredAgents.filter(agent => agent.agent_type === agentTypeFilter);
         }
         
         setAgents(filteredAgents);
