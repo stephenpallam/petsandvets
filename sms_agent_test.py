@@ -661,7 +661,11 @@ class SMSAgentTester:
             
             if review_response.status_code == 200:
                 review_posts = review_response.json()
-                sms_review_posts = [post for post in review_posts if post.get('agent_type') == 'sms_agent']
+                # Handle both list and dict responses
+                if isinstance(review_posts, list):
+                    sms_review_posts = [post for post in review_posts if isinstance(post, dict) and post.get('agent_type') == 'sms_agent']
+                else:
+                    sms_review_posts = []
                 
                 if sms_review_posts:
                     review_success = True
@@ -669,7 +673,11 @@ class SMSAgentTester:
             
             if ready_response.status_code == 200:
                 ready_posts = ready_response.json()
-                sms_ready_posts = [post for post in ready_posts if post.get('agent_type') == 'sms_agent']
+                # Handle both list and dict responses
+                if isinstance(ready_posts, list):
+                    sms_ready_posts = [post for post in ready_posts if isinstance(post, dict) and post.get('agent_type') == 'sms_agent']
+                else:
+                    sms_ready_posts = []
                 
                 if sms_ready_posts:
                     ready_success = True
