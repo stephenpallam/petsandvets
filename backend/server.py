@@ -5068,6 +5068,116 @@ The Veterinary Care Team"""
         traceback.print_exc()
         return
 
+async def generate_write_mode_email_for_agent(agent_id: str, agent_data: dict, post_id: str, now, email_content: str):
+    """Generate email for write mode email agent"""
+    try:
+        logger.info(f"Generating write mode email for agent {agent_id}")
+        
+        # Get agent settings
+        use_chatgpt = agent_data.get('use_chatgpt_formatting', True)
+        email_subject = agent_data.get('email_subject', 'Email from Your Veterinary Team')
+        agent_name = agent_data.get('agent_name', 'Write Mode Email Agent')
+        
+        # Get a random customer for preview (same logic as other email functions)
+        customers_cursor = db.customers.aggregate([{"$sample": {"size": 1}}])
+        customers_list = await customers_cursor.to_list(length=1)
+        
+        if not customers_list:
+            logger.warning("No customers found for email preview")
+            customer_name = "Valued Customer"
+            pet_names = "your pet"
+        else:
+            customer = customers_list[0]
+            customer_name = customer.get('name', 'Valued Customer')
+            
+            # Handle pet names (both new pets array and legacy pet_name field)
+            pets = customer.get('pets', [])
+            if pets:
+                # New format: array of pet objects
+                valid_pet_names = [pet.get('name', '').strip() for pet in pets if pet.get('name', '').strip()]
+            elif customer.get('pet_name', '').strip():
+                # Legacy format: comma-separated string
+                pet_names_str = customer.get('pet_name').strip()
+                valid_pet_names = [name.strip() for name in pet_names_str.split(',') if name.strip()]
+            else:
+                valid_pet_names = []
+            
+            # Format pet names grammatically
+            if len(valid_pet_names) == 0:
+                pet_names = "your pet"
+            elif len(valid_pet_names) == 1:
+                pet_names = valid_pet_names[0]
+            elif len(valid_pet_names) == 2:
+                pet_names = f"{valid_pet_names[0]} and {valid_pet_names[1]}"
+            else:
+                pet_names = ", ".join(valid_pet_names[:-1]) + f", and {valid_pet_names[-1]}"
+        
+        logger.info(f"Using customer {customer_name} with pet(s): {pet_names} for email preview")
+        
+        # Replace placeholders in email content
+        personalized_content = email_content.replace('[CUSTOMER_NAME]', customer_name)
+        personalized_content = personalized_content.replace('[PET_NAME]', pet_names)
+        personalized_content = personalized_content.replace('[PET_NAMES]', pet_names)
+        
+        # Apply ChatGPT formatting if enabled
+        final_content = personalized_content
+        if use_chatgpt:
+            try:
+                formatted_content = await ai_service.format_email_content(
+                    content=personalized_content,
+                    customer_name=customer_name,
+                    pet_names=pet_names,
+                    subject=email_subject
+                )
+                if formatted_content and formatted_content.strip():
+                    final_content = formatted_content
+                    logger.info(f"Applied ChatGPT formatting to write mode email for agent {agent_id}")
+                else:
+                    logger.info(f"ChatGPT formatting returned empty, using original content for agent {agent_id}")
+            except Exception as e:
+                logger.error(f"ChatGPT formatting failed for agent {agent_id}: {str(e)}")
+                logger.info(f"Using original content for agent {agent_id}")
+        
+        # Create the email post
+        email_post = {
+            "id": post_id,
+            "agent_id": agent_id,
+            "agent_name": agent_name,
+            "agent_type": "email",
+            "topic": email_subject,
+            "content": final_content,
+            "status": "in_review",
+            "created_at": now,
+            "updated_at": now,
+            "platforms": ["email"],
+            "email_template": email_content,  # Store original template for mass sending
+            "sample_customer_name": customer_name,
+            "sample_pet_names": pet_names,
+            "email_subject": email_subject,
+            "use_chatgpt_formatting": use_chatgpt,
+            "email_type": agent_data.get('email_type', 'bulk'),
+            "ready_for_mass_email": False,
+            "mass_emails_sent": 0,
+            "mass_emails_failed": 0
+        }
+        
+        # Insert the post
+        await db.ai_posts.insert_one(email_post)
+        
+        logger.info(f"Created write mode email post {post_id} for agent {agent_id} with status: in_review")
+        
+        return {
+            "post_id": post_id,
+            "status": "in_review",
+            "content_preview": final_content[:200] + "..." if len(final_content) > 200 else final_content
+        }
+        
+    except Exception as e:
+        logger.error(f"Error in generate_write_mode_email_for_agent: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return
+
 async def send_mass_emails_from_post(post_id: str, post_data: dict):
     """Send personalized emails to all customers using the approved email template"""
     try:
