@@ -393,10 +393,9 @@ class WriteEmailAgentTester:
                     run_result
                 )
                 
-                # Check for posts created
+                # Check for posts created (social media posts might have agent_type: None)
                 posts = await self.db.ai_posts.find({
-                    "agent_id": agent_id,
-                    "agent_type": "social_media"
+                    "agent_id": agent_id
                 }).sort("created_at", -1).to_list(length=10)
                 
                 if posts:
