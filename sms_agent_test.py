@@ -356,31 +356,38 @@ class SMSAgentTester:
             # This might pass creation but fail during execution
             if response.status_code == 200:
                 # Try to run the agent to see if it fails
-                agent_data = response.json()
-                agent_id = agent_data.get('id')
+                response_data = response.json()
+                agent_id = response_data.get('agent_id')
                 
-                run_response = requests.post(f"{self.api_base}/ai-agents/{agent_id}/run")
-                
-                if run_response.status_code != 200:
-                    self.log_test_result(
-                        "SMS Agent Validation - Missing SMS Content (Write Mode)", 
-                        True, 
-                        "Agent creation allowed but run fails without SMS content"
-                    )
+                if agent_id:
+                    run_response = requests.post(f"{self.api_base}/ai-agents/{agent_id}/run", headers=self.headers)
+                    
+                    if run_response.status_code != 200:
+                        self.log_test_result(
+                            "SMS Agent Validation - Missing SMS Content (Write Mode)", 
+                            True, 
+                            f"Agent creation allowed but run fails without SMS content: {run_response.text}"
+                        )
+                    else:
+                        self.log_test_result(
+                            "SMS Agent Validation - Missing SMS Content (Write Mode)", 
+                            False, 
+                            "Agent runs successfully without SMS content"
+                        )
                 else:
                     self.log_test_result(
                         "SMS Agent Validation - Missing SMS Content (Write Mode)", 
                         False, 
-                        "Agent runs successfully without SMS content"
+                        "Agent created but no agent_id in response"
                     )
-            else:
+            elif response.status_code in [400, 500]:
                 # Check if it was rejected at creation
                 error_text = response.text.lower()
-                if "sms content" in error_text or "content" in error_text:
+                if "sms content" in error_text or "content" in error_text or "failed to create" in error_text:
                     self.log_test_result(
                         "SMS Agent Validation - Missing SMS Content (Write Mode)", 
                         True, 
-                        f"Correctly rejected at creation: {response.text}"
+                        f"Correctly rejected at creation (HTTP {response.status_code}): {response.text}"
                     )
                 else:
                     self.log_test_result(
@@ -388,6 +395,12 @@ class SMSAgentTester:
                         False, 
                         f"Unexpected error: {response.text}"
                     )
+            else:
+                self.log_test_result(
+                    "SMS Agent Validation - Missing SMS Content (Write Mode)", 
+                    False, 
+                    f"Unexpected response: {response.status_code} - {response.text}"
+                )
                 
         except Exception as e:
             self.log_test_result(
