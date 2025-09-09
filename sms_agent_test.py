@@ -124,25 +124,33 @@ class SMSAgentTester:
             response = requests.post(f"{self.api_base}/ai-agents", json=sms_agent_data, headers=self.headers)
             
             if response.status_code == 200:
-                agent_data = response.json()
-                agent_id = agent_data.get('id')
+                response_data = response.json()
+                agent_id = response_data.get('agent_id')
                 
-                # Verify agent was created with correct fields
-                if (agent_data.get('agent_type') == 'sms_agent' and 
-                    agent_data.get('mode') == 'write' and
-                    agent_data.get('sms_content') == sms_agent_data['sms_content']):
-                    
-                    self.log_test_result(
-                        "SMS Agent Creation - Write Mode", 
-                        True, 
-                        f"Agent created with ID: {agent_id}"
-                    )
-                    return agent_id
+                if agent_id:
+                    # Verify agent was created by checking database
+                    agent_doc = await self.db.ai_agents.find_one({"id": agent_id})
+                    if (agent_doc and agent_doc.get('agent_type') == 'sms_agent' and 
+                        agent_doc.get('mode') == 'write' and
+                        agent_doc.get('sms_content') == sms_agent_data['sms_content']):
+                        
+                        self.log_test_result(
+                            "SMS Agent Creation - Write Mode", 
+                            True, 
+                            f"Agent created with ID: {agent_id}"
+                        )
+                        return agent_id
+                    else:
+                        self.log_test_result(
+                            "SMS Agent Creation - Write Mode", 
+                            False, 
+                            f"Agent created but fields incorrect in database"
+                        )
                 else:
                     self.log_test_result(
                         "SMS Agent Creation - Write Mode", 
                         False, 
-                        f"Agent created but fields incorrect: {agent_data}"
+                        f"Agent created but no agent_id in response: {response_data}"
                     )
             else:
                 self.log_test_result(
