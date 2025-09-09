@@ -444,10 +444,9 @@ class WriteEmailAgentTester:
                 "agent_type": "email"
             }).to_list(length=10)
             
-            # Get social media agent posts  
+            # Get social media agent posts (might have agent_type: None)
             social_posts = await self.db.ai_posts.find({
-                "agent_id": getattr(self, 'social_agent_id', None),
-                "agent_type": "social_media"
+                "agent_id": getattr(self, 'social_agent_id', None)
             }).to_list(length=10)
             
             comparison = {
