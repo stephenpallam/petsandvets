@@ -426,6 +426,14 @@ The Veterinary Care Team`,
             } else {
               correctTabId = 'email-recurring'; // Topic-based recurring emails
             }
+          } else if (agentData.agent_type === 'sms_agent') {
+            if (tabMode === 'write') {
+              correctTabId = 'sms-write';
+            } else if (tabMode === 'recurring' && agentData.selected_holidays?.length > 0) {
+              correctTabId = 'sms-scheduled'; // Holiday-based SMS use scheduled tab
+            } else {
+              correctTabId = 'sms-recurring'; // Topic-based recurring SMS
+            }
           } else {
             // Social media agents
             correctTabId = `social-media-${tabMode}`;
