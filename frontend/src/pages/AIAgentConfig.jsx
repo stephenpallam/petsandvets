@@ -622,6 +622,59 @@ Best regards,
               });
             }
           }
+
+          // Handle SMS agent data prepopulation
+          if (agentData.agent_type === 'sms_agent') {
+            if (agentData.mode === 'recurring' && agentData.selected_holidays && agentData.selected_holidays.length > 0) {
+              // This is a scheduled SMS agent (holiday-based)
+              setSmsScheduledMode({
+                agentName: agentData.name || agentData.agent_name || '',
+                selectedHolidays: agentData.selected_holidays || [],
+                smsProvider: agentData.sms_provider || 'twilio',
+                useSMSChatGPTFormatting: agentData.use_sms_chatgpt_formatting !== undefined ? agentData.use_sms_chatgpt_formatting : true,
+                smsContentTemplate: agentData.sms_template || agentData.sms_content_template || '',
+                postTime: agentData.post_time || '09:00',
+                postDestination: agentData.post_destination || 'in_review',
+                useCustomerDatabase: agentData.use_customer_database !== undefined ? agentData.use_customer_database : true,
+                smsType: agentData.sms_type || 'bulk',
+                selectedCustomer: agentData.selected_sms_customer || null,
+                smsCharacterLimit: agentData.sms_character_limit || 160
+              });
+            } else if (agentData.mode === 'recurring') {
+              // This is a recurring SMS agent (topic-based)
+              const isCustomTopic = !['Pet vaccination reminders', 'Appointment reminders', 'Health checkup alerts', 'Special offers', 'Holiday greetings', 'Pet care tips', 'Emergency updates'].includes(agentData.topic);
+              setSmsRecurringMode({
+                agentName: agentData.name || agentData.agent_name || '',
+                topic: isCustomTopic ? 'Custom' : (agentData.topic || ''),
+                customTopic: isCustomTopic ? agentData.topic : '',
+                scheduleType: agentData.schedule_type || 'weekly',
+                daysOfWeek: agentData.days_of_week || { monday: false, tuesday: false, wednesday: false, thursday: false, friday: false, saturday: false, sunday: false },
+                monthlySchedule: agentData.monthly_schedule || '1st',
+                smsContentTemplate: agentData.sms_template || agentData.sms_content_template || '',
+                postTime: agentData.post_time || '09:00',
+                postDestination: agentData.post_destination || 'in_review',
+                smsProvider: agentData.sms_provider || 'twilio',
+                useSMSChatGPTFormatting: agentData.use_sms_chatgpt_formatting !== undefined ? agentData.use_sms_chatgpt_formatting : true,
+                smsType: agentData.sms_type || 'bulk',
+                smsCharacterLimit: agentData.sms_character_limit || 160
+              });
+            } else if (agentData.mode === 'write') {
+              // This is a write mode SMS agent
+              setSmsWriteMode({
+                agentName: agentData.name || agentData.agent_name || '',
+                smsContent: agentData.sms_content || agentData.post_content || '',
+                smsSubject: agentData.sms_subject || agentData.post_title || '',
+                smsProvider: agentData.sms_provider || 'twilio',
+                useSMSChatGPTFormatting: agentData.use_sms_chatgpt_formatting !== undefined ? agentData.use_sms_chatgpt_formatting : true,
+                postDestination: agentData.post_destination || 'in_review',
+                postDate: agentData.post_date || '',
+                postTime: agentData.post_time || '',
+                smsType: agentData.sms_type || 'bulk',
+                selectedCustomer: agentData.selected_sms_customer || null,
+                smsCharacterLimit: agentData.sms_character_limit || 160
+              });
+            }
+          }
           
           setMessage({ type: 'info', text: `Editing agent: ${agentData.name || agentData.agent_name || 'Unknown Agent'}` });
         } catch (error) {
