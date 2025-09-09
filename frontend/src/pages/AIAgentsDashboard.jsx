@@ -1836,6 +1836,24 @@ const AIAgentsDashboard = () => {
                                 </div>
                               )}
                               
+                              {/* Row 1: Post Title and Workflow Mode for Social Media Agents */}
+                              {agent.agent_type !== 'email' && agent.agent_type !== 'time_sheet' && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Post Title</span>
+                                    <p className="text-sm text-gray-900 mt-1 font-medium">
+                                      {agent.post_title || 'No title specified'}
+                                    </p>
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Workflow Mode</span>
+                                    <p className="text-sm text-gray-900 mt-1">
+                                      {getWorkflowMode(agent)}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                              
                               {/* Row 2: Email Recipients and Workflow Mode for Email Agents */}
                               {agent.agent_type === 'email' && (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
