@@ -5000,8 +5000,10 @@ The Veterinary Care Team"""
         return {"post_id": post_id, "status": "completed"}
         
     except Exception as e:
-        logger.error(f"Error generating email for agent {agent_id}: {str(e)}")
-        raise
+        logger.error(f"Error in generate_scheduled_email_for_agent: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return
 
 async def send_mass_emails_from_post(post_id: str, post_data: dict):
     """Send personalized emails to all customers using the approved email template"""
