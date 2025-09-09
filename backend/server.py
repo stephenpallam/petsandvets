@@ -4726,27 +4726,28 @@ async def generate_recurring_email_for_agent(agent_id: str, agent_data: dict, po
             
             logger.info(f"Using customer {customer_name} with pet(s): {pet_names} for email preview")
         
-        # Create topic-specific content using the template as a base
-        # Start with a topic-focused introduction
-        topic_introduction = f"""Dear [CUSTOMER_NAME],
+        # Create topic-specific content that properly incorporates the topic
+        topic_specific_content = f"""Dear {customer_name},
 
-I hope this message finds you and [PET_NAMES] in excellent health!
+I hope this message finds you and {pet_names} in excellent health!
 
-Our latest {topic} update includes important information that can help keep [PET_NAMES] healthy and happy. As your trusted veterinary team, we want to share these valuable insights with you."""
+As part of our commitment to keeping you informed about the latest developments in pet care, we're excited to share important updates about {topic}.
 
-        # Replace all placeholders in both the introduction and template
-        topic_specific_content = topic_introduction.replace('[CUSTOMER_NAME]', customer_name)
-        topic_specific_content = topic_specific_content.replace('[PET_NAME]', pet_names)  # Legacy support
-        topic_specific_content = topic_specific_content.replace('[PET_NAMES]', pet_names)  # New plural support
-        
-        # Append a simplified version of the template (without greeting/closing as ChatGPT will handle structure)
-        base_template = email_template.replace('Dear [CUSTOMER_NAME],', '').replace('Warm regards,\nThe Veterinary Care Team', '').strip()
-        base_template = base_template.replace('[CUSTOMER_NAME]', customer_name)
-        base_template = base_template.replace('[PET_NAME]', pet_names)
-        base_template = base_template.replace('[PET_NAMES]', pet_names)
-        
-        # Combine topic introduction with base service information
-        topic_specific_content = f"{topic_specific_content}\n\n{base_template}"
+This information can help you make informed decisions about {pet_names}'s health and wellbeing. Our veterinary team stays current with the latest research and trends to provide you with valuable insights.
+
+Here are some key points about {topic} that every pet owner should know:
+
+• Stay informed about the latest veterinary research and recommendations
+• Regular preventive care remains the foundation of good pet health
+• Understanding current trends helps you make better decisions for {pet_names}
+• Our team is always here to discuss any questions you may have
+
+We believe that informed pet owners like you are the best advocates for their pets' health. If you have any questions about {topic} or how it might relate to {pet_names}'s care, please don't hesitate to reach out to our team.
+
+Thank you for trusting us with {pet_names}'s care!
+
+Best regards,
+The Veterinary Care Team"""
         
         if use_chatgpt:
             # Call actual ChatGPT API to format the email professionally with topic focus
