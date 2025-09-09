@@ -4862,20 +4862,30 @@ async def generate_email_for_agent(agent_id: str, agent_data: dict):
         
         logger.info(f"Generating email for agent {agent_id}")
         
-        # Get email template and agent mode
-        email_template = agent_data.get('email_content_template', '')
+        # Get agent mode
         agent_mode = agent_data.get('mode', 'scheduled')
         
-        if not email_template:
-            logger.error(f"No email template found for agent {agent_id}")
-            return
-        
         # Handle different agent modes
-        if agent_mode == 'recurring':
+        if agent_mode == 'write':
+            # This is a write mode email agent - use email_content instead of email_content_template
+            email_content = agent_data.get('email_content', '')
+            if not email_content:
+                logger.error(f"No email content found for write mode agent {agent_id}")
+                return
+            return await generate_write_mode_email_for_agent(agent_id, agent_data, post_id, now, email_content)
+        elif agent_mode == 'recurring':
             # This is a topic-based recurring email agent
+            email_template = agent_data.get('email_content_template', '')
+            if not email_template:
+                logger.error(f"No email template found for recurring agent {agent_id}")
+                return
             return await generate_recurring_email_for_agent(agent_id, agent_data, post_id, now, email_template)
         else:
             # This is a scheduled (holiday-based) email agent
+            email_template = agent_data.get('email_content_template', '')
+            if not email_template:
+                logger.error(f"No email template found for scheduled agent {agent_id}")
+                return
             return await generate_scheduled_email_for_agent(agent_id, agent_data, post_id, now, email_template)
             
     except Exception as e:
