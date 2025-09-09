@@ -1057,8 +1057,16 @@ const AIInReview = () => {
                               </div>
                             </div>
 
-                            {/* Social Media Post Content */}
+                            {/* Social Media/Email Post Content */}
                             <div className="prose max-w-none">
+                              {/* Email Subject Line - only show for email posts */}
+                              {post.agent_type === 'email' && post.email_subject && (
+                                <div className="mb-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-400">
+                                  <div className="text-sm font-medium text-blue-800 mb-1">Email Subject:</div>
+                                  <div className="text-blue-900 font-semibold">{post.email_subject}</div>
+                                </div>
+                              )}
+                              
                               <div className="whitespace-pre-wrap text-gray-900 leading-relaxed">
                                 {post.content}
                               </div>
