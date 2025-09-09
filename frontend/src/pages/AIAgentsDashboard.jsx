@@ -2119,9 +2119,8 @@ const AIAgentsDashboard = () => {
                           
                           {/* Next Run & Last Run for Recurring Agents */}
                           {(agent.mode === 'auto' || agent.mode === 'recurring') && (
-                            <div className="flex flex-col pt-3 border-t border-gray-100">
-                              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Next Run & Last Run</span>
-                              <div className="mt-1 grid grid-cols-1 lg:grid-cols-2 gap-4">
+                            <div className="pt-3 border-t border-gray-100">
+                              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                 {/* Left Column: Next Run Info */}
                                 <div className="p-3 bg-green-50 border border-green-200 rounded-md">
                                   {(() => {
