@@ -1051,7 +1051,7 @@ const AIInReview = () => {
                                     key={platform} 
                                     className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700"
                                   >
-                                    {getPlatformIcon(platform)} {platform === 'twitter' ? 'X' : platform}
+                                    {getPlatformIcon(platform)} {platform === 'twitter' ? 'X' : platform.charAt(0).toUpperCase() + platform.slice(1)}
                                   </span>
                                 ))}
                               </div>
