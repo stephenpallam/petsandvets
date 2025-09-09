@@ -278,7 +278,6 @@ The Veterinary Care Team`,
   const [smsScheduledMode, setSmsScheduledMode] = useState({
     agentName: '',
     selectedHolidays: [], // Array of holiday IDs
-    smsProvider: 'twilio', // 'twilio' or 'sendgrid'
     useSMSChatGPTFormatting: true, // Default to true for ChatGPT formatting
     smsContentTemplate: `Hi [CUSTOMER_NAME]! Hope [PET_NAME] is doing well. Special holiday offer - 20% off checkups this month. Call us at (555) 123-4567 to book!`,
     postTime: '09:00',
