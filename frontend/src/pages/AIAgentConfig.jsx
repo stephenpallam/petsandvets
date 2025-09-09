@@ -324,7 +324,6 @@ The Veterinary Care Team`,
     smsContentTemplate: `Hi [CUSTOMER_NAME]! Regular reminder about [PET_NAME]'s care. Visit us for checkups, vaccines & more. Call (555) 123-4567`,
     postTime: '09:00',
     postDestination: 'in_review',
-    smsProvider: 'twilio',
     useSMSChatGPTFormatting: true,
     smsType: 'bulk',
     selectedCustomer: null, // For single SMS mode
