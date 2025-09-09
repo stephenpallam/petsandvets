@@ -2185,7 +2185,12 @@ const AIAgentsDashboard = () => {
                                       <span className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Last Run</span>
                                       <p className="text-sm text-gray-900 mt-1">
                                         {(() => {
-                                          // If agent has a scheduled date/time in the past, it likely ran
+                                          // For adhoc agents, prioritize actual manual run time over scheduled dates
+                                          if (agent.last_manual_run) {
+                                            return formatDate(agent.last_manual_run);
+                                          }
+                                          
+                                          // If no manual run time, check if there's a scheduled date in the past as fallback
                                           if (agent.post_date && agent.post_time) {
                                             try {
                                               const scheduledDate = new Date(agent.post_date);
@@ -2194,7 +2199,7 @@ const AIAgentsDashboard = () => {
                                               const now = new Date();
                                               
                                               if (scheduledDate < now) {
-                                                // Past scheduled date - show as last run
+                                                // Past scheduled date - show as fallback
                                                 const formattedDate = scheduledDate.toLocaleDateString('en-US', {
                                                   weekday: 'short',
                                                   month: 'short',
@@ -2208,9 +2213,8 @@ const AIAgentsDashboard = () => {
                                             }
                                           }
                                           
-                                          // Fallback to original logic - check last_manual_run first, then last_run
-                                          return agent.last_manual_run ? formatDate(agent.last_manual_run) : 
-                                                 (agent.last_run ? formatDate(agent.last_run) : 'Never run');
+                                          // Final fallback
+                                          return agent.last_run ? formatDate(agent.last_run) : 'Never run';
                                         })()}
                                       </p>
                                     </div>
