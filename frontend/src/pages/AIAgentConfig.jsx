@@ -1392,7 +1392,7 @@ The Veterinary Care Team`,
             agent_type: 'email',
             mode: 'recurring',
             agent_name: emailRecurringMode.agentName,
-            topic: emailRecurringMode.topic, // Required for recurring email agents
+            topic: emailRecurringMode.topic === 'Custom' ? emailRecurringMode.customTopic : emailRecurringMode.topic, // Use custom topic if selected
             word_count: emailRecurringMode.wordCount,
             // Schedule fields (replacing holiday fields)
             schedule_type: emailRecurringMode.scheduleType,
