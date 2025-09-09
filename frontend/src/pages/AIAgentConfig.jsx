@@ -6015,22 +6015,8 @@ Example:
                           </div>
                         </div>
 
-                        {/* Send Date and Time */}
+                        {/* Send Time */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              <Calendar className="h-4 w-4 inline mr-2" />
-                              Scheduled Date (Optional)
-                            </label>
-                            <input
-                              type="date"
-                              value={smsRecurringMode.scheduledDate || ''}
-                              onChange={(e) => setSmsRecurringMode(prev => ({ ...prev, scheduledDate: e.target.value }))}
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            />
-                            <p className="text-xs text-gray-500 mt-1">Leave blank to send based on recurring schedule</p>
-                          </div>
-
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               <Clock className="h-4 w-4 inline mr-2" />
@@ -6048,6 +6034,9 @@ Example:
                               ))}
                             </select>
                           </div>
+                          
+                          {/* Empty div to maintain grid layout */}
+                          <div></div>
                         </div>
 
                         {/* SMS Type */}
