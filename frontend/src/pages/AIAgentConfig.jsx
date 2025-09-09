@@ -5923,6 +5923,20 @@ Example:
                                 <p className="text-xs text-gray-600">SMS goes directly to "Ready to Publish" → Sent</p>
                               </div>
                             </label>
+                            <label className="flex items-start">
+                              <input
+                                type="radio"
+                                name="smsRecurringPostDestination"
+                                value="auto_send"
+                                checked={smsRecurringMode.postDestination === 'auto_send'}
+                                onChange={(e) => setSmsRecurringMode(prev => ({ ...prev, postDestination: e.target.value }))}
+                                className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                              />
+                              <div className="ml-3">
+                                <span className="text-sm font-medium text-gray-900">Send Immediately</span>
+                                <p className="text-xs text-gray-600">SMS is sent immediately on schedule without manual review</p>
+                              </div>
+                            </label>
                           </div>
                         </div>
 
