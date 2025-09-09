@@ -4809,6 +4809,9 @@ The Veterinary Care Team"""
                 logger.error(f"ChatGPT formatting failed for agent {agent_id}: {str(e)}")
                 logger.info(f"Using well-structured template-based content for agent {agent_id}")
         
+        # Generate topic-specific email subject line
+        subject_line = generate_topic_email_subject(topic, customer_name, pet_names)
+        
         sample_content = topic_specific_content
         
         # Create post record for email preview
@@ -4818,6 +4821,7 @@ The Veterinary Care Team"""
             "agent_name": agent_data.get('agent_name', 'Email Agent'),
             "topic": f"{topic} - {agent_data.get('agent_name', 'Email Agent')}",
             "content": sample_content,
+            "email_subject": subject_line,  # Add email subject line
             "image_url": "",
             "image_option": agent_data.get('image_option', 'none'),
             "platforms": ["email"],  # Email-specific platform
