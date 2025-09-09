@@ -387,7 +387,7 @@ class SMSAgentTester:
                 "sms_character_limit": 160
             }
             
-            response = requests.post(f"{self.api_base}/ai-agents", json=sms_agent_data)
+            response = requests.post(f"{self.api_base}/ai-agents", json=sms_agent_data, headers=self.headers)
             
             if response.status_code == 400:
                 error_text = response.text.lower()
