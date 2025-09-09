@@ -1481,7 +1481,9 @@ const AIAgentsDashboard = () => {
                                     <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${
                                       agent.agent_type === 'time_sheet' ? 'bg-purple-100 text-purple-700' : 'bg-teal-100 text-teal-700'
                                     }`}>
-                                      {agent.agent_type === 'time_sheet' ? 'Time Sheet' : 'Social Media'}
+                                      {agent.agent_type === 'time_sheet' ? 'Time Sheet' : 
+                                       agent.agent_type === 'email' || agent.agent_type === 'email_agent' ? 'Email' : 
+                                       'Social Media'}
                                     </span>
                                   </div>
                                 </div>
