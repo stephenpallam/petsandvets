@@ -5503,6 +5503,10 @@ async def send_mass_sms_from_post(post_id: str, post_data: dict):
                 personalized_sms = personalized_sms.replace('[PET_NAME]', pet_names)
                 personalized_sms = personalized_sms.replace('[PET_NAMES]', pet_names)
                 
+                # Replace [LINK] placeholder with actual link
+                sms_link = post_data.get('sms_link', 'https://petsandvetsanimalhospital.com')
+                personalized_sms = personalized_sms.replace('[LINK]', sms_link)
+                
                 # Ensure SMS is within character limit
                 if len(personalized_sms) > 160:
                     personalized_sms = personalized_sms[:157] + "..."
