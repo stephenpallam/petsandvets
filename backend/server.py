@@ -5737,6 +5737,21 @@ async def create_ai_agent(
                 if agent_data.custom_start_date >= agent_data.custom_end_date:
                     raise HTTPException(status_code=400, detail="Start date must be before end date")
         
+        # SMS agent specific validation
+        if agent_data.agent_type == AIAgentType.SMS_AGENT:
+            # Agent name is required for SMS agents
+            if not agent_data.agent_name:
+                raise HTTPException(status_code=400, detail="Agent name is required for SMS agents")
+            
+            # Validate SMS content length (160 character limit)
+            if agent_data.mode == AIAgentMode.WRITE and agent_data.sms_content:
+                if len(agent_data.sms_content) > agent_data.sms_character_limit or 160:
+                    raise HTTPException(status_code=400, detail=f"SMS content exceeds {agent_data.sms_character_limit or 160} character limit")
+            
+            # Validate SMS provider
+            if agent_data.sms_provider and agent_data.sms_provider not in ['twilio', 'sendgrid']:
+                raise HTTPException(status_code=400, detail="SMS provider must be either 'twilio' or 'sendgrid'")
+        
         now = await business_now_async()
         agent_dict = agent_data.dict()
         agent_dict["social_platforms"] = social_platforms
