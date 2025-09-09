@@ -324,6 +324,7 @@ The Veterinary Care Team`,
     // Monthly schedule - simplified to 1st of every month
     monthlySchedule: '1st', // Always 1st day of month for monthly schedules
     smsContentTemplate: `Hi [CUSTOMER_NAME]! Regular reminder about [PET_NAME]'s care. Visit us for checkups, vaccines & more. Call (555) 123-4567`,
+    smsLink: 'https://petsandvetsanimalhospital.com', // Default website link
     postTime: '09:00',
     postDestination: 'in_review',
     useSMSChatGPTFormatting: true,
