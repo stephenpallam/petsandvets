@@ -2583,11 +2583,7 @@ const AIAgentsDashboard = () => {
                             <div>
                               <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Use ChatGPT to Format Email</label>
                               <p className="text-sm text-gray-900 mt-1">
-                                <span className={`inline-flex items-center px-3 py-1 rounded text-xs font-medium ${
-                                  selectedAgent.use_chatgpt_formatting ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
-                                }`}>
-                                  {selectedAgent.use_chatgpt_formatting ? 'Yes' : 'No'}
-                                </span>
+                                {selectedAgent.use_chatgpt_formatting ? 'Yes' : 'No'}
                               </p>
                             </div>
                           )}
