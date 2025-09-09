@@ -4681,15 +4681,12 @@ async def email_timesheet_report_post(post_id: str, email_data: dict):
         logger.error(f"Error emailing timesheet report post: {str(e)}")
         raise
 
-def generate_topic_email_subject(topic: str, customer_name: str, pet_names: list) -> str:
+def generate_topic_email_subject(topic: str, customer_name: str, pet_names: str) -> str:
     """Generate a topic-specific email subject line"""
     try:
         # Create a personalized subject based on topic and customer info
-        if pet_names and len(pet_names) > 0:
-            if len(pet_names) == 1:
-                pet_part = pet_names[0]
-            else:
-                pet_part = f"{pet_names[0]} and {len(pet_names) - 1} other{'s' if len(pet_names) > 2 else ''}"
+        if pet_names and pet_names.strip():
+            pet_part = pet_names
         else:
             pet_part = "your pet"
         
@@ -4710,9 +4707,11 @@ def generate_topic_email_subject(topic: str, customer_name: str, pet_names: list
             return f"Important Health Alert for {pet_part}"
         elif "holiday" in topic_lower:
             return f"Holiday Safety Tips for {pet_part}"
+        elif "trending" in topic_lower and "health" in topic_lower:
+            return f"Latest Health News for {pet_part}"
         else:
             # Generic subject for other topics
-            return f"Important Update About {pet_part} from {customer_name.split()[0] if customer_name else 'Your'} Veterinary Team"
+            return f"Important Update About {pet_part}'s Care"
             
     except Exception as e:
         # Fallback subject if generation fails
