@@ -5207,39 +5207,43 @@ Example:
                           </div>
                           
                           {availableHolidays.length > 0 ? (
-                            <div className="max-h-60 overflow-y-auto border border-gray-200 rounded-lg">
-                              {availableHolidays.map((holiday) => {
-                                const IconComponent = getCategoryIcon(holiday.category);
-                                return (
-                                  <label key={holiday.id} className="flex items-center p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0">
-                                    <input
-                                      type="checkbox"
-                                      checked={smsScheduledMode.selectedHolidays.includes(holiday.id)}
-                                      onChange={() => {
-                                        setSmsScheduledMode(prev => ({
-                                          ...prev,
-                                          selectedHolidays: prev.selectedHolidays.includes(holiday.id)
-                                            ? prev.selectedHolidays.filter(id => id !== holiday.id)
-                                            : [...prev.selectedHolidays, holiday.id]
-                                        }));
-                                      }}
-                                      className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mr-3"
-                                    />
-                                    <IconComponent className="h-4 w-4 mr-2 text-gray-500" />
-                                    <div className="flex-1">
-                                      <span className="text-sm font-medium text-gray-900">{holiday.name}</span>
-                                      <span className="text-xs text-gray-500 ml-2">
-                                        {new Date(holiday.date).toLocaleDateString('en-US', { 
-                                          weekday: 'short', 
-                                          month: 'short', 
-                                          day: 'numeric',
-                                          year: 'numeric'
-                                        })}
-                                      </span>
-                                    </div>
-                                  </label>
-                                );
-                              })}
+                            <div className="max-h-60 overflow-y-auto border border-gray-200 rounded-lg p-4">
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                {availableHolidays.map((holiday) => {
+                                  const IconComponent = getCategoryIcon(holiday.category);
+                                  return (
+                                    <label key={holiday.id} className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer border">
+                                      <input
+                                        type="checkbox"
+                                        checked={smsScheduledMode.selectedHolidays.includes(holiday.id)}
+                                        onChange={() => {
+                                          setSmsScheduledMode(prev => ({
+                                            ...prev,
+                                            selectedHolidays: prev.selectedHolidays.includes(holiday.id)
+                                              ? prev.selectedHolidays.filter(id => id !== holiday.id)
+                                              : [...prev.selectedHolidays, holiday.id]
+                                          }));
+                                        }}
+                                        className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mr-3"
+                                      />
+                                      <div className="flex-1 min-w-0">
+                                        <div className="flex items-center mb-1">
+                                          <IconComponent className="h-4 w-4 mr-2 text-gray-500 flex-shrink-0" />
+                                          <span className="text-sm font-medium text-gray-900 truncate">{holiday.name}</span>
+                                        </div>
+                                        <span className="text-xs text-gray-500 block">
+                                          {new Date(holiday.date).toLocaleDateString('en-US', { 
+                                            weekday: 'short', 
+                                            month: 'short', 
+                                            day: 'numeric',
+                                            year: 'numeric'
+                                          })}
+                                        </span>
+                                      </div>
+                                    </label>
+                                  );
+                                })}
+                              </div>
                             </div>
                           ) : (
                             <div className="text-center py-4 text-gray-500">
