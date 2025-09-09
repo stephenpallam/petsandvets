@@ -533,7 +533,7 @@ class SMSAgentTester:
         print("\n=== TEST: SMS Agent Endpoints - GET /api/ai-agents ===")
         
         try:
-            response = requests.get(f"{self.api_base}/ai-agents")
+            response = requests.get(f"{self.api_base}/ai-agents", headers=self.headers)
             
             if response.status_code == 200:
                 agents = response.json()
