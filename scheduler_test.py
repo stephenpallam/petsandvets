@@ -37,6 +37,7 @@ class SchedulerTester:
         self.db_name = os.environ['DB_NAME']
         self.client = None
         self.db = None
+        self.auth_token = None
         
         # Get backend URL from frontend .env
         frontend_env_path = Path(__file__).parent / "frontend" / ".env"
