@@ -1817,26 +1817,63 @@ const AIAgentsDashboard = () => {
                           
                           {agent.mode === 'write' && (
                             <div className="space-y-4">
+                              {/* Row 1: ChatGPT Formatting and Email Type for Email Agents */}
+                              {agent.agent_type === 'email' && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Use ChatGPT to Format Email</span>
+                                    <p className="text-sm text-gray-900 mt-1">
+                                      <span className={`inline-flex items-center px-3 py-1 rounded text-xs font-medium ${
+                                        agent.use_chatgpt_formatting ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
+                                      }`}>
+                                        {agent.use_chatgpt_formatting ? 'Yes' : 'No'}
+                                      </span>
+                                    </p>
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Recipients</span>
+                                    <p className="text-sm text-gray-900 mt-1 capitalize">
+                                      {agent.email_type === 'single' ? 'Single Customer' : 'Bulk Customer Emails'}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {/* Email Subject Line for Email Agents */}
+                              {agent.agent_type === 'email' && agent.email_subject && (
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Subject</span>
+                                  <p className="text-sm text-gray-900 mt-1 font-medium">{agent.email_subject}</p>
+                                </div>
+                              )}
+                              
                               {/* Content Preview - Full Width */}
                               <div className="flex flex-col">
                                 <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Content Preview</span>
                                 <div className="mt-2 p-3 bg-white rounded-md border border-gray-200">
-                                  <p className="text-sm text-gray-900 line-clamp-3">{agent.post_content}</p>
+                                  <p className="text-sm text-gray-900 line-clamp-3">
+                                    {agent.agent_type === 'email' ? agent.email_content : agent.post_content}
+                                  </p>
                                 </div>
                               </div>
                               
-                              {/* Last Manual Run - Full Width */}
-                              <div className="grid grid-cols-1 gap-4 pt-2 border-t border-gray-100">
+                              {/* Last Manual Run and Schedule in One Row */}
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-gray-100">
                                 <div className="flex flex-col">
                                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Last Manual Run</span>
                                   <p className="text-sm text-gray-900 mt-1">
                                     {agent.last_manual_run ? formatDate(agent.last_manual_run) : 'Never run manually'}
                                   </p>
                                 </div>
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Schedule</span>
+                                  <p className="text-sm text-gray-900 mt-1">
+                                    {agent.mode === 'write' ? 'Manual Only' : 'Automated'}
+                                  </p>
+                                </div>
                               </div>
-                              
-                              {/* Next Run & Last Run for Recurring Write Mode Agents */}
-                              {(agent.mode === 'auto' || agent.mode === 'recurring') && (
+                            </div>
+                          ) && agent.mode !== 'write' && (
                                 <div className="flex flex-col pt-3 border-t border-gray-100">
                                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Next Run & Last Run</span>
                                   <div className="mt-1 grid grid-cols-1 lg:grid-cols-2 gap-4">
