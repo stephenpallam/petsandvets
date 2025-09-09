@@ -5311,12 +5311,56 @@ Example:
                             </label>
                             <select
                               value={smsScheduledMode.smsType}
-                              onChange={(e) => setSmsScheduledMode(prev => ({ ...prev, smsType: e.target.value }))}
+                              onChange={(e) => setSmsScheduledMode(prev => ({ ...prev, smsType: e.target.value, selectedCustomer: e.target.value === 'single' ? prev.selectedCustomer : null }))}
                               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             >
                               <option value="bulk">Bulk SMS (All Customers)</option>
                               <option value="single">Single Customer</option>
                             </select>
+                            
+                            {/* Descriptive labels */}
+                            {smsScheduledMode.smsType === 'bulk' && (
+                              <div className="mt-2 p-3 bg-blue-50 rounded-lg">
+                                <div className="flex items-start">
+                                  <Users className="h-4 w-4 text-blue-600 mt-0.5 mr-2" />
+                                  <p className="text-sm text-blue-700">
+                                    SMS will be sent to all customers in your customer management database who have opted in for SMS communications and have valid phone numbers.
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+                            
+                            {smsScheduledMode.smsType === 'single' && (
+                              <div className="mt-3">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  <User className="h-4 w-4 inline mr-2" />
+                                  Select Customer *
+                                </label>
+                                <select
+                                  value={smsScheduledMode.selectedCustomer || ''}
+                                  onChange={(e) => setSmsScheduledMode(prev => ({ ...prev, selectedCustomer: e.target.value }))}
+                                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                >
+                                  <option value="">Choose a customer...</option>
+                                  {availableCustomers.length > 0 ? (
+                                    availableCustomers
+                                      .filter(customer => customer.phone && customer.phone.trim()) // Only show customers with phone numbers
+                                      .map((customer) => (
+                                        <option key={customer.id} value={customer.id}>
+                                          {customer.name} - {customer.phone} {customer.pets && customer.pets.length > 0 ? `(${customer.pets.map(p => p.name).join(', ')})` : ''}
+                                        </option>
+                                      ))
+                                  ) : (
+                                    <option value="" disabled>Loading customers...</option>
+                                  )}
+                                </select>
+                                {availableCustomers.length > 0 && availableCustomers.filter(c => c.phone && c.phone.trim()).length === 0 && (
+                                  <p className="text-sm text-amber-600 mt-1">
+                                    No customers with phone numbers found. Please add phone numbers to customers in Customer Management.
+                                  </p>
+                                )}
+                              </div>
+                            )}
                           </div>
                         </div>
 
