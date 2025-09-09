@@ -130,8 +130,9 @@ class LastManualRunTester:
             "agent_type": "social_media",
             "mode": "adhoc",
             "topic": "Pet health tips",
-            "social_platforms": ["facebook"],
-            "image_option": "none"  # Use text only for faster testing
+            "social_platforms": {"facebook": True},
+            "image_option": "none",  # Use text only for faster testing
+            "word_count": "short"
         }
         
         print(f"Creating agent with data: {json.dumps(agent_data, indent=2)}")
