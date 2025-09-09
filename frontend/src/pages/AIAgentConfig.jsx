@@ -226,6 +226,7 @@ The Veterinary Care Team`,
   const [emailRecurringMode, setEmailRecurringMode] = useState({
     agentName: '',
     topic: '', // Required for recurring email agents  
+    customTopic: '', // For custom topic selection
     wordCount: '100',
     // Schedule Selection (replacing holiday selection)
     scheduleType: 'weekly', // 'weekly' or 'monthly'
@@ -239,8 +240,8 @@ The Veterinary Care Team`,
       saturday: false,
       sunday: false
     },
-    // Monthly schedule fields
-    monthlySchedule: 'first_monday', // 'first_monday', 'first_tuesday', etc.
+    // Monthly schedule - simplified to 1st of every month
+    monthlySchedule: '1st', // Always 1st day of month for monthly schedules
     // All other fields matching scheduled mode
     emailContentTemplate: `Dear [CUSTOMER_NAME],
 
