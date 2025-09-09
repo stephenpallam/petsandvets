@@ -325,7 +325,7 @@ class SMSAgentTester:
                 "sms_provider": "twilio"
             }
             
-            response = requests.post(f"{self.api_base}/ai-agents", json=sms_agent_data)
+            response = requests.post(f"{self.api_base}/ai-agents", json=sms_agent_data, headers=self.headers)
             
             # This might pass creation but fail during execution
             if response.status_code == 200:
