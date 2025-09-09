@@ -425,7 +425,7 @@ class SMSAgentFixesTester:
                             self.test_results.append(f"❌ SMS Edit Mode Fix - {agent_name}: agent_type incorrect")
                         
                         # For scheduled mode agents (with holidays), verify selected_holidays field
-                        if actual_mode == "recurring" and "selected_holidays" in agent["data"]:
+                        if actual_mode == "recurring" and "selected_holidays" in agent_info["data"]:
                             selected_holidays = retrieved_agent.get("selected_holidays")
                             if selected_holidays:
                                 print(f"✅ {agent_name}: selected_holidays field present for scheduled mode display")
