@@ -294,6 +294,7 @@ The Veterinary Care Team`,
     agentName: '',
     smsSubject: '', // Optional SMS title/subject
     smsContent: `Hi [CUSTOMER_NAME]! Hope [PET_NAME] is well. Don't forget your pet's checkup. Call (555) 123-4567 to schedule. Thanks!`,
+    smsLink: 'https://petsandvetsanimalhospital.com', // Default website link
     useSMSChatGPTFormatting: true,
     smsType: 'bulk', // 'single' or 'bulk'
     selectedCustomer: null, // For single SMS mode
