@@ -1518,6 +1518,7 @@ const AIAgentsDashboard = () => {
                                     }`}>
                                       {agent.agent_type === 'time_sheet' ? 'Time Sheet' : 
                                        agent.agent_type === 'email' || agent.agent_type === 'email_agent' ? 'Email' : 
+                                       agent.agent_type === 'sms_agent' ? 'SMS' :
                                        'Social Media'}
                                     </span>
                                   </div>
