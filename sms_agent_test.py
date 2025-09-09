@@ -587,7 +587,7 @@ class SMSAgentTester:
                 "sms_provider": "sendgrid"
             }
             
-            response = requests.put(f"{self.api_base}/ai-agents/{agent_id}", json=update_data)
+            response = requests.put(f"{self.api_base}/ai-agents/{agent_id}", json=update_data, headers=self.headers)
             
             if response.status_code == 200:
                 updated_agent = response.json()
