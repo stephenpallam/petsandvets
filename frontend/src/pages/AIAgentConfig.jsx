@@ -5649,6 +5649,306 @@ Example:
                     )}
                   </div>
                 )}
+
+                {/* SMS Recurring Mode Tab */}
+                {activeTab === 'sms-recurring' && (
+                  <div className="space-y-6">
+                    {searchParams.get('agent_type') === 'sms_agent' ? (
+                      // SMS Recurring Mode Form
+                      <div className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          {/* Agent Name */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              <MessageSquare className="h-4 w-4 inline mr-2" />
+                              Agent Name *
+                            </label>
+                            <input
+                              type="text"
+                              value={smsRecurringMode.agentName}
+                              onChange={(e) => setSmsRecurringMode(prev => ({ ...prev, agentName: e.target.value }))}
+                              placeholder="My Recurring SMS Agent"
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+
+                          {/* SMS Provider */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              SMS Provider
+                            </label>
+                            <select
+                              value={smsRecurringMode.smsProvider}
+                              onChange={(e) => setSmsRecurringMode(prev => ({ ...prev, smsProvider: e.target.value }))}
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                              <option value="twilio">Twilio</option>
+                              <option value="sendgrid">SendGrid</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* Topic Selection */}
+                        <div className="space-y-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <MessageSquare className="h-4 w-4 inline mr-2" />
+                            SMS Topic *
+                          </label>
+                          <select
+                            value={smsRecurringMode.topic}
+                            onChange={(e) => setSmsRecurringMode(prev => ({ ...prev, topic: e.target.value }))}
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          >
+                            <option value="">Select a topic...</option>
+                            <option value="Pet vaccination reminders">Pet vaccination reminders</option>
+                            <option value="Appointment reminders">Appointment reminders</option>
+                            <option value="Health checkup alerts">Health checkup alerts</option>
+                            <option value="Special offers">Special offers</option>
+                            <option value="Holiday greetings">Holiday greetings</option>
+                            <option value="Pet care tips">Pet care tips</option>
+                            <option value="Emergency updates">Emergency updates</option>
+                            <option value="Custom">Custom</option>
+                          </select>
+                          
+                          {smsRecurringMode.topic === 'Custom' && (
+                            <div className="mt-3">
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Custom Topic *
+                              </label>
+                              <input
+                                type="text"
+                                value={smsRecurringMode.customTopic}
+                                onChange={(e) => setSmsRecurringMode(prev => ({ ...prev, customTopic: e.target.value }))}
+                                placeholder="Enter your custom SMS topic"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              />
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Schedule Type */}
+                        <div className="space-y-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <Calendar className="h-4 w-4 inline mr-2" />
+                            Schedule Type *
+                          </label>
+                          <div className="space-y-3">
+                            <label className="flex items-start">
+                              <input
+                                type="radio"
+                                name="smsRecurringScheduleType"
+                                value="weekly"
+                                checked={smsRecurringMode.scheduleType === 'weekly'}
+                                onChange={(e) => setSmsRecurringMode(prev => ({ ...prev, scheduleType: e.target.value }))}
+                                className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                              />
+                              <div className="ml-3">
+                                <span className="text-sm font-medium text-gray-900">Weekly</span>
+                                <p className="text-xs text-gray-600">Send SMS on selected days of the week</p>
+                              </div>
+                            </label>
+                            <label className="flex items-start">
+                              <input
+                                type="radio"
+                                name="smsRecurringScheduleType"
+                                value="monthly"
+                                checked={smsRecurringMode.scheduleType === 'monthly'}
+                                onChange={(e) => setSmsRecurringMode(prev => ({ ...prev, scheduleType: e.target.value }))}
+                                className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                              />
+                              <div className="ml-3">
+                                <span className="text-sm font-medium text-gray-900">Monthly</span>
+                                <p className="text-xs text-gray-600">Send SMS on the 1st of every month</p>
+                              </div>
+                            </label>
+                          </div>
+                        </div>
+
+                        {/* Weekly Schedule Selection */}
+                        {smsRecurringMode.scheduleType === 'weekly' && (
+                          <div className="space-y-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Select Days of Week *
+                            </label>
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                              {Object.entries(smsRecurringMode.daysOfWeek).map(([day, checked]) => (
+                                <label key={day} className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer">
+                                  <input
+                                    type="checkbox"
+                                    checked={checked}
+                                    onChange={(e) => setSmsRecurringMode(prev => ({
+                                      ...prev,
+                                      daysOfWeek: {
+                                        ...prev.daysOfWeek,
+                                        [day]: e.target.checked
+                                      }
+                                    }))}
+                                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mr-3"
+                                  />
+                                  <span className="text-sm font-medium text-gray-900 capitalize">{day}</span>
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* SMS Template */}
+                        <div className="space-y-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <MessageSquare className="h-4 w-4 inline mr-2" />
+                            SMS Template *
+                            <span className="text-xs text-gray-500 ml-2">
+                              ({smsRecurringMode.smsContentTemplate.length}/160 characters)
+                            </span>
+                          </label>
+                          <textarea
+                            value={smsRecurringMode.smsContentTemplate}
+                            onChange={(e) => {
+                              if (e.target.value.length <= 160) {
+                                setSmsRecurringMode(prev => ({ ...prev, smsContentTemplate: e.target.value }));
+                              }
+                            }}
+                            placeholder="Hi [CUSTOMER_NAME]! Regular reminder about [PET_NAME]'s care. Visit us for checkups, vaccines & more. Call (555) 123-4567"
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                            rows="3"
+                          />
+                          <div className="bg-gray-50 p-3 rounded-lg">
+                            <p className="text-xs text-gray-600 mb-2">
+                              <strong>Available placeholders:</strong>
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                              <code className="bg-white px-2 py-1 rounded text-xs">[CUSTOMER_NAME]</code>
+                              <code className="bg-white px-2 py-1 rounded text-xs">[PET_NAME]</code>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Send Time */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              <Clock className="h-4 w-4 inline mr-2" />
+                              Send Time
+                            </label>
+                            <select
+                              value={smsRecurringMode.postTime}
+                              onChange={(e) => setSmsRecurringMode(prev => ({ ...prev, postTime: e.target.value }))}
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                              {timeOptions.map(option => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+
+                          {/* SMS Type */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              SMS Type
+                            </label>
+                            <select
+                              value={smsRecurringMode.smsType}
+                              onChange={(e) => setSmsRecurringMode(prev => ({ ...prev, smsType: e.target.value }))}
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                              <option value="bulk">Bulk SMS (All Customers)</option>
+                              <option value="single">Single Customer</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* ChatGPT SMS Formatting */}
+                        <div className="space-y-4">
+                          <label className="flex items-center p-4 bg-purple-50 rounded-lg">
+                            <input
+                              type="checkbox"
+                              checked={smsRecurringMode.useSMSChatGPTFormatting}
+                              onChange={(e) => setSmsRecurringMode(prev => ({ ...prev, useSMSChatGPTFormatting: e.target.checked }))}
+                              className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500 mr-3"
+                            />
+                            <div>
+                              <div className="font-medium text-purple-900">Use ChatGPT SMS Formatting</div>
+                              <div className="text-sm text-purple-700">Let ChatGPT enhance and format your SMS content while keeping it under 160 characters</div>
+                            </div>
+                          </label>
+                        </div>
+
+                        {/* Content Review Workflow */}
+                        <div className="space-y-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Content Review Workflow
+                          </label>
+                          <div className="space-y-3">
+                            <label className="flex items-start">
+                              <input
+                                type="radio"
+                                name="smsRecurringPostDestination"
+                                value="in_review"
+                                checked={smsRecurringMode.postDestination === 'in_review'}
+                                onChange={(e) => setSmsRecurringMode(prev => ({ ...prev, postDestination: e.target.value }))}
+                                className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                              />
+                              <div className="ml-3">
+                                <span className="text-sm font-medium text-gray-900">In Review First</span>
+                                <p className="text-xs text-gray-600">SMS goes to "In Review" → "Ready to Publish" → Sent</p>
+                              </div>
+                            </label>
+                            <label className="flex items-start">
+                              <input
+                                type="radio"
+                                name="smsRecurringPostDestination"
+                                value="ready_to_publish"
+                                checked={smsRecurringMode.postDestination === 'ready_to_publish'}
+                                onChange={(e) => setSmsRecurringMode(prev => ({ ...prev, postDestination: e.target.value }))}
+                                className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                              />
+                              <div className="ml-3">
+                                <span className="text-sm font-medium text-gray-900">Ready to Publish</span>
+                                <p className="text-xs text-gray-600">SMS goes directly to "Ready to Publish" → Sent</p>
+                              </div>
+                            </label>
+                          </div>
+                        </div>
+
+                        {/* Save/Run Button */}
+                        <div className="flex justify-end space-x-3">
+                          <button
+                            onClick={isRunMode ? saveAndRunAgent : saveAgent}
+                            disabled={loading || (!isEditMode && !isRunMode && (!smsRecurringMode.agentName || !smsRecurringMode.topic || !smsRecurringMode.smsContentTemplate || (smsRecurringMode.scheduleType === 'weekly' && !Object.values(smsRecurringMode.daysOfWeek).some(day => day))))}
+                            className="text-white px-6 py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center font-medium"
+                            style={{ 
+                              backgroundColor: loading ? '#94a3b8' : 
+                                            isRunMode ? '#10b981' : '#29add3'
+                            }}
+                            onMouseEnter={(e) => {
+                              if (!loading && ((isEditMode || isRunMode) || (smsRecurringMode.agentName && smsRecurringMode.topic && smsRecurringMode.smsContentTemplate && (smsRecurringMode.scheduleType !== 'weekly' || Object.values(smsRecurringMode.daysOfWeek).some(day => day))))) {
+                                e.target.style.backgroundColor = isRunMode ? '#059669' : '#1e88e5';
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (!loading) {
+                                e.target.style.backgroundColor = isRunMode ? '#10b981' : '#29add3';
+                              }
+                            }}
+                          >
+                            {isRunMode ? <Play className="h-4 w-4 mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+                            {loading ? (isRunMode ? 'Updating & Running...' : 'Saving...') : 
+                             isRunMode ? 'Update & Run Agent' : 
+                             isEditMode ? 'Update Agent Configuration' : 'Save Agent'}
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <h3 className="text-lg font-medium text-gray-900 mb-2">SMS Recurring Mode</h3>
+                        <p className="text-gray-600">SMS Recurring Mode form will be available here.</p>
+                        <p className="text-sm text-gray-500 mt-2">Currently under development.</p>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
