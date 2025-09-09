@@ -655,11 +655,13 @@ Best regards,
                 daysOfWeek: agentData.days_of_week || { monday: false, tuesday: false, wednesday: false, thursday: false, friday: false, saturday: false, sunday: false },
                 monthlySchedule: agentData.monthly_schedule || '1st',
                 smsContentTemplate: agentData.sms_template || agentData.sms_content_template || '',
+                scheduledDate: agentData.scheduled_date || '',
                 postTime: agentData.post_time || '09:00',
                 postDestination: agentData.post_destination || 'in_review',
                 smsProvider: agentData.sms_provider || 'twilio',
                 useSMSChatGPTFormatting: agentData.use_sms_chatgpt_formatting !== undefined ? agentData.use_sms_chatgpt_formatting : true,
                 smsType: agentData.sms_type || 'bulk',
+                selectedCustomer: agentData.selected_sms_customer || null,
                 smsCharacterLimit: agentData.sms_character_limit || 160
               });
             } else if (agentData.mode === 'write') {
