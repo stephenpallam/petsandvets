@@ -62,6 +62,28 @@ class LastManualRunTester:
         if self.client:
             self.client.close()
     
+    def authenticate(self):
+        """Authenticate with the API using admin credentials"""
+        print("\n=== AUTHENTICATING WITH API ===")
+        
+        login_data = {
+            "email": "admin@hospital.com",
+            "password": "admin123"
+        }
+        
+        response = self.make_request('POST', '/login', login_data)
+        
+        if response and response.status_code == 200:
+            result = response.json()
+            self.auth_token = result.get('access_token')
+            print(f"✅ Authentication successful")
+            return True
+        else:
+            print(f"❌ Authentication failed. Status: {response.status_code if response else 'No response'}")
+            if response:
+                print(f"Response: {response.text}")
+            return False
+    
     def make_request(self, method, endpoint, data=None, headers=None):
         """Make HTTP request to the API"""
         url = f"{self.api_base}{endpoint}"
@@ -70,6 +92,11 @@ class LastManualRunTester:
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
+        
+        # Add authentication header if we have a token
+        if self.auth_token and endpoint != '/login':
+            default_headers['Authorization'] = f'Bearer {self.auth_token}'
+        
         if headers:
             default_headers.update(headers)
         
