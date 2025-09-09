@@ -368,14 +368,20 @@ class SMSAgentFixesTester:
             expected_mode = agent["expected_mode"]
             
             try:
-                # Retrieve agent data for editing
+                # Retrieve agent data for editing from the agents list
                 response = requests.get(
-                    f"{BACKEND_URL}/ai-agents/{agent_id}",
+                    f"{BACKEND_URL}/ai-agents",
                     headers=self.get_headers()
                 )
                 
                 if response.status_code == 200:
-                    retrieved_agent = response.json()
+                    agents_list = response.json()
+                    # Find our specific agent
+                    retrieved_agent = None
+                    for agent in agents_list:
+                        if agent.get("id") == agent_id:
+                            retrieved_agent = agent
+                            break
                     
                     # Check if all SMS-specific fields are present for edit mode
                     required_fields = [
