@@ -1907,23 +1907,51 @@ const AIAgentsDashboard = () => {
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="flex flex-col">
                                       <span className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Next Run</span>
-                                      <p className="text-sm text-gray-900 mt-1">
+                                      <div className="mt-1">
                                         {(() => {
                                           try {
                                             const date = new Date(agent.post_date);
+                                            const [hours, minutes] = agent.post_time.split(':');
+                                            date.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+                                            const now = new Date();
+                                            
                                             const formattedDate = date.toLocaleDateString('en-US', {
                                               weekday: 'short',
                                               month: 'short',
                                               day: 'numeric',
                                               year: 'numeric'
                                             });
-                                            return `${formattedDate} at ${formatTime(agent.post_time)}`;
+                                            
+                                            if (date < now) {
+                                              // Past date - show suggestion message
+                                              return (
+                                                <div>
+                                                  <p className="text-sm text-gray-500 line-through">
+                                                    {formattedDate} at {formatTime(agent.post_time)}
+                                                  </p>
+                                                  <p className="text-xs text-amber-600 mt-1 italic">
+                                                    Schedule your next run or run it adhoc when you need
+                                                  </p>
+                                                </div>
+                                              );
+                                            } else {
+                                              // Future date - show normally
+                                              return (
+                                                <p className="text-sm text-gray-900">
+                                                  {formattedDate} at {formatTime(agent.post_time)}
+                                                </p>
+                                              );
+                                            }
                                           } catch (error) {
                                             console.error('Error formatting date:', error);
-                                            return `${agent.post_date} at ${formatTime(agent.post_time)}`;
+                                            return (
+                                              <p className="text-sm text-gray-900">
+                                                {agent.post_date} at {formatTime(agent.post_time)}
+                                              </p>
+                                            );
                                           }
                                         })()}
-                                      </p>
+                                      </div>
                                     </div>
                                     <div className="flex flex-col">
                                       <span className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Last Run</span>
