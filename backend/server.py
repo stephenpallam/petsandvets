@@ -5686,7 +5686,7 @@ async def send_mass_sms_from_post(post_id: str, post_data: dict):
                 # Skip customers without phone numbers
                 phone_number = customer.get('phone', '').strip() 
                 if not phone_number:
-                    logger.warning(f"No phone number for customer {customer.get('name', 'Unknown')}")
+                    logger.warning(f"No phone number for customer {get_customer_full_name(customer)}")
                     sms_failed += 1
                     continue
                 
