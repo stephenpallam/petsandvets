@@ -596,6 +596,7 @@ INSTRUCTIONS:
 7. Remove any redundant or duplicate sections (especially greetings and closings)
 8. Make the tone warm but professional
 9. Include practical, valuable information related to the topic
+10. DO NOT include any subject line or "Subject:" in your response - the email subject is handled separately
 
 EMAIL TEMPLATE (use as foundation, but enhance):
 {template}
@@ -605,6 +606,8 @@ PERSONALIZATION:
 - Pet(s): {pet_names}
 - Topic Focus: {topic}
 
+IMPORTANT: The email subject is already set separately. DO NOT include any subject line in your response. Start your email directly with the greeting.
+
 Please create a complete, valuable email about "{topic}" that:
 - Starts with a warm, personal greeting (only once)
 - Provides useful information about the topic
@@ -612,6 +615,7 @@ Please create a complete, valuable email about "{topic}" that:
 - Includes practical tips or insights
 - Ends with a single, professional closing
 - Contains NO duplicate greetings, signatures, or redundant content
+- Contains NO subject line or "Subject:" text
 
 The email should be informative and valuable to pet owners, not just generic promotional content."""
 
