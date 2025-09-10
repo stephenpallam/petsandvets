@@ -1675,99 +1675,110 @@ const AIAgentsDashboard = () => {
                               {/* Next Run & Last Run for Adhoc Timesheet Agents */}
                               {agent.mode === 'adhoc' && agent.agent_type === 'time_sheet' && (
                                 <div className="pt-3 border-t border-gray-100">
-                                  <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg p-4">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                      <div className="flex flex-col">
-                                        <span className="text-xs font-semibold text-purple-700 uppercase tracking-wide">Next Run</span>
-                                        <div className="mt-1">
-                                          {agent.post_date && agent.post_time ? (
-                                            // Agent has scheduled date/time - show formatted date with past date logic
-                                            (() => {
-                                              try {
-                                                const date = new Date(agent.post_date);
-                                                const [hours, minutes] = agent.post_time.split(':');
-                                                date.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-                                                const now = new Date();
-                                                
-                                                const formattedDate = date.toLocaleDateString('en-US', {
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {/* Scheduled Next Run - Left Column */}
+                                    <div className="flex flex-col p-4 bg-purple-50 rounded-lg border border-purple-200">
+                                      <span className="text-xs font-semibold text-purple-600 uppercase tracking-wide mb-2">
+                                        📅 Scheduled Next Run
+                                      </span>
+                                      <div className="space-y-1">
+                                        {agent.post_date && agent.post_time ? (
+                                          // Agent has scheduled date/time - show formatted date with past date logic
+                                          (() => {
+                                            try {
+                                              const date = new Date(agent.post_date);
+                                              const [hours, minutes] = agent.post_time.split(':');
+                                              date.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+                                              const now = new Date();
+                                              
+                                              const formattedDate = date.toLocaleDateString('en-US', {
+                                                weekday: 'short',
+                                                month: 'short',
+                                                day: 'numeric',
+                                                year: 'numeric'
+                                              });
+                                              
+                                              if (date < now) {
+                                                // Past date - show suggestion message
+                                                return (
+                                                  <div>
+                                                    <p className="text-sm text-gray-500 line-through">
+                                                      {formattedDate} at {formatTime(agent.post_time)}
+                                                    </p>
+                                                    <p className="text-xs text-amber-600 mt-1 italic">
+                                                      Schedule your next run or run it adhoc when you need
+                                                    </p>
+                                                  </div>
+                                                );
+                                              } else {
+                                                // Future date - show normally
+                                                return (
+                                                  <p className="text-sm font-medium text-purple-900">
+                                                    {formattedDate} at {formatTime(agent.post_time)}
+                                                  </p>
+                                                );
+                                              }
+                                            } catch (error) {
+                                              console.error('Error formatting date:', error);
+                                              return (
+                                                <p className="text-sm font-medium text-purple-900">
+                                                  {agent.post_date} at {formatTime(agent.post_time)}
+                                                </p>
+                                              );
+                                            }
+                                          })()
+                                        ) : (
+                                          // No scheduled date/time - show manual options
+                                          <p className="text-sm font-medium text-purple-900">Manual trigger only</p>
+                                        )}
+                                      </div>
+                                    </div>
+                                    
+                                    {/* Last Manual Run - Right Column */}
+                                    <div className="flex flex-col p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                      <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">
+                                        📝 Last Manual Run
+                                      </span>
+                                      <p className="text-sm text-gray-900">
+                                        {(() => {
+                                          // For write mode agents, prioritize actual manual run time over scheduled dates
+                                          if (agent.last_manual_run) {
+                                            return new Date(agent.last_manual_run).toLocaleDateString('en-US', {
+                                              year: 'numeric',
+                                              month: 'short',
+                                              day: 'numeric',
+                                              hour: '2-digit',
+                                              minute: '2-digit'
+                                            });
+                                          }
+                                          
+                                          // If no manual run time, check if there's a scheduled date in the past as fallback
+                                          if (agent.post_date && agent.post_time) {
+                                            try {
+                                              const scheduledDate = new Date(agent.post_date);
+                                              const [hours, minutes] = agent.post_time.split(':');
+                                              scheduledDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+                                              const now = new Date();
+                                              
+                                              if (scheduledDate < now) {
+                                                // Past scheduled date - show as fallback
+                                                const formattedDate = scheduledDate.toLocaleDateString('en-US', {
                                                   weekday: 'short',
                                                   month: 'short',
                                                   day: 'numeric',
                                                   year: 'numeric'
                                                 });
-                                                
-                                                if (date < now) {
-                                                  // Past date - show suggestion message
-                                                  return (
-                                                    <div>
-                                                      <p className="text-sm text-gray-500 line-through">
-                                                        {formattedDate} at {formatTime(agent.post_time)}
-                                                      </p>
-                                                      <p className="text-xs text-amber-600 mt-1 italic">
-                                                        Schedule your next run or run it adhoc when you need
-                                                      </p>
-                                                    </div>
-                                                  );
-                                                } else {
-                                                  // Future date - show normally
-                                                  return (
-                                                    <p className="text-sm text-gray-900">
-                                                      {formattedDate} at {formatTime(agent.post_time)}
-                                                    </p>
-                                                  );
-                                                }
-                                              } catch (error) {
-                                                console.error('Error formatting date:', error);
-                                                return (
-                                                  <p className="text-sm text-gray-900">
-                                                    {agent.post_date} at {formatTime(agent.post_time)}
-                                                  </p>
-                                                );
+                                                return `${formattedDate} at ${formatTime(agent.post_time)}`;
                                               }
-                                            })()
-                                          ) : (
-                                            // No scheduled date/time - show manual options
-                                            <p className="text-sm text-gray-900">Manual trigger only</p>
-                                          )}
-                                        </div>
-                                      </div>
-                                      <div className="flex flex-col">
-                                        <span className="text-xs font-semibold text-purple-700 uppercase tracking-wide">Last Run</span>
-                                        <p className="text-sm text-gray-900 mt-1">
-                                          {(() => {
-                                            // For write mode agents, prioritize actual manual run time over scheduled dates
-                                            if (agent.last_manual_run) {
-                                              return formatDate(agent.last_manual_run);
+                                            } catch (error) {
+                                              console.error('Error parsing scheduled date:', error);
                                             }
-                                            
-                                            // If no manual run time, check if there's a scheduled date in the past as fallback
-                                            if (agent.post_date && agent.post_time) {
-                                              try {
-                                                const scheduledDate = new Date(agent.post_date);
-                                                const [hours, minutes] = agent.post_time.split(':');
-                                                scheduledDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-                                                const now = new Date();
-                                                
-                                                if (scheduledDate < now) {
-                                                  // Past scheduled date - show as fallback
-                                                  const formattedDate = scheduledDate.toLocaleDateString('en-US', {
-                                                    weekday: 'short',
-                                                    month: 'short',
-                                                    day: 'numeric',
-                                                    year: 'numeric'
-                                                  });
-                                                  return `${formattedDate} at ${formatTime(agent.post_time)}`;
-                                                }
-                                              } catch (error) {
-                                                console.error('Error parsing scheduled date:', error);
-                                              }
-                                            }
-                                            
-                                            // Final fallback
-                                            return agent.last_manual_run ? formatDate(agent.last_manual_run) : 'Never run';
-                                          })()}
-                                        </p>
-                                      </div>
+                                          }
+                                          
+                                          // Final fallback
+                                          return 'Never run manually';
+                                        })()}
+                                      </p>
                                     </div>
                                   </div>
                                 </div>
