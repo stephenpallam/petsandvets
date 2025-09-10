@@ -355,6 +355,130 @@ class CustomerDataInvestigator:
             )
             return False, [], []
     
+    async def test_direct_database_queries(self):
+        """Investigation 5: Test Direct Database Queries"""
+        print("🔍 INVESTIGATION 5: Test Direct Database Queries")
+        print("=" * 60)
+        
+        try:
+            # Test various queries to find customer data
+            query_results = {}
+            
+            # Get all collections
+            collections = await self.db.list_collection_names()
+            
+            # Query 1: Look for any document with "Stephen" in any field
+            stephen_results = []
+            for collection_name in collections:
+                try:
+                    # Search for Stephen in any text field
+                    docs = await self.db[collection_name].find({
+                        "$or": [
+                            {"name": {"$regex": "Stephen", "$options": "i"}},
+                            {"customer_name": {"$regex": "Stephen", "$options": "i"}},
+                            {"full_name": {"$regex": "Stephen", "$options": "i"}},
+                            {"owner_first_name": {"$regex": "Stephen", "$options": "i"}},
+                            {"email": {"$regex": "stephen", "$options": "i"}}
+                        ]
+                    }).to_list(length=10)
+                    
+                    if docs:
+                        for doc in docs:
+                            if '_id' in doc:
+                                del doc['_id']
+                            stephen_results.append({
+                                "collection": collection_name,
+                                "document": doc
+                            })
+                except Exception as e:
+                    continue
+            
+            query_results["stephen_search"] = stephen_results
+            
+            # Query 2: Look for any document with pet names (Molly, Dolly)
+            pet_results = []
+            for collection_name in collections:
+                try:
+                    docs = await self.db[collection_name].find({
+                        "$or": [
+                            {"pet_name": {"$regex": "Molly|Dolly", "$options": "i"}},
+                            {"pets.name": {"$regex": "Molly|Dolly", "$options": "i"}},
+                            {"pet_names": {"$regex": "Molly|Dolly", "$options": "i"}}
+                        ]
+                    }).to_list(length=10)
+                    
+                    if docs:
+                        for doc in docs:
+                            if '_id' in doc:
+                                del doc['_id']
+                            pet_results.append({
+                                "collection": collection_name,
+                                "document": doc
+                            })
+                except Exception as e:
+                    continue
+            
+            query_results["pet_search"] = pet_results
+            
+            # Query 3: Look for any document with email addresses
+            email_results = []
+            for collection_name in collections:
+                try:
+                    docs = await self.db[collection_name].find({
+                        "email": {"$exists": True, "$ne": ""}
+                    }).limit(5).to_list(length=5)
+                    
+                    if docs:
+                        for doc in docs:
+                            if '_id' in doc:
+                                del doc['_id']
+                            email_results.append({
+                                "collection": collection_name,
+                                "document": doc
+                            })
+                except Exception as e:
+                    continue
+            
+            query_results["email_search"] = email_results
+            
+            # Query 4: Count documents in each collection
+            collection_counts = {}
+            for collection_name in collections:
+                try:
+                    count = await self.db[collection_name].count_documents({})
+                    if count > 0:
+                        collection_counts[collection_name] = count
+                except Exception as e:
+                    continue
+            
+            query_results["collection_counts"] = collection_counts
+            
+            total_results = len(stephen_results) + len(pet_results) + len(email_results)
+            success = total_results > 0
+            
+            self.log_test_result(
+                "Direct Database Queries",
+                success,
+                f"Found {total_results} relevant documents across database queries",
+                {
+                    "Stephen Search Results": len(stephen_results),
+                    "Pet Search Results": len(pet_results), 
+                    "Email Search Results": len(email_results),
+                    "Collection Counts": collection_counts,
+                    "Detailed Results": query_results
+                }
+            )
+            return success, query_results
+            
+        except Exception as e:
+            self.log_test_result(
+                "Direct Database Queries",
+                False,
+                f"Error running direct database queries: {str(e)}",
+                {"Error Details": str(e)}
+            )
+            return False, {}
+    
     async def test_customer_api_with_auth(self):
         """Investigation 6: Test Customer API Endpoint with Authentication"""
         print("🔍 INVESTIGATION 6: Test Customer API Endpoint with Authentication")
