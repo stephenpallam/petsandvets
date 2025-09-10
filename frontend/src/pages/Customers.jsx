@@ -303,8 +303,20 @@ const Customers = () => {
       pets = petNames.length > 0 ? petNames.map(name => ({ name })) : [{ name: '' }];
     }
     
+    // Handle first_name and last_name - if they exist, use them; otherwise split the name
+    let firstName = customer.first_name || '';
+    let lastName = customer.last_name || '';
+    
+    // If first_name and last_name don't exist but name does, try to split the name
+    if (!firstName && !lastName && customer.name) {
+      const nameParts = customer.name.trim().split(' ');
+      firstName = nameParts[0] || '';
+      lastName = nameParts.slice(1).join(' ') || '';
+    }
+    
     setFormData({
-      name: customer.name || '',
+      first_name: firstName,
+      last_name: lastName,
       pets: pets,
       phone: customer.phone || '',
       email: customer.email || '',
