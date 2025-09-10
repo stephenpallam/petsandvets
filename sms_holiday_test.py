@@ -339,7 +339,7 @@ class SMSHolidayTester:
         
         try:
             # Run the SMS agent manually
-            response = requests.post(f"{self.api_base}/ai-agents/{agent_id}/run")
+            response = requests.post(f"{self.api_base}/ai-agents/{agent_id}/run", headers=self.headers)
             
             if response.status_code == 200:
                 run_result = response.json()
