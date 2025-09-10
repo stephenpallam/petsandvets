@@ -364,7 +364,7 @@ class SMSWorkflowTester:
                     all_placeholders_replaced,
                     "Placeholder replacement logic working correctly" if all_placeholders_replaced else "Some placeholders not replaced properly",
                     {
-                        "Mass SMS function executed": True,
+                        "Mass SMS function executed": mass_sms_executed,
                         "Customers processed": len(placeholder_tests),
                         "Sample personalizations": [
                             f"{test['customer']}: {test['personalized_content'][:80]}..." 
@@ -378,8 +378,8 @@ class SMSWorkflowTester:
                 self.log_test_result(
                     "SMS Placeholder Replacement in Mass Sending",
                     False,
-                    "Mass SMS function returned None or failed",
-                    {"Post ID": post_id}
+                    "Mass SMS function failed to execute",
+                    {"Post ID": post_id, "Function executed": mass_sms_executed}
                 )
                 return False
                 
