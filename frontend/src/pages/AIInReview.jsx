@@ -23,6 +23,102 @@ import {
 } from 'lucide-react';
 import { formatDate, formatScheduledDate } from '../utils/dateUtils';
 
+// SMS Content Preview Component
+const SMSContentPreview = ({ post }) => {
+  const [customerPreview, setCustomerPreview] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCustomerPreview = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/customers?limit=1`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (response.ok) {
+          const customers = await response.json();
+          if (customers && customers.length > 0) {
+            setCustomerPreview(customers[0]);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching customer preview:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCustomerPreview();
+  }, []);
+
+  const getPreviewContent = () => {
+    if (!post.content) return 'No content available';
+    
+    let previewContent = post.content;
+    
+    if (customerPreview) {
+      // Replace customer placeholders
+      previewContent = previewContent.replace(/\[CUSTOMER_NAME\]/g, customerPreview.customer_name || 'John Doe');
+      
+      // Replace pet placeholders
+      const petNames = customerPreview.pets && customerPreview.pets.length > 0 
+        ? customerPreview.pets.map(pet => pet.pet_name).join(', ')
+        : 'Fluffy';
+      
+      previewContent = previewContent.replace(/\[PET_NAME\]/g, petNames);
+      previewContent = previewContent.replace(/\[PET_NAMES\]/g, petNames);
+    } else {
+      // Fallback to sample data
+      previewContent = previewContent.replace(/\[CUSTOMER_NAME\]/g, 'John Doe');
+      previewContent = previewContent.replace(/\[PET_NAME\]/g, 'Fluffy');
+      previewContent = previewContent.replace(/\[PET_NAMES\]/g, 'Fluffy');
+    }
+    
+    // Replace link placeholder
+    const smsLink = post.sms_link || 'https://petsandvetsanimalhospital.com';
+    previewContent = previewContent.replace(/\[LINK\]/g, smsLink);
+    
+    return previewContent;
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+        <div className="text-sm text-orange-600 mb-2">📱 SMS Preview (Loading...)</div>
+        <div className="text-gray-500">Loading customer preview...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* SMS Preview with Customer Data */}
+      <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+        <div className="text-sm text-orange-600 mb-2 font-medium">📱 SMS Preview (First Customer)</div>
+        <div className="whitespace-pre-wrap text-gray-900 leading-relaxed bg-white p-3 rounded border">
+          {getPreviewContent()}
+        </div>
+        {customerPreview && (
+          <div className="mt-2 text-xs text-orange-600">
+            Preview for: {customerPreview.customer_name} ({customerPreview.phone_number || 'No phone'})
+          </div>
+        )}
+      </div>
+      
+      {/* Raw Template for Reference */}
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <div className="text-sm text-gray-600 mb-2 font-medium">📝 Raw Template</div>
+        <div className="whitespace-pre-wrap text-gray-700 text-sm bg-white p-3 rounded border">
+          {post.content}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const AIInReview = () => {
   const { user, token, isAdmin, canAccessManager, loading: authLoading } = useAuth();
   const [posts, setPosts] = useState([]);
