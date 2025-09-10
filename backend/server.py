@@ -5009,7 +5009,7 @@ async def generate_recurring_email_for_agent(agent_id: str, agent_data: dict, po
             customer_email = "customer@example.com"
         else:
             customer = customers_list[0]
-            customer_name = customer.get('name', 'Valued Customer')
+            customer_name = get_customer_full_name(customer)
             customer_email = customer.get('email', 'customer@example.com')
             
             # Get pet name(s) for this customer - handle both data structures
