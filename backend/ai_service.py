@@ -746,7 +746,11 @@ Make sure there are no duplicate signatures or redundant messages."""
             """
             
             # Generate SMS content
-            chat = LlmChat(api_key=self.emergent_key)
+            chat = LlmChat(
+                api_key=self.emergent_key,
+                session_id=f"sms_generation_{datetime.now().timestamp()}",
+                system_message="You are a professional SMS content creator for a veterinary clinic. Generate concise, engaging SMS messages that are warm but professional and relevant to pet owners."
+            ).with_model("openai", "gpt-4o-mini")
             
             messages = [UserMessage(content=sms_prompt)]
             response = await chat.chat_async(messages=messages, model="gpt-4o-mini")
