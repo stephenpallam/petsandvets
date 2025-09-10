@@ -778,9 +778,9 @@ Make sure there are no duplicate signatures or redundant messages."""
                         "agent_id": agent_id
                     },
                     "usage_info": {
-                        "prompt_tokens": response.usage.prompt_tokens if hasattr(response, 'usage') else 0,
-                        "completion_tokens": response.usage.completion_tokens if hasattr(response, 'usage') else 0,
-                        "total_tokens": response.usage.total_tokens if hasattr(response, 'usage') else 0
+                        "prompt_tokens": 0,  # Usage info not available in new response format
+                        "completion_tokens": 0,
+                        "total_tokens": 0
                     }
                 })
             
