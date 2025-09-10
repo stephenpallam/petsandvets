@@ -1258,8 +1258,10 @@ Best regards,
 
       if (response.ok) {
         const customers = await response.json();
-        // Filter customers that match the search term in name, email, or pet names
+        // Filter customers that match the search term in first_name, last_name, name (legacy), email, or pet names
         const filteredCustomers = customers.filter(customer => 
+          customer.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          customer.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           customer.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           customer.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           (customer.pets && customer.pets.some(pet => 
