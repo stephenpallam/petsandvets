@@ -745,30 +745,59 @@ const Customers = () => {
               {/* Scrollable Content */}
               <div className="px-6 py-4 max-h-[calc(90vh-140px)] overflow-y-auto">
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Customer Name *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none transition-colors"
-                      style={{ 
-                        '--tw-ring-color': 'rgb(41, 173, 211)',
-                        '--tw-border-opacity': '1'
-                      }}
-                      onFocus={(e) => {
-                        e.target.style.borderColor = 'rgb(41, 173, 211)';
-                        e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
-                      }}
-                      onBlur={(e) => {
-                        e.target.style.borderColor = '#d1d5db';
-                        e.target.style.boxShadow = 'none';
-                      }}
-                      placeholder="Enter customer name"
-                    />
+                  {/* First Name and Last Name */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        First Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.first_name}
+                        onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none transition-colors"
+                        style={{ 
+                          '--tw-ring-color': 'rgb(41, 173, 211)',
+                          '--tw-border-opacity': '1'
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = 'rgb(41, 173, 211)';
+                          e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = '#d1d5db';
+                          e.target.style.boxShadow = 'none';
+                        }}
+                        placeholder="Enter first name"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Last Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.last_name}
+                        onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none transition-colors"
+                        style={{ 
+                          '--tw-ring-color': 'rgb(41, 173, 211)',
+                          '--tw-border-opacity': '1'
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = 'rgb(41, 173, 211)';
+                          e.target.style.boxShadow = '0 0 0 2px rgba(41, 173, 211, 0.2)';
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = '#d1d5db';
+                          e.target.style.boxShadow = 'none';
+                        }}
+                        placeholder="Enter last name"
+                      />
+                    </div>
                   </div>
 
                   <div>
