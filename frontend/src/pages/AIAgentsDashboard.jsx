@@ -1861,8 +1861,8 @@ const AIAgentsDashboard = () => {
                                             📝 Last Manual Run
                                           </span>
                                           <p className="text-sm text-gray-900">
-                                            {agent.last_run_date ? 
-                                              new Date(agent.last_run_date).toLocaleDateString('en-US', {
+                                            {agent.last_manual_run ? 
+                                              new Date(agent.last_manual_run).toLocaleDateString('en-US', {
                                                 year: 'numeric',
                                                 month: 'short',
                                                 day: 'numeric',
@@ -1908,8 +1908,8 @@ const AIAgentsDashboard = () => {
                                             📝 Last Manual Run
                                           </span>
                                           <p className="text-sm text-gray-900">
-                                            {agent.last_run_date ? 
-                                              new Date(agent.last_run_date).toLocaleDateString('en-US', {
+                                            {agent.last_manual_run ? 
+                                              new Date(agent.last_manual_run).toLocaleDateString('en-US', {
                                                 year: 'numeric',
                                                 month: 'short',
                                                 day: 'numeric',
@@ -1999,8 +1999,8 @@ const AIAgentsDashboard = () => {
                                             📝 Last Manual Run
                                           </span>
                                           <p className="text-sm text-gray-900">
-                                            {agent.last_run_date ? 
-                                              new Date(agent.last_run_date).toLocaleDateString('en-US', {
+                                            {agent.last_manual_run ? 
+                                              new Date(agent.last_manual_run).toLocaleDateString('en-US', {
                                                 year: 'numeric',
                                                 month: 'short',
                                                 day: 'numeric',
@@ -2046,8 +2046,8 @@ const AIAgentsDashboard = () => {
                                             📝 Last Manual Run
                                           </span>
                                           <p className="text-sm text-gray-900">
-                                            {agent.last_run_date ? 
-                                              new Date(agent.last_run_date).toLocaleDateString('en-US', {
+                                            {agent.last_manual_run ? 
+                                              new Date(agent.last_manual_run).toLocaleDateString('en-US', {
                                                 year: 'numeric',
                                                 month: 'short',
                                                 day: 'numeric',
@@ -2131,8 +2131,8 @@ const AIAgentsDashboard = () => {
                                           📝 Last Manual Run
                                         </span>
                                         <p className="text-sm text-gray-900">
-                                          {agent.last_run_date ? 
-                                            new Date(agent.last_run_date).toLocaleDateString('en-US', {
+                                          {agent.last_manual_run ? 
+                                            new Date(agent.last_manual_run).toLocaleDateString('en-US', {
                                               year: 'numeric',
                                               month: 'short',
                                               day: 'numeric',
