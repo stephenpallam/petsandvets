@@ -1241,6 +1241,20 @@ Best regards,
     }
   };
 
+  // Helper function to get customer's full name
+  const getCustomerFullName = (customer) => {
+    if (customer.first_name && customer.last_name) {
+      return `${customer.first_name} ${customer.last_name}`;
+    } else if (customer.first_name) {
+      return customer.first_name;
+    } else if (customer.last_name) {
+      return customer.last_name;
+    } else if (customer.name) {
+      return customer.name; // Fallback to legacy name field
+    }
+    return 'Unnamed Customer';
+  };
+
   // Customer search function with debouncing
   const searchCustomers = async (searchTerm) => {
     if (searchTerm.length < 3) {
