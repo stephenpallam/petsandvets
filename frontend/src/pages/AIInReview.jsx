@@ -72,7 +72,12 @@ const SMSContentPreview = ({ post }) => {
     
     if (customerPreview) {
       // Replace customer name placeholder with actual customer data
-      const customerName = customerPreview.customer_name || customerPreview.name || 'Customer';
+      // Handle different customer name field formats
+      const customerName = customerPreview.customer_name || 
+                           customerPreview.name || 
+                           customerPreview.owner_first_name || 
+                           customerPreview.first_name || 
+                           'Customer';
       previewContent = previewContent.replace(/\[CUSTOMER_NAME\]/g, customerName);
       
       // Replace pet placeholders with actual pet data
@@ -80,7 +85,9 @@ const SMSContentPreview = ({ post }) => {
       
       // Handle pets array format (new format)
       if (customerPreview.pets && Array.isArray(customerPreview.pets) && customerPreview.pets.length > 0) {
-        const petNamesList = customerPreview.pets.map(pet => pet.pet_name || pet.name).filter(Boolean);
+        const petNamesList = customerPreview.pets
+          .map(pet => pet.pet_name || pet.name || pet.petName)
+          .filter(Boolean);
         if (petNamesList.length > 0) {
           if (petNamesList.length === 1) {
             petNames = petNamesList[0];
@@ -94,6 +101,10 @@ const SMSContentPreview = ({ post }) => {
       // Handle legacy pet_name format (fallback)
       else if (customerPreview.pet_name && customerPreview.pet_name.trim()) {
         petNames = customerPreview.pet_name.trim();
+      }
+      // Handle other pet field formats
+      else if (customerPreview.petName && customerPreview.petName.trim()) {
+        petNames = customerPreview.petName.trim();
       }
       
       previewContent = previewContent.replace(/\[PET_NAME\]/g, petNames);
