@@ -41,9 +41,13 @@ const SMSContentPreview = ({ post }) => {
         });
         
         if (response.ok) {
-          const customers = await response.json();
-          if (customers && customers.length > 0) {
-            setCustomerPreview(customers[0]);
+          const customerData = await response.json();
+          // Handle paginated response format from API
+          if (customerData && customerData.customers && customerData.customers.length > 0) {
+            setCustomerPreview(customerData.customers[0]);
+          } else if (customerData && Array.isArray(customerData) && customerData.length > 0) {
+            // Handle direct array format (fallback)
+            setCustomerPreview(customerData[0]);
           } else {
             setError('No customers found in database');
           }
