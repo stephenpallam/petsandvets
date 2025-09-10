@@ -798,16 +798,7 @@ const AIAgentsDashboard = () => {
 
   // Helper function to get next scheduled holiday for email and SMS agents
   const getNextScheduledHoliday = (agent) => {
-    console.log('DEBUG getNextScheduledHoliday:', {
-      agentType: agent.agent_type,
-      agentName: agent.agent_name,
-      selectedHolidays: agent.selected_holidays,
-      holidaysCount: holidays?.length,
-      mode: agent.mode
-    });
-    
     if ((agent.agent_type !== 'email' && agent.agent_type !== 'sms_agent') || !agent.selected_holidays || agent.selected_holidays.length === 0) {
-      console.log('DEBUG: Returning no holidays selected');
       return { nextRun: 'No holidays selected', holidayName: '' };
     }
     
