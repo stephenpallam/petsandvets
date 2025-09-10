@@ -5361,7 +5361,7 @@ async def generate_write_mode_email_for_agent(agent_id: str, agent_data: dict, p
             pet_names = "your pet"
         else:
             customer = customers_list[0]
-            customer_name = customer.get('name', 'Valued Customer')
+            customer_name = get_customer_full_name(customer)
             
             # Handle pet names (both new pets array and legacy pet_name field)
             pets = customer.get('pets', [])
