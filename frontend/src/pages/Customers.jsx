@@ -274,7 +274,8 @@ const Customers = () => {
   // Reset form
   const resetForm = () => {
     setFormData({
-      name: '',
+      first_name: '',
+      last_name: '',
       pets: [{ name: '' }], // Reset to one empty pet
       phone: '',
       email: '',
