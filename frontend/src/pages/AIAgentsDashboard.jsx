@@ -2157,6 +2157,7 @@ const AIAgentsDashboard = () => {
                                       </div>
                                     </div>
                                   </div>
+                                )
                               )}
                           
                               {agent.mode === 'adhoc' && (
