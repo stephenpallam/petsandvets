@@ -2341,7 +2341,7 @@ const AIAgentsDashboard = () => {
                                               )}
                                             </div>
                                           )}
-                                        </div>
+                                        }
                                       </div>
                                       
                                       {/* Last Manual Run - Right Column */}
