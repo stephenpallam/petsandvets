@@ -1361,16 +1361,20 @@ const AIAgentsDashboard = () => {
                     <select
                       value={agentTypeFilter}
                       onChange={(e) => handleAgentTypeFilterChange(e.target.value)}
-                      className="text-white px-4 py-2 rounded-lg transition-colors font-medium flex-1 sm:flex-initial cursor-pointer"
+                      className="text-white px-4 py-2 rounded-lg transition-colors font-medium flex-1 sm:flex-initial cursor-pointer appearance-none pr-10"
                       style={{ 
-                        backgroundColor: '#16a34a',
-                        minWidth: '160px'
+                        backgroundColor: 'rgb(41, 173, 211)',
+                        minWidth: '160px',
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E")`,
+                        backgroundPosition: 'right 8px center',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundSize: '16px'
                       }}
                       onMouseEnter={(e) => {
-                        e.target.style.backgroundColor = '#15803d';
+                        e.target.style.backgroundColor = 'rgb(31, 153, 189)';
                       }}
                       onMouseLeave={(e) => {
-                        e.target.style.backgroundColor = '#16a34a';
+                        e.target.style.backgroundColor = 'rgb(41, 173, 211)';
                       }}
                     >
                       <option value="all" style={{ backgroundColor: 'white', color: 'black' }}>All Agent Types</option>
