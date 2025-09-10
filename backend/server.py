@@ -10014,6 +10014,10 @@ async def create_customer(
     # Handle pets array and pet_name field conversion
     customer_dict = customer_data.dict()
     
+    # Generate full name from first_name and last_name for backward compatibility
+    if customer_dict.get('first_name') and customer_dict.get('last_name'):
+        customer_dict['name'] = f"{customer_dict['first_name']} {customer_dict['last_name']}"
+    
     # If pets array is provided, also create pet_name for backward compatibility
     if customer_dict.get('pets') and len(customer_dict['pets']) > 0:
         valid_pet_names = [pet['name'] for pet in customer_dict['pets'] if pet.get('name', '').strip()]
