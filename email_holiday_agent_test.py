@@ -673,6 +673,81 @@ class EmailHolidayAgentTester:
             )
             return False
     
+    async def test_api_endpoints_for_email_agents(self):
+        """Test 7: API Endpoints for Email Agents with Holidays"""
+        print("🧪 TEST 7: API Endpoints for Email Agents with Holidays")
+        print("=" * 70)
+        
+        try:
+            # Test the AI agents API endpoint
+            response = requests.get(f"{self.api_url}/ai-agents")
+            
+            if response.status_code == 200:
+                agents_data = response.json()
+                agents = agents_data.get("agents", [])
+                
+                # Filter email agents with holidays
+                email_holiday_agents = [
+                    agent for agent in agents 
+                    if agent.get("agent_type") == "email" and 
+                    agent.get("selected_holidays") and 
+                    len(agent.get("selected_holidays", [])) > 0
+                ]
+                
+                if email_holiday_agents:
+                    # Test holidays API endpoint
+                    holidays_response = requests.get(f"{self.api_url}/holidays")
+                    
+                    if holidays_response.status_code == 200:
+                        holidays_data = holidays_response.json()
+                        holidays = holidays_data.get("holidays", [])
+                        
+                        success = True
+                        message = f"API endpoints working - found {len(email_holiday_agents)} email holiday agents"
+                        details = {
+                            "API Status": "Working",
+                            "Email Holiday Agents": len(email_holiday_agents),
+                            "Total Holidays Available": len(holidays),
+                            "Sample Agent": {
+                                "name": email_holiday_agents[0].get("agent_name"),
+                                "type": email_holiday_agents[0].get("agent_type"),
+                                "holidays_count": len(email_holiday_agents[0].get("selected_holidays", []))
+                            }
+                        }
+                    else:
+                        success = False
+                        message = f"Holidays API endpoint failed: {holidays_response.status_code}"
+                        details = {"Holidays API Status": holidays_response.status_code}
+                else:
+                    success = False
+                    message = "No email agents with holidays found via API"
+                    details = {
+                        "Total Agents": len(agents),
+                        "Email Agents": len([a for a in agents if a.get("agent_type") == "email"]),
+                        "Email Holiday Agents": 0
+                    }
+            else:
+                success = False
+                message = f"AI Agents API endpoint failed: {response.status_code}"
+                details = {"API Status Code": response.status_code}
+            
+            self.log_test_result(
+                "API Endpoints for Email Agents",
+                success,
+                message,
+                details
+            )
+            return success
+            
+        except Exception as e:
+            self.log_test_result(
+                "API Endpoints for Email Agents",
+                False,
+                f"Error testing API endpoints: {str(e)}",
+                {"Error Details": str(e)}
+            )
+            return False
+
     async def cleanup_test_data(self):
         """Clean up test data created during testing"""
         try:
