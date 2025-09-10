@@ -5494,6 +5494,7 @@ async def send_mass_emails_from_post(post_id: str, post_data: dict):
         
         # Get the original email template and holiday context from the post
         email_template = post_data.get('email_template', '')
+        email_subject = post_data.get('email_subject', 'Important Message from Your Veterinary Team')
         use_chatgpt = post_data.get('use_chatgpt_formatting', True)
         holiday_name = post_data.get('holiday_name', 'Holiday')
         holiday_date = post_data.get('holiday_date', '')
