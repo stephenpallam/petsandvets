@@ -3162,6 +3162,16 @@ const AIAgentsDashboard = () => {
                               </p>
                             </div>
                           )}
+                          {selectedAgent.agent_type === 'sms_agent' && (
+                            <div>
+                              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Link</label>
+                              <p className="text-sm text-gray-900 mt-1">
+                                <span className="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-blue-100 text-blue-700">
+                                  {selectedAgent.sms_link || 'No Link Provided'}
+                                </span>
+                              </p>
+                            </div>
+                          )}
                           {selectedAgent.agent_type === 'email' && selectedAgent.use_chatgpt_formatting !== undefined && (
                             <div>
                               <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Use ChatGPT to Format Email</label>
