@@ -1875,6 +1875,53 @@ const AIAgentsDashboard = () => {
                                         </div>
                                       </div>
                                     )}
+                                    
+                                    {/* Row 3: Next Run and Last Run for Topic-based Recurring Email agents */}
+                                    {agent.mode === 'recurring' && (!agent.selected_holidays || agent.selected_holidays.length === 0) && (
+                                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {/* Next Scheduled Run - Left Column */}
+                                        <div className="flex flex-col p-4 bg-green-50 rounded-lg border border-green-200">
+                                          <span className="text-xs font-semibold text-green-600 uppercase tracking-wide mb-2">
+                                            📅 Next Scheduled Run
+                                          </span>
+                                          <div className="space-y-1">
+                                            <p className="text-sm font-medium text-green-900">
+                                              {(() => {
+                                                const runInfo = calculateNextRunForRecurringAgent(agent);
+                                                return runInfo ? runInfo.nextRunDate : 'Not scheduled';
+                                              })()}
+                                            </p>
+                                            {(() => {
+                                              const runInfo = calculateNextRunForRecurringAgent(agent);
+                                              return runInfo && runInfo.selectedDays ? (
+                                                <p className="text-xs text-green-600">
+                                                  {runInfo.selectedDays} at {agent.post_time || '09:00'}
+                                                </p>
+                                              ) : null;
+                                            })()}
+                                          </div>
+                                        </div>
+                                        
+                                        {/* Last Manual Run - Right Column */}
+                                        <div className="flex flex-col p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                          <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">
+                                            📝 Last Manual Run
+                                          </span>
+                                          <p className="text-sm text-gray-900">
+                                            {agent.last_run_date ? 
+                                              new Date(agent.last_run_date).toLocaleDateString('en-US', {
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                              }) : 
+                                              'Never run manually'
+                                            }
+                                          </p>
+                                        </div>
+                                      </div>
+                                    )}
                                   </div>
                                 )
                               ) : agent.agent_type === 'sms_agent' ? (
