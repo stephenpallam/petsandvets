@@ -1500,6 +1500,68 @@ async def get_cost_analytics(
         logger.error(f"Error generating cost analytics: {e}")
         raise HTTPException(status_code=500, detail="Failed to generate cost analytics")
 
+async def holiday_scheduler():
+    """Background task that processes holiday-related tasks"""
+    import asyncio
+    
+    logger.info("🎉 Started holiday background scheduler")
+    
+    while True:
+        try:
+            await process_holiday_tasks()
+            # Wait for 1 hour before next check (holidays don't need frequent checking)
+            await asyncio.sleep(3600)
+        except Exception as e:
+            logger.error(f"Error in holiday scheduler: {e}")
+            # Wait a bit before retrying on error  
+            await asyncio.sleep(300)
+
+async def process_holiday_tasks():
+    """Process holiday-related tasks like updating dates for recurring holidays"""
+    try:
+        current_time = await business_now_async()
+        current_date = current_time.date()
+        
+        # Check for holidays that need date updates (recurring holidays that have passed)
+        holidays = await db.holidays.find({
+            "is_recurring": True,
+            "is_enabled": True
+        }).to_list(length=None)
+        
+        updated_count = 0
+        for holiday_doc in holidays:
+            try:
+                holiday_date = datetime.strptime(holiday_doc["date"], "%Y-%m-%d").date()
+                
+                # If the holiday has passed this year, update it to next year
+                if holiday_date < current_date:
+                    next_year = current_date.year + 1
+                    month_day = holiday_doc["month_day"]  # Format: "12-25"
+                    new_date = f"{next_year}-{month_day}"
+                    
+                    # Update the holiday with the new date
+                    await db.holidays.update_one(
+                        {"id": holiday_doc["id"]},
+                        {
+                            "$set": {
+                                "date": new_date,
+                                "updated_at": current_time
+                            }
+                        }
+                    )
+                    updated_count += 1
+                    logger.info(f"Updated holiday '{holiday_doc['name']}' to {new_date}")
+                    
+            except Exception as e:
+                logger.error(f"Error updating holiday {holiday_doc.get('name', 'Unknown')}: {e}")
+                continue
+        
+        if updated_count > 0:
+            logger.info(f"🎉 Holiday scheduler updated {updated_count} holidays to next year")
+        
+    except Exception as e:
+        logger.error(f"Error in process_holiday_tasks: {e}")
+
 async def scheduled_posts_scheduler():
     """Background task that runs the scheduled posts processor every minute"""
     import asyncio
