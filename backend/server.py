@@ -5523,7 +5523,7 @@ async def send_mass_emails_from_post(post_id: str, post_data: dict):
         
         for customer in customers:
             try:
-                customer_name = customer.get('name', 'Valued Customer')
+                customer_name = get_customer_full_name(customer)
                 customer_email = customer.get('email')
                 
                 # Get pet name(s) for this customer - handle both data structures
