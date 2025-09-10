@@ -188,7 +188,7 @@ class SMSHolidayTester:
             
             if response.status_code == 200:
                 agent_result = response.json()
-                agent_id = agent_result.get('id')
+                agent_id = agent_result.get('agent_id') or agent_result.get('id')  # Handle both response formats
                 print(f"Created agent ID: {agent_id}")
                 self.created_agents.append(agent_id)
                 
