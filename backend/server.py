@@ -5798,8 +5798,70 @@ async def generate_sms_for_agent(agent_id: str, agent_data: dict):
                 if not sms_content:
                     raise Exception("No SMS content provided for write mode")
                 content_result = {"content": sms_content}
+            elif agent_mode == 'recurring' and agent_data.get('selected_holidays'):
+                # This is a scheduled (holiday-based) SMS agent - use holiday context
+                selected_holidays = agent_data.get('selected_holidays', [])
+                
+                if not selected_holidays:
+                    raise Exception("No holidays selected for scheduled SMS agent")
+                
+                # Get holiday information for context
+                holidays_cursor = db.holidays.find({"id": {"$in": selected_holidays}})
+                holidays_list = await holidays_cursor.to_list(length=None)
+                
+                if not holidays_list:
+                    raise Exception(f"No holiday data found for selected holidays {selected_holidays}")
+                
+                # Find the next upcoming holiday from selected holidays
+                from datetime import datetime
+                today = datetime.now().date()
+                
+                # Parse and sort holidays by date to find the next upcoming one
+                valid_holidays = []
+                for holiday in holidays_list:
+                    try:
+                        holiday_date = datetime.strptime(holiday['date'], '%Y-%m-%d').date()
+                        valid_holidays.append({
+                            'holiday_data': holiday,
+                            'parsed_date': holiday_date
+                        })
+                    except Exception as e:
+                        logger.warning(f"Could not parse holiday date {holiday.get('date', 'unknown')}: {e}")
+                        continue
+                
+                if not valid_holidays:
+                    raise Exception(f"No valid holiday dates found for scheduled SMS agent")
+                
+                # Sort holidays by date
+                valid_holidays.sort(key=lambda x: x['parsed_date'])
+                
+                # Find the next upcoming holiday (today or later)
+                upcoming_holiday = None
+                for holiday_info in valid_holidays:
+                    if holiday_info['parsed_date'] >= today:
+                        upcoming_holiday = holiday_info['holiday_data']
+                        break
+                
+                # If no upcoming holiday found, use the earliest holiday (for past year wrap-around)
+                if not upcoming_holiday:
+                    upcoming_holiday = valid_holidays[0]['holiday_data']
+                    logger.info(f"No upcoming holidays found, using earliest selected holiday: {upcoming_holiday.get('name')}")
+                
+                holiday_name = upcoming_holiday.get('name', 'Holiday')
+                holiday_date = upcoming_holiday.get('date', '')
+                
+                logger.info(f"Using holiday context for SMS: {holiday_name} ({holiday_date})")
+                
+                # Use holiday context for SMS generation
+                content_result = await ai_service.generate_sms_content(
+                    topic=f"Holiday SMS for {holiday_name}",
+                    custom_topic=f"Create a warm, festive SMS message for {holiday_name} on {holiday_date}. Keep it brief and include a call to action.",
+                    track_usage=True,
+                    user_id="admin",
+                    agent_id=agent_id
+                )
             else:
-                # Generate SMS content using AI service
+                # Generate SMS content using AI service for topic-based recurring SMS agents
                 topic = agent_data.get('topic', 'General SMS')
                 content_result = await ai_service.generate_sms_content(
                     topic=topic,
