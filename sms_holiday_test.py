@@ -720,10 +720,10 @@ class SMSHolidayTester:
             agent_id = agent_result.get('id')
             
             # Step 3: Test holiday calculation logic
-            expected_holiday = await self.test_holiday_calculation_logic(agent_id, holiday_map)
+            expected_holiday = await self.test_holiday_calculation_logic(agent_result, holiday_map)
             
             # Step 4: Test SMS agent manual run
-            post_doc = await self.test_sms_agent_manual_run(agent_id)
+            post_doc = await self.test_sms_agent_manual_run(agent_result)
             
             # Step 5: Test holiday-specific content generation
             await self.test_holiday_specific_content(post_doc, expected_holiday)
