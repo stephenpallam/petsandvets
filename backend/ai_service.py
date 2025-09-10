@@ -752,8 +752,9 @@ Make sure there are no duplicate signatures or redundant messages."""
                 system_message="You are a professional SMS content creator for a veterinary clinic. Generate concise, engaging SMS messages that are warm but professional and relevant to pet owners."
             ).with_model("openai", "gpt-4o-mini")
             
-            messages = [UserMessage(content=sms_prompt)]
-            response = await chat.chat_async(messages=messages, model="gpt-4o-mini")
+            # Send message and get response
+            user_message = UserMessage(text=sms_prompt)
+            response = await chat.send_message(user_message)
             
             sms_content = response.message.content.strip()
             
