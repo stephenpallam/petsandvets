@@ -613,13 +613,13 @@ const Customers = () => {
                           <div className="flex-shrink-0 h-10 w-10">
                             <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
                               <span className="text-blue-600 font-medium text-sm">
-                                {customer.name.charAt(0).toUpperCase()}
+                                {getFullName(customer).charAt(0).toUpperCase()}
                               </span>
                             </div>
                           </div>
                           <div>
                             <div className="text-sm font-medium text-gray-900">
-                              {customer.name}
+                              {getFullName(customer)}
                             </div>
                             {((customer.pets && customer.pets.length > 0) || customer.pet_name) && (
                               <div className="text-xs text-gray-500">
