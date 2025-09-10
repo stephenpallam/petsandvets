@@ -39,7 +39,8 @@ import {
   Stethoscope,
   Search,
   Type,
-  Globe
+  Globe,
+  X
 } from 'lucide-react';
 
 const AIAgentConfig = () => {
