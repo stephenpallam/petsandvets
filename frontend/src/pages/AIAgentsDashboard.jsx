@@ -1861,25 +1861,41 @@ const AIAgentsDashboard = () => {
                                       </div>
                                     </div>
                                     
-                                    {/* Row 2: Workflow Mode and SMS Provider */}
+                                    {/* Row 2: Workflow Mode and Link */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                       <div className="flex flex-col">
                                         <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Workflow Mode</span>
                                         <p className="text-sm text-gray-900 mt-1">
-                                          {agent.mode === 'recurring' && agent.selected_holidays && agent.selected_holidays.length > 0 ? (
-                                            'Holiday-based'
-                                          ) : (
-                                            getWorkflowMode(agent)
-                                          )}
+                                          {getWorkflowMode(agent)}
                                         </p>
                                       </div>
                                       <div className="flex flex-col">
-                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">SMS Provider</span>
-                                        <p className="text-sm text-gray-900 mt-1 capitalize">
-                                          {agent.sms_provider || 'Twilio'}
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Link</span>
+                                        <p className="text-sm text-gray-900 mt-1">
+                                          {agent.sms_link || 'No Link Provided'}
                                         </p>
                                       </div>
                                     </div>
+
+                                    {/* Row 3: Next Scheduled Run for Holiday-based SMS agents */}
+                                    {agent.mode === 'recurring' && agent.selected_holidays && agent.selected_holidays.length > 0 && (
+                                      <div className="grid grid-cols-1 gap-4">
+                                        <div className="flex flex-col">
+                                          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                            {(() => {
+                                              const holidayInfo = getNextScheduledHoliday(agent);
+                                              return holidayInfo.holidayName || 'Next Scheduled Run';
+                                            })()}
+                                          </span>
+                                          <p className="text-sm text-gray-900 mt-1">
+                                            {(() => {
+                                              const holidayInfo = getNextScheduledHoliday(agent);
+                                              return holidayInfo.nextRun;
+                                            })()}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    )}
                                   </div>
                                 )
                               ) : (
