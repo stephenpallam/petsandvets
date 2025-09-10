@@ -1518,12 +1518,15 @@ async def holiday_scheduler():
             await asyncio.sleep(300)
 
 async def process_holiday_tasks():
-    """Process holiday-related tasks like updating dates for recurring holidays"""
+    """Process holiday-related tasks including creating scheduled SMS posts for upcoming holidays"""
     try:
         current_time = await business_now_async()
         current_date = current_time.date()
         
-        # Check for holidays that need date updates (recurring holidays that have passed)
+        # Task 1: Check for SMS agents that need scheduled posts created for upcoming holidays
+        await schedule_upcoming_holiday_sms()
+        
+        # Task 2: Update passed holidays to next year (for recurring holidays)
         holidays = await db.holidays.find({
             "is_recurring": True,
             "is_enabled": True
@@ -1537,7 +1540,7 @@ async def process_holiday_tasks():
                 # If the holiday has passed this year, update it to next year
                 if holiday_date < current_date:
                     next_year = current_date.year + 1
-                    month_day = holiday_doc["month_day"]  # Format: "12-25"
+                    month_day = holiday_doc.get("month_day", holiday_doc["date"][5:])  # Get MM-DD part
                     new_date = f"{next_year}-{month_day}"
                     
                     # Update the holiday with the new date
@@ -1562,6 +1565,92 @@ async def process_holiday_tasks():
         
     except Exception as e:
         logger.error(f"Error in process_holiday_tasks: {e}")
+
+async def schedule_upcoming_holiday_sms():
+    """Create scheduled SMS posts for upcoming holidays (within next 30 days)"""
+    try:
+        current_time = await business_now_async()
+        current_date = current_time.date()
+        
+        # Get all SMS agents with selected holidays
+        sms_agents = await db.ai_agents.find({
+            "agent_type": "sms_agent",
+            "selected_holidays": {"$exists": True, "$ne": []},
+            "is_active": True
+        }).to_list(length=None)
+        
+        if not sms_agents:
+            return
+        
+        # Get all holidays
+        holidays = await db.holidays.find({}).to_list(length=None)
+        holiday_map = {h["id"]: h for h in holidays}
+        
+        scheduled_count = 0
+        
+        for agent in sms_agents:
+            try:
+                selected_holidays = agent.get("selected_holidays", [])
+                agent_id = agent.get("id")
+                
+                for holiday_id in selected_holidays:
+                    if holiday_id not in holiday_map:
+                        continue
+                    
+                    holiday = holiday_map[holiday_id]
+                    holiday_date = datetime.strptime(holiday["date"], "%Y-%m-%d").date()
+                    
+                    # Check if holiday is within next 30 days
+                    days_until = (holiday_date - current_date).days
+                    if days_until < 0 or days_until > 30:
+                        continue
+                    
+                    # Check if we already have a scheduled post for this agent and holiday
+                    agent_post_time = agent.get("post_time", "09:00")
+                    scheduled_datetime = datetime.combine(holiday_date, datetime.strptime(agent_post_time, "%H:%M").time())
+                    
+                    existing_post = await db.ai_posts.find_one({
+                        "agent_id": agent_id,
+                        "holiday_date": holiday["date"],
+                        "status": {"$in": ["scheduled", "in_review", "ready_to_publish"]}
+                    })
+                    
+                    if existing_post:
+                        continue  # Already have a post scheduled for this holiday
+                    
+                    # Create scheduled SMS post
+                    post_id = str(uuid.uuid4())
+                    
+                    post_data = {
+                        "id": post_id,
+                        "agent_id": agent_id,
+                        "agent_name": agent.get("agent_name", "SMS Agent"),
+                        "agent_type": "sms_agent",
+                        "content": "",  # Will be generated when scheduled time arrives
+                        "sms_template": agent.get("sms_template", ""),
+                        "sms_link": agent.get("sms_link", "https://petsandvetsanimalhospital.com"),
+                        "holiday_name": holiday.get("name"),
+                        "holiday_date": holiday["date"],
+                        "status": "scheduled",
+                        "scheduled_for": scheduled_datetime,
+                        "created_at": current_time,
+                        "updated_at": current_time
+                    }
+                    
+                    await db.ai_posts.insert_one(post_data)
+                    scheduled_count += 1
+                    
+                    logger.info(f"📅 Scheduled SMS post for agent '{agent.get('agent_name')}' on {holiday.get('name')} ({holiday['date']} at {agent_post_time})")
+                    
+            except Exception as e:
+                logger.error(f"Error scheduling SMS for agent {agent.get('agent_name', 'Unknown')}: {e}")
+                continue
+        
+        if scheduled_count > 0:
+            logger.info(f"🎉 Holiday scheduler created {scheduled_count} scheduled SMS posts")
+            
+    except Exception as e:
+        logger.error(f"Error in schedule_upcoming_holiday_sms: {e}")
 
 async def scheduled_posts_scheduler():
     """Background task that runs the scheduled posts processor every minute"""
