@@ -37,13 +37,14 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv(backend_dir / '.env')
 
-class SMSAIServiceTester:
+class CustomerDataInvestigator:
     def __init__(self):
         self.mongo_url = os.environ['MONGO_URL']
         self.db_name = os.environ['DB_NAME']
         self.client = None
         self.db = None
         self.test_results = []
+        self.backend_url = os.environ.get('FRONTEND_URL', 'https://smart-sms-1.preview.emergentagent.com')
         
     async def connect(self):
         """Connect to MongoDB"""
@@ -72,444 +73,456 @@ class SMSAIServiceTester:
             "details": details or {}
         })
     
-    async def create_test_sms_agent(self, agent_name: str, mode: str = "recurring", selected_holidays: list = None):
-        """Create a test SMS agent"""
-        import uuid
-        
-        agent_data = {
-            "id": str(uuid.uuid4()),
-            "agent_name": agent_name,
-            "agent_type": "sms_agent",
-            "mode": mode,
-            "sms_provider": "twilio",
-            "sms_link": "https://petsandvetsanimalhospital.com",
-            "sms_template": "Hi [CUSTOMER_NAME]! We hope [PET_NAME] is doing well. - Your Vet Team",
-            "created_at": datetime.utcnow(),
-            "updated_at": datetime.utcnow(),
-            "is_active": True
-        }
-        
-        if selected_holidays:
-            agent_data["selected_holidays"] = selected_holidays
-        
-        if mode == "write":
-            agent_data["sms_content"] = "Test SMS content for write mode agent"
-        elif mode == "recurring" and not selected_holidays:
-            agent_data["topic"] = "Pet Health Tips"
-        
-        # Insert the test agent
-        await self.db.ai_agents.insert_one(agent_data)
-        return agent_data
-    
-    async def test_ai_service_initialization(self):
-        """Test 1: AI Service LlmChat Initialization Fix"""
-        print("🧪 TEST 1: AI Service LlmChat Initialization Fix")
+    async def investigate_customer_collections(self):
+        """Investigation 1: Check Customer Collections"""
+        print("🔍 INVESTIGATION 1: Check Customer Collections")
         print("=" * 60)
         
         try:
-            # Import AI service
-            from ai_service import ai_service
+            # Get all collection names
+            collections = await self.db.list_collection_names()
             
-            # Test direct SMS content generation
-            result = await ai_service.generate_sms_content(
-                topic="Pet Health Tips",
-                custom_topic="Create a warm SMS about regular pet checkups",
-                track_usage=True,
-                user_id="test_user",
-                agent_id="test_agent"
-            )
+            # Look for customer-related collections
+            customer_collections = []
+            possible_names = ['customers', 'users', 'customer_data', 'client', 'clients', 'patient', 'patients']
             
-            # Check if result contains expected fields
-            if result and "content" in result and "character_count" in result:
-                if "error" not in result:
-                    self.log_test_result(
-                        "AI Service LlmChat Initialization",
-                        True,
-                        "LlmChat initialization successful - no missing arguments error",
-                        {
-                            "Generated Content": result["content"][:100] + "..." if len(result["content"]) > 100 else result["content"],
-                            "Character Count": result["character_count"],
-                            "Within SMS Limit": result["character_count"] <= 160
-                        }
-                    )
-                    return True
-                else:
-                    self.log_test_result(
-                        "AI Service LlmChat Initialization",
-                        False,
-                        f"AI service returned error: {result['error']}",
-                        {"Error Details": result.get("error")}
-                    )
-                    return False
-            else:
-                self.log_test_result(
-                    "AI Service LlmChat Initialization",
-                    False,
-                    "AI service returned invalid result format",
-                    {"Result": str(result)}
-                )
-                return False
-                
-        except Exception as e:
-            error_msg = str(e)
-            if "missing" in error_msg.lower() and "argument" in error_msg.lower():
-                self.log_test_result(
-                    "AI Service LlmChat Initialization",
-                    False,
-                    f"LlmChat initialization still has missing arguments: {error_msg}",
-                    {"Error Type": "Missing Arguments", "Full Error": error_msg}
-                )
-            else:
-                self.log_test_result(
-                    "AI Service LlmChat Initialization",
-                    False,
-                    f"Unexpected error in AI service: {error_msg}",
-                    {"Error Type": "Unexpected Error", "Full Error": error_msg}
-                )
-            return False
-    
-    async def test_sms_content_generation(self):
-        """Test 2: Basic SMS Content Generation"""
-        print("🧪 TEST 2: Basic SMS Content Generation")
-        print("=" * 60)
-        
-        try:
-            # Create a simple SMS agent
-            agent = await self.create_test_sms_agent("Test SMS Agent", mode="recurring")
+            for collection_name in collections:
+                if any(name in collection_name.lower() for name in possible_names):
+                    customer_collections.append(collection_name)
             
-            # Import the SMS generation function
-            from server import generate_sms_for_agent
-            
-            # Test SMS generation
-            post_id = await generate_sms_for_agent(agent["id"], agent)
-            
-            if post_id:
-                # Check the generated post
-                post = await self.db.ai_posts.find_one({"id": post_id})
-                
-                if post and post.get("status") == "in_review":
-                    content = post.get("content", "")
-                    char_count = len(content)
-                    
-                    self.log_test_result(
-                        "SMS Content Generation",
-                        True,
-                        "SMS content generated successfully",
-                        {
-                            "Post ID": post_id,
-                            "Content": content[:100] + "..." if len(content) > 100 else content,
-                            "Character Count": char_count,
-                            "Within SMS Limit": char_count <= 160,
-                            "Status": post.get("status"),
-                            "Agent Type": post.get("agent_type")
-                        }
-                    )
-                    return True
-                else:
-                    self.log_test_result(
-                        "SMS Content Generation",
-                        False,
-                        f"Post created but with wrong status or missing content",
-                        {
-                            "Post Status": post.get("status") if post else "No post found",
-                            "Post Content": post.get("content", "No content") if post else "No post found"
-                        }
-                    )
-                    return False
-            else:
-                self.log_test_result(
-                    "SMS Content Generation",
-                    False,
-                    "SMS generation did not return a post ID",
-                    {"Returned Value": str(post_id)}
-                )
-                return False
-                
-        except Exception as e:
-            self.log_test_result(
-                "SMS Content Generation",
-                False,
-                f"Error during SMS content generation: {str(e)}",
-                {"Error Details": str(e)}
-            )
-            return False
-    
-    async def test_holiday_sms_generation(self):
-        """Test 3: Holiday-Specific SMS Generation"""
-        print("🧪 TEST 3: Holiday-Specific SMS Generation")
-        print("=" * 60)
-        
-        try:
-            # Find a holiday to use for testing
-            holidays = await self.db.holidays.find({}).limit(5).to_list(length=5)
-            
-            if not holidays:
-                self.log_test_result(
-                    "Holiday SMS Generation",
-                    False,
-                    "No holidays found in database for testing",
-                    {"Available Holidays": 0}
-                )
-                return False
-            
-            # Use the first available holiday
-            test_holiday = holidays[0]
-            holiday_id = test_holiday["id"]
-            holiday_name = test_holiday["name"]
-            holiday_date = test_holiday["date"]
-            
-            # Create SMS agent with holiday selection
-            agent = await self.create_test_sms_agent(
-                f"Holiday SMS Agent - {holiday_name}",
-                mode="recurring",
-                selected_holidays=[holiday_id]
-            )
-            
-            # Import the SMS generation function
-            from server import generate_sms_for_agent
-            
-            # Test holiday-based SMS generation
-            post_id = await generate_sms_for_agent(agent["id"], agent)
-            
-            if post_id:
-                # Check the generated post
-                post = await self.db.ai_posts.find_one({"id": post_id})
-                
-                if post and post.get("status") == "in_review":
-                    content = post.get("content", "")
-                    char_count = len(content)
-                    
-                    # Check if content mentions the holiday (basic check)
-                    holiday_mentioned = any(word.lower() in content.lower() for word in holiday_name.split())
-                    
-                    self.log_test_result(
-                        "Holiday SMS Generation",
-                        True,
-                        "Holiday-specific SMS content generated successfully",
-                        {
-                            "Holiday Used": f"{holiday_name} ({holiday_date})",
-                            "Post ID": post_id,
-                            "Content": content[:100] + "..." if len(content) > 100 else content,
-                            "Character Count": char_count,
-                            "Within SMS Limit": char_count <= 160,
-                            "Holiday Context Detected": holiday_mentioned,
-                            "Status": post.get("status")
-                        }
-                    )
-                    return True
-                else:
-                    self.log_test_result(
-                        "Holiday SMS Generation",
-                        False,
-                        f"Holiday SMS post created but with issues",
-                        {
-                            "Post Status": post.get("status") if post else "No post found",
-                            "Holiday Used": f"{holiday_name} ({holiday_date})"
-                        }
-                    )
-                    return False
-            else:
-                self.log_test_result(
-                    "Holiday SMS Generation",
-                    False,
-                    "Holiday SMS generation did not return a post ID",
-                    {
-                        "Holiday Used": f"{holiday_name} ({holiday_date})",
-                        "Returned Value": str(post_id)
+            # Check each potential customer collection
+            collection_data = {}
+            for collection_name in customer_collections:
+                try:
+                    count = await self.db[collection_name].count_documents({})
+                    sample_doc = await self.db[collection_name].find_one({})
+                    collection_data[collection_name] = {
+                        "count": count,
+                        "sample_structure": list(sample_doc.keys()) if sample_doc else []
                     }
-                )
-                return False
-                
+                except Exception as e:
+                    collection_data[collection_name] = {"error": str(e)}
+            
+            # Also check all collections for any that might contain customer data
+            all_collection_data = {}
+            for collection_name in collections:
+                try:
+                    count = await self.db[collection_name].count_documents({})
+                    if count > 0:
+                        sample_doc = await self.db[collection_name].find_one({})
+                        # Check if this collection has customer-like fields
+                        if sample_doc and any(field in str(sample_doc).lower() for field in ['name', 'email', 'phone', 'customer', 'pet']):
+                            all_collection_data[collection_name] = {
+                                "count": count,
+                                "sample_structure": list(sample_doc.keys()) if sample_doc else [],
+                                "sample_data": {k: v for k, v in sample_doc.items() if k != '_id'}
+                            }
+                except Exception as e:
+                    continue
+            
+            success = len(customer_collections) > 0 or len(all_collection_data) > 0
+            
+            self.log_test_result(
+                "Customer Collections Investigation",
+                success,
+                f"Found {len(customer_collections)} obvious customer collections and {len(all_collection_data)} collections with customer-like data",
+                {
+                    "All Collections": collections,
+                    "Customer Collections": customer_collections,
+                    "Customer Collection Data": collection_data,
+                    "All Collections with Customer Data": all_collection_data
+                }
+            )
+            return success, all_collection_data
+            
         except Exception as e:
             self.log_test_result(
-                "Holiday SMS Generation",
+                "Customer Collections Investigation",
                 False,
-                f"Error during holiday SMS generation: {str(e)}",
+                f"Error investigating collections: {str(e)}",
                 {"Error Details": str(e)}
             )
-            return False
+            return False, {}
     
-    async def test_sms_character_limit(self):
-        """Test 4: SMS Character Limit Compliance"""
-        print("🧪 TEST 4: SMS Character Limit Compliance")
+    async def verify_customer_data_structure(self, collections_data):
+        """Investigation 2: Verify Customer Data Structure"""
+        print("🔍 INVESTIGATION 2: Verify Customer Data Structure")
         print("=" * 60)
         
         try:
-            from ai_service import ai_service
+            customer_records = []
             
-            # Test with a topic that might generate long content
-            long_topic = "Create a detailed SMS about comprehensive pet health care including vaccinations, dental care, nutrition, exercise, grooming, and regular checkups"
+            # Check each collection that might contain customer data
+            for collection_name, data in collections_data.items():
+                if data.get("count", 0) > 0:
+                    try:
+                        # Get a few sample records
+                        records = await self.db[collection_name].find({}).limit(5).to_list(length=5)
+                        for record in records:
+                            # Remove MongoDB _id for cleaner display
+                            if '_id' in record:
+                                del record['_id']
+                            customer_records.append({
+                                "collection": collection_name,
+                                "record": record
+                            })
+                    except Exception as e:
+                        continue
             
-            result = await ai_service.generate_sms_content(
-                topic="Pet Health",
-                custom_topic=long_topic,
-                track_usage=False
-            )
-            
-            if result and "content" in result:
-                content = result["content"]
-                char_count = len(content)
-                within_limit = char_count <= 160
-                
-                self.log_test_result(
-                    "SMS Character Limit Compliance",
-                    within_limit,
-                    f"SMS content character count: {char_count}/160",
-                    {
-                        "Content": content,
-                        "Character Count": char_count,
-                        "Within Limit": within_limit,
-                        "Truncated": "..." in content
-                    }
-                )
-                return within_limit
-            else:
-                self.log_test_result(
-                    "SMS Character Limit Compliance",
-                    False,
-                    "AI service did not return valid content for character limit test",
-                    {"Result": str(result)}
-                )
-                return False
-                
-        except Exception as e:
-            self.log_test_result(
-                "SMS Character Limit Compliance",
-                False,
-                f"Error during character limit test: {str(e)}",
-                {"Error Details": str(e)}
-            )
-            return False
-    
-    async def test_sms_manual_run(self):
-        """Test 5: SMS Agent Manual Run via API"""
-        print("🧪 TEST 5: SMS Agent Manual Run via API")
-        print("=" * 60)
-        
-        try:
-            # Create a test SMS agent
-            agent = await self.create_test_sms_agent("Manual Run Test Agent", mode="write")
-            agent_id = agent["id"]
-            
-            # Import the run agent function
-            from server import run_agent
-            
-            # Test manual run
-            result = await run_agent(agent_id)
-            
-            if result and "message" in result:
-                # Check if a post was created
-                posts = await self.db.ai_posts.find({
-                    "agent_id": agent_id,
-                    "agent_type": "sms_agent"
-                }).to_list(length=10)
-                
-                if posts:
-                    latest_post = posts[-1]  # Get the most recent post
+            # Look specifically for the customer mentioned by user (Stephen Pallam)
+            stephen_records = []
+            for collection_name in collections_data.keys():
+                try:
+                    # Search for Stephen Pallam specifically
+                    stephen_docs = await self.db[collection_name].find({
+                        "$or": [
+                            {"name": {"$regex": "Stephen", "$options": "i"}},
+                            {"customer_name": {"$regex": "Stephen", "$options": "i"}},
+                            {"full_name": {"$regex": "Stephen", "$options": "i"}},
+                            {"owner_first_name": {"$regex": "Stephen", "$options": "i"}}
+                        ]
+                    }).to_list(length=10)
                     
-                    self.log_test_result(
-                        "SMS Agent Manual Run",
-                        True,
-                        "SMS agent manual run completed successfully",
-                        {
-                            "Agent ID": agent_id,
-                            "Result Message": result["message"],
-                            "Post Created": latest_post.get("id"),
-                            "Post Status": latest_post.get("status"),
-                            "Content Preview": latest_post.get("content", "")[:50] + "..." if latest_post.get("content") else "No content"
-                        }
-                    )
-                    return True
-                else:
-                    self.log_test_result(
-                        "SMS Agent Manual Run",
-                        False,
-                        "Manual run completed but no SMS post was created",
-                        {
-                            "Agent ID": agent_id,
-                            "Result Message": result["message"],
-                            "Posts Found": len(posts)
-                        }
-                    )
-                    return False
-            else:
-                self.log_test_result(
-                    "SMS Agent Manual Run",
-                    False,
-                    "Manual run did not return expected result format",
-                    {
-                        "Agent ID": agent_id,
-                        "Result": str(result)
-                    }
-                )
-                return False
-                
+                    for doc in stephen_docs:
+                        if '_id' in doc:
+                            del doc['_id']
+                        stephen_records.append({
+                            "collection": collection_name,
+                            "record": doc
+                        })
+                except Exception as e:
+                    continue
+            
+            success = len(customer_records) > 0
+            
+            self.log_test_result(
+                "Customer Data Structure Verification",
+                success,
+                f"Found {len(customer_records)} customer records across collections, {len(stephen_records)} Stephen Pallam records",
+                {
+                    "Total Customer Records": len(customer_records),
+                    "Sample Customer Records": customer_records[:3],  # Show first 3
+                    "Stephen Pallam Records": stephen_records,
+                    "Collections with Data": list(collections_data.keys())
+                }
+            )
+            return success, customer_records, stephen_records
+            
         except Exception as e:
             self.log_test_result(
-                "SMS Agent Manual Run",
+                "Customer Data Structure Verification",
                 False,
-                f"Error during manual run test: {str(e)}",
+                f"Error verifying customer data structure: {str(e)}",
                 {"Error Details": str(e)}
             )
-            return False
+            return False, [], []
     
-    async def cleanup_test_data(self):
-        """Clean up test data created during testing"""
+    async def test_customer_api_endpoint(self):
+        """Investigation 3: Test Customer API Endpoint"""
+        print("🔍 INVESTIGATION 3: Test Customer API Endpoint")
+        print("=" * 60)
+        
         try:
-            # Delete test agents
-            await self.db.ai_agents.delete_many({
-                "agent_name": {"$regex": "Test.*Agent|Holiday SMS Agent.*|Manual Run Test Agent"}
-            })
+            import aiohttp
+            import ssl
             
-            # Delete test posts
-            await self.db.ai_posts.delete_many({
-                "agent_name": {"$regex": "Test.*Agent|Holiday SMS Agent.*|Manual Run Test Agent"}
-            })
+            # Create SSL context that doesn't verify certificates (for testing)
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
             
-            print("🧹 Test data cleanup completed")
+            # Test different customer endpoints
+            endpoints_to_test = [
+                "/api/customers",
+                "/api/customers?limit=1",
+                "/api/customers?limit=10",
+                "/api/users",
+                "/api/customer-data",
+                "/api/clients"
+            ]
+            
+            endpoint_results = {}
+            
+            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
+                for endpoint in endpoints_to_test:
+                    try:
+                        url = f"{self.backend_url}{endpoint}"
+                        print(f"Testing endpoint: {url}")
+                        
+                        async with session.get(url, timeout=10) as response:
+                            status = response.status
+                            try:
+                                data = await response.json()
+                            except:
+                                data = await response.text()
+                            
+                            endpoint_results[endpoint] = {
+                                "status": status,
+                                "data": data,
+                                "success": status == 200
+                            }
+                            
+                    except Exception as e:
+                        endpoint_results[endpoint] = {
+                            "status": "error",
+                            "error": str(e),
+                            "success": False
+                        }
+            
+            # Check if any endpoint returned customer data
+            working_endpoints = [ep for ep, result in endpoint_results.items() if result.get("success")]
+            
+            success = len(working_endpoints) > 0
+            
+            self.log_test_result(
+                "Customer API Endpoint Testing",
+                success,
+                f"Found {len(working_endpoints)} working customer endpoints out of {len(endpoints_to_test)} tested",
+                {
+                    "Working Endpoints": working_endpoints,
+                    "All Endpoint Results": endpoint_results,
+                    "Backend URL": self.backend_url
+                }
+            )
+            return success, endpoint_results
             
         except Exception as e:
-            print(f"⚠️  Warning: Could not clean up all test data: {str(e)}")
+            self.log_test_result(
+                "Customer API Endpoint Testing",
+                False,
+                f"Error testing customer API endpoints: {str(e)}",
+                {"Error Details": str(e)}
+            )
+            return False, {}
     
-    async def run_comprehensive_sms_ai_test(self):
-        """Run comprehensive SMS AI service integration test"""
-        print("🚀 STARTING SMS AI SERVICE INTEGRATION TEST")
+    async def check_alternative_endpoints(self):
+        """Investigation 4: Check Alternative Customer Endpoints"""
+        print("🔍 INVESTIGATION 4: Check Alternative Customer Endpoints")
+        print("=" * 60)
+        
+        try:
+            # Check server.py for customer-related routes
+            server_file_path = Path(__file__).parent / "backend" / "server.py"
+            
+            customer_routes = []
+            if server_file_path.exists():
+                with open(server_file_path, 'r') as f:
+                    content = f.read()
+                    
+                # Look for customer-related routes
+                import re
+                route_patterns = [
+                    r'@api_router\.(get|post|put|delete)\("([^"]*customer[^"]*)"',
+                    r'@api_router\.(get|post|put|delete)\("([^"]*client[^"]*)"',
+                    r'@api_router\.(get|post|put|delete)\("([^"]*user[^"]*)"',
+                ]
+                
+                for pattern in route_patterns:
+                    matches = re.findall(pattern, content, re.IGNORECASE)
+                    for method, route in matches:
+                        customer_routes.append(f"{method.upper()} {route}")
+            
+            # Also check what collections are actually being used in the server code
+            collection_usage = []
+            if server_file_path.exists():
+                with open(server_file_path, 'r') as f:
+                    content = f.read()
+                    
+                # Look for db.collection_name patterns
+                db_patterns = re.findall(r'db\.([a-zA-Z_]+)', content)
+                collection_usage = list(set(db_patterns))
+            
+            success = len(customer_routes) > 0
+            
+            self.log_test_result(
+                "Alternative Customer Endpoints Check",
+                success,
+                f"Found {len(customer_routes)} customer-related routes in server.py",
+                {
+                    "Customer Routes Found": customer_routes,
+                    "Database Collections Used": collection_usage,
+                    "Server File Path": str(server_file_path)
+                }
+            )
+            return success, customer_routes, collection_usage
+            
+        except Exception as e:
+            self.log_test_result(
+                "Alternative Customer Endpoints Check",
+                False,
+                f"Error checking alternative endpoints: {str(e)}",
+                {"Error Details": str(e)}
+            )
+            return False, [], []
+    
+    async def test_direct_database_queries(self):
+        """Investigation 5: Test Direct Database Queries"""
+        print("🔍 INVESTIGATION 5: Test Direct Database Queries")
+        print("=" * 60)
+        
+        try:
+            # Test various queries to find customer data
+            query_results = {}
+            
+            # Get all collections
+            collections = await self.db.list_collection_names()
+            
+            # Query 1: Look for any document with "Stephen" in any field
+            stephen_results = []
+            for collection_name in collections:
+                try:
+                    # Search for Stephen in any text field
+                    docs = await self.db[collection_name].find({
+                        "$or": [
+                            {"name": {"$regex": "Stephen", "$options": "i"}},
+                            {"customer_name": {"$regex": "Stephen", "$options": "i"}},
+                            {"full_name": {"$regex": "Stephen", "$options": "i"}},
+                            {"owner_first_name": {"$regex": "Stephen", "$options": "i"}},
+                            {"email": {"$regex": "stephen", "$options": "i"}}
+                        ]
+                    }).to_list(length=10)
+                    
+                    if docs:
+                        for doc in docs:
+                            if '_id' in doc:
+                                del doc['_id']
+                            stephen_results.append({
+                                "collection": collection_name,
+                                "document": doc
+                            })
+                except Exception as e:
+                    continue
+            
+            query_results["stephen_search"] = stephen_results
+            
+            # Query 2: Look for any document with pet names (Molly, Dolly)
+            pet_results = []
+            for collection_name in collections:
+                try:
+                    docs = await self.db[collection_name].find({
+                        "$or": [
+                            {"pet_name": {"$regex": "Molly|Dolly", "$options": "i"}},
+                            {"pets.name": {"$regex": "Molly|Dolly", "$options": "i"}},
+                            {"pet_names": {"$regex": "Molly|Dolly", "$options": "i"}}
+                        ]
+                    }).to_list(length=10)
+                    
+                    if docs:
+                        for doc in docs:
+                            if '_id' in doc:
+                                del doc['_id']
+                            pet_results.append({
+                                "collection": collection_name,
+                                "document": doc
+                            })
+                except Exception as e:
+                    continue
+            
+            query_results["pet_search"] = pet_results
+            
+            # Query 3: Look for any document with email addresses
+            email_results = []
+            for collection_name in collections:
+                try:
+                    docs = await self.db[collection_name].find({
+                        "email": {"$exists": True, "$ne": ""}
+                    }).limit(5).to_list(length=5)
+                    
+                    if docs:
+                        for doc in docs:
+                            if '_id' in doc:
+                                del doc['_id']
+                            email_results.append({
+                                "collection": collection_name,
+                                "document": doc
+                            })
+                except Exception as e:
+                    continue
+            
+            query_results["email_search"] = email_results
+            
+            # Query 4: Count documents in each collection
+            collection_counts = {}
+            for collection_name in collections:
+                try:
+                    count = await self.db[collection_name].count_documents({})
+                    if count > 0:
+                        collection_counts[collection_name] = count
+                except Exception as e:
+                    continue
+            
+            query_results["collection_counts"] = collection_counts
+            
+            total_results = len(stephen_results) + len(pet_results) + len(email_results)
+            success = total_results > 0
+            
+            self.log_test_result(
+                "Direct Database Queries",
+                success,
+                f"Found {total_results} relevant documents across database queries",
+                {
+                    "Stephen Search Results": len(stephen_results),
+                    "Pet Search Results": len(pet_results), 
+                    "Email Search Results": len(email_results),
+                    "Collection Counts": collection_counts,
+                    "Detailed Results": query_results
+                }
+            )
+            return success, query_results
+            
+        except Exception as e:
+            self.log_test_result(
+                "Direct Database Queries",
+                False,
+                f"Error running direct database queries: {str(e)}",
+                {"Error Details": str(e)}
+            )
+            return False, {}
+    
+    async def run_customer_data_investigation(self):
+        """Run comprehensive customer data investigation"""
+        print("🔍 STARTING CUSTOMER DATA INVESTIGATION")
         print("=" * 80)
-        print("Testing the AI service fix for SMS generation")
-        print("Focus: LlmChat initialization with session_id and system_message parameters")
+        print("Investigating why SMS preview shows 'No customers found in database'")
+        print("when user reports there is one customer (Stephen Pallam)")
         print("=" * 80)
         
         try:
             await self.connect()
             
-            # Run all tests
-            test_results = []
+            # Run all investigations
+            investigation_results = []
             
-            # Test 1: AI Service Initialization
-            test_results.append(await self.test_ai_service_initialization())
+            # Investigation 1: Check Customer Collections
+            success1, collections_data = await self.investigate_customer_collections()
+            investigation_results.append(success1)
             
-            # Test 2: Basic SMS Content Generation
-            test_results.append(await self.test_sms_content_generation())
+            # Investigation 2: Verify Customer Data Structure
+            success2, customer_records, stephen_records = await self.verify_customer_data_structure(collections_data)
+            investigation_results.append(success2)
             
-            # Test 3: Holiday-Specific SMS Generation
-            test_results.append(await self.test_holiday_sms_generation())
+            # Investigation 3: Test Customer API Endpoint
+            success3, endpoint_results = await self.test_customer_api_endpoint()
+            investigation_results.append(success3)
             
-            # Test 4: SMS Character Limit
-            test_results.append(await self.test_sms_character_limit())
+            # Investigation 4: Check Alternative Endpoints
+            success4, customer_routes, collection_usage = await self.check_alternative_endpoints()
+            investigation_results.append(success4)
             
-            # Test 5: Manual Run
-            test_results.append(await self.test_sms_manual_run())
+            # Investigation 5: Test Direct Database Queries
+            success5, query_results = await self.test_direct_database_queries()
+            investigation_results.append(success5)
             
             # Summary
             print("=" * 80)
-            print("🎯 SMS AI SERVICE INTEGRATION TEST SUMMARY")
+            print("🎯 CUSTOMER DATA INVESTIGATION SUMMARY")
             print("=" * 80)
             
-            passed_tests = sum(test_results)
-            total_tests = len(test_results)
-            success_rate = (passed_tests / total_tests) * 100
+            passed_investigations = sum(investigation_results)
+            total_investigations = len(investigation_results)
+            success_rate = (passed_investigations / total_investigations) * 100
             
-            print(f"Tests Passed: {passed_tests}/{total_tests} ({success_rate:.1f}%)")
+            print(f"Successful Investigations: {passed_investigations}/{total_investigations} ({success_rate:.1f}%)")
             print()
             
             # Detailed results
@@ -518,41 +531,64 @@ class SMSAIServiceTester:
                 print(f"{status} {result['test_name']}: {result['message']}")
             
             print()
+            print("🔍 KEY FINDINGS:")
+            print("=" * 40)
             
-            # Overall assessment
-            if passed_tests == total_tests:
-                print("🎉 ALL TESTS PASSED - SMS AI Service Integration Fix is Working!")
-                print("✅ No more LlmChat initialization errors")
-                print("✅ SMS content generation working correctly")
-                print("✅ Holiday-based SMS generation functional")
-                print("✅ Character limit compliance maintained")
-                print("✅ Manual run functionality operational")
-            elif passed_tests >= 3:
-                print("⚠️  MOSTLY WORKING - SMS AI Service Integration has minor issues")
-                print("✅ Core AI service fix appears to be working")
-                print("⚠️  Some functionality may need additional attention")
+            # Analyze findings
+            if stephen_records:
+                print(f"✅ FOUND STEPHEN PALLAM: Located {len(stephen_records)} records")
+                for record in stephen_records:
+                    print(f"   Collection: {record['collection']}")
+                    print(f"   Data: {record['record']}")
             else:
-                print("❌ CRITICAL ISSUES - SMS AI Service Integration needs attention")
-                print("❌ Core AI service fix may not be fully implemented")
-                print("❌ Multiple functionality areas failing")
+                print("❌ STEPHEN PALLAM NOT FOUND: No records found in database")
+            
+            if any(result.get("success") for result in endpoint_results.values()):
+                working_endpoints = [ep for ep, result in endpoint_results.items() if result.get("success")]
+                print(f"✅ WORKING API ENDPOINTS: {working_endpoints}")
+            else:
+                print("❌ NO WORKING CUSTOMER API ENDPOINTS FOUND")
+            
+            if customer_routes:
+                print(f"✅ CUSTOMER ROUTES IN CODE: {customer_routes}")
+            else:
+                print("❌ NO CUSTOMER ROUTES FOUND IN SERVER CODE")
+            
+            print()
+            print("🎯 DIAGNOSIS:")
+            print("=" * 40)
+            
+            if not stephen_records:
+                print("❌ ROOT CAUSE: No customer data found in database")
+                print("   - The customer Stephen Pallam does not exist in any collection")
+                print("   - SMS preview is correct - there are no customers to show")
+                print("   - User may need to add customer data first")
+            elif not any(result.get("success") for result in endpoint_results.values()):
+                print("❌ ROOT CAUSE: Customer API endpoints not working")
+                print("   - Customer data exists in database")
+                print("   - But API endpoints are not accessible or returning errors")
+                print("   - Frontend cannot retrieve customer data via API")
+            else:
+                print("✅ CUSTOMER DATA AND API WORKING")
+                print("   - Customer data exists in database")
+                print("   - API endpoints are accessible")
+                print("   - Issue may be in frontend SMS preview component")
             
             print()
             print("=" * 80)
             
         except Exception as e:
-            print(f"❌ CRITICAL ERROR during testing: {str(e)}")
+            print(f"❌ CRITICAL ERROR during investigation: {str(e)}")
             import traceback
             traceback.print_exc()
         
         finally:
-            # Clean up test data
-            await self.cleanup_test_data()
             await self.disconnect()
 
 async def main():
-    """Main test function"""
-    tester = SMSAIServiceTester()
-    await tester.run_comprehensive_sms_ai_test()
+    """Main investigation function"""
+    investigator = CustomerDataInvestigator()
+    await investigator.run_customer_data_investigation()
 
 if __name__ == "__main__":
     asyncio.run(main())
