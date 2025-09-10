@@ -6842,17 +6842,21 @@ async def process_scheduled_posts():
         
         for post in scheduled_posts:
             try:
-                # Update post status to published
-                await db.ai_posts.update_one(
-                    {"id": post["id"]},
-                    {
-                        "$set": {
-                            "status": PostStatus.PUBLISHED,
-                            "published_at": current_time,
-                            "updated_at": current_time
+                # Special handling for scheduled SMS posts - generate content and send
+                if post.get("agent_type") == "sms_agent" and not post.get("content"):
+                    await process_scheduled_sms_post(post, current_time)
+                else:
+                    # Regular scheduled post - just update status to published
+                    await db.ai_posts.update_one(
+                        {"id": post["id"]},
+                        {
+                            "$set": {
+                                "status": PostStatus.PUBLISHED,
+                                "published_at": current_time,
+                                "updated_at": current_time
+                            }
                         }
-                    }
-                )
+                    )
                 
                 logger.info(f"Published scheduled post {post['id']} at {current_time}")
                 
