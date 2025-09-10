@@ -1638,7 +1638,7 @@ const AIAgentsDashboard = () => {
                                               </p>
                                             </div>
                                             <div>
-                                              <label className="text-xs font-semibold text-orange-700 uppercase tracking-wide">Next Run</label>
+                                              <label className="text-xs font-semibold text-orange-700 uppercase tracking-wide">Scheduled Next Run</label>
                                               <p className="text-sm font-medium text-orange-900">
                                                 {periodInfo.nextRunDate}
                                               </p>
