@@ -9982,7 +9982,15 @@ async def get_customers(
     # Build query with search functionality
     query = {}
     if search:
-        query["name"] = {"$regex": search, "$options": "i"}  # Case-insensitive search
+        # Search across first_name, last_name, name (legacy), email, and pet names
+        search_conditions = [
+            {"first_name": {"$regex": search, "$options": "i"}},
+            {"last_name": {"$regex": search, "$options": "i"}},
+            {"name": {"$regex": search, "$options": "i"}},  # Legacy field
+            {"email": {"$regex": search, "$options": "i"}},
+            {"pets.name": {"$regex": search, "$options": "i"}}
+        ]
+        query["$or"] = search_conditions
     
     # Get total count for pagination
     total_count = await db.customers.count_documents(query)
