@@ -1480,201 +1480,23 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Timesheet Agent Validation - Invalid Date Range"
+    - "SMS Holiday-Specific Content Generation - AI Service Integration Fix"
+    - "SMS Template Placeholder Support - Complete Personalization"
   stuck_tasks:
-    - "Timesheet Agent Validation - Invalid Date Range"
+    - "SMS Holiday-Specific Content Generation - AI Service Integration Fix"
+    - "SMS Template Placeholder Support - Complete Personalization"
+    - "SMS Agent Backend API Response - Return post_id"
+    - "SMS Agent Edge Case Handling - Graceful Error Handling"
   test_all: false
   test_priority: "high_first"
   completed_focus:
-    - "SMS Agent Fixes - All Tests Passed (92% Success Rate)"
-    - "Holiday Selection Fix for Email Agents - All Tests Passed"
-    - "Write Your Email Agent Save and Update Functionality - All Tests Passed"
-    - "Scheduler Functionality for Write Mode Social Media Agents - All Tests Passed"
-    - "Social Media Agent last_manual_run Field Update - All Tests Passed"
-    - "Write Mode Email Agent Post Creation Functionality - All Tests Passed"
+    - "SMS Agent Holiday Context Integration - All Tests Passed"
+    - "SMS Agent Holiday Calculation Logic - All Tests Passed"
+    - "SMS Agent Manual Run with Holiday Context - All Tests Passed"
 
-  - task: "Holiday Selection Fix for Email Agents - Thanksgiving Date Correction"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: true
-        agent: "testing"
-        comment: "✅ CRITICAL FIX VERIFIED: Thanksgiving 2025 date correctly stored as 2025-11-27 in database (was previously 2025-11-28). Database verification confirms proper date correction."
-
-  - task: "Holiday Selection Fix for Email Agents - Holiday Selection Logic"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: true
-        agent: "testing"
-        comment: "✅ HOLIDAY SELECTION LOGIC WORKING: Email agent with both National Cat Day (2025-10-29) and Thanksgiving (2025-11-27) correctly selects National Cat Day as next upcoming holiday. Logic properly sorts holidays by date and selects earliest upcoming holiday (51 days vs 80 days from current date)."
-
-  - task: "Holiday Selection Fix for Email Agents - Email Generation Function"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: true
-        agent: "testing"
-        comment: "✅ EMAIL GENERATION WORKING: generate_email_for_agent function successfully generates email posts with correct holiday context. Function returns proper post_id and creates email post with status 'in_review'."
-
-  - task: "Holiday Selection Fix for Email Agents - Content Verification"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: true
-        agent: "testing"
-        comment: "✅ CONTENT VERIFICATION PASSED: Generated email content correctly references 'National Cat Day' (4 mentions) and contains zero 'Thanksgiving' mentions. Holiday name field properly set to 'National Cat Day 2025'. Email content is holiday-specific and personalized with real customer data (Stephen Pallam, pets: Molly and Dolly)."
-
-  - task: "Write Your Email Agent - Create Functionality"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: true
-        agent: "testing"
-        comment: "✅ WRITE EMAIL AGENT CREATION WORKING: Successfully created 'Write Your Email' agent with all specified fields. Agent created with correct agent_name='Test Write Email Agent', email_subject='Test Subject', email_content='Test email content', post_date='2025-09-15', post_time='14:30', image_option='none', use_chatgpt_formatting=true. All fields properly saved to database."
-
-  - task: "Write Your Email Agent - Post Date and Post Time Fields"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: true
-        agent: "testing"
-        comment: "✅ POST DATE/TIME FIELDS WORKING: post_date and post_time fields are properly saved during agent creation. Verified agent created with post_date='2025-09-15' and post_time='14:30' as specified. Fields correctly stored in database and retrievable via GET /ai-agents endpoint."
-
-  - task: "Write Your Email Agent - Update Functionality"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: true
-        agent: "testing"
-        comment: "✅ WRITE EMAIL AGENT UPDATE WORKING: Successfully updated existing 'Write Your Email' agent with new post_date and post_time values. Update operation completed successfully via PUT /ai-agents/{agent_id} endpoint. Server returned success response with updated agent_id."
-
-  - task: "Write Your Email Agent - Update Verification"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: true
-        agent: "testing"
-        comment: "✅ UPDATE VERIFICATION PASSED: Updated post_date and post_time values are correctly saved and persisted in database. Verified agent updated from post_date='2025-09-15'/post_time='14:30' to post_date='2025-09-20'/post_time='10:00' as requested. Both fields properly updated and retrievable."
-
-  - task: "Scheduler Functionality for Write Mode Social Media Agents"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: true
-        agent: "testing"
-        comment: "✅ SCHEDULER FUNCTIONALITY COMPREHENSIVE TEST PASSED: Created 'Test Social Media Write Agent' with post_date='2025-09-10', post_time='14:30', platforms=['facebook', 'instagram']. Agent created successfully with ID f0030cb8-265d-4a2f-8d72-9b3f2d862808. Background scheduler running every minute (confirmed via logs). Post generation working - created post ID 5a67c220-388f-49e3-b619-182e6034623f with status 'in_review'. Scheduler functions (scheduled_posts_scheduler, process_scheduled_posts) implemented and callable. Startup configuration verified - scheduler starts automatically on application boot."
-
-  - task: "Scheduler Background Process Verification"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: true
-        agent: "testing"
-        comment: "✅ BACKGROUND SCHEDULER VERIFIED: Logs show scheduler running every minute with 'Found 0 scheduled posts ready for publication' messages. Functions scheduled_posts_scheduler() and process_scheduled_posts() are implemented, callable, and configured to start on application startup via asyncio.create_task(). Scheduler processes posts with status 'scheduled' and updates them to 'published' when due."
-
-  - task: "Write Mode Agent Creation with Scheduling Parameters"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: true
-        agent: "testing"
-        comment: "✅ WRITE MODE AGENT CREATION WORKING: Successfully created agents with post_date and post_time fields. API accepts social_platforms as dictionary format {'facebook': true, 'instagram': true}. Agents created with correct scheduling parameters and stored in database. Both future dates (2025-09-10) and past dates (2025-09-08) handled properly."
-
-  - task: "Automatic Post Creation at Scheduled Times"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: true
-        agent: "testing"
-        comment: "✅ AUTOMATIC POST CREATION WORKING: Manual run of agent f0030cb8-265d-4a2f-8d72-9b3f2d862808 successfully generated post 5a67c220-388f-49e3-b619-182e6034623f. Posts created with status 'in_review' for approval workflow. LiteLLM integration working for content generation. System processes scheduled posts and updates status from 'scheduled' to 'published' when due time arrives."
-
-  - task: "Past Date Scenario Handling"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: true
-        agent: "testing"
-        comment: "✅ PAST DATE HANDLING WORKING: Created agent with past date '2025-09-08' and time '09:00' successfully. Agent ID 6c9fe5bb-d0d8-43ce-820f-8929c86dc653 created and post 8e918bad-e03c-430b-9254-1275a50037e9 generated. System handles past dates by processing them immediately rather than scheduling for future."
-
-  - task: "Social Media Agent last_manual_run Field Update - Adhoc Mode"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: true
-        agent: "testing"
-        comment: "✅ ADHOC AGENT last_manual_run UPDATE WORKING: Created adhoc social media agent 'Test Adhoc Last Run' with topic 'Pet health tips' and Facebook platform. Verified last_manual_run field is null initially. After running agent via /api/ai-agents/{id}/run endpoint, last_manual_run field correctly updated to timestamp 2025-09-09 14:52:07.264000. Posts created successfully (IDs: abf28b47-a880-4aeb-bbf7-8220d4a295ce, 05ddec25-4033-449b-8385-e65c8c2c6080) with status 'in_review'."
-
-  - task: "Social Media Agent last_manual_run Field Update - Write Mode"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: true
-        agent: "testing"
-        comment: "✅ WRITE MODE AGENT last_manual_run UPDATE WORKING: Created write mode social media agent 'Test Write Mode Last Run' with custom post title and content. Verified last_manual_run field is null initially. After running agent via /api/ai-agents/{id}/run endpoint, last_manual_run field correctly updated to timestamp 2025-09-09 14:52:13.452000. Posts created successfully (IDs: 3a329250-d17f-49f5-85cf-4ba0e43646f9, 5bab87da-d86a-4681-b606-dc22fa8e0bdf) with status 'in_review'."
-
-  - task: "Social Media Agent last_manual_run Field Update - Timestamp Format Verification"
-    implemented: true
+agent_communication:
+  - agent: "testing"
+    message: "SMS Agent Holiday Integration testing completed. Core infrastructure working (42.9% success rate). CRITICAL ISSUE: AI service integration failure prevents holiday-specific content generation - LlmChat initialization error. Holiday calculation logic working perfectly, SMS agents created and run successfully, but content is generic instead of holiday-specific. Recommend fixing AI service parameters and completing template placeholders for full functionality."ue
     working: true
     file: "backend/server.py"
     stuck_count: 0
