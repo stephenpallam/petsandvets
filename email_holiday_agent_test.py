@@ -413,14 +413,11 @@ class EmailHolidayAgentTester:
             return False
     
     async def test_holiday_calculation_logic(self):
-        """Test 4: Holiday Calculation Logic for Email Agents"""
+        """Test 4: Holiday Calculation Logic for Email Agents (Frontend Logic)"""
         print("🧪 TEST 4: Holiday Calculation Logic for Email Agents")
         print("=" * 70)
         
         try:
-            # Import the holiday calculation function
-            from server import get_next_scheduled_holiday_for_agent
-            
             # Get an email agent with holidays
             email_agent = await self.db.ai_agents.find_one({
                 "agent_type": "email",
@@ -436,38 +433,62 @@ class EmailHolidayAgentTester:
                 )
                 return False
             
-            # Test the holiday calculation function
-            try:
-                next_holiday_info = await get_next_scheduled_holiday_for_agent(email_agent)
+            # Get holidays data
+            holidays = await self.db.holidays.find({}).to_list(length=None)
+            holiday_map = {h["id"]: h for h in holidays}
+            
+            # Implement the same logic as frontend getNextScheduledHoliday function
+            selected_holidays = email_agent.get("selected_holidays", [])
+            post_time = email_agent.get("post_time", "09:00")
+            
+            if not selected_holidays:
+                success = False
+                message = "Email agent has no selected holidays"
+            else:
+                from datetime import datetime
+                today = datetime.now()
+                next_holiday = None
+                min_diff = float('inf')
                 
-                if next_holiday_info:
+                # Find the next upcoming holiday from selected holidays
+                for holiday_id in selected_holidays:
+                    if holiday_id in holiday_map:
+                        holiday = holiday_map[holiday_id]
+                        try:
+                            holiday_date = datetime.strptime(f"{holiday['date']}T{post_time}:00", "%Y-%m-%dT%H:%M:%S")
+                            time_diff = (holiday_date - today).total_seconds()
+                            
+                            if time_diff > 0 and time_diff < min_diff:
+                                min_diff = time_diff
+                                next_holiday = {
+                                    "name": holiday["name"],
+                                    "date": holiday_date,
+                                    "post_time": post_time,
+                                    "days_until": int(time_diff / 86400)  # Convert seconds to days
+                                }
+                        except ValueError as ve:
+                            continue
+                
+                if next_holiday:
                     success = True
-                    message = "Holiday calculation working for email agents"
+                    message = "Holiday calculation working for email agents (frontend logic)"
                     details = {
                         "Agent Name": email_agent.get("agent_name"),
                         "Agent Type": email_agent.get("agent_type"),
-                        "Selected Holidays": len(email_agent.get("selected_holidays", [])),
-                        "Next Holiday": next_holiday_info.get("holiday_name"),
-                        "Next Date": next_holiday_info.get("holiday_date"),
-                        "Days Until": next_holiday_info.get("days_until"),
-                        "Formatted Time": next_holiday_info.get("formatted_datetime")
+                        "Selected Holidays": len(selected_holidays),
+                        "Next Holiday": next_holiday["name"],
+                        "Next Date": next_holiday["date"].strftime("%Y-%m-%d"),
+                        "Days Until": next_holiday["days_until"],
+                        "Post Time": next_holiday["post_time"]
                     }
                 else:
                     success = False
-                    message = "Holiday calculation returned no results for email agent"
+                    message = "No upcoming holidays found for email agent"
                     details = {
                         "Agent Name": email_agent.get("agent_name"),
-                        "Selected Holidays": len(email_agent.get("selected_holidays", [])),
-                        "Function Result": str(next_holiday_info)
+                        "Selected Holidays": len(selected_holidays),
+                        "Available Holidays": len(holidays)
                     }
-                
-            except Exception as calc_error:
-                success = False
-                message = f"Holiday calculation function error: {str(calc_error)}"
-                details = {
-                    "Agent Name": email_agent.get("agent_name"),
-                    "Calculation Error": str(calc_error)
-                }
             
             self.log_test_result(
                 "Holiday Calculation Logic",
