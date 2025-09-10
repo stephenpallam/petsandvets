@@ -1877,9 +1877,29 @@ const AIAgentsDashboard = () => {
                                       </div>
                                     </div>
 
-                                    {/* Row 3: Next Scheduled Run for Holiday-based SMS agents */}
+                                    {/* Row 3: Last Manual Run and Next Scheduled Run for Holiday-based SMS agents */}
                                     {agent.selected_holidays && agent.selected_holidays.length > 0 && (
-                                      <div className="grid grid-cols-1 gap-4">
+                                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {/* Last Manual Run */}
+                                        <div className="flex flex-col p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                          <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">
+                                            📝 Last Manual Run
+                                          </span>
+                                          <p className="text-sm text-gray-900">
+                                            {agent.last_run_date ? 
+                                              new Date(agent.last_run_date).toLocaleDateString('en-US', {
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                              }) : 
+                                              'Never run manually'
+                                            }
+                                          </p>
+                                        </div>
+                                        
+                                        {/* Next Scheduled Run */}
                                         <div className="flex flex-col p-4 bg-blue-50 rounded-lg border border-blue-200">
                                           <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-2">
                                             🗓️ Next Scheduled Run
@@ -1896,9 +1916,6 @@ const AIAgentsDashboard = () => {
                                                 const holidayInfo = getNextScheduledHoliday(agent);
                                                 return holidayInfo.nextRun;
                                               })()}
-                                            </p>
-                                            <p className="text-xs text-blue-600 mt-2">
-                                              Agent will automatically run and generate SMS content on this date
                                             </p>
                                           </div>
                                         </div>
