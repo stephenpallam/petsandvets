@@ -5033,7 +5033,7 @@ Example:
                                 <div className="flex items-center justify-between">
                                   <div>
                                     <div className="font-medium text-green-900">Selected Customer:</div>
-                                    <div className="text-green-700">{selectedCustomer.name}</div>
+                                    <div className="text-green-700">{getCustomerFullName(selectedCustomer)}</div>
                                     <div className="text-sm text-green-600">{selectedCustomer.email}</div>
                                   </div>
                                   <button
