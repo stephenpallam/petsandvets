@@ -796,9 +796,9 @@ const AIAgentsDashboard = () => {
     return agent.image_option.replace('_', ' ');
   };
 
-  // Helper function to get next scheduled holiday for email agents
+  // Helper function to get next scheduled holiday for email and SMS agents
   const getNextScheduledHoliday = (agent) => {
-    if (agent.agent_type !== 'email' || !agent.selected_holidays || agent.selected_holidays.length === 0) {
+    if ((agent.agent_type !== 'email' && agent.agent_type !== 'sms_agent') || !agent.selected_holidays || agent.selected_holidays.length === 0) {
       return { nextRun: 'No holidays selected', holidayName: '' };
     }
     
