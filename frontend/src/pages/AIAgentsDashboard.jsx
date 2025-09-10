@@ -2444,16 +2444,20 @@ const AIAgentsDashboard = () => {
                               
                               {/* Content Preview - Full Width */}
                               <div className="flex flex-col">
-                                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Content Preview</span>
+                                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                  {agent.agent_type === 'sms_agent' ? 'SMS Content Preview' : 'Content Preview'}
+                                </span>
                                 <div className="mt-2 p-3 bg-white rounded-md border border-gray-200">
                                   <p className="text-sm text-gray-900 line-clamp-3">
-                                    {agent.agent_type === 'email' ? agent.email_content : agent.post_content}
+                                    {agent.agent_type === 'email' ? agent.email_content : 
+                                     agent.agent_type === 'sms_agent' ? agent.sms_content : 
+                                     agent.post_content}
                                   </p>
                                 </div>
                               </div>
                               
-                              {/* Web Research and ChatGPT Formatting for Social Media Agents */}
-                              {agent.agent_type !== 'email' && agent.agent_type !== 'time_sheet' && (
+                              {/* Web Research and ChatGPT Formatting for Social Media Agents ONLY */}
+                              {agent.agent_type !== 'email' && agent.agent_type !== 'time_sheet' && agent.agent_type !== 'sms_agent' && (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                   <div className="flex flex-col">
                                     <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Use Web Research</span>
