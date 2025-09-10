@@ -3189,11 +3189,20 @@ const AIAgentsDashboard = () => {
                         {/* Content Preview for Write Mode */}
                         {selectedAgent.mode === 'write' && (
                           <div>
-                            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Content Preview</label>
+                            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                              {selectedAgent.agent_type === 'sms_agent' ? 'SMS Content Preview' : 'Content Preview'}
+                            </label>
                             <div className="mt-2 p-3 bg-white rounded-md border border-gray-200">
                               <p className="text-sm text-gray-900 whitespace-pre-wrap">
-                                {selectedAgent.agent_type === 'email' ? selectedAgent.email_content : selectedAgent.post_content}
+                                {selectedAgent.agent_type === 'email' ? selectedAgent.email_content : 
+                                 selectedAgent.agent_type === 'sms_agent' ? selectedAgent.sms_content : 
+                                 selectedAgent.post_content}
                               </p>
+                              {selectedAgent.agent_type === 'sms_agent' && selectedAgent.sms_content && (
+                                <div className="mt-2 text-xs text-orange-600">
+                                  Character count: {selectedAgent.sms_content.length} / 160
+                                </div>
+                              )}
                             </div>
                           </div>
                         )}
