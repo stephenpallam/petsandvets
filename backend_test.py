@@ -355,7 +355,226 @@ class CustomerDataInvestigator:
             )
             return False, [], []
     
-    async def test_direct_database_queries(self):
+    async def test_customer_api_with_auth(self):
+        """Investigation 6: Test Customer API Endpoint with Authentication"""
+        print("🔍 INVESTIGATION 6: Test Customer API Endpoint with Authentication")
+        print("=" * 60)
+        
+        try:
+            import aiohttp
+            import ssl
+            
+            # Create SSL context that doesn't verify certificates (for testing)
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            
+            # First, get authentication token
+            login_data = {
+                "email": "admin@hospital.com",
+                "password": "admin123"
+            }
+            
+            auth_token = None
+            
+            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
+                # Login to get token
+                try:
+                    login_url = f"{self.backend_url}/api/login"
+                    print(f"Attempting login at: {login_url}")
+                    
+                    async with session.post(login_url, json=login_data, timeout=10) as response:
+                        if response.status == 200:
+                            login_result = await response.json()
+                            auth_token = login_result.get("access_token")
+                            print(f"✅ Login successful, got token: {auth_token[:20]}...")
+                        else:
+                            error_text = await response.text()
+                            print(f"❌ Login failed with status {response.status}: {error_text}")
+                            
+                except Exception as e:
+                    print(f"❌ Login error: {str(e)}")
+                
+                # Test customer endpoints with authentication
+                endpoint_results = {}
+                
+                if auth_token:
+                    headers = {"Authorization": f"Bearer {auth_token}"}
+                    
+                    endpoints_to_test = [
+                        "/api/customers",
+                        "/api/customers?limit=1",
+                        "/api/customers?limit=10"
+                    ]
+                    
+                    for endpoint in endpoints_to_test:
+                        try:
+                            url = f"{self.backend_url}{endpoint}"
+                            print(f"Testing authenticated endpoint: {url}")
+                            
+                            async with session.get(url, headers=headers, timeout=10) as response:
+                                status = response.status
+                                try:
+                                    data = await response.json()
+                                except:
+                                    data = await response.text()
+                                
+                                endpoint_results[endpoint] = {
+                                    "status": status,
+                                    "data": data,
+                                    "success": status == 200
+                                }
+                                
+                                if status == 200:
+                                    print(f"✅ {endpoint} returned: {data}")
+                                else:
+                                    print(f"❌ {endpoint} failed with status {status}: {data}")
+                                    
+                        except Exception as e:
+                            endpoint_results[endpoint] = {
+                                "status": "error",
+                                "error": str(e),
+                                "success": False
+                            }
+                            print(f"❌ {endpoint} error: {str(e)}")
+                else:
+                    print("❌ Cannot test endpoints without authentication token")
+            
+            # Check if any endpoint returned customer data
+            working_endpoints = [ep for ep, result in endpoint_results.items() if result.get("success")]
+            
+            success = len(working_endpoints) > 0
+            
+            self.log_test_result(
+                "Customer API Endpoint Testing with Authentication",
+                success,
+                f"Found {len(working_endpoints)} working customer endpoints with authentication",
+                {
+                    "Authentication": "Success" if auth_token else "Failed",
+                    "Working Endpoints": working_endpoints,
+                    "All Endpoint Results": endpoint_results,
+                    "Backend URL": self.backend_url
+                }
+            )
+            return success, endpoint_results
+            
+        except Exception as e:
+            self.log_test_result(
+                "Customer API Endpoint Testing with Authentication",
+                False,
+                f"Error testing customer API endpoints with auth: {str(e)}",
+                {"Error Details": str(e)}
+            )
+            return False, {}
+    
+    async def test_sms_preview_component_simulation(self):
+        """Investigation 7: Simulate SMS Preview Component Behavior"""
+        print("🔍 INVESTIGATION 7: Simulate SMS Preview Component Behavior")
+        print("=" * 60)
+        
+        try:
+            # Simulate what the SMS preview component does
+            # Based on the test_result.md, it should call /api/customers?limit=1
+            
+            import aiohttp
+            import ssl
+            
+            # Create SSL context that doesn't verify certificates (for testing)
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            
+            # Get authentication token
+            login_data = {
+                "email": "admin@hospital.com",
+                "password": "admin123"
+            }
+            
+            auth_token = None
+            customer_data = None
+            
+            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
+                # Login to get token
+                try:
+                    login_url = f"{self.backend_url}/api/login"
+                    async with session.post(login_url, json=login_data, timeout=10) as response:
+                        if response.status == 200:
+                            login_result = await response.json()
+                            auth_token = login_result.get("access_token")
+                        else:
+                            print(f"Login failed with status {response.status}")
+                            
+                except Exception as e:
+                    print(f"Login error: {str(e)}")
+                
+                # Test the exact endpoint that SMS preview uses
+                if auth_token:
+                    headers = {"Authorization": f"Bearer {auth_token}"}
+                    
+                    try:
+                        # This is the exact call that SMS preview makes
+                        url = f"{self.backend_url}/api/customers?limit=1"
+                        print(f"Simulating SMS preview call: {url}")
+                        
+                        async with session.get(url, headers=headers, timeout=10) as response:
+                            status = response.status
+                            
+                            if status == 200:
+                                customer_data = await response.json()
+                                print(f"✅ SMS preview would receive: {customer_data}")
+                                
+                                # Check if it has the expected structure
+                                if isinstance(customer_data, list) and len(customer_data) > 0:
+                                    first_customer = customer_data[0]
+                                    customer_name = first_customer.get('name', 'Unknown')
+                                    pet_info = first_customer.get('pet_name', '') or first_customer.get('pets', [])
+                                    
+                                    print(f"✅ Customer found: {customer_name}")
+                                    print(f"✅ Pet info: {pet_info}")
+                                    
+                                    success = True
+                                    message = f"SMS preview would successfully show customer: {customer_name}"
+                                elif isinstance(customer_data, list) and len(customer_data) == 0:
+                                    success = False
+                                    message = "SMS preview would show 'No customers found' - API returned empty array"
+                                else:
+                                    success = False
+                                    message = f"SMS preview would fail - unexpected data format: {type(customer_data)}"
+                            else:
+                                error_data = await response.text()
+                                success = False
+                                message = f"SMS preview would fail - API returned status {status}: {error_data}"
+                                
+                    except Exception as e:
+                        success = False
+                        message = f"SMS preview would fail - API call error: {str(e)}"
+                        customer_data = None
+                else:
+                    success = False
+                    message = "SMS preview would fail - authentication failed"
+                    customer_data = None
+            
+            self.log_test_result(
+                "SMS Preview Component Simulation",
+                success,
+                message,
+                {
+                    "Authentication": "Success" if auth_token else "Failed",
+                    "API Response": customer_data,
+                    "Expected Behavior": "Should show Stephen Pallam with pets Molly, Dolly",
+                    "Actual Behavior": message
+                }
+            )
+            return success, customer_data
+            
+        except Exception as e:
+            self.log_test_result(
+                "SMS Preview Component Simulation",
+                False,
+                f"Error simulating SMS preview component: {str(e)}",
+                {"Error Details": str(e)}
+            )
+            return False, None
         """Investigation 5: Test Direct Database Queries"""
         print("🔍 INVESTIGATION 5: Test Direct Database Queries")
         print("=" * 60)
