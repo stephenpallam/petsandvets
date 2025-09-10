@@ -913,6 +913,11 @@ const AIPublishedPosts = () => {
                               </div>
                             </div>
                           )
+                        ) : post.agent_type === 'sms_agent' ? (
+                          // SMS Post Rendering with Customer Preview
+                          <div>
+                            <SMSContentPreview post={post} />
+                          </div>
                         ) : (
                           // Regular Social Media Post Rendering  
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
