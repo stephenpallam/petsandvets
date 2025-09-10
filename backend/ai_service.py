@@ -620,9 +620,12 @@ The email should be informative and valuable to pet owners, not just generic pro
                 api_key=self.emergent_key,
                 session_id=f"topic_email_format_{uuid.uuid4()}",
                 system_message="You are a professional email writer for a veterinary clinic specializing in informative, topic-based communications."
-            )
+            ).with_model("openai", "gpt-4o-mini")
             
-            formatted_content = await chat.send_message(email_prompt)
+            user_message = UserMessage(text=email_prompt)
+            response = await chat.send_message(user_message)
+            
+            formatted_content = response.strip()
             
             if formatted_content and formatted_content.strip():
                 logger.info(f"Successfully formatted topic-based email using ChatGPT for topic: {topic}")
