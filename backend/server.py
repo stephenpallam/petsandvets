@@ -5405,21 +5405,24 @@ INSTRUCTIONS:
 5. Create ONE cohesive, well-structured email
 6. Keep the core message but enhance the language
 7. Make it specific and personal to the customer and their pets
+8. DO NOT include any subject line or "Subject:" in the email content - the subject is handled separately
+9. Start directly with the greeting, do not add any subject line
 
-EMAIL CONTENT:
+EMAIL CONTENT TO ENHANCE:
 {personalized_content}
 
 DETAILS:
 - Customer: {customer_name}
 - Pet(s): {pet_names}
-- Subject: {email_subject}
 
-Please create a complete, polished email that a veterinary clinic would be proud to send. Include:
-- A warm greeting
+IMPORTANT: The email subject "{email_subject}" is already set separately. DO NOT include any subject line in your response. Start your email directly with the greeting.
+
+Please create a complete, polished email body (no subject line) that a veterinary clinic would be proud to send. Include:
+- A warm greeting (Dear {customer_name}, etc.)
 - The main message (enhanced from the content)
 - A single, professional closing
 
-Make sure there are no duplicate signatures or redundant messages."""
+Make sure there are no duplicate signatures, subject lines, or redundant messages."""
 
                 # Call ChatGPT using Emergent integrations
                 from emergentintegrations.llm.chat import LlmChat, UserMessage
