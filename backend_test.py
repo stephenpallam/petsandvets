@@ -728,9 +728,13 @@ class CustomerDataInvestigator:
             success4, customer_routes, collection_usage = await self.check_alternative_endpoints()
             investigation_results.append(success4)
             
-            # Investigation 5: Test Direct Database Queries
-            success5, query_results = await self.test_direct_database_queries()
-            investigation_results.append(success5)
+            # Investigation 6: Test Customer API with Authentication
+            success6, auth_endpoint_results = await self.test_customer_api_with_auth()
+            investigation_results.append(success6)
+            
+            # Investigation 7: Simulate SMS Preview Component
+            success7, sms_preview_data = await self.test_sms_preview_component_simulation()
+            investigation_results.append(success7)
             
             # Summary
             print("=" * 80)
