@@ -3044,13 +3044,24 @@ const AIAgentsDashboard = () => {
                     <section>
                       <h4 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
                         <Share2 className="h-5 w-5 text-blue-600 mr-2" />
-                        {selectedAgent.agent_type === 'email' ? 'Email Recipients' : 'Social Media Platforms'}
+                        {selectedAgent.agent_type === 'email' ? 'Email Recipients' : 
+                         selectedAgent.agent_type === 'sms_agent' ? 'SMS Recipients' : 
+                         'Social Media Platforms'}
                       </h4>
                       <div className="bg-gray-50 rounded-lg p-4">
                         {selectedAgent.agent_type === 'email' ? (
                           <div className="flex flex-wrap gap-2">
                             <span className="inline-flex items-center px-3 py-2 rounded text-sm font-medium bg-purple-100 text-purple-700 border border-purple-200">
                               {selectedAgent.email_type === 'single' ? 'Single Customer' : 'Bulk Customer Emails'}
+                            </span>
+                          </div>
+                        ) : selectedAgent.agent_type === 'sms_agent' ? (
+                          <div className="flex flex-wrap gap-2">
+                            <span className="inline-flex items-center px-3 py-2 rounded text-sm font-medium bg-orange-100 text-orange-700 border border-orange-200">
+                              {selectedAgent.recipient_type === 'single' ? 
+                                `Single Customer: ${selectedAgent.customer_name || 'Selected Customer'}` : 
+                                'All customers in database'
+                              }
                             </span>
                           </div>
                         ) : (
