@@ -2392,6 +2392,8 @@ const AIAgentsDashboard = () => {
                                         </div>
                                       </div>
                                     </div>
+                                  )
+                                )}
 
                                     {/* Social Media Platforms */}
                                     <div className="flex flex-col pt-3 border-t border-gray-100">
