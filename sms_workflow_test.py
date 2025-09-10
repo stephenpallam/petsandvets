@@ -454,13 +454,17 @@ class SMSWorkflowTester:
             
             # Test placeholder replacement with links
             if post_1:
-                template_with_link = post_1.get("sms_template", "")
-                has_link_placeholder = "[LINK]" in template_with_link
+                # Check if sms_link is properly stored for placeholder replacement during mass sending
+                has_sms_link_stored = post_1.get("sms_link") is not None
+                sms_link_value = post_1.get("sms_link", "")
+                
+                # The template stored should be the AI-generated content (not the original template with placeholders)
+                # But the sms_link should be available for mass sending placeholder replacement
                 link_tests.append({
-                    "test": "Link placeholder in template",
-                    "success": has_link_placeholder,
-                    "expected": "Template contains [LINK]",
-                    "actual": f"[LINK] found: {has_link_placeholder}"
+                    "test": "SMS link stored for mass sending",
+                    "success": has_sms_link_stored and sms_link_value,
+                    "expected": "sms_link field populated for mass sending",
+                    "actual": f"sms_link: {sms_link_value}"
                 })
             
             all_link_tests_passed = all(test["success"] for test in link_tests)
