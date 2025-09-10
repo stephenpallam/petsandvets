@@ -219,7 +219,7 @@ class SMSHolidayTester:
                         f"Agent ID: {agent_id}, Type: {agent_type}, Mode: {mode}, Holidays: {len(selected_holidays)}"
                     )
                     
-                    return agent_result if success else None
+                    return {"id": agent_id, "agent_data": agent_doc} if success else None
                 else:
                     print(f"Agent {agent_id} not found in database")
                     self.log_test_result(
