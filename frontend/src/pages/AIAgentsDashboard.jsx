@@ -2179,6 +2179,59 @@ const AIAgentsDashboard = () => {
                                       </div>
                                     </div>
                                   </div>
+                                ) : agent.agent_type === 'sms_agent' ? (
+                                  // SMS Agent Adhoc Display - Custom Post Mode
+                                  <div className="space-y-4">
+                                    {/* Row 1: SMS Recipients and Link */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">SMS Recipients</span>
+                                        <p className="text-sm text-gray-900 mt-1">
+                                          {agent.recipient_type === 'single' ? 
+                                            `Single Customer: ${agent.customer_name || 'Selected Customer'}` : 
+                                            'All customers in database'
+                                          }
+                                        </p>
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Link</span>
+                                        <p className="text-sm text-gray-900 mt-1">
+                                          {agent.sms_link || 'No Link Provided'}
+                                        </p>
+                                      </div>
+                                    </div>
+
+                                    {/* Row 2: Workflow Mode and Use ChatGPT */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Workflow Mode</span>
+                                        <p className="text-sm text-gray-900 mt-1">
+                                          {getWorkflowMode(agent)}
+                                        </p>
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Use ChatGPT to Format SMS</span>
+                                        <p className="text-sm text-gray-900 mt-1">
+                                          {(agent.use_sms_chatgpt_formatting || agent.useSMSChatGPTFormatting || agent.use_chatgpt_sms_formatting) ? 'Yes' : 'No'}
+                                        </p>
+                                      </div>
+                                    </div>
+
+                                    {/* Row 3: SMS Content Template */}
+                                    {agent.sms_content && (
+                                      <div className="grid grid-cols-1 gap-4">
+                                        <div className="flex flex-col">
+                                          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">SMS Content Template</span>
+                                          <div className="mt-1 bg-orange-50 border border-orange-200 rounded p-3">
+                                            <p className="text-sm text-gray-900 whitespace-pre-wrap">{agent.sms_content}</p>
+                                            <div className="mt-2 text-xs text-orange-600">
+                                              Character count: {agent.sms_content.length} / 160
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
                                 ) : (
                                   // Social Media Agent Adhoc Display
                                   <div className="space-y-4">
