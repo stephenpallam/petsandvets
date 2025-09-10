@@ -1773,24 +1773,32 @@ const AIAgentsDashboard = () => {
                               )}
                             </div>
                           ) : (
-                            // Email vs Social Media Agent Display
+                            // Email, SMS vs Social Media Agent Display
                             <>
                               {agent.agent_type === 'email' ? (
                                 // Email Agent Display (scheduled and recurring modes)
                                 (agent.mode === 'auto' || agent.mode === 'recurring') && (
                                   <div className="space-y-4">
-                                    {/* Row 1: Email/Topic and Image Option */}
+                                    {/* Row 1: Email Recipients/Topic and Image Option */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                       <div className="flex flex-col">
-                                        {agent.mode === 'recurring' ? (
+                                        {agent.mode === 'recurring' && agent.selected_holidays && agent.selected_holidays.length > 0 ? (
+                                          // Holiday-based email agent (scheduled mode)
+                                          <>
+                                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Will Be Sent To</span>
+                                            <p className="text-sm text-gray-900 mt-1">All customers in database</p>
+                                          </>
+                                        ) : agent.mode === 'recurring' ? (
+                                          // Topic-based recurring email agent
                                           <>
                                             <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Topic</span>
                                             <p className="text-sm text-gray-900 mt-1">{agent.topic || 'No topic specified'}</p>
                                           </>
                                         ) : (
+                                          // Other email modes
                                           <>
-                                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email</span>
-                                            <p className="text-sm text-gray-900 mt-1">Opt In Customers</p>
+                                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Will Be Sent To</span>
+                                            <p className="text-sm text-gray-900 mt-1">All customers in database</p>
                                           </>
                                         )}
                                       </div>
