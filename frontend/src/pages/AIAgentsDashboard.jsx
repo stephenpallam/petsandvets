@@ -2570,7 +2570,7 @@ const AIAgentsDashboard = () => {
                               )}
                               
                               {/* Social Media Platforms - Only for Social Media Write Mode Agents */}
-                              {agent.agent_type !== 'email' && agent.agent_type !== 'time_sheet' && (
+                              {agent.agent_type !== 'email' && agent.agent_type !== 'time_sheet' && agent.agent_type !== 'sms_agent' && (
                                 <div className="flex flex-col pt-3 border-t border-gray-100">
                                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Social Media Platforms</span>
                                   <p className="text-sm text-gray-900 mt-1">
