@@ -1,4 +1,94 @@
-## LATEST DEBUG - Customer Data Issue for SMS Preview (RESOLVED ✅)
+## LATEST INVESTIGATION - Agent Last Run Data Field Names (COMPLETED ✅)
+
+**Test Date:** 2025-01-09  
+**Test Focus:** Investigate last run data field names for email and SMS agents in dashboard  
+**Overall Success Rate:** 100% (6/6 investigations passed)
+
+### 🔍 INVESTIGATION RESULTS:
+
+**ROOT CAUSE IDENTIFIED:** Frontend Field Name Mismatch
+
+**Problem:** Dashboard shows "Never run manually" because frontend is looking for wrong field names.
+
+**Database vs Frontend Field Analysis:**
+```
+✅ WORKING FIELDS (exist in DB with data):
+- last_manual_run: Used by 4/4 agents, has actual timestamps
+- Sample values: 2025-09-09 15:09:21, 2025-09-09 15:27:04, 2025-09-10 10:03:15
+
+❌ MISSING FIELDS (frontend expects but don't exist in DB):
+- last_run_date: Frontend looks for this but field doesn't exist
+- last_run: Frontend looks for this but field doesn't exist
+
+⚠️ EMPTY FIELDS (exist but no data):
+- last_post_published: Exists in DB but all values are null
+```
+
+### ✅ COMPREHENSIVE INVESTIGATION COMPLETED:
+
+**1. ✅ Agent Data Structure Verified**
+- Found 3 email agents and 2 SMS agents in database
+- Identified 11 potential last run fields in agent records
+- Confirmed `last_manual_run` field exists and contains actual data
+
+**2. ✅ Last Run Data Storage Confirmed**
+- 4/5 agents have `last_manual_run` data stored
+- Data includes actual timestamps from recent agent executions
+- Field is properly populated when agents are run manually
+
+**3. ✅ API Response Format Validated**
+- GET /api/ai-agents endpoint returns `last_manual_run` field correctly
+- API authentication working properly
+- All database fields are included in API response
+
+**4. ✅ Field Name Mapping Issue Identified**
+- Database field: `last_manual_run` ✅ (has data)
+- Frontend expects: `last_run_date` ❌ (doesn't exist)
+- Frontend also expects: `last_run` ❌ (doesn't exist)
+
+**5. ✅ Agent Execution Verified**
+- Successfully executed 2 agents via API
+- Agent execution creates posts in ai_posts collection
+- Found 17 posts from 7 agents with execution history
+
+**6. ✅ Execution History Cross-Referenced**
+- Agent posts show recent executions with timestamps
+- Post creation times match `last_manual_run` values in agent records
+- Execution workflow is working correctly
+
+### 🎯 SOLUTION REQUIRED:
+
+**Frontend Fix Needed:** Update dashboard to use correct field names:
+
+```javascript
+// Current (incorrect):
+{agent.last_run_date ? 
+  new Date(agent.last_run_date).toLocaleDateString() : 
+  'Never run manually'}
+
+// Should be (correct):
+{agent.last_manual_run ? 
+  formatDate(agent.last_manual_run) : 
+  'Never run manually'}
+```
+
+**Specific Changes Required:**
+1. Replace all instances of `agent.last_run_date` with `agent.last_manual_run`
+2. Replace all instances of `agent.last_run` with `agent.last_manual_run`
+3. Keep existing `agent.last_manual_run` usage (already correct)
+
+### 📊 INVESTIGATION SUMMARY:
+- ✅ Last run data exists: 4/5 agents have `last_manual_run` timestamps
+- ✅ API endpoints working correctly
+- ✅ Agent execution updating last run fields properly
+- ✅ Database structure is correct
+- ❌ Frontend using wrong field names in some places
+
+**Status:** 🟢 **ROOT CAUSE IDENTIFIED** - Frontend needs to use `last_manual_run` instead of `last_run_date`
+
+---
+
+## PREVIOUS DEBUG - Customer Data Issue for SMS Preview (RESOLVED ✅)
 
 **Test Date:** 2025-01-09  
 **Test Focus:** Debug customer data issue - SMS preview shows "No customers found in database"  
