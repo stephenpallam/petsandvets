@@ -1067,9 +1067,14 @@ const AIInReview = () => {
                                 </div>
                               )}
                               
-                              <div className="whitespace-pre-wrap text-gray-900 leading-relaxed">
-                                {post.content}
-                              </div>
+                              {/* SMS Content with Customer Preview */}
+                              {post.agent_type === 'sms_agent' ? (
+                                <SMSContentPreview post={post} />
+                              ) : (
+                                <div className="whitespace-pre-wrap text-gray-900 leading-relaxed">
+                                  {post.content}
+                                </div>
+                              )}
                               
                               {post.image_url && (
                                 <div className="mt-4">
