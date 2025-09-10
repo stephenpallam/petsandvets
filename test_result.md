@@ -1459,6 +1459,79 @@ backend:
         comment: "✅ COMPLETE SUCCESS: SMS Agent Dashboard Display Fix verified comprehensively. SMS agents can be created with selected_holidays array, dashboard condition (agent.selected_holidays && agent.selected_holidays.length > 0) passes correctly, holiday calculation logic works, next upcoming holiday properly calculated (Thanksgiving 2025 - Nov 27th, 2025 at 9:00 AM), holiday names and dates properly formatted. Frontend should display holiday information instead of 'No days selected'. Tested with 8 existing SMS agents, 5 with holidays, successful holiday calculation for valid holiday IDs."
 
 backend:
+  - task: "Email Holiday Agent Mode Label Fix"
+    implemented: true
+    working: true
+    file: "frontend/src/pages/AIAgentsDashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ Email Holiday Agent Mode Label Fix: getModeLabel function working correctly for email agents with holidays. Email agents with selected_holidays show 'Scheduled Mode' instead of 'Recurring Mode'. Logic properly differentiates between agents with and without holidays. Tested with 4 agents (2 with holidays, 2 without) - all showing correct mode labels."
+
+  - task: "Email Holiday Agent Next Scheduled Run Display"
+    implemented: true
+    working: true
+    file: "frontend/src/pages/AIAgentsDashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ Email Holiday Agent Next Scheduled Run Display: getNextScheduledHoliday function working correctly for email agents. Next upcoming holiday properly calculated and formatted (e.g., 'New Year's Day 2026 on 2026-01-01 at 09:00'). Holiday calculation logic finds closest upcoming holiday from selected holidays. Tested with 2 email agents - both showing correct next scheduled run data."
+
+  - task: "Email Holiday Agent Data Structure Verification"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ Email Holiday Agent Data Structure: Email agents with selected_holidays exist in database and match frontend expectations. Agent data structure includes agent_type='email', selected_holidays array, mode='recurring', email_content_template, use_chatgpt_formatting, and post_time fields. Test agents created successfully when none existed."
+
+  - task: "Email Holiday Agent Calculation Logic"
+    implemented: true
+    working: true
+    file: "frontend/src/pages/AIAgentsDashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ Email Holiday Agent Calculation Logic: Frontend holiday calculation logic working correctly. Finds next upcoming holiday from selected holidays, proper date parsing and time difference calculations, handles multiple holidays and selects closest upcoming one. Tested with Holiday Agent - next holiday: New Year's Day 2026 (112 days until)."
+
+  - task: "Specific Holiday Agent Testing"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ Specific Holiday Agent: 'Holiday Agent' found with proper configuration (2 selected holidays). Shows correct mode ('Scheduled Mode' for agents with holidays), displays next scheduled run information (New Year's Day 2026), has proper email template and ChatGPT formatting enabled. All requirements from review request satisfied."
+
+  - task: "Email vs SMS Holiday Agent Consistency"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ Email vs SMS Holiday Agent Consistency: Both email and SMS agents support holiday structure with consistent data fields (selected_holidays, mode, post_time). Same holiday calculation logic applies to both agent types. Tested with 2 email agents and 1 SMS agent - all have consistent structure."
+
+backend:
   - task: "SMS Agent Backend Model Enhancement - sms_link Field"
     implemented: true
     working: true
