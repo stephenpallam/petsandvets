@@ -1240,6 +1240,52 @@ Best regards,
     }
   };
 
+  // Customer search function with debouncing
+  const searchCustomers = async (searchTerm) => {
+    if (searchTerm.length < 3) {
+      setSearchedCustomers([]);
+      return;
+    }
+
+    setIsSearchingCustomers(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/customers?search=${encodeURIComponent(searchTerm)}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const customers = await response.json();
+        // Filter customers that match the search term in name, email, or pet names
+        const filteredCustomers = customers.filter(customer => 
+          customer.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          customer.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (customer.pets && customer.pets.some(pet => 
+            pet.name?.toLowerCase().includes(searchTerm.toLowerCase())
+          ))
+        );
+        setSearchedCustomers(filteredCustomers);
+      }
+    } catch (error) {
+      console.error('Error searching customers:', error);
+      setSearchedCustomers([]);
+    } finally {
+      setIsSearchingCustomers(false);
+    }
+  };
+
+  // Debounced search effect
+  useEffect(() => {
+    const delayedSearch = setTimeout(() => {
+      if (customerSearchTerm) {
+        searchCustomers(customerSearchTerm);
+      }
+    }, 500); // 500ms delay
+
+    return () => clearTimeout(delayedSearch);
+  }, [customerSearchTerm]);
+
   // Helper functions
   const getDayNumber = (dayName) => {
     const days = {
