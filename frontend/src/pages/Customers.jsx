@@ -341,6 +341,21 @@ const Customers = () => {
     });
   };
 
+  // Get full name for display
+  const getFullName = (customer) => {
+    if (customer.first_name && customer.last_name) {
+      return `${customer.first_name} ${customer.last_name}`;
+    } else if (customer.name) {
+      // Fallback to legacy name field
+      return customer.name;
+    } else if (customer.first_name) {
+      return customer.first_name;
+    } else if (customer.last_name) {
+      return customer.last_name;
+    }
+    return 'Unnamed Customer';
+  };
+
   // Handle pagination
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
