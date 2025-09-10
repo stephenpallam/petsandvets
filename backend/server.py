@@ -5426,7 +5426,7 @@ Make sure there are no duplicate signatures or redundant messages."""
                 
                 chat = LlmChat(
                     api_key=ai_service.emergent_key,
-                    session_id=f"write_email_format_{agent_id}_{datetime.now().timestamp()}",
+                    session_id=f"write_email_format_{agent_id}_{now.timestamp()}",
                     system_message="You are a professional email formatter for a veterinary clinic specializing in write mode email enhancement."
                 ).with_model("openai", "gpt-4o-mini")
                 
