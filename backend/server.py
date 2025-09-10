@@ -5390,12 +5390,51 @@ async def generate_write_mode_email_for_agent(agent_id: str, agent_data: dict, p
         final_content = personalized_content
         if use_chatgpt:
             try:
-                formatted_content = await ai_service.format_email_content(
-                    content=personalized_content,
-                    customer_name=customer_name,
-                    pet_names=pet_names,
-                    subject=email_subject
-                )
+                # For write mode emails, we need to create a custom formatting function
+                # since the existing functions are for holiday/topic-based emails
+                from ai_service import ai_service
+                
+                # Create a comprehensive prompt for write mode email formatting
+                email_prompt = f"""You are a professional email formatter for a veterinary clinic. Please take the following email content and create a warm, grammatically perfect, and professionally formatted email.
+
+INSTRUCTIONS:
+1. Fix any grammatical errors
+2. Make the tone warm but professional
+3. Ensure the email flows naturally
+4. Remove any duplicate or redundant closing statements
+5. Create ONE cohesive, well-structured email
+6. Keep the core message but enhance the language
+7. Make it specific and personal to the customer and their pets
+
+EMAIL CONTENT:
+{personalized_content}
+
+DETAILS:
+- Customer: {customer_name}
+- Pet(s): {pet_names}
+- Subject: {email_subject}
+
+Please create a complete, polished email that a veterinary clinic would be proud to send. Include:
+- A warm greeting
+- The main message (enhanced from the content)
+- A single, professional closing
+
+Make sure there are no duplicate signatures or redundant messages."""
+
+                # Call ChatGPT using Emergent integrations
+                from emergentintegrations.llm.chat import LlmChat, UserMessage
+                
+                chat = LlmChat(
+                    api_key=ai_service.emergent_key,
+                    session_id=f"write_email_format_{agent_id}_{datetime.now().timestamp()}",
+                    system_message="You are a professional email formatter for a veterinary clinic specializing in write mode email enhancement."
+                ).with_model("openai", "gpt-4o-mini")
+                
+                user_message = UserMessage(text=email_prompt)
+                response = await chat.send_message(user_message)
+                
+                formatted_content = response.strip()
+                
                 if formatted_content and formatted_content.strip():
                     final_content = formatted_content
                     logger.info(f"Applied ChatGPT formatting to write mode email for agent {agent_id}")
