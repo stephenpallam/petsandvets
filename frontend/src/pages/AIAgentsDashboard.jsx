@@ -1832,6 +1832,56 @@ const AIAgentsDashboard = () => {
                                     </div>
                                   </div>
                                 )
+                              ) : agent.agent_type === 'sms_agent' ? (
+                                // SMS Agent Display (scheduled and recurring modes)
+                                (agent.mode === 'auto' || agent.mode === 'recurring') && (
+                                  <div className="space-y-4">
+                                    {/* Row 1: SMS Recipients/Topic and Workflow Mode */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      <div className="flex flex-col">
+                                        {agent.mode === 'recurring' && agent.selected_holidays && agent.selected_holidays.length > 0 ? (
+                                          // Holiday-based SMS agent (scheduled mode)
+                                          <>
+                                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">SMS Will Be Sent To</span>
+                                            <p className="text-sm text-gray-900 mt-1">All customers in database</p>
+                                          </>
+                                        ) : (
+                                          // Topic-based recurring SMS agent
+                                          <>
+                                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Topic</span>
+                                            <p className="text-sm text-gray-900 mt-1">{agent.topic || 'No topic specified'}</p>
+                                          </>
+                                        )}
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Use ChatGPT to Format SMS</span>
+                                        <p className="text-sm text-gray-900 mt-1">
+                                          {(agent.use_sms_chatgpt_formatting || agent.useSMSChatGPTFormatting || agent.use_chatgpt_sms_formatting) ? 'Yes' : 'No'}
+                                        </p>
+                                      </div>
+                                    </div>
+                                    
+                                    {/* Row 2: Workflow Mode and SMS Provider */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Workflow Mode</span>
+                                        <p className="text-sm text-gray-900 mt-1">
+                                          {agent.mode === 'recurring' && agent.selected_holidays && agent.selected_holidays.length > 0 ? (
+                                            'Holiday-based'
+                                          ) : (
+                                            getWorkflowMode(agent)
+                                          )}
+                                        </p>
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">SMS Provider</span>
+                                        <p className="text-sm text-gray-900 mt-1 capitalize">
+                                          {agent.sms_provider || 'Twilio'}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )
                               ) : (
                                 // Social Media Agent Display (original logic)
                                 (agent.mode === 'auto' || agent.mode === 'recurring') && (
