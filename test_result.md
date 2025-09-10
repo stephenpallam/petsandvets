@@ -1,4 +1,88 @@
-## LATEST INVESTIGATION - Agent Last Run Data Field Names (COMPLETED ✅)
+## LATEST DEBUG - SMS Agent Dashboard Display Issue (COMPLETED ✅)
+
+**Test Date:** 2025-01-09  
+**Test Focus:** Debug why custom post SMS agent "My SMS" is still showing Social Media Platforms instead of SMS-specific fields  
+**Overall Success Rate:** 100% (6/6 investigations passed)
+
+### 🔍 ROOT CAUSE IDENTIFIED:
+
+**CRITICAL FRONTEND ISSUE:** Dashboard display logic missing SMS agent exclusion
+
+**Problem:** SMS agents are falling through to "Social Media Platforms" display section because the exclusion condition doesn't include `sms_agent`.
+
+**Specific Issue Location:**
+```javascript
+// File: /app/frontend/src/pages/AIAgentsDashboard.jsx, Line 2573
+{agent.agent_type !== 'email' && agent.agent_type !== 'time_sheet' && (
+  <div className="flex flex-col pt-3 border-t border-gray-100">
+    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Social Media Platforms</span>
+```
+
+**Analysis:** The condition excludes `email` and `time_sheet` agents but **includes `sms_agent`**, causing SMS agents to show "Social Media Platforms" instead of SMS-specific fields.
+
+### ✅ COMPREHENSIVE INVESTIGATION COMPLETED:
+
+**1. ✅ SMS Agent Data Structure Verified**
+- Found "My SMS" agent in database with correct structure
+- Agent Type: `sms_agent` ✅ (correct)
+- Mode: `write` ✅ (correct)
+- Has SMS Link: `https://petsandvetsanimalhospital.com` ✅
+- Has SMS-specific fields: `sms_template`, `sms_content`, `sms_link` ✅
+
+**2. ✅ Agent Display Conditions Identified**
+- SMS agent matches condition: `agent.agent_type !== 'email' && agent.agent_type !== 'time_sheet'`
+- This causes SMS agents to fall through to Social Media Platforms section
+- SMS agents should be excluded from this section like email and timesheet agents
+
+**3. ✅ All Social Media Platform Display Locations Found**
+- Found 12 "Social Media Platforms" references across dashboard files
+- Primary issue in AIAgentsDashboard.jsx lines 2572-2575
+- Additional locations in AIAgentConfig.jsx need similar fixes
+
+**4. ✅ Field Names Verified**
+- SMS agent has correct field names: `sms_link`, `sms_content`, `sms_template`
+- Missing expected fields: `recipient_type`, `customer_name` (these are handled differently)
+- Agent has problematic social media fields: `topic`, `social_platforms` (inherited from base agent structure)
+
+**5. ✅ API Response Confirmed**
+- API correctly returns SMS agent with `agent_type: 'sms_agent'`
+- All SMS-specific fields are present in API response
+- Frontend receives correct data structure
+
+**6. ✅ Frontend Logic Issues Diagnosed**
+- 11 locations where Social Media Platforms display logic needs SMS agent exclusion
+- SMS display logic exists but is not being used in the problematic sections
+- Condition needs to exclude `sms_agent` along with `email` and `time_sheet`
+
+### 🎯 EXACT SOLUTION REQUIRED:
+
+**Frontend Fix:** Update dashboard display condition to exclude SMS agents:
+
+```javascript
+// Current (incorrect):
+{agent.agent_type !== 'email' && agent.agent_type !== 'time_sheet' && (
+
+// Should be (correct):
+{agent.agent_type !== 'email' && agent.agent_type !== 'time_sheet' && agent.agent_type !== 'sms_agent' && (
+```
+
+**Files Requiring Updates:**
+1. `/app/frontend/src/pages/AIAgentsDashboard.jsx` - Line 2573 (PRIMARY FIX)
+2. Additional Social Media Platform sections in same file
+3. Similar conditions in `/app/frontend/src/pages/AIAgentConfig.jsx`
+
+### 📊 INVESTIGATION SUMMARY:
+- ✅ "My SMS" agent exists with correct `agent_type: 'sms_agent'`
+- ✅ Agent has all required SMS-specific fields and data
+- ✅ API endpoints return correct agent data
+- ✅ SMS display logic exists in dashboard (lines 1937, 2188, 2213, etc.)
+- ❌ **ROOT CAUSE**: Frontend condition includes SMS agents in Social Media Platforms section
+
+**Status:** 🟢 **ROOT CAUSE IDENTIFIED** - Frontend needs to exclude `sms_agent` from Social Media Platforms display logic
+
+---
+
+## PREVIOUS INVESTIGATION - Agent Last Run Data Field Names (COMPLETED ✅)
 
 **Test Date:** 2025-01-09  
 **Test Focus:** Investigate last run data field names for email and SMS agents in dashboard  
