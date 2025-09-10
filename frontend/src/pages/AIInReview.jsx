@@ -27,13 +27,15 @@ import { formatDate, formatScheduledDate } from '../utils/dateUtils';
 const SMSContentPreview = ({ post }) => {
   const [customerPreview, setCustomerPreview] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchCustomerPreview = async () => {
       try {
+        const token = localStorage.getItem('token');
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/customers?limit=1`, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         });
@@ -42,10 +44,15 @@ const SMSContentPreview = ({ post }) => {
           const customers = await response.json();
           if (customers && customers.length > 0) {
             setCustomerPreview(customers[0]);
+          } else {
+            setError('No customers found in database');
           }
+        } else {
+          setError('Failed to fetch customer data');
         }
       } catch (error) {
         console.error('Error fetching customer preview:', error);
+        setError('Error loading customer data');
       } finally {
         setLoading(false);
       }
@@ -60,24 +67,39 @@ const SMSContentPreview = ({ post }) => {
     let previewContent = post.content;
     
     if (customerPreview) {
-      // Replace customer placeholders
-      previewContent = previewContent.replace(/\[CUSTOMER_NAME\]/g, customerPreview.customer_name || 'John Doe');
+      // Replace customer name placeholder with actual customer data
+      const customerName = customerPreview.customer_name || customerPreview.name || 'Customer';
+      previewContent = previewContent.replace(/\[CUSTOMER_NAME\]/g, customerName);
       
-      // Replace pet placeholders
-      const petNames = customerPreview.pets && customerPreview.pets.length > 0 
-        ? customerPreview.pets.map(pet => pet.pet_name).join(', ')
-        : 'Fluffy';
+      // Replace pet placeholders with actual pet data
+      let petNames = 'Pet';
+      
+      // Handle pets array format (new format)
+      if (customerPreview.pets && Array.isArray(customerPreview.pets) && customerPreview.pets.length > 0) {
+        const petNamesList = customerPreview.pets.map(pet => pet.pet_name || pet.name).filter(Boolean);
+        if (petNamesList.length > 0) {
+          if (petNamesList.length === 1) {
+            petNames = petNamesList[0];
+          } else if (petNamesList.length === 2) {
+            petNames = `${petNamesList[0]} and ${petNamesList[1]}`;
+          } else {
+            petNames = `${petNamesList.slice(0, -1).join(', ')}, and ${petNamesList[petNamesList.length - 1]}`;
+          }
+        }
+      }
+      // Handle legacy pet_name format (fallback)
+      else if (customerPreview.pet_name && customerPreview.pet_name.trim()) {
+        petNames = customerPreview.pet_name.trim();
+      }
       
       previewContent = previewContent.replace(/\[PET_NAME\]/g, petNames);
       previewContent = previewContent.replace(/\[PET_NAMES\]/g, petNames);
     } else {
-      // Fallback to sample data
-      previewContent = previewContent.replace(/\[CUSTOMER_NAME\]/g, 'John Doe');
-      previewContent = previewContent.replace(/\[PET_NAME\]/g, 'Fluffy');
-      previewContent = previewContent.replace(/\[PET_NAMES\]/g, 'Fluffy');
+      // No customer data available - show message instead of dummy data
+      return 'No customer data available for preview. Please add customers to the database to see personalized preview.';
     }
     
-    // Replace link placeholder
+    // Replace link placeholder with actual SMS link
     const smsLink = post.sms_link || 'https://petsandvetsanimalhospital.com';
     previewContent = previewContent.replace(/\[LINK\]/g, smsLink);
     
@@ -87,30 +109,54 @@ const SMSContentPreview = ({ post }) => {
   if (loading) {
     return (
       <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-        <div className="text-sm text-orange-600 mb-2">📱 SMS Preview (Loading...)</div>
-        <div className="text-gray-500">Loading customer preview...</div>
+        <div className="text-sm text-orange-600 mb-2">📱 SMS Preview</div>
+        <div className="text-gray-500">Loading customer data from database...</div>
+      </div>
+    );
+  }
+
+  if (error || !customerPreview) {
+    return (
+      <div className="space-y-4">
+        {/* Error/No Customer Message */}
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <div className="text-sm text-yellow-700 mb-2 font-medium">⚠️ SMS Preview Unavailable</div>
+          <div className="text-yellow-800 text-sm">
+            {error || 'No customers found in database. Please add customers to see personalized SMS preview.'}
+          </div>
+        </div>
+        
+        {/* Raw Template for Reference */}
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+          <div className="text-sm text-gray-600 mb-2 font-medium">📝 SMS Template</div>
+          <div className="whitespace-pre-wrap text-gray-700 text-sm bg-white p-3 rounded border">
+            {post.content}
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      {/* SMS Preview with Customer Data */}
+      {/* SMS Preview with Real Customer Data */}
       <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
         <div className="text-sm text-orange-600 mb-2 font-medium">📱 SMS Preview (First Customer)</div>
         <div className="whitespace-pre-wrap text-gray-900 leading-relaxed bg-white p-3 rounded border">
           {getPreviewContent()}
         </div>
-        {customerPreview && (
-          <div className="mt-2 text-xs text-orange-600">
-            Preview for: {customerPreview.customer_name} ({customerPreview.phone_number || 'No phone'})
-          </div>
-        )}
+        <div className="mt-2 text-xs text-orange-600">
+          Preview for: {customerPreview.customer_name || customerPreview.name} 
+          {customerPreview.phone_number || customerPreview.phone ? 
+            ` (${customerPreview.phone_number || customerPreview.phone})` : 
+            ' (No phone number)'
+          }
+        </div>
       </div>
       
       {/* Raw Template for Reference */}
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-        <div className="text-sm text-gray-600 mb-2 font-medium">📝 Raw Template</div>
+        <div className="text-sm text-gray-600 mb-2 font-medium">📝 Original Template</div>
         <div className="whitespace-pre-wrap text-gray-700 text-sm bg-white p-3 rounded border">
           {post.content}
         </div>
