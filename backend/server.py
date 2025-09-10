@@ -9968,6 +9968,25 @@ async def delete_shift_preset(
     return {"message": "Shift preset deleted successfully"}
 
 
+# Helper function to get customer's full name
+def get_customer_full_name(customer: dict) -> str:
+    """Get the full name of a customer, handling both new and legacy data formats"""
+    # Priority: first_name + last_name > name (legacy) > fallback
+    first_name = customer.get('first_name', '').strip()
+    last_name = customer.get('last_name', '').strip()
+    
+    if first_name and last_name:
+        return f"{first_name} {last_name}"
+    elif first_name:
+        return first_name
+    elif last_name:
+        return last_name
+    elif customer.get('name', '').strip():
+        # Fallback to legacy name field
+        return customer.get('name').strip()
+    else:
+        return 'Valued Customer'
+
 # Customer Management Routes
 @api_router.get("/customers")
 async def get_customers(
