@@ -1887,7 +1887,7 @@ const AIAgentsDashboard = () => {
                                     </div>
 
                                     {/* Row 3: Next Scheduled Run for Holiday-based SMS agents */}
-                                    {agent.mode === 'recurring' && agent.selected_holidays && agent.selected_holidays.length > 0 && (
+                                    {agent.selected_holidays && agent.selected_holidays.length > 0 && (
                                       <div className="grid grid-cols-1 gap-4">
                                         <div className="flex flex-col">
                                           <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
