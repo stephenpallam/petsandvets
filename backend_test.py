@@ -790,16 +790,23 @@ class CustomerDataInvestigator:
                 print("   - The customer Stephen Pallam does not exist in any collection")
                 print("   - SMS preview is correct - there are no customers to show")
                 print("   - User may need to add customer data first")
-            elif not any(result.get("success") for result in endpoint_results.values()):
-                print("❌ ROOT CAUSE: Customer API endpoints not working")
+            if not any(result.get("success") for result in auth_endpoint_results.values()):
+                print("❌ ROOT CAUSE: Customer API endpoints not working even with authentication")
                 print("   - Customer data exists in database")
-                print("   - But API endpoints are not accessible or returning errors")
-                print("   - Frontend cannot retrieve customer data via API")
+                print("   - API endpoints exist in server code")
+                print("   - But API endpoints return errors even with valid authentication")
+                print("   - Frontend SMS preview cannot retrieve customer data")
+            elif sms_preview_data:
+                print("✅ CUSTOMER API WORKING - SMS PREVIEW SHOULD WORK")
+                print("   - Customer data exists in database")
+                print("   - API endpoints are accessible with authentication")
+                print("   - SMS preview should be able to retrieve customer data")
+                print("   - Issue may be in frontend authentication or component logic")
             else:
-                print("✅ CUSTOMER DATA AND API WORKING")
+                print("⚠️  PARTIAL SUCCESS - API WORKING BUT NO CUSTOMER DATA RETURNED")
                 print("   - Customer data exists in database")
                 print("   - API endpoints are accessible")
-                print("   - Issue may be in frontend SMS preview component")
+                print("   - But API returns empty results - possible filtering issue")
             
             print()
             print("=" * 80)
