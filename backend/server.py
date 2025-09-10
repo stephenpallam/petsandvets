@@ -1361,6 +1361,7 @@ async def initialize_production_data():
         # Start background scheduler for processing scheduled posts
         import asyncio
         asyncio.create_task(scheduled_posts_scheduler())
+        asyncio.create_task(holiday_scheduler())  # New holiday-based scheduler
         
     except Exception as e:
         logger.error(f"❌ Production data initialization failed: {e}")
