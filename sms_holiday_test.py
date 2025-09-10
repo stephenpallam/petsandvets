@@ -67,6 +67,35 @@ class SMSHolidayTester:
         self.created_agents = []
         self.created_posts = []
         
+    async def authenticate(self):
+        """Authenticate with the API"""
+        print("=== AUTHENTICATING WITH API ===")
+        
+        login_data = {
+            "email": "admin@hospital.com",
+            "password": "admin123"
+        }
+        
+        try:
+            response = requests.post(f"{self.api_base}/login", json=login_data)
+            
+            if response.status_code == 200:
+                auth_result = response.json()
+                self.auth_token = auth_result.get('access_token')
+                self.headers = {
+                    'Authorization': f'Bearer {self.auth_token}',
+                    'Content-Type': 'application/json'
+                }
+                print("✅ Authentication successful")
+                return True
+            else:
+                print(f"❌ Authentication failed: {response.status_code} - {response.text}")
+                return False
+                
+        except Exception as e:
+            print(f"❌ Authentication error: {str(e)}")
+            return False
+    
     async def connect(self):
         """Connect to MongoDB"""
         self.client = AsyncIOMotorClient(self.mongo_url)
