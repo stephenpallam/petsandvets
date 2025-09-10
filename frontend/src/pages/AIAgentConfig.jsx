@@ -6441,13 +6441,13 @@ Example:
                                             key={customer.id}
                                             onClick={() => {
                                               setSelectedCustomer(customer);
-                                              setCustomerSearchTerm(customer.name);
+                                              setCustomerSearchTerm(getCustomerFullName(customer));
                                               setSearchedCustomers([]);
-                                              setSmsRecurringMode(prev => ({ ...prev, selectedCustomer: customer.id, customerName: customer.name }));
+                                              setSmsRecurringMode(prev => ({ ...prev, selectedCustomer: customer.id, customerName: getCustomerFullName(customer) }));
                                             }}
                                             className="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
                                           >
-                                            <div className="font-medium text-gray-900">{customer.name}</div>
+                                            <div className="font-medium text-gray-900">{getCustomerFullName(customer)}</div>
                                             <div className="text-sm text-gray-600">{customer.phone}</div>
                                             {customer.pets && customer.pets.length > 0 && (
                                               <div className="text-sm text-gray-500">
