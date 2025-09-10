@@ -59,6 +59,8 @@ class SMSHolidayTester:
             self.backend_url = "https://smart-sms-1.preview.emergentagent.com"
         
         self.api_base = f"{self.backend_url}/api"
+        self.auth_token = None
+        self.headers = {}
         
         # Test results tracking
         self.test_results = []
