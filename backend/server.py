@@ -427,7 +427,9 @@ class CustomerCreate(BaseModel):
 
 
 class CustomerUpdate(BaseModel):
-    name: Optional[str] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    name: Optional[str] = None  # Legacy field for backward compatibility
     pets: Optional[List[Pet]] = None  # New structured pets array
     pet_name: Optional[str] = None  # Legacy field for backward compatibility
     phone: Optional[str] = None
