@@ -2073,7 +2073,6 @@ const AIAgentsDashboard = () => {
                                       </div>
                                     )}
                                   </div>
-                                )
                               ) : (
                                 // Social Media Agent Display (original logic)
                                 (agent.mode === 'auto' || agent.mode === 'recurring') && (
