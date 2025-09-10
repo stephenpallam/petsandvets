@@ -273,6 +273,12 @@ The Veterinary Care Team`,
   // Email-specific data
   const [availableHolidays, setAvailableHolidays] = useState([]);
   const [availableCustomers, setAvailableCustomers] = useState([]);
+  
+  // Customer search functionality
+  const [customerSearchTerm, setCustomerSearchTerm] = useState('');
+  const [searchedCustomers, setSearchedCustomers] = useState([]);
+  const [isSearchingCustomers, setIsSearchingCustomers] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   // SMS Agent - Scheduled Mode State (Holiday-based SMS)
   const [smsScheduledMode, setSmsScheduledMode] = useState({
