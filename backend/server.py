@@ -10068,6 +10068,18 @@ async def update_customer(
     # Update only provided fields
     update_data = {k: v for k, v in customer_data.dict().items() if v is not None}
     
+    # Generate full name if first_name or last_name is being updated
+    if 'first_name' in update_data or 'last_name' in update_data:
+        current_first_name = customer.get('first_name', update_data.get('first_name', ''))
+        current_last_name = customer.get('last_name', update_data.get('last_name', ''))
+        
+        # Use updated values if provided, otherwise use existing values
+        first_name = update_data.get('first_name', current_first_name)
+        last_name = update_data.get('last_name', current_last_name)
+        
+        if first_name and last_name:
+            update_data['name'] = f"{first_name} {last_name}"
+    
     # Handle pets array and pet_name field conversion
     if 'pets' in update_data and update_data['pets']:
         # If pets array is provided, also update pet_name for backward compatibility
