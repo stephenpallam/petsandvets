@@ -2360,23 +2360,23 @@ const AIAgentsDashboard = () => {
                                                 const now = new Date();
                                                 
                                                 if (scheduledDate < now) {
-                                                    // Past scheduled date - show as fallback
-                                                    const formattedDate = scheduledDate.toLocaleDateString('en-US', {
-                                                      weekday: 'short',
-                                                      month: 'short',
-                                                      day: 'numeric',
-                                                      year: 'numeric'
-                                                    });
-                                                    return `${formattedDate} at ${formatTime(agent.post_time)}`;
-                                                  }
-                                                } catch (error) {
-                                                  console.error('Error parsing scheduled date:', error);
+                                                  // Past scheduled date - show as fallback
+                                                  const formattedDate = scheduledDate.toLocaleDateString('en-US', {
+                                                    weekday: 'short',
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                    year: 'numeric'
+                                                  });
+                                                  return `${formattedDate} at ${formatTime(agent.post_time)}`;
                                                 }
+                                              } catch (error) {
+                                                console.error('Error parsing scheduled date:', error);
                                               }
-                                              
-                                              // Final fallback
-                                              return agent.last_manual_run ? formatDate(agent.last_manual_run) : 'Never run';
-                                            })()}
+                                            }
+                                            
+                                            // Final fallback
+                                            return 'Never run manually';
+                                          })()}
                                           </p>
                                         </div>
                                       </div>
