@@ -575,7 +575,7 @@ class SMSHolidayTester:
                 "post_destination": "in_review"
             }
             
-            response = requests.post(f"{self.api_base}/ai-agents", json=agent_data)
+            response = requests.post(f"{self.api_base}/ai-agents", json=agent_data, headers=self.headers)
             
             if response.status_code == 200:
                 agent_result = response.json()
@@ -583,7 +583,7 @@ class SMSHolidayTester:
                 self.created_agents.append(agent_id)
                 
                 # Try to run this agent - should fail gracefully
-                run_response = requests.post(f"{self.api_base}/ai-agents/{agent_id}/run")
+                run_response = requests.post(f"{self.api_base}/ai-agents/{agent_id}/run", headers=self.headers)
                 
                 # Should fail gracefully with proper error handling
                 success = run_response.status_code in [400, 500]  # Should fail but not crash
