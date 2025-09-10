@@ -1339,6 +1339,11 @@ const AIReadyToPublish = () => {
                                   {post.content.split(' ').length} words
                                 </div>
                               </div>
+                            ) : post.agent_type === 'sms_agent' ? (
+                              /* SMS Post Content with Customer Preview */
+                              <div>
+                                <SMSContentPreview post={post} />
+                              </div>
                             ) : (
                               /* Regular Social Media Post Content - Match review page styling */
                               <div>
