@@ -161,9 +161,15 @@ const SMSContentPreview = ({ post }) => {
           {getPreviewContent()}
         </div>
         <div className="mt-2 text-xs text-orange-600">
-          Preview for: {customerPreview.customer_name || customerPreview.name} 
-          {customerPreview.phone_number || customerPreview.phone ? 
-            ` (${customerPreview.phone_number || customerPreview.phone})` : 
+          Preview for: {customerPreview.customer_name || 
+                      customerPreview.name || 
+                      customerPreview.owner_first_name || 
+                      customerPreview.first_name || 
+                      'Customer'} 
+          {customerPreview.phone_number || 
+           customerPreview.phone || 
+           customerPreview.owner_phone ? 
+            ` (${customerPreview.phone_number || customerPreview.phone || customerPreview.owner_phone})` : 
             ' (No phone number)'
           }
         </div>
