@@ -5741,7 +5741,7 @@ async def send_mass_sms_from_post(post_id: str, post_data: dict):
                 await asyncio.sleep(0.1)
                 
             except Exception as customer_error:
-                logger.error(f"Error sending SMS to customer {customer.get('name', 'Unknown')}: {str(customer_error)}")
+                logger.error(f"Error sending SMS to customer {get_customer_full_name(customer)}: {str(customer_error)}")
                 sms_failed += 1
                 continue
         
