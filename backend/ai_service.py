@@ -668,6 +668,7 @@ INSTRUCTIONS:
 5. Create ONE cohesive, well-structured email
 6. Keep the core message but enhance the language
 7. Make it specific to the holiday and personal to the customer and their pets
+8. DO NOT include any subject line or "Subject:" in your response - the email subject is handled separately
 
 EMAIL TEMPLATE:
 {template}
@@ -678,13 +679,15 @@ DETAILS:
 - Holiday: {holiday_name}
 - Date: {holiday_date}
 
+IMPORTANT: The email subject is already set separately. DO NOT include any subject line in your response. Start your email directly with the greeting.
+
 Please create a complete, polished email that a veterinary clinic would be proud to send. Include:
 - A warm greeting
 - The main message (enhanced from the template)
 - Holiday-specific well wishes
 - A single, professional closing
 
-Make sure there are no duplicate signatures or redundant messages."""
+Make sure there are no duplicate signatures, redundant messages, or subject lines."""
 
             # Call ChatGPT using Emergent integrations
             chat = LlmChat(
