@@ -1763,7 +1763,7 @@ const AIAgentsDashboard = () => {
                                             }
                                             
                                             // Final fallback
-                                            return agent.last_run ? formatDate(agent.last_run) : 'Never run';
+                                            return agent.last_manual_run ? formatDate(agent.last_manual_run) : 'Never run';
                                           })()}
                                         </p>
                                       </div>
@@ -2309,7 +2309,7 @@ const AIAgentsDashboard = () => {
                                               }
                                               
                                               // Final fallback
-                                              return agent.last_run ? formatDate(agent.last_run) : 'Never run';
+                                              return agent.last_manual_run ? formatDate(agent.last_manual_run) : 'Never run';
                                             })()}
                                           </p>
                                         </div>
@@ -2503,7 +2503,7 @@ const AIAgentsDashboard = () => {
                                           }
                                           
                                           // Final fallback
-                                          return agent.last_run ? formatDate(agent.last_run) : 'Never run';
+                                          return agent.last_manual_run ? formatDate(agent.last_manual_run) : 'Never run';
                                         })()}
                                       </p>
                                     </div>
