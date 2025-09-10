@@ -2408,9 +2408,9 @@ const AIAgentsDashboard = () => {
                                         )}
                                       </p>
                                     </div>
-                                  </div>
-                                )
-                              )}
+                                  
+                                
+                              
                           
                           {agent.mode === 'write' && (
                             <div className="space-y-4">
@@ -2642,20 +2642,6 @@ const AIAgentsDashboard = () => {
                                     </p>
                                   </div>
                                 </div>
-                              )}
-                                            } catch (error) {
-                                              console.error('Error parsing scheduled date:', error);
-                                            }
-                                          }
-                                          
-                                          // Final fallback
-                                          return agent.last_manual_run ? formatDate(agent.last_manual_run) : 'Never run';
-                                        })()}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
                               )}
                               
                               {/* Social Media Platforms - Only for Social Media Write Mode Agents */}
