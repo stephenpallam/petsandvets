@@ -6761,6 +6761,69 @@ async def calculate_scheduled_datetime(post_date: str, post_time: str) -> Option
         logger.error(f"Error calculating scheduled datetime: {e}")
         return None
 
+async def process_scheduled_sms_post(post: dict, current_time: datetime):
+    """Process a scheduled SMS post by generating content and sending it"""
+    try:
+        # Generate SMS content using AI
+        agent_id = post.get("agent_id")
+        holiday_name = post.get("holiday_name", "")
+        sms_template = post.get("sms_template", "")
+        sms_link = post.get("sms_link", "https://petsandvetsanimalhospital.com")
+        
+        # Get the agent details
+        agent = await db.ai_agents.find_one({"id": agent_id})
+        if not agent:
+            raise Exception(f"SMS agent {agent_id} not found")
+        
+        # Generate SMS content using AI service
+        prompt = f"""Generate a short SMS message for {holiday_name}. 
+        Template: {sms_template}
+        Keep it under 160 characters and include the link: {sms_link}
+        Make it warm, professional, and holiday-appropriate for a veterinary hospital."""
+        
+        # Use AI service to generate content
+        generated_content = await ai_service.generate_text(
+            prompt=prompt,
+            max_tokens=100,
+            temperature=0.7
+        )
+        
+        if not generated_content:
+            raise Exception("Failed to generate SMS content")
+        
+        # Update the post with generated content and mark as published
+        await db.ai_posts.update_one(
+            {"id": post["id"]},
+            {
+                "$set": {
+                    "content": generated_content,
+                    "status": PostStatus.PUBLISHED,
+                    "published_at": current_time,
+                    "updated_at": current_time
+                }
+            }
+        )
+        
+        logger.info(f"Generated and published SMS post {post['id']} for {holiday_name}: {generated_content[:50]}...")
+        
+        # TODO: Actually send SMS to customers
+        # This is where you would integrate with SMS service (Twilio, etc.)
+        
+    except Exception as e:
+        logger.error(f"Error processing scheduled SMS post {post.get('id', 'unknown')}: {e}")
+        
+        # Mark post as failed
+        await db.ai_posts.update_one(
+            {"id": post["id"]},
+            {
+                "$set": {
+                    "status": PostStatus.FAILED,
+                    "error_message": str(e),
+                    "updated_at": current_time
+                }
+            }
+        )
+
 async def process_scheduled_posts():
     """
     Process scheduled posts that are ready to be published
