@@ -1203,7 +1203,7 @@ const AIReadyToPublish = () => {
                           
                           {/* Actions */}
                           <div className="flex items-center space-x-2">
-                            {post.platforms.map((platform) => (
+                            {post.platforms && post.platforms.map((platform) => (
                               <span 
                                 key={platform} 
                                 className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700"
