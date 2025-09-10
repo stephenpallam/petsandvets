@@ -183,10 +183,17 @@ class SMSHolidayTester:
         try:
             response = requests.post(f"{self.api_base}/ai-agents", json=agent_data, headers=self.headers)
             
+            print(f"Agent creation response: {response.status_code}")
+            print(f"Response content: {response.text[:500]}")
+            
             if response.status_code == 200:
                 agent_result = response.json()
                 agent_id = agent_result.get('id')
+                print(f"Created agent ID: {agent_id}")
                 self.created_agents.append(agent_id)
+                
+                # Wait a moment for database write
+                await asyncio.sleep(1)
                 
                 # Verify agent was created with correct holiday selection
                 agent_doc = await self.db.ai_agents.find_one({"id": agent_id})
@@ -195,6 +202,8 @@ class SMSHolidayTester:
                     selected_holidays = agent_doc.get('selected_holidays', [])
                     agent_type = agent_doc.get('agent_type')
                     mode = agent_doc.get('mode')
+                    
+                    print(f"Found agent in DB - Type: {agent_type}, Mode: {mode}, Holidays: {selected_holidays}")
                     
                     success = (
                         agent_type == 'sms_agent' and
@@ -212,6 +221,7 @@ class SMSHolidayTester:
                     
                     return agent_result if success else None
                 else:
+                    print(f"Agent {agent_id} not found in database")
                     self.log_test_result(
                         "SMS Agent Creation with Holidays",
                         False,
