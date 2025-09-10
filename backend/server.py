@@ -6577,14 +6577,24 @@ async def run_agent(
         
         # Generate content using the existing generate_post_for_agent function
         # This function already handles all agent modes (recurring, adhoc, write)
-        await generate_post_for_agent(agent_id, agent)
+        generation_result = await generate_post_for_agent(agent_id, agent)
         
-        return {
+        # Prepare response with generation result
+        response = {
             "message": "Agent executed successfully",
             "agent_id": agent_id,
             "agent_name": agent.get("agent_name", agent.get("name", "AI Agent")),
             "mode": agent.get("mode", "recurring")
         }
+        
+        # Include post_id if generation was successful
+        if generation_result and isinstance(generation_result, dict):
+            if "post_id" in generation_result:
+                response["post_id"] = generation_result["post_id"]
+            if "status" in generation_result:
+                response["status"] = generation_result["status"]
+        
+        return response
         
     except HTTPException:
         raise
