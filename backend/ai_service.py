@@ -756,7 +756,7 @@ Make sure there are no duplicate signatures or redundant messages."""
             user_message = UserMessage(text=sms_prompt)
             response = await chat.send_message(user_message)
             
-            sms_content = response.message.content.strip()
+            sms_content = response.strip()
             
             # Ensure SMS is within character limit
             if len(sms_content) > 160:
