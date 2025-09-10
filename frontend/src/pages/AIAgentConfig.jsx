@@ -6396,28 +6396,80 @@ Example:
                                   <User className="h-4 w-4 inline mr-2" />
                                   Select Customer *
                                 </label>
-                                <select
-                                  value={smsRecurringMode.selectedCustomer || ''}
-                                  onChange={(e) => setSmsRecurringMode(prev => ({ ...prev, selectedCustomer: e.target.value }))}
-                                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                >
-                                  <option value="">Choose a customer...</option>
-                                  {availableCustomers.length > 0 ? (
-                                    availableCustomers
-                                      .filter(customer => customer.phone && customer.phone.trim())
-                                      .map((customer) => (
-                                        <option key={customer.id} value={customer.id}>
-                                          {customer.name} - {customer.phone} {customer.pets && customer.pets.length > 0 ? `(${customer.pets.map(p => p.name).join(', ')})` : ''}
-                                        </option>
-                                      ))
-                                  ) : (
-                                    <option value="" disabled>Loading customers...</option>
+                                
+                                {/* Customer Search Input */}
+                                <div className="relative">
+                                  <input
+                                    type="text"
+                                    value={customerSearchTerm}
+                                    onChange={(e) => setCustomerSearchTerm(e.target.value)}
+                                    placeholder="Type at least 3 characters to search by customer name, email, or pet name..."
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"
+                                  />
+                                  <Search className="h-5 w-5 text-gray-400 absolute left-3 top-3.5" />
+                                  {isSearchingCustomers && (
+                                    <div className="absolute right-3 top-3.5">
+                                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
+                                    </div>
                                   )}
-                                </select>
-                                {availableCustomers.length > 0 && availableCustomers.filter(c => c.phone && c.phone.trim()).length === 0 && (
-                                  <p className="text-sm text-amber-600 mt-1">
-                                    No customers with phone numbers found. Please add phone numbers to customers in Customer Management.
-                                  </p>
+                                </div>
+                                
+                                {/* Search Results */}
+                                {customerSearchTerm.length >= 3 && !isSearchingCustomers && (
+                                  <div className="border border-gray-300 rounded-lg max-h-40 overflow-y-auto mt-2">
+                                    {searchedCustomers.length > 0 ? (
+                                      searchedCustomers
+                                        .filter(customer => customer.phone && customer.phone.trim())
+                                        .map((customer) => (
+                                          <div
+                                            key={customer.id}
+                                            onClick={() => {
+                                              setSelectedCustomer(customer);
+                                              setCustomerSearchTerm(customer.name);
+                                              setSearchedCustomers([]);
+                                              setSmsRecurringMode(prev => ({ ...prev, selectedCustomer: customer.id, customerName: customer.name }));
+                                            }}
+                                            className="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                                          >
+                                            <div className="font-medium text-gray-900">{customer.name}</div>
+                                            <div className="text-sm text-gray-600">{customer.phone}</div>
+                                            {customer.pets && customer.pets.length > 0 && (
+                                              <div className="text-sm text-gray-500">
+                                                Pets: {customer.pets.map(pet => pet.name).join(', ')}
+                                              </div>
+                                            )}
+                                          </div>
+                                        ))
+                                    ) : (
+                                      <div className="p-3 text-gray-500 text-center">
+                                        No customers with phone numbers found matching "{customerSearchTerm}"
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                                
+                                {/* Selected Customer Display */}
+                                {selectedCustomer && (
+                                  <div className="bg-green-50 border border-green-200 rounded-lg p-3 mt-2">
+                                    <div className="flex items-center justify-between">
+                                      <div>
+                                        <div className="font-medium text-green-900">Selected Customer:</div>
+                                        <div className="text-green-700">{selectedCustomer.name}</div>
+                                        <div className="text-sm text-green-600">{selectedCustomer.phone}</div>
+                                      </div>
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          setSelectedCustomer(null);
+                                          setCustomerSearchTerm('');
+                                          setSmsRecurringMode(prev => ({ ...prev, selectedCustomer: null, customerName: '' }));
+                                        }}
+                                        className="text-green-600 hover:text-green-800"
+                                      >
+                                        <X className="h-5 w-5" />
+                                      </button>
+                                    </div>
+                                  </div>
                                 )}
                               </div>
                             </div>
