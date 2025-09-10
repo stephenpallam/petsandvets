@@ -2407,7 +2407,7 @@ const AIAgentsDashboard = () => {
                               )}
                               
                               {/* Row 1: Post Title and Workflow Mode for Social Media Agents */}
-                              {agent.agent_type !== 'email' && agent.agent_type !== 'time_sheet' && (
+                              {agent.agent_type !== 'email' && agent.agent_type !== 'time_sheet' && agent.agent_type !== 'sms_agent' && (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                   <div className="flex flex-col">
                                     <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Post Title</span>
