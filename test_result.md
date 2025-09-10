@@ -1318,11 +1318,23 @@ backend:
     file: "backend/server.py"
     stuck_count: 1
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: false
         agent: "testing"
         comment: "❌ Edge Case Handling: SMS agents with no holidays selected return 404 on run (should handle gracefully), SMS agents with invalid holiday IDs return 404 on run (should handle gracefully). Poor error handling for edge cases."
+
+  - task: "SMS Agent Dashboard Display Fix - Holiday Condition Verification"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ COMPLETE SUCCESS: SMS Agent Dashboard Display Fix verified comprehensively. SMS agents can be created with selected_holidays array, dashboard condition (agent.selected_holidays && agent.selected_holidays.length > 0) passes correctly, holiday calculation logic works, next upcoming holiday properly calculated (Thanksgiving 2025 - Nov 27th, 2025 at 9:00 AM), holiday names and dates properly formatted. Frontend should display holiday information instead of 'No days selected'. Tested with 8 existing SMS agents, 5 with holidays, successful holiday calculation for valid holiday IDs."
 
 backend:
   - task: "SMS Agent Backend Model Enhancement - sms_link Field"
