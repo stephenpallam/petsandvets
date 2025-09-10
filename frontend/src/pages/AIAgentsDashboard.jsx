@@ -2442,6 +2442,27 @@ const AIAgentsDashboard = () => {
                                 </div>
                               )}
                               
+                              {/* Row 1: SMS Recipients and Link for SMS Agents */}
+                              {agent.agent_type === 'sms_agent' && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">SMS Recipients</span>
+                                    <p className="text-sm text-gray-900 mt-1">
+                                      {agent.recipient_type === 'single' ? 
+                                        `Single Customer: ${agent.customer_name || 'Selected Customer'}` : 
+                                        'All customers in database'
+                                      }
+                                    </p>
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Link</span>
+                                    <p className="text-sm text-gray-900 mt-1">
+                                      {agent.sms_link || 'No Link Provided'}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                              
                               {/* Content Preview - Full Width */}
                               <div className="flex flex-col">
                                 <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
