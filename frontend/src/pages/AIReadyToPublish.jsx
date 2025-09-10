@@ -182,7 +182,7 @@ const SMSContentPreview = ({ post }) => {
     </div>
   );
 };
-import SMSContentPreview from '../components/SMSContentPreview';
+
 
 const AIReadyToPublish = () => {
   const { user, token, isAdmin, canAccessManager, loading: authLoading } = useAuth();
