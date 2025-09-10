@@ -563,8 +563,8 @@ const AIAgentsDashboard = () => {
   };
 
   const getModeLabel = (mode, agentType, selectedHolidays) => {
-    // Special case for SMS agents with holidays (scheduled mode)
-    if (agentType === 'sms_agent' && mode === 'recurring' && selectedHolidays && selectedHolidays.length > 0) {
+    // Special case for SMS and Email agents with holidays (scheduled mode)
+    if ((agentType === 'sms_agent' || agentType === 'email') && mode === 'recurring' && selectedHolidays && selectedHolidays.length > 0) {
       return 'Scheduled Mode';
     }
     
