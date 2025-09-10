@@ -21,6 +21,168 @@ import {
 } from 'lucide-react';
 import { formatDate as utilFormatDate } from '../utils/dateUtils';
 
+const SMSContentPreview = ({ post }) => {
+  const [customerPreview, setCustomerPreview] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchCustomerPreview = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/customers?limit=1`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (response.ok) {
+          const customerData = await response.json();
+          // Handle paginated response format from API
+          if (customerData && customerData.customers && customerData.customers.length > 0) {
+            setCustomerPreview(customerData.customers[0]);
+          } else if (customerData && Array.isArray(customerData) && customerData.length > 0) {
+            // Handle direct array format (fallback)
+            setCustomerPreview(customerData[0]);
+          } else {
+            setError('No customers found in database');
+          }
+        } else {
+          setError('Failed to fetch customer data');
+        }
+      } catch (error) {
+        console.error('Error fetching customer preview:', error);
+        setError('Error loading customer data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCustomerPreview();
+  }, []);
+
+  const getPreviewContent = () => {
+    if (!post.content) return 'No content available';
+    
+    let previewContent = post.content;
+    
+    if (customerPreview) {
+      // Replace customer name placeholder with actual customer data
+      // Handle different customer name field formats
+      const customerName = customerPreview.customer_name || 
+                           customerPreview.name || 
+                           customerPreview.owner_first_name || 
+                           customerPreview.first_name || 
+                           'Customer';
+      previewContent = previewContent.replace(/\[CUSTOMER_NAME\]/g, customerName);
+      
+      // Replace pet placeholders with actual pet data
+      let petNames = 'Pet';
+      
+      // Handle pets array format (new format)
+      if (customerPreview.pets && Array.isArray(customerPreview.pets) && customerPreview.pets.length > 0) {
+        const petNamesList = customerPreview.pets
+          .map(pet => pet.pet_name || pet.name || pet.petName)
+          .filter(Boolean);
+        if (petNamesList.length > 0) {
+          if (petNamesList.length === 1) {
+            petNames = petNamesList[0];
+          } else if (petNamesList.length === 2) {
+            petNames = `${petNamesList[0]} and ${petNamesList[1]}`;
+          } else {
+            petNames = `${petNamesList.slice(0, -1).join(', ')}, and ${petNamesList[petNamesList.length - 1]}`;
+          }
+        }
+      }
+      // Handle legacy pet_name format (fallback)
+      else if (customerPreview.pet_name && customerPreview.pet_name.trim()) {
+        petNames = customerPreview.pet_name.trim();
+      }
+      // Handle other pet field formats
+      else if (customerPreview.petName && customerPreview.petName.trim()) {
+        petNames = customerPreview.petName.trim();
+      }
+      
+      previewContent = previewContent.replace(/\[PET_NAME\]/g, petNames);
+      previewContent = previewContent.replace(/\[PET_NAMES\]/g, petNames);
+    } else {
+      // No customer data available - show message instead of dummy data
+      return 'No customer data available for preview. Please add customers to the database to see personalized preview.';
+    }
+    
+    // Replace link placeholder with actual SMS link
+    const smsLink = post.sms_link || 'https://petsandvetsanimalhospital.com';
+    previewContent = previewContent.replace(/\[LINK\]/g, smsLink);
+    
+    return previewContent;
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+        <div className="text-sm text-orange-600 mb-2">📱 SMS Preview</div>
+        <div className="text-gray-500">Loading customer data from database...</div>
+      </div>
+    );
+  }
+
+  if (error || !customerPreview) {
+    return (
+      <div className="space-y-4">
+        {/* Error/No Customer Message */}
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <div className="text-sm text-yellow-700 mb-2 font-medium">⚠️ SMS Preview Unavailable</div>
+          <div className="text-yellow-800 text-sm">
+            {error || 'No customers found in database. Please add customers to see personalized SMS preview.'}
+          </div>
+        </div>
+        
+        {/* Raw Template for Reference */}
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+          <div className="text-sm text-gray-600 mb-2 font-medium">📝 SMS Template</div>
+          <div className="whitespace-pre-wrap text-gray-700 text-sm bg-white p-3 rounded border">
+            {post.content}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* SMS Preview with Real Customer Data */}
+      <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+        <div className="text-sm text-orange-600 mb-2 font-medium">📱 SMS Preview (First Customer)</div>
+        <div className="whitespace-pre-wrap text-gray-900 leading-relaxed bg-white p-3 rounded border">
+          {getPreviewContent()}
+        </div>
+        <div className="mt-2 text-xs text-orange-600">
+          Preview for: {customerPreview.customer_name || 
+                      customerPreview.name || 
+                      customerPreview.owner_first_name || 
+                      customerPreview.first_name || 
+                      'Customer'} 
+          {customerPreview.phone_number || 
+           customerPreview.phone || 
+           customerPreview.owner_phone ? 
+            ` (${customerPreview.phone_number || customerPreview.phone || customerPreview.owner_phone})` : 
+            ' (No phone number)'
+          }
+        </div>
+      </div>
+      
+      {/* Raw Template for Reference */}
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <div className="text-sm text-gray-600 mb-2 font-medium">📝 Original Template</div>
+        <div className="whitespace-pre-wrap text-gray-700 text-sm bg-white p-3 rounded border">
+          {post.content}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const AIPublishedPosts = () => {
   const { user, token, isAdmin, canAccessManager, loading: authLoading } = useAuth();
   const [posts, setPosts] = useState([]);
