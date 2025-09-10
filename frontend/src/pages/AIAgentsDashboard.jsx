@@ -1884,6 +1884,7 @@ const AIAgentsDashboard = () => {
                                           <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
                                             {(() => {
                                               const holidayInfo = getNextScheduledHoliday(agent);
+                                              console.log('SMS Holiday Info Debug:', { agent: agent.agent_name, holidayInfo, selectedHolidays: agent.selected_holidays, holidays: holidays?.length });
                                               return holidayInfo.holidayName || 'Next Scheduled Run';
                                             })()}
                                           </span>
