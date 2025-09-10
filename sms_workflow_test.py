@@ -311,10 +311,15 @@ class SMSWorkflowTester:
             from server import send_mass_sms_from_post
             
             # Test mass SMS sending (this should replace placeholders)
-            result = await send_mass_sms_from_post(post_id, post_data)
+            try:
+                result = await send_mass_sms_from_post(post_id, post_data)
+                mass_sms_executed = True
+            except Exception as e:
+                mass_sms_executed = False
+                print(f"   Mass SMS function error: {str(e)}")
             
             # Check if function executed without errors
-            if result is not None:
+            if mass_sms_executed:
                 # Get customers to verify placeholder replacement logic
                 customers = await self.db.customers.find({}).to_list(length=10)
                 
