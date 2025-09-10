@@ -1848,7 +1848,7 @@ const AIAgentsDashboard = () => {
                                     {/* Row 1: SMS Recipients/Topic and Workflow Mode */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                       <div className="flex flex-col">
-                                        {agent.mode === 'recurring' && agent.selected_holidays && agent.selected_holidays.length > 0 ? (
+                                        {agent.selected_holidays && agent.selected_holidays.length > 0 ? (
                                           // Holiday-based SMS agent (scheduled mode)
                                           <>
                                             <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">SMS Will Be Sent To</span>
