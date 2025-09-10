@@ -538,7 +538,7 @@ class SMSHolidayTester:
                 self.created_agents.append(agent_id)
                 
                 # Try to run this agent
-                run_response = requests.post(f"{self.api_base}/ai-agents/{agent_id}/run")
+                run_response = requests.post(f"{self.api_base}/ai-agents/{agent_id}/run", headers=self.headers)
                 
                 # This should either work with topic-based generation or fail gracefully
                 success = run_response.status_code in [200, 400]  # Either works or fails gracefully
