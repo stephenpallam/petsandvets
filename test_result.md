@@ -1,4 +1,39 @@
-## LATEST FIXES - SMS Agent Issues (RESOLVED)
+## LATEST ENHANCEMENT - SMS Agent Dashboard Display Improvements (COMPLETED ✅)
+
+**Additional Enhancements Applied:**
+1. **Workflow Mode Display**: Updated to show actual workflow mode (In Review → Ready to Publish → Publish) instead of generic "Holiday-based"
+2. **SMS Provider → Link Field**: Replaced "SMS Provider" field with "Link" field showing SMS link value or "No Link Provided"
+3. **Next Scheduled Run**: Added calculated next holiday run using same logic as email agents, showing upcoming holiday name and date
+
+**Changes Made:**
+
+**1. Holiday Calculation Logic Extension (✅ COMPLETED):**
+- Modified getNextScheduledHoliday function to support both email and SMS agents
+- Function now works for agent_type === 'email' OR agent_type === 'sms_agent'
+- Reuses existing holiday calculation logic for consistency
+
+**2. SMS Agent Dashboard Display Updates (✅ COMPLETED):**
+- **Workflow Mode**: Now shows actual workflow mode (getWorkflowMode(agent)) instead of "Holiday-based"
+- **Link Field**: Replaced "SMS Provider" with "Link" showing agent.sms_link or "No Link Provided"
+- **Next Scheduled Run**: Added Row 3 for holiday-based SMS agents showing:
+  - Label: Dynamic holiday name (e.g., "Christmas Day 2025") or "Next Scheduled Run"
+  - Value: Formatted date and time (e.g., "Dec 25th, 2025 at 9:00 AM")
+
+**3. Display Logic (✅ COMPLETED):**
+- Next Scheduled Run only appears for holiday-based SMS agents (mode === 'recurring' with selected_holidays)
+- Uses same date formatting as email agents: "Nov 23rd, 2025 at 9:00 AM"  
+- Shows holiday name as field label for better user experience
+- Handles edge cases: no holidays selected, loading state, no upcoming holidays
+
+**Expected Results:**
+- SMS scheduled agents show proper workflow mode instead of generic "Holiday-based"
+- Link field displays SMS link URL or "No Link Provided" message
+- Next Scheduled Run shows calculated upcoming holiday with proper formatting
+- Consistent experience with email agent holiday display
+
+**Status:** ALL SMS DASHBOARD ENHANCEMENTS COMPLETED ✅
+
+## LATEST FIXES - SMS Agent Issues (COMPLETED ✅)
 
 **Issues Being Fixed:**
 1. **SMS Agent Dashboard Display**: Fixed getModeLabel function in AIAgentsDashboard.jsx to correctly display mode for SMS scheduled agents
