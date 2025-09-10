@@ -1134,6 +1134,91 @@ Content: "We hope this message finds you, Molly, and Dolly in great spirits as w
 ✅ Blue theme button colors (#29add3) consistently applied
 
 backend:
+  - task: "SMS Agent Holiday Context Integration - Agent Creation"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ SMS Agent Creation with Holidays: SMS agents can be created with selected holidays (Christmas 2025, Thanksgiving 2025). Agent type correctly set to 'sms_agent', mode set to 'recurring', selected holidays properly stored in database. All required SMS agent fields working."
+
+  - task: "SMS Agent Holiday Calculation Logic"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ Holiday Calculation Logic: Backend correctly fetches holiday data from database, holiday date parsing working, next upcoming holiday calculation working (Thanksgiving 2025 selected over Christmas 2025), holiday sorting by date working. Same logic as email agents - consistent implementation."
+
+  - task: "SMS Agent Manual Run with Holiday Context"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ SMS Agent Manual Run: SMS agents can be run manually via API, posts created in database with status 'in_review', agent type correctly set to 'sms_agent', SMS template and link fields populated. Minor: Backend bug - API doesn't return post_id but post is created successfully."
+
+  - task: "SMS Holiday-Specific Content Generation"
+    implemented: true
+    working: false
+    file: "backend/ai_service.py"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL: AI service integration failure - LlmChat.__init__() missing 2 required positional arguments: 'session_id' and 'system_message'. Holiday-specific content generation not working, falls back to generic template instead of ChatGPT-generated holiday content. Holiday context passed correctly but AI service fails."
+
+  - task: "SMS Template Placeholder Support"
+    implemented: true
+    working: false
+    file: "backend/server.py"
+    stuck_count: 1
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: "❌ SMS Template Placeholder Issues: Missing [PET_NAME] and [LINK] placeholders in generated template. [CUSTOMER_NAME] placeholder present, SMS link field correctly populated. Impact: Mass SMS sending may not have complete personalization."
+
+  - task: "SMS Agent Backend API Response"
+    implemented: true
+    working: false
+    file: "backend/server.py"
+    stuck_count: 1
+    priority: "low"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: "❌ Backend API Response Bug: /api/ai-agents/{id}/run endpoint doesn't return post_id in response. Post is created successfully in database. Impact: Frontend may not be able to redirect to generated post."
+
+  - task: "SMS Agent Edge Case Handling"
+    implemented: true
+    working: false
+    file: "backend/server.py"
+    stuck_count: 1
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: "❌ Edge Case Handling: SMS agents with no holidays selected return 404 on run (should handle gracefully), SMS agents with invalid holiday IDs return 404 on run (should handle gracefully). Poor error handling for edge cases."
+
+backend:
   - task: "SMS Agent Backend Model Enhancement - sms_link Field"
     implemented: true
     working: true
