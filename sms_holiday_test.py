@@ -370,15 +370,20 @@ class SMSHolidayTester:
             # Run the SMS agent manually
             response = requests.post(f"{self.api_base}/ai-agents/{agent_id}/run", headers=self.headers)
             
+            print(f"Agent run response: {response.status_code}")
+            print(f"Response content: {response.text[:500]}")
+            
             if response.status_code == 200:
                 run_result = response.json()
                 post_id = run_result.get('post_id')
+                
+                print(f"Run result: {run_result}")
                 
                 if post_id:
                     self.created_posts.append(post_id)
                     
                     # Wait a moment for post generation to complete
-                    await asyncio.sleep(3)
+                    await asyncio.sleep(5)  # Increased wait time
                     
                     # Check the generated post
                     post_doc = await self.db.ai_posts.find_one({"id": post_id})
@@ -424,7 +429,7 @@ class SMSHolidayTester:
                     self.log_test_result(
                         "SMS Agent Manual Run",
                         False,
-                        "No post_id returned from agent run"
+                        f"No post_id returned from agent run. Response: {run_result}"
                     )
                     return None
             else:
