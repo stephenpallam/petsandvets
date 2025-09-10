@@ -793,6 +793,9 @@ class EmailHolidayAgentTester:
             # Test 6: Email vs SMS Consistency
             test_results.append(await self.test_email_vs_sms_consistency())
             
+            # Test 7: API Endpoints
+            test_results.append(await self.test_api_endpoints_for_email_agents())
+            
             # Summary
             print("=" * 80)
             print("🎯 EMAIL HOLIDAY AGENT DASHBOARD DISPLAY TEST SUMMARY")
