@@ -1316,8 +1316,8 @@ const AIAgentsDashboard = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          {/* Header - Make this section sticky */}
-          <div className="sticky top-16 z-40 px-4 sm:px-6 py-4 bg-gray-50 border-b border-gray-200 shadow-sm">
+          {/* Header */}
+          <div className="px-4 sm:px-6 py-4 bg-gray-50 border-b border-gray-200">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div className="flex items-center space-x-3">
                 <BarChart3 className="h-8 w-8 text-blue-600 flex-shrink-0" />
