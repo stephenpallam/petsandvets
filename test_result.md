@@ -1206,11 +1206,14 @@ backend:
     file: "backend/server.py"
     stuck_count: 1
     priority: "low"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: false
         agent: "testing"
         comment: "❌ Backend API Response Bug: /api/ai-agents/{id}/run endpoint doesn't return post_id in response. Post is created successfully in database. Impact: Frontend may not be able to redirect to generated post."
+      - working: false
+        agent: "testing"
+        comment: "❌ CONFIRMED: Manual run API still has issues - 'Body' object has no attribute 'get' error. SMS posts are created successfully in database with correct status 'in_review' and agent_type 'sms_agent', but API endpoint has implementation bug preventing proper response. Core SMS generation working, API wrapper needs fix."
 
   - task: "SMS Agent Edge Case Handling"
     implemented: true
