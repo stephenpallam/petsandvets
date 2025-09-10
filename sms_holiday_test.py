@@ -352,9 +352,19 @@ class SMSHolidayTester:
         
         return upcoming_holiday
     
-    async def test_sms_agent_manual_run(self, agent_id):
+    async def test_sms_agent_manual_run(self, agent_result):
         """Test 3: SMS Agent Manual Run with Holiday Context"""
         print("\n=== TEST 3: SMS AGENT MANUAL RUN WITH HOLIDAY CONTEXT ===")
+        
+        if not agent_result:
+            self.log_test_result(
+                "SMS Agent Manual Run",
+                False,
+                "No agent result provided"
+            )
+            return None
+        
+        agent_id = agent_result.get('id')
         
         try:
             # Run the SMS agent manually
