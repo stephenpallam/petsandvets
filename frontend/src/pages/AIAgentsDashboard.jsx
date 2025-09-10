@@ -3150,7 +3150,7 @@ const AIAgentsDashboard = () => {
                               {getWorkflowMode(selectedAgent)}
                             </p>
                           </div>
-                          {selectedAgent.use_web_research !== undefined && selectedAgent.agent_type !== 'email' && (
+                          {selectedAgent.use_web_research !== undefined && selectedAgent.agent_type !== 'email' && selectedAgent.agent_type !== 'sms_agent' && (
                             <div>
                               <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Web Research</label>
                               <p className="text-sm text-gray-900 mt-1">
