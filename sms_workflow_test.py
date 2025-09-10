@@ -417,6 +417,12 @@ class SMSWorkflowTester:
                 template="Check out our services: [LINK] - perfect for [CUSTOMER_NAME] and [PET_NAME]"
             )
             
+            # Remove the sms_link field to test default behavior
+            await self.db.ai_agents.update_one(
+                {"id": agent_no_link["id"]},
+                {"$unset": {"sms_link": ""}}
+            )
+            
             post_id_2 = await generate_sms_for_agent(agent_no_link["id"], agent_no_link)
             
             # Check both posts
