@@ -24,6 +24,7 @@ import {
   Hash
 } from 'lucide-react';
 import { formatDate, formatScheduledDate } from '../utils/dateUtils';
+import SMSContentPreview from '../components/SMSContentPreview';
 
 const AIReadyToPublish = () => {
   const { user, token, isAdmin, canAccessManager, loading: authLoading } = useAuth();
