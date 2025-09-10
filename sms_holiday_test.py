@@ -244,17 +244,26 @@ class SMSHolidayTester:
             )
             return None
     
-    async def test_holiday_calculation_logic(self, agent_id, holiday_map):
+    async def test_holiday_calculation_logic(self, agent_result, holiday_map):
         """Test 2: Holiday Calculation Logic"""
         print("\n=== TEST 2: HOLIDAY CALCULATION LOGIC ===")
         
-        # Get agent data from database
-        agent_doc = await self.db.ai_agents.find_one({"id": agent_id})
+        if not agent_result:
+            self.log_test_result(
+                "Holiday Calculation Logic",
+                False,
+                "No agent result provided"
+            )
+            return None
+        
+        agent_id = agent_result.get('id')
+        agent_doc = agent_result.get('agent_data')
+        
         if not agent_doc:
             self.log_test_result(
                 "Holiday Calculation Logic",
                 False,
-                "Agent not found in database"
+                "Agent data not found"
             )
             return None
         
