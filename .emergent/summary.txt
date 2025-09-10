@@ -1,64 +1,110 @@
 <analysis>
-The previous AI engineer's work centered on a significant feature expansion: the introduction of a new SMS Agent Type for the AI Pets and Vets application, designed to mirror the functionality of existing email agents. This encompassed a full-stack implementation, beginning with backend model definitions (adding  enum and extending Pydantic models), integrating Twilio for SMS sending, and weaving SMS posts into the existing content approval workflow. Backend testing confirmed a 92.9% success rate for the core functionality.
+The AI engineer's work primarily focused on expanding the AI Pets and Vets application with a new **SMS Agent Type**, mirroring existing email agent functionality. This involved extensive full-stack development, from backend model and API integration (Twilio for SMS,  enum, Pydantic model extensions) to comprehensive frontend UI enhancements (, , ).
 
-Frontend development focused on creating dedicated SMS agent configuration forms () for Scheduled, Recurring, and Write modes. Throughout this, the engineer iteratively refined the UI based on user feedback, enhancing elements like holiday selectors, converting dropdowns to checkboxes for recipient selection, and establishing a centralized SMS Configuration page () with corresponding backend APIs and navigation. Consistent styling was applied across configuration pages and agent types. The engineer also addressed several bugs, including fixing dashboard display inconsistencies for SMS agents and adding a Website Link field to all SMS forms. The current task is debugging dashboard display labels and disabled edit mode tabs for SMS agents.
+Throughout the trajectory, the engineer iteratively addressed user feedback, including critical bug fixes for dashboard display labels (e.g., correct mode identification, next run dates), enabling disabled edit mode tabs, implementing a holiday-based automatic SMS scheduler, and fixing placeholder replacement across content review and publishing pages. Significant effort was also put into refining UI elements like customer data integration in SMS previews and ensuring consistent behavior between email and SMS agent types, notably resolving duplicate email subject lines. The sticky header functionality, however, proved challenging and was ultimately rolled back to its original state.
 </analysis>
 
 <product_requirements>
-The AI Pets and Vets application automates content for Timesheet, Social Media, and Email AI agents. The primary product requirement is the implementation of a new **SMS Agent Type**, functionally analogous to the Email Agent, offering Scheduled (holiday-based), Recurring (topic-based), and Write Your SMS modes. This new agent should utilize short SMS templates with customer placeholders, integrate with Twilio and SendGrid SMS APIs (with Twilio as the primary sender), and leverage existing customer phone numbers, supporting ChatGPT for content generation.
+The AI Pets and Vets application aims to automate content for Timesheet, Social Media, and Email AI agents. The core requirement was to introduce an **SMS Agent Type** with Scheduled (holiday-based), Recurring (topic-based), and Write Your SMS modes. This agent needed to support short SMS templates with customer placeholders, integrate Twilio (primary sender) and SendGrid, and leverage existing customer phone numbers with ChatGPT for content generation.
 
-Key UI/UX requirements for SMS agents included Send Immediately workflow options, clear labels and single-customer search for bulk/single SMS selection, checkboxes for SMS type, and a combined Scheduled Date and Send Time field. A centralized SMS Configuration page, similar to Email Configuration, was mandated for managers to set SMS provider credentials, removing provider selection from individual agent forms. A Website Link field (defaulting to ) that integrates a  placeholder into SMS content was also requested. Current issues involve correcting SMS agent labels on the dashboard and enabling edit mode forms.
+UI/UX requirements included Send Immediately options, clear labels, single-customer search, checkbox-based SMS type, a combined Scheduled Date and Send Time, and a centralized SMS Configuration page. A Website Link field defaulting to  with a  placeholder was also essential. Iterative refinements addressed: correcting SMS agent dashboard labels and modes, enabling edit mode forms, ensuring Next Scheduled Run accuracy for holiday-based agents, implementing automatic holiday-based SMS scheduling, fixing In Review page errors (map undefined, placeholder display), integrating real customer data for previews, and resolving duplicate email subject generation across all email agent types.
 </product_requirements>
 
 <key_technical_concepts>
-- Full-stack Architecture: React, FastAPI, MongoDB.
-- AI Agent System: Modular agents for various content types (Timesheet, Social Media, Email, SMS).
+- Full-stack Architecture: React (Frontend), FastAPI (Backend), MongoDB (Database).
+- AI Agent System: Modular agents (Timesheet, Social Media, Email, SMS).
 - Data Management: Pydantic for backend data validation, MongoDB for persistence.
 - UI/UX: React components for dynamic, conditional rendering and form management.
 - LLM Integration: OpenAI's gpt-4o-mini via Emergent integrations for content generation.
-- Third-Party APIs: Twilio for SMS delivery, SendGrid supported via Twilio.
+- Third-Party APIs: Twilio for SMS delivery, SendGrid for SMS.
+- Scheduled Tasks: Python-based background schedulers.
 </key_technical_concepts>
 
 <code_architecture>
 
 
 - ****:
-    - **Importance**: Handles core backend logic, FastAPI endpoints, Pydantic models, and agent execution.
-    - **Changes**: Added  to  enum. Extended  and  models for SMS fields (, , , , , ). Implemented SMS generation () and sending () functions. Integrated SMS with  collection and validation. Introduced  model and corresponding CRUD API endpoints (, ).
+    - **Importance**: Core backend logic, FastAPI endpoints, Pydantic models, agent execution, and scheduling.
+    - **Summary of changes**:
+        - Integrated  into  enum.
+        - Extended  and  Pydantic models with SMS-specific fields (, , , , , ).
+        - Implemented  (now handles holiday context) and  functions.
+        - Integrated SMS with  collection, including validation and storing .
+        - Added  model and corresponding CRUD API endpoints.
+        - Modified  to include  placeholder replacement.
+        - Implemented a  to automatically create scheduled SMS posts based on upcoming holidays.
+        - Modified  to generate content and send SMS for scheduled SMS posts when their time arrives.
+        - Fixed AI service call within  to use specific SMS generation.
+        - Updated ChatGPT prompts for holiday and recurring email generation (, ) to explicitly exclude subject lines from the generated content, resolving duplicate subject issues.
 - ****:
-    - **Importance**: Contains AI logic for content generation.
-    - **Changes**: Added  to the  class to create SMS content using LLMs.
+    - **Importance**: Contains AI logic for content generation using LLMs.
+    - **Summary of changes**:
+        - Added  to  to create SMS content using LLMs.
+        - Fixed  initialization in  to pass  and .
+        - Corrected message format and usage extraction in .
+        - Modified ChatGPT prompt for write your email mode to exclude subject generation and start directly with a greeting.
 - ****:
     - **Importance**: Manages primary application routing.
-    - **Changes**: Imported  and added its route ().
+    - **Summary of changes**: Imported  and added its route ().
 - ****:
-    - **Importance**: Provides site-wide navigation, especially for admin/manager tools.
-    - **Changes**: Added SMS Configuration link to both admin and manager navigation dropdowns.
+    - **Importance**: Provides site-wide navigation.
+    - **Summary of changes**: Added SMS Configuration link to admin and manager navigation dropdowns.
 - ****:
     - **Importance**: Main interface for configuring all AI agents.
-    - **Changes**: Extensive updates to support SMS agents, including new forms, state variables, tab handling, data fetching, saving, and edit mode prepopulation. Implemented UI improvements: Send Immediately options, checkbox-based SMS type selection, single customer search, / pairing (later  removed for some modes), and a Website Link field with default value and  placeholder. Also styled holiday selection for Email Scheduled agents and days-of-week for Email Recurring agents to match SMS agent styles.  selection was removed from these forms.
+    - **Summary of changes**:
+        - Extensive updates to support SMS agents (forms, state variables, tab handling, data fetching, saving, edit mode prepopulation).
+        - Added missing SMS agent case in the tab mapping logic to correctly set  for SMS modes in edit mode, resolving disabled tabs.
+        - Implemented UI improvements (e.g., Send Immediately, checkbox-based SMS type, single customer search, Website Link field).
 - ****:
     - **Importance**: Dashboard for viewing and managing AI agents.
-    - **Changes**: Updated to correctly display SMS agent types and modes, addressing previous mislabeling. Further fixes are ongoing for mode labels.
+    - **Summary of changes**:
+        - Updated  to correctly display the mode for SMS scheduled agents by passing  and  parameters.
+        - Added dedicated display logic for SMS agents (scheduled, recurring, write modes).
+        - Updated display for both SMS and email scheduled agents to show SMS Will Be Sent To / Email Will Be Sent To and calculated Next Scheduled Run.
+        - Added display for Next Scheduled Run and Last Manual Run for topic-based recurring email and social media agents.
+        - Removed old Next Scheduled Run: No days selected section.
+        - Switched positions of Last Manual Run and Next Scheduled Run for scheduled SMS agents.
+        - Fixed  to handle email agents with holidays as Scheduled Mode.
+        - Added Next Scheduled Run section back for email agents with holidays.
+        - Corrected field name mismatch for Last Manual Run (from / to ).
+        - Added specific display logic for  mode SMS agents, including SMS recipients, link, workflow mode, ChatGPT formatting, and content template.
+        - Updated modal display logic to exclude Social Media Platforms and Web Research for SMS agents, and added Link field.
+        - Renamed Content Preview to SMS Content Preview for SMS agents.
+        - Modified conditional logic for display sections to explicitly exclude  where social media platforms or generic post titles were shown.
+        - Added Use ChatGPT SMS Formatting field to SMS agent display.
+        - Added SMS Agent Type to the filter dropdown.
+        - Attempted to implement a sticky header, but these changes were ultimately rolled back to the original state due to user feedback.
 - ****: (New file)
     - **Importance**: Centralized manager interface for SMS provider settings.
-    - **Changes**: Created with tabs for General Settings, SMS Provider (Twilio/SendGrid credentials), and Test & Verify. Styled to mirror  for consistency.
+    - **Summary of changes**: Created with tabs for General Settings, SMS Provider (Twilio/SendGrid credentials), and Test & Verify.
+- ****:
+    - **Importance**: Page for reviewing posts before publication.
+    - **Summary of changes**:
+        - Added safety check  to prevent  errors for SMS posts.
+        - Created and integrated  component to display a personalized SMS preview using real customer data, resolving raw placeholder display.
+        - Enhanced customer, pet, and phone number detection to handle paginated API responses and various field formats.
+- ****:
+    - **Importance**: Page for posts ready for publication.
+    - **Summary of changes**:
+        - Added safety check  to prevent  errors for SMS posts.
+        - Integrated  component to provide personalized SMS content preview.
+- ****:
+    - **Importance**: Page for viewing published posts.
+    - **Summary of changes**:
+        - Added safety check  to prevent  errors for SMS posts.
+        - Integrated  component to provide personalized SMS content preview.
 </code_architecture>
 
 <pending_tasks>
-- **Fix SMS Agent Dashboard Display**: Rectify the  function in  to correctly display the mode for SMS scheduled agents.
-- **Fix SMS Agent Edit Mode**: Address the issue where SMS agent configuration tabs are disabled when an agent is in edit mode on .
-- **Backend SMS Link Placeholder**: Update backend SMS generation to replace the  placeholder with the actual URL from the  field.
+- Re-implement sticky header functionality for the AI Agents Dashboard section, ensuring it sticks below the main website header without covering other content or having a gap, adhering to precise user requirements.
 </pending_tasks>
 
 <current_work>
-Immediately prior to this summary, the AI engineer was actively working on resolving two user-reported issues concerning the newly implemented SMS agent type:
-1.  **Dashboard Display Incorrect Labels**: Scheduled SMS agents were displaying incorrect labels, specifically Recurring Mode Agent for their mode and Social Media for their agent type on the .
-2.  **Edit Mode Tabs Disabled**: When attempting to edit an existing SMS agent through , all configuration tabs within the form were disabled, preventing any modifications.
+Immediately prior to this summary, the AI engineer was addressing a user-reported issue concerning **duplicate subject lines** in email agent posts, specifically for holiday and recurring email agents. The user observed that the Email Subject field (from user input) and a Subject: line embedded within the email content itself were both present in generated posts. The user sought confirmation that only the explicit Email Subject would be used for sending, and the duplicate one in the content would be ignored or not generated.
 
-The engineer diagnosed the first issue, identifying that the agent type check within  (specifically in the  function) was not correctly identifying the  type. A fix was applied to address the general agent type mislabeling. The engineer's very next, in-progress step is to refine the  function in  to accurately reflect the mode (e.g., Scheduled instead of Recurring) for SMS scheduled agents. The second issue, regarding disabled tabs in edit mode, is yet to be addressed but is recognized as a pending task.
+The engineer investigated and confirmed that the backend email sending process indeed only utilizes the dedicated Email Subject: field, while any Subject: text within the content is merely redundant visual clutter. To fix this, the ChatGPT formatting prompts for both holiday and recurring email generation functions ( and  in  or  as they pass prompts to LLM) were updated. The modified prompts now explicitly instruct ChatGPT to **exclude any subject line or Subject: text** from the generated email content and to start directly with the greeting. This ensures consistency across all email agent types, providing a clean email content body without duplicate subjects.
 </current_work>
 
 <optional_next_step>
-Update the  function in  to correctly display the mode for SMS scheduled agents.
+Address the pending sticky header implementation, ensuring it meets user's exact specifications.
 </optional_next_step>

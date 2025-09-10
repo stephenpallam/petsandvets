@@ -43,7 +43,7 @@ class SMSAgentDebugger:
         self.client = None
         self.db = None
         self.test_results = []
-        self.backend_url = os.environ.get('FRONTEND_URL', 'https://smart-sms-1.preview.emergentagent.com')
+        self.backend_url = os.environ.get('FRONTEND_URL', 'https://vetssms.preview.emergentagent.com')
         
     async def connect(self):
         """Connect to MongoDB"""

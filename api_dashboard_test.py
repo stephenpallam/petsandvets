@@ -41,7 +41,7 @@ class APIDashboardTester:
                         self.backend_url = line.split('=', 1)[1].strip()
                         break
         else:
-            self.backend_url = "https://smart-sms-1.preview.emergentagent.com"
+            self.backend_url = "https://vetssms.preview.emergentagent.com"
         
         self.api_url = f"{self.backend_url}/api"
         

@@ -2,5 +2,5 @@ MONGO_URL="mongodb://localhost:27017"
 DB_NAME="animal_hospital_db"
 CORS_ORIGINS="*"
 JWT_SECRET_KEY="your-very-secret-jwt-key-change-this-in-production"
-FRONTEND_URL="https://smart-sms-1.preview.emergentagent.com"
+FRONTEND_URL="https://vetssms.preview.emergentagent.com"
 EMERGENT_LLM_KEY=sk-emergent-9778d9c09Fa02D6D8F

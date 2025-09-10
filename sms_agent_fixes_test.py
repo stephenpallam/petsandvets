@@ -16,7 +16,7 @@ from datetime import datetime, date
 from pathlib import Path
 
 # Backend URL from environment
-BACKEND_URL = "https://smart-sms-1.preview.emergentagent.com/api"
+BACKEND_URL = "https://vetssms.preview.emergentagent.com/api"
 
 class SMSAgentFixesTester:
     def __init__(self):
