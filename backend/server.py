@@ -5566,18 +5566,28 @@ async def send_mass_emails_from_post(post_id: str, post_data: dict):
                         # Fallback to basic formatting
                         personalized_content = f"Dear {customer_name},\n\n{personalized_content}\n\nWarm regards,\nThe Veterinary Care Team"
                 
-                # TODO: Actually send email here using email service
-                # For now, just log the email that would be sent
-                logger.info(f"Would send email to {customer_email} for {customer_name} with pets: {pet_names}")
+                # Use the email service to send the actual email
+                # The email_subject field is used for the actual email subject line
+                personalized_subject = email_subject.replace('[CUSTOMER_NAME]', customer_name)
+                personalized_subject = personalized_subject.replace('[PET_NAME]', pet_names)
+                personalized_subject = personalized_subject.replace('[PET_NAMES]', pet_names)
                 
-                # In a real implementation, this would use an email service like:
-                # await send_email(
-                #     to=customer_email,
-                #     subject=f"Special message for {customer_name}",
-                #     content=personalized_content
-                # )
-                
-                emails_sent += 1
+                # Send email using the email service
+                try:
+                    success = await email_service.send_email(
+                        to_email=customer_email,
+                        subject=personalized_subject,
+                        html_content=personalized_content
+                    )
+                    if success:
+                        logger.info(f"Successfully sent email to {customer_email} for {customer_name}")
+                        emails_sent += 1
+                    else:
+                        logger.warning(f"Failed to send email to {customer_email} for {customer_name}")
+                        emails_failed += 1
+                except Exception as email_error:
+                    logger.error(f"Email service error for {customer_email}: {str(email_error)}")
+                    emails_failed += 1
                 
             except Exception as customer_error:
                 logger.error(f"Failed to send email to customer {customer.get('name', 'Unknown')}: {str(customer_error)}")
