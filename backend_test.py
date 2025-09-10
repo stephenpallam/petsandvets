@@ -1,19 +1,22 @@
 #!/usr/bin/env python3
 """
-SMS Agent AI Service Integration Test
+Customer Data Investigation Test for SMS Preview Issue
 
-This test verifies the AI service fix for SMS generation that was just implemented.
-Specifically tests:
-1. LlmChat initialization works correctly with session_id and system_message parameters
-2. SMS content generation works without initialization errors
-3. Holiday-based SMS content generation with the new AI service fix
-4. SMS content stays within 160-character limit
-5. Holiday-specific SMS generation
+This test investigates the customer data issue where SMS preview shows 
+"No customers found in database" when user reports there is one customer.
+
+Investigation Focus:
+1. Check Customer Collections - Look for customers in different possible collection names
+2. Verify Customer Data Structure - Check the actual structure of customer records  
+3. Test Customer API Endpoint - Test if GET /api/customers endpoint exists and works
+4. Check Alternative Customer Endpoints - Look for other customer-related endpoints
+5. Test Customer Database Query - Run direct database queries to find customer data
 
 Expected Results:
-- No more "LlmChat.__init__() missing arguments" errors
-- SMS content should generate successfully
-- Holiday-based SMS agents should work with proper holiday context
+- Should find where customer data is stored
+- Should identify the correct API endpoint for customer data
+- Should find the customer record that user mentioned
+- Should determine why frontend can't access customer data
 """
 
 import asyncio
