@@ -669,6 +669,11 @@ class SMSHolidayTester:
         try:
             await self.connect()
             
+            # Authenticate first
+            if not await self.authenticate():
+                print("❌ Authentication failed. Cannot proceed with tests.")
+                return
+            
             # Step 1: Get available holidays
             holiday_map = await self.get_available_holidays()
             
