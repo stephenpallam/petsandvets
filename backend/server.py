@@ -5690,8 +5690,8 @@ async def send_mass_sms_from_post(post_id: str, post_data: dict):
                     sms_failed += 1
                     continue
                 
-                # Get customer data
-                customer_name = customer.get('name', 'Valued Customer')
+                # Get customer data using new helper function
+                customer_name = get_customer_full_name(customer)
                 
                 # Handle pet names (support both pets array and pet_name field)
                 pets = customer.get('pets', [])
