@@ -183,13 +183,14 @@ class MarketingAgentTester:
             marketing_agent_data = {
                 "agent_type": "marketing_agent",
                 "agent_name": "Test Marketing Campaign",
+                "mode": "write",  # Required field - using write mode for marketing campaigns
                 "marketing_content_type": "topic",
                 "topic": "Pet Health Tips",
                 "marketing_channels": ["email", "sms"],
-                "marketing_email_personalization": True,
-                "email_content_template": "Test email template with [CUSTOMER_NAME] and [PET_NAME]",
-                "marketing_sms_personalization": True,
-                "sms_template": "Test SMS for [CUSTOMER_NAME] about [PET_NAME]",
+                "marketing_email_personalized": True,  # Fixed field name
+                "marketing_email_template": "Test email template with [CUSTOMER_NAME] and [PET_NAME]",  # Fixed field name
+                "marketing_sms_personalized": True,  # Fixed field name
+                "marketing_sms_template": "Test SMS for [CUSTOMER_NAME] about [PET_NAME]",  # Fixed field name
                 "marketing_link": "https://petsandvetsanimalhospital.com/campaign",
                 "post_date": "2025-01-15",
                 "post_time": "09:00",
