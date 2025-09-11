@@ -10035,8 +10035,11 @@ async def get_customers(
     customers_cursor = db.customers.find(query).sort([("first_name", 1), ("last_name", 1)]).skip(skip).limit(limit)
     customers = await customers_cursor.to_list(length=limit)
     
-    # Convert to Customer objects
-    customer_list = [Customer(**customer) for customer in customers]
+    # Convert to Customer objects with legacy data conversion
+    customer_list = []
+    for customer in customers:
+        converted_customer = convert_legacy_customer_data(customer)
+        customer_list.append(Customer(**converted_customer))
     
     return {
         "customers": customer_list,
