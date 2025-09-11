@@ -2227,6 +2227,8 @@ Best regards,
               </div>
             )}
 
+            {/* Content Area */}
+            <>
             {/* Tab Navigation - Only show if tabs exist */}
             {tabs.length > 0 && (
             <div className="border border-gray-200 rounded-lg mb-4 sm:mb-6">
