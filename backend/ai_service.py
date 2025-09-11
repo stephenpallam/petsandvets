@@ -112,6 +112,72 @@ Hashtags: [comma-separated hashtags without # symbol]
             logger.error(f"Error formatting custom content: {str(e)}")
             raise Exception(f"Failed to format content: {str(e)}")
 
+    def _get_platform_characteristics(self, platform: str) -> Dict[str, str]:
+        """Get platform-specific characteristics for content generation"""
+        platform_map = {
+            'facebook': {
+                'name': 'Facebook',
+                'description': 'longer form content with personal engagement',
+                'tone': 'conversational and community-focused tone',
+                'format': 'longer paragraphs with story-telling elements',
+                'hashtag_style': 'moderate use of hashtags (3-5)',
+                'hashtag_instruction': 'Include 3-5 strategic hashtags',
+                'hashtag_count': '3-5 hashtags',
+                'length_guide': 'can be up to 400+ characters',
+                'title_length': '5-10 words max',
+                'special_requirements': '- Encourage engagement with questions\n- Use emojis sparingly\n- Include call-to-action for comments'
+            },
+            'instagram': {
+                'name': 'Instagram',
+                'description': 'visual-first platform with hashtag optimization',
+                'tone': 'trendy and visually appealing tone',
+                'format': 'shorter captions with strong visual appeal',
+                'hashtag_style': 'heavy hashtag use (8-15 hashtags)',
+                'hashtag_instruction': 'Include 8-15 relevant hashtags for maximum reach',
+                'hashtag_count': '8-15 hashtags',
+                'length_guide': 'keep captions under 300 characters for better engagement',
+                'title_length': '3-6 words max',
+                'special_requirements': '- Optimize for visual storytelling\n- Use trending hashtags when relevant\n- Include location-based hashtags if applicable'
+            },
+            'twitter': {
+                'name': 'Twitter/X',
+                'description': 'concise, timely content with trending elements',
+                'tone': 'concise and direct tone',
+                'format': 'very short, punchy content',
+                'hashtag_style': 'minimal hashtag use (1-3)',
+                'hashtag_instruction': 'Include 1-3 highly relevant hashtags',
+                'hashtag_count': '1-3 hashtags',
+                'length_guide': 'must be under 280 characters total',
+                'title_length': '2-4 words max',
+                'special_requirements': '- Keep it under 280 characters\n- Use trending topics when relevant\n- Include @mentions if applicable'
+            },
+            'whatsapp': {
+                'name': 'WhatsApp',
+                'description': 'personal, direct communication style',
+                'tone': 'personal and conversational tone',
+                'format': 'message-like format with personal touch',
+                'hashtag_style': 'minimal or no hashtags',
+                'hashtag_instruction': 'Use 1-3 hashtags only if highly relevant',
+                'hashtag_count': '0-3 hashtags',
+                'length_guide': 'keep messages conversational and not too long',
+                'title_length': '3-5 words max',
+                'special_requirements': '- Write like a personal message\n- Include practical tips\n- Use friendly, approachable language'
+            }
+        }
+        
+        return platform_map.get(platform.lower(), {
+            'name': 'Social Media',
+            'description': 'general social media platform',
+            'tone': 'professional and engaging tone',
+            'format': 'standard social media format',
+            'hashtag_style': 'moderate hashtag use',
+            'hashtag_instruction': 'Include 3-5 relevant hashtags',
+            'hashtag_count': '3-5 hashtags',
+            'length_guide': 'moderate length content',
+            'title_length': '5-8 words max',
+            'special_requirements': '- Keep content engaging and informative'
+        })
+
     async def generate_social_media_content(
         self,
         topic: str,
