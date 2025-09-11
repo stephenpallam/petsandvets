@@ -1569,6 +1569,15 @@ Best regards,
     return errors;
   };
 
+  // Handle save for all agent types
+  const handleSave = async (runAfterSave = false) => {
+    if (runAfterSave) {
+      await saveAndRunAgent();
+    } else {
+      await saveAgent();
+    }
+  };
+
   const saveAgent = async () => {
     setLoading(true);
     
