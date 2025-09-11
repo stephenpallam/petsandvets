@@ -4222,6 +4222,21 @@ class AIAgent(BaseModel):
     selected_sms_customer: Optional[str] = ""  # Customer ID for single SMS
     sms_character_limit: Optional[int] = 160  # SMS character limit
     sms_link: Optional[str] = "https://petsandvetsanimalhospital.com"  # Link for [LINK] placeholder replacement
+    # Marketing agent specific fields
+    marketing_content_type: Optional[str] = "topic"  # topic, holidays, custom_campaign
+    marketing_selected_topic: Optional[str] = ""  # Selected topic for marketing content
+    marketing_selected_holidays: Optional[List[str]] = []  # Holiday IDs for marketing campaigns
+    marketing_custom_campaign: Optional[str] = ""  # Custom campaign content
+    marketing_channels: Optional[List[str]] = []  # Selected channels: social_media, email, sms
+    marketing_social_platforms: Optional[Dict[str, bool]] = {}  # Social media platforms for marketing
+    marketing_email_personalized: Optional[bool] = True  # Whether to personalize marketing emails
+    marketing_sms_personalized: Optional[bool] = True  # Whether to personalize marketing SMS
+    marketing_email_template: Optional[str] = ""  # Email template for marketing campaigns
+    marketing_sms_template: Optional[str] = ""  # SMS template for marketing campaigns
+    marketing_link: Optional[str] = "https://petsandvetsanimalhospital.com"  # Marketing campaign link
+    marketing_scheduled_date: Optional[str] = None  # Scheduled date for marketing campaign
+    marketing_post_time: Optional[str] = None  # Scheduled time for marketing campaign
+    marketing_workflow_mode: Optional[str] = "in_review"  # in_review, ready_to_publish, auto_publish
     # Agent metadata
     created_at: datetime = Field(default_factory=business_now)
     updated_at: datetime = Field(default_factory=business_now)
