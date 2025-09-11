@@ -10098,7 +10098,8 @@ async def get_customer(
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
     
-    return Customer(**customer)
+    converted_customer = convert_legacy_customer_data(customer)
+    return Customer(**converted_customer)
 
 
 @api_router.put("/customers/{customer_id}", response_model=Customer)
