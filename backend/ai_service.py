@@ -108,14 +108,17 @@ Hashtags: [comma-separated hashtags without # symbol, {platform_info['hashtag_co
             # Parse response with title
             generated_title_from_response, content, hashtags = self._parse_content_with_title_response(response)
             
+            # Use the optimized title from response if available, otherwise use the generated title
+            final_title = generated_title_from_response if generated_title_from_response else generated_title
+            
             return {
                 "content": content,
                 "hashtags": hashtags,
-                "topic": generated_title,
+                "topic": final_title,
                 "platforms": platforms,
                 "word_count": len(content.split()) if content else 0,
                 "original_title": post_title,
-                "generated_title": generated_title,
+                "generated_title": final_title,
                 "original_content": post_content,
                 "enhanced_with_research": use_web_research
             }
