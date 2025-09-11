@@ -382,6 +382,82 @@ The Veterinary Care Team`,
     postDestination: 'in_review' // 'auto_post', 'in_review', or 'ready_to_publish'
   });
 
+  // Marketing Agent State
+  const [marketingMode, setMarketingMode] = useState({
+    agentName: '',
+    contentType: 'topic', // 'topic', 'holidays', 'custom_campaign'
+    selectedTopic: '',
+    selectedHolidays: [], // Array of holiday IDs
+    customCampaign: `🎉 Special Offer Alert! 🎉
+
+We're excited to announce a limited-time promotion for your furry friends! 
+
+🐾 20% OFF all pet checkups this month
+🐾 FREE nail trimming with any visit
+🐾 Complimentary health consultation
+
+Your pet's health is our priority. Book now to ensure [PET_NAME] gets the best care possible.
+
+📞 Call us at (555) 123-4567
+🌐 Visit: [LINK]
+
+*Offer valid until end of month. Terms and conditions apply.
+
+#PetHealth #VeterinaryCare #SpecialOffer`,
+    
+    // Channel Selection
+    channels: [], // ['social_media', 'email', 'sms']
+    
+    // Social Media Settings
+    socialPlatforms: {
+      facebook: false,
+      instagram: false,
+      twitter: false,
+      whatsapp: false
+    },
+    
+    // Email Settings
+    emailPersonalized: true,
+    emailTemplate: `Subject: Special Offer for [CUSTOMER_NAME] and [PET_NAME]!
+
+Dear [CUSTOMER_NAME],
+
+We hope you and [PET_NAME] are doing well! 
+
+We're excited to share a special offer just for you:
+
+🎉 20% OFF all pet checkups this month
+🎉 FREE nail trimming with any visit  
+🎉 Complimentary health consultation
+
+Your pet's health is our top priority, and we'd love to see [PET_NAME] for a wellness check.
+
+To schedule your appointment:
+📞 Call us at (555) 123-4567
+🌐 Visit our website: [LINK]
+
+Thank you for trusting us with [PET_NAME]'s care!
+
+Best regards,
+Your Veterinary Team`,
+    
+    // SMS Settings  
+    smsPersonalized: true,
+    smsTemplate: `Hi [CUSTOMER_NAME]! 🐾 Special offer for [PET_NAME]: 20% off checkups this month + FREE nail trim! Call (555) 123-4567 or visit [LINK] to book. Limited time only!`,
+    
+    // Campaign Settings
+    marketingLink: 'https://petsandvetsanimalhospital.com',
+    scheduledDate: '',
+    postTime: '09:00',
+    workflowMode: 'in_review', // 'in_review', 'ready_to_publish', 'auto_publish'
+    
+    // Image Options
+    imageOption: 'ai_generate', // 'ai_generate', 'upload', 'reference', 'none'
+    uploadedImages: [],
+    imageText: 'Happy pets getting veterinary care, professional clinic setting',
+    wordCount: '100'
+  });
+
   const [isFormattingContent, setIsFormattingContent] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isRunMode, setIsRunMode] = useState(false);
