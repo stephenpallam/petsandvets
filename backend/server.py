@@ -5765,10 +5765,8 @@ async def send_mass_sms_from_post(post_id: str, post_data: dict):
         raise
 
 async def generate_social_media_post_for_agent(agent_id: str, agent_data: dict):
-    """Generate a social media post for an AI agent"""
+    """Generate platform-specific social media posts for an AI agent"""
     try:
-        # Create initial post record
-        post_id = str(uuid.uuid4())
         now = await business_now_async()
         
         # Extract platforms that are enabled
@@ -5778,196 +5776,214 @@ async def generate_social_media_post_for_agent(agent_id: str, agent_data: dict):
             logger.warning(f"No platforms enabled for agent {agent_id}")
             return
         
-        # Create post record with generating status
-        post_data = {
-            "id": post_id,
-            "agent_id": agent_id,
-            "agent_name": agent_data.get('agent_name', 'AI Agent'),
-            "topic": agent_data.get('custom_topic') if agent_data.get('topic') == 'Custom' else agent_data.get('topic'),
-            "content": "",
-            "image_url": "",
-            "image_text": agent_data.get('image_text', ''),
-            "hashtags": [],
-            "platforms": enabled_platforms,
-            "status": PostStatus.GENERATING,
-            "scheduled_for": None,
-            "published_at": None,
-            "social_media_links": [],
-            "error_message": "",
-            "created_at": now,
-            "updated_at": now
-        }
+        logger.info(f"Generating {len(enabled_platforms)} platform-specific posts for agent {agent_id}: {enabled_platforms}")
         
-        # Insert initial post record
-        await db.ai_posts.insert_one(post_data)
+        # Create separate posts for each platform
+        created_posts = []
         
-        try:
-            # Generate or format content based on mode
-            if agent_data.get('mode') == 'write':
-                # Format custom written content
-                content_result = await ai_service.format_custom_content(
-                    post_title=agent_data.get('post_title', ''),
-                    post_content=agent_data.get('post_content', ''),
-                    word_count=agent_data.get('word_count', '100'),
-                    platforms=enabled_platforms,
-                    use_web_research=agent_data.get('use_web_research', False),
-                    image_text=agent_data.get('image_text')
-                )
-            else:
-                # Generate content using AI service
-                content_result = await ai_service.generate_social_media_content(
-                    topic=agent_data.get('topic'),
-                    word_count=agent_data.get('word_count', '100'),
-                    platforms=enabled_platforms,
-                    custom_topic=agent_data.get('custom_topic'),
-                    image_text=agent_data.get('image_text'),
-                    track_usage=True,
-                    user_id="admin",  # TODO: Get actual user ID
-                    agent_id=agent_id
-                )
-                
-                # Log text generation cost
-                if content_result.get('usage_info') and content_result.get('track_usage'):
-                    usage_info = content_result['usage_info']
-                    track_info = content_result['track_usage']
-                    
-                    cost = calculate_text_cost(
-                        track_info['provider'], 
-                        track_info['model'], 
-                        usage_info.get('prompt_tokens', 0),
-                        usage_info.get('completion_tokens', 0)
-                    )
-                    
-                    await log_ai_usage(
-                        cost_type=CostType.TEXT_GENERATION,
-                        provider=track_info['provider'],
-                        model=track_info['model'],
-                        cost_usd=cost,
-                        user_id=track_info['user_id'],
-                        agent_id=track_info['agent_id'],
-                        tokens_used=usage_info.get('total_tokens', 0),
-                        prompt_tokens=usage_info.get('prompt_tokens', 0),
-                        completion_tokens=usage_info.get('completion_tokens', 0),
-                        request_details={'topic': agent_data.get('topic'), 'word_count': agent_data.get('word_count')}
-                    )
+        for platform in enabled_platforms:
+            post_id = str(uuid.uuid4())
             
-            # Update post with generated content
-            update_data = {
-                "content": content_result.get('content', ''),
-                "hashtags": content_result.get('hashtags', []),
-                "updated_at": await business_now_async()
+            # Create post record with generating status
+            post_data = {
+                "id": post_id,
+                "agent_id": agent_id,
+                "agent_name": agent_data.get('agent_name', 'AI Agent'),
+                "topic": agent_data.get('custom_topic') if agent_data.get('topic') == 'Custom' else agent_data.get('topic'),
+                "content": "",
+                "image_url": "",
+                "image_text": agent_data.get('image_text', ''),
+                "hashtags": [],
+                "platforms": [platform],  # Single platform per post
+                "status": PostStatus.GENERATING,
+                "scheduled_for": None,
+                "published_at": None,
+                "social_media_links": [],
+                "error_message": "",
+                "created_at": now,
+                "updated_at": now
             }
             
-            # Generate image if requested
-            if agent_data.get('image_option') in ['ai_generate', 'reference']:
-                try:
-                    image_result = await ai_service.generate_image(
-                        content=content_result.get('content', ''),
-                        topic=content_result.get('topic', ''),
+            # Insert initial post record
+            await db.ai_posts.insert_one(post_data)
+            created_posts.append({"post_id": post_id, "platform": platform})
+            
+        # Generate content for each platform separately
+        for post_info in created_posts:
+            post_id = post_info["post_id"]
+            platform = post_info["platform"]
+            
+            try:
+                # Generate or format content based on mode - platform-specific
+                if agent_data.get('mode') == 'write':
+                    # Format custom written content for specific platform
+                    content_result = await ai_service.format_custom_content(
+                        post_title=agent_data.get('post_title', ''),
+                        post_content=agent_data.get('post_content', ''),
+                        word_count=agent_data.get('word_count', '100'),
+                        platforms=[platform],  # Single platform
+                        use_web_research=agent_data.get('use_web_research', False),
+                        image_text=agent_data.get('image_text')
+                    )
+                else:
+                    # Generate platform-specific content using AI service
+                    content_result = await ai_service.generate_social_media_content(
+                        topic=agent_data.get('topic'),
+                        word_count=agent_data.get('word_count', '100'),
+                        platforms=[platform],  # Single platform
+                        custom_topic=agent_data.get('custom_topic'),
                         image_text=agent_data.get('image_text'),
-                        size="1024x1024",
-                        quality="standard",
                         track_usage=True,
                         user_id="admin",  # TODO: Get actual user ID
                         agent_id=agent_id
                     )
                     
-                    if image_result and isinstance(image_result, dict):
-                        image_url = image_result.get('image_url')
+                    # Log text generation cost for each platform
+                    if content_result.get('usage_info') and content_result.get('track_usage'):
+                        usage_info = content_result['usage_info']
+                        track_info = content_result['track_usage']
                         
-                        # Log image generation cost
-                        if image_result.get('track_usage'):
-                            track_info = image_result['track_usage']
+                        cost = calculate_text_cost(
+                            track_info['provider'], 
+                            track_info['model'], 
+                            usage_info.get('prompt_tokens', 0),
+                            usage_info.get('completion_tokens', 0)
+                        )
+                        
+                        await log_ai_usage(
+                            cost_type=CostType.TEXT_GENERATION,
+                            provider=track_info['provider'],
+                            model=track_info['model'],
+                            cost_usd=cost,
+                            user_id=track_info['user_id'],
+                            agent_id=track_info['agent_id'],
+                            tokens_used=usage_info.get('total_tokens', 0),
+                            prompt_tokens=usage_info.get('prompt_tokens', 0),
+                            completion_tokens=usage_info.get('completion_tokens', 0),
+                            request_details={
+                                'platform': platform,
+                                'topic': agent_data.get('topic'), 
+                                'word_count': agent_data.get('word_count')
+                            }
+                        )
+                
+                # Update post with generated content
+                update_data = {
+                    "content": content_result.get('content', ''),
+                    "hashtags": content_result.get('hashtags', []),
+                    "updated_at": await business_now_async()
+                }
+                
+                # Generate image if requested (one per platform)
+                if agent_data.get('image_option') in ['ai_generate', 'reference']:
+                    try:
+                        image_result = await ai_service.generate_image(
+                            content=content_result.get('content', ''),
+                            topic=content_result.get('topic', ''),
+                            image_text=agent_data.get('image_text'),
+                            size="1024x1024",
+                            quality="standard",
+                            track_usage=True,
+                            user_id="admin",  # TODO: Get actual user ID
+                            agent_id=agent_id
+                        )
+                        
+                        if image_result and isinstance(image_result, dict):
+                            image_url = image_result.get('image_url')
                             
-                            cost = calculate_image_cost(
-                                track_info['provider'],
-                                track_info['model'],
-                                image_result.get('size', '1024x1024'),
-                                image_result.get('quality', 'standard'),
-                                image_result.get('images_generated', 1)
-                            )
-                            
-                            await log_ai_usage(
-                                cost_type=CostType.IMAGE_GENERATION,
-                                provider=track_info['provider'],
-                                model=track_info['model'],
-                                cost_usd=cost,
-                                user_id=track_info['user_id'],
-                                agent_id=track_info['agent_id'],
-                                images_generated=image_result.get('images_generated', 1),
-                                request_details={
-                                    'size': image_result.get('size', '1024x1024'),
-                                    'quality': image_result.get('quality', 'standard'),
-                                    'topic': content_result.get('topic', '')
-                                }
-                            )
+                            # Log image generation cost for each platform
+                            if image_result.get('track_usage'):
+                                track_info = image_result['track_usage']
+                                
+                                cost = calculate_image_cost(
+                                    track_info['provider'],
+                                    track_info['model'],
+                                    image_result.get('size', '1024x1024'),
+                                    image_result.get('quality', 'standard'),
+                                    image_result.get('images_generated', 1)
+                                )
+                                
+                                await log_ai_usage(
+                                    cost_type=CostType.IMAGE_GENERATION,
+                                    provider=track_info['provider'],
+                                    model=track_info['model'],
+                                    cost_usd=cost,
+                                    user_id=track_info['user_id'],
+                                    agent_id=track_info['agent_id'],
+                                    images_generated=image_result.get('images_generated', 1),
+                                    request_details={
+                                        'platform': platform,
+                                        'size': image_result.get('size', '1024x1024'),
+                                        'quality': image_result.get('quality', 'standard'),
+                                        'topic': content_result.get('topic', '')
+                                    }
+                                )
+                        else:
+                            # Handle legacy return format
+                            image_url = image_result
+                        if image_url:
+                            update_data["image_url"] = image_url
+                    except Exception as img_error:
+                        logger.error(f"Error generating image for post {post_id} (platform: {platform}): {str(img_error)}")
+                        # Continue without image
+                
+                # Handle post destination and scheduling for each platform
+                post_destination = agent_data.get('post_destination', 'in_review')
+                
+                if post_destination == 'auto_post':
+                    # Handle auto post - could be immediate or scheduled
+                    if agent_data.get('mode') == 'adhoc' and agent_data.get('post_date') and agent_data.get('post_time'):
+                        # Scheduled auto post for adhoc mode
+                        scheduled_datetime = await calculate_scheduled_datetime(
+                            agent_data.get('post_date'), 
+                            agent_data.get('post_time')
+                        )
+                        
+                        if scheduled_datetime and scheduled_datetime > await business_now_async():
+                            # Schedule for future publication
+                            update_data["status"] = PostStatus.SCHEDULED
+                            update_data["scheduled_for"] = scheduled_datetime
+                            logger.info(f"Post {post_id} ({platform}) scheduled for {scheduled_datetime} (business timezone)")
+                        else:
+                            # Publish immediately (past time or invalid date)
+                            update_data["status"] = PostStatus.PUBLISHED
+                            update_data["published_at"] = await business_now_async()
+                            logger.info(f"Post {post_id} ({platform}) published immediately (past scheduled time)")
                     else:
-                        # Handle legacy return format
-                        image_url = image_result
-                    if image_url:
-                        update_data["image_url"] = image_url
-                except Exception as img_error:
-                    logger.error(f"Error generating image for post {post_id}: {str(img_error)}")
-                    # Continue without image
-            
-            # Check if agent has auto_post enabled
-            # Handle post destination and scheduling
-            post_destination = agent_data.get('post_destination', 'in_review')
-            
-            if post_destination == 'auto_post':
-                # Handle auto post - could be immediate or scheduled
-                if agent_data.get('mode') == 'adhoc' and agent_data.get('post_date') and agent_data.get('post_time'):
-                    # Scheduled auto post for adhoc mode
-                    scheduled_datetime = await calculate_scheduled_datetime(
-                        agent_data.get('post_date'), 
-                        agent_data.get('post_time')
-                    )
-                    
-                    if scheduled_datetime and scheduled_datetime > await business_now_async():
-                        # Schedule for future publication
-                        update_data["status"] = PostStatus.SCHEDULED
-                        update_data["scheduled_for"] = scheduled_datetime
-                        logger.info(f"Post {post_id} scheduled for {scheduled_datetime} (business timezone)")
-                    else:
-                        # Publish immediately (past time or invalid date)
+                        # Immediate auto post (for auto mode or adhoc without date/time)
                         update_data["status"] = PostStatus.PUBLISHED
                         update_data["published_at"] = await business_now_async()
-                        logger.info(f"Post {post_id} published immediately (past scheduled time)")
+                        logger.info(f"Post {post_id} ({platform}) published immediately")
+                    # TODO: Actually publish to social media platforms
                 else:
-                    # Immediate auto post (for auto mode or adhoc without date/time)
-                    update_data["status"] = PostStatus.PUBLISHED
-                    update_data["published_at"] = await business_now_async()
-                    logger.info(f"Post {post_id} published immediately")
-                # TODO: Actually publish to social media platforms
-            else:
-                # Respect the post_destination setting for review workflow
-                if post_destination == 'in_review':
-                    update_data["status"] = PostStatus.IN_REVIEW
-                else:  # Default to 'ready_to_publish'
-                    update_data["status"] = PostStatus.READY
-            
-            # Update post record
-            await db.ai_posts.update_one(
-                {"id": post_id},
-                {"$set": update_data}
-            )
-            
-            logger.info(f"Successfully generated post {post_id} for agent {agent_id}")
-            
-        except Exception as content_error:
-            # Update post with error status
-            await db.ai_posts.update_one(
-                {"id": post_id},
-                {"$set": {
-                    "status": PostStatus.FAILED,
-                    "error_message": str(content_error),
-                    "updated_at": await business_now_async()
-                }}
-            )
-            logger.error(f"Error generating content for post {post_id}: {str(content_error)}")
-            
+                    # Respect the post_destination setting for review workflow
+                    if post_destination == 'in_review':
+                        update_data["status"] = PostStatus.IN_REVIEW
+                    else:  # Default to 'ready_to_publish'
+                        update_data["status"] = PostStatus.READY
+                
+                # Update post record for this platform
+                await db.ai_posts.update_one(
+                    {"id": post_id},
+                    {"$set": update_data}
+                )
+                
+                logger.info(f"Successfully generated post {post_id} for agent {agent_id} (platform: {platform})")
+                
+            except Exception as content_error:
+                # Update post with error status for this platform
+                await db.ai_posts.update_one(
+                    {"id": post_id},
+                    {"$set": {
+                        "status": PostStatus.FAILED,
+                        "error_message": str(content_error),
+                        "updated_at": await business_now_async()
+                    }}
+                )
+                logger.error(f"Error generating content for post {post_id} (platform: {platform}): {str(content_error)}")
+                
     except Exception as e:
-        logger.error(f"Error in generate_post_for_agent: {str(e)}")
+        logger.error(f"Error in generate_social_media_post_for_agent: {str(e)}")
 
 async def generate_sms_for_agent(agent_id: str, agent_data: dict):
     """Generate SMS content for an AI SMS agent"""
