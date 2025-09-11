@@ -6755,8 +6755,8 @@ Example:
             </div>
             )}
 
-        {/* Marketing Agent Form */}
-        {searchParams.get('agent_type') === 'marketing_agent' && (
+            {/* Marketing Agent Form */}
+            {searchParams.get('agent_type') === 'marketing_agent' && (
           <div className="space-y-6">
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               <div className="px-6 py-4 bg-gradient-to-r from-purple-50 to-blue-50 border-b border-gray-200">
