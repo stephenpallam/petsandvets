@@ -6750,8 +6750,7 @@ Example:
                 )}
               </div>
             </div>
-          </div>
-        )}
+            )}
 
         {/* Marketing Agent Form */}
         {searchParams.get('agent_type') === 'marketing_agent' && (
