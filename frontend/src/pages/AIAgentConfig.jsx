@@ -525,7 +525,9 @@ Your Veterinary Team`,
             correctTabId = `social-media-${tabMode}`;
           }
           
-          setActiveTab(correctTabId);
+          if (correctTabId) {
+            setActiveTab(correctTabId);
+          }
           
           // Pre-populate form fields based on agent type and mode
           if (agentData.agent_type === 'marketing_agent') {
