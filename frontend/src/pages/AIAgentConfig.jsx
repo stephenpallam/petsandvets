@@ -541,18 +541,18 @@ Your Veterinary Team`,
               selectedHolidays: agentData.selected_holidays || [],
               channels: agentData.marketing_channels || [],
               socialPlatforms: {
-                facebook: Array.isArray(agentData.social_platforms) 
-                  ? agentData.social_platforms.includes('facebook')
-                  : agentData.social_platforms?.facebook || false,
-                instagram: Array.isArray(agentData.social_platforms)
-                  ? agentData.social_platforms.includes('instagram')
-                  : agentData.social_platforms?.instagram || false,
-                twitter: Array.isArray(agentData.social_platforms)
-                  ? agentData.social_platforms.includes('x') || agentData.social_platforms.includes('twitter')
-                  : agentData.social_platforms?.twitter || false,
-                whatsapp: Array.isArray(agentData.social_platforms)
-                  ? agentData.social_platforms.includes('whatsapp')
-                  : agentData.social_platforms?.whatsapp || false
+                facebook: Array.isArray(agentData.marketing_social_platforms)
+                  ? agentData.marketing_social_platforms.includes('facebook')
+                  : agentData.marketing_social_platforms?.facebook || false,
+                instagram: Array.isArray(agentData.marketing_social_platforms)
+                  ? agentData.marketing_social_platforms.includes('instagram')
+                  : agentData.marketing_social_platforms?.instagram || false,
+                twitter: Array.isArray(agentData.marketing_social_platforms)
+                  ? agentData.marketing_social_platforms.includes('x') || agentData.marketing_social_platforms.includes('twitter')
+                  : agentData.marketing_social_platforms?.twitter || false,
+                whatsapp: Array.isArray(agentData.marketing_social_platforms)
+                  ? agentData.marketing_social_platforms.includes('whatsapp')
+                  : agentData.marketing_social_platforms?.whatsapp || false
               },
               emailPersonalized: agentData.marketing_email_personalization !== undefined ? agentData.marketing_email_personalization : true,
               emailTemplate: agentData.email_content_template || '',
