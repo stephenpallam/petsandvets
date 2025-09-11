@@ -2162,6 +2162,8 @@ Best regards,
                           ? 'Modify your email agent settings'
                           : agentType === 'sms_agent'
                           ? 'Modify your SMS agent settings'
+                          : agentType === 'marketing_agent'
+                          ? 'Modify your marketing agent settings'
                           : 'Modify your social media agent settings';
                       } else {
                         return agentType === 'time_sheet'
