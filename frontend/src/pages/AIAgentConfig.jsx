@@ -2172,6 +2172,8 @@ Best regards,
                           ? 'Configure AI agents for automated email campaigns and customer communication'
                           : agentType === 'sms_agent'
                           ? 'Configure AI agents for automated SMS campaigns and customer communication'
+                          : agentType === 'marketing_agent'
+                          ? 'Create comprehensive marketing campaigns across multiple channels including social media, email, and SMS'
                           : 'Configure AI agents for automated social media posting';
                       }
                     })()}
