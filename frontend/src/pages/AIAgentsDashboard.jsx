@@ -1969,19 +1969,25 @@ const AIAgentsDashboard = () => {
                                     <div className="space-y-1">
                                       {(() => {
                                         try {
-                                          // Use business time for proper timezone handling
+                                          // Parse the date properly with business timezone consideration
                                           const scheduledDate = new Date(agent.post_date);
+                                          
+                                          // Add the time if provided
                                           if (agent.post_time) {
                                             const [hours, minutes] = agent.post_time.split(':');
                                             scheduledDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
                                           }
                                           
-                                          const formattedDate = scheduledDate.toLocaleDateString('en-US', {
+                                          // Format date using business timezone if available
+                                          const dateOptions = {
                                             weekday: 'short',
                                             month: 'short',
                                             day: 'numeric',
-                                            year: 'numeric'
-                                          });
+                                            year: 'numeric',
+                                            ...(businessTimezone && { timeZone: businessTimezone })
+                                          };
+                                          
+                                          const formattedDate = scheduledDate.toLocaleDateString('en-US', dateOptions);
                                           
                                           return (
                                             <p className="text-sm font-medium text-blue-900">
