@@ -6898,28 +6898,85 @@ Example:
 
                   {marketingMode.contentType === 'holidays' && (
                     <div className="mt-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Select Holidays *</label>
-                      <div className="border border-gray-300 rounded-md p-4 max-h-48 overflow-y-auto bg-gray-50">
-                        {availableHolidays.map((holiday) => (
-                          <label key={holiday.id} className="flex items-center space-x-2 py-1">
-                            <input
-                              type="checkbox"
-                              checked={marketingMode.selectedHolidays.includes(holiday.id)}
-                              onChange={(e) => {
-                                const isChecked = e.target.checked;
-                                setMarketingMode(prev => ({
-                                  ...prev,
-                                  selectedHolidays: isChecked 
-                                    ? [...prev.selectedHolidays, holiday.id]
-                                    : prev.selectedHolidays.filter(id => id !== holiday.id)
-                                }));
-                              }}
-                              className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-                            />
-                            <span className="text-sm text-gray-700">{holiday.name}</span>
-                            <span className="text-xs text-gray-500">({holiday.date})</span>
-                          </label>
-                        ))}
+                      <label className="block text-sm font-medium text-gray-700 mb-4">
+                        <Calendar className="h-4 w-4 inline mr-2" />
+                        Select Holidays for Marketing Campaign *
+                      </label>
+                      <div className="bg-green-50 p-4 rounded-lg mb-4">
+                        <div className="flex items-start">
+                          <Calendar className="h-5 w-5 text-green-600 mt-0.5 mr-3" />
+                          <div>
+                            <h4 className="font-medium text-green-900">How Holiday Marketing Works</h4>
+                            <p className="text-sm text-green-700 mt-1">
+                              Your marketing campaign will be scheduled for each selected holiday using the content templates below. 
+                              The content will be personalized with customer names and pet information across all selected channels.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {availableHolidays.length > 0 ? (
+                        <div className="max-h-60 overflow-y-auto border border-gray-200 rounded-lg p-4">
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            {availableHolidays.map((holiday) => {
+                              const IconComponent = getCategoryIcon(holiday.category);
+                              return (
+                                <label key={holiday.id} className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer border">
+                                  <input
+                                    type="checkbox"
+                                    checked={marketingMode.selectedHolidays.includes(holiday.id)}
+                                    onChange={(e) => {
+                                      const isChecked = e.target.checked;
+                                      setMarketingMode(prev => ({
+                                        ...prev,
+                                        selectedHolidays: isChecked 
+                                          ? [...prev.selectedHolidays, holiday.id]
+                                          : prev.selectedHolidays.filter(id => id !== holiday.id)
+                                      }));
+                                    }}
+                                    className="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500 mr-3"
+                                  />
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center mb-1">
+                                      <IconComponent className="h-4 w-4 mr-2 text-gray-500 flex-shrink-0" />
+                                      <span className="text-sm font-medium text-gray-900 truncate">{holiday.name}</span>
+                                    </div>
+                                    <span className="text-xs text-gray-500 block">
+                                      {new Date(holiday.date).toLocaleDateString('en-US', { 
+                                        weekday: 'short', 
+                                        month: 'short', 
+                                        day: 'numeric',
+                                        year: 'numeric'
+                                      })}
+                                    </span>
+                                  </div>
+                                </label>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-center py-4 text-gray-500">
+                          <Calendar className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                          <p>Loading holidays...</p>
+                        </div>
+                      )}
+                      <p className="text-xs text-gray-500 mt-2">
+                        Selected: {marketingMode.selectedHolidays.length} holiday{marketingMode.selectedHolidays.length !== 1 ? 's' : ''}
+                      </p>
+                      <div className="mt-3 p-3 bg-blue-50 rounded-md border-l-4 border-blue-400">
+                        <div className="flex">
+                          <div className="flex-shrink-0">
+                            <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                          <div className="ml-3">
+                            <p className="text-sm text-blue-700">
+                              <strong>Missing a holiday?</strong> Configure additional holidays in the <strong>Holiday Management</strong> page.
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}
