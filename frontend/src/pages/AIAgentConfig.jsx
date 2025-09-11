@@ -2127,15 +2127,18 @@ Best regards,
                       const agentType = searchParams.get('agent_type');
                       if (isRunMode) {
                         return agentType === 'time_sheet' ? 'Run Timesheet AI Agent' : 
-                               agentType === 'sms_agent' ? 'Run SMS AI Agent' : 'Run Social Media AI Agent';
+                               agentType === 'sms_agent' ? 'Run SMS AI Agent' :
+                               agentType === 'marketing_agent' ? 'Run Marketing AI Agent' : 'Run Social Media AI Agent';
                       } else if (isEditMode) {
                         return agentType === 'time_sheet' ? 'Edit Timesheet AI Agent' : 
                                agentType === 'email' ? 'Edit Email AI Agent' :
-                               agentType === 'sms_agent' ? 'Edit SMS AI Agent' : 'Edit Social Media AI Agent';
+                               agentType === 'sms_agent' ? 'Edit SMS AI Agent' :
+                               agentType === 'marketing_agent' ? 'Edit Marketing AI Agent' : 'Edit Social Media AI Agent';
                       } else {
                         return agentType === 'time_sheet' ? 'Create New Timesheet Agent' : 
                                agentType === 'email' ? 'Create New Email Agent' :
-                               agentType === 'sms_agent' ? 'Create New SMS Agent' : 'Create New Social Media Agent';
+                               agentType === 'sms_agent' ? 'Create New SMS Agent' :
+                               agentType === 'marketing_agent' ? 'Create New Marketing Agent' : 'Create New Social Media Agent';
                       }
                     })()}
                   </h2>
