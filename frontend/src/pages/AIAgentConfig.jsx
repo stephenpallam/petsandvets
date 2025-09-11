@@ -1271,18 +1271,11 @@ Best regards,
       });
 
       if (response.ok) {
-        const customers = await response.json();
-        // Filter customers that match the search term in first_name, last_name, name (legacy), email, or pet names
-        const filteredCustomers = customers.filter(customer => 
-          customer.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          customer.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          customer.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          customer.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (customer.pets && customer.pets.some(pet => 
-            pet.name?.toLowerCase().includes(searchTerm.toLowerCase())
-          ))
-        );
-        setSearchedCustomers(filteredCustomers);
+        const data = await response.json();
+        // The API returns paginated results with a customers array
+        const customers = data.customers || [];
+        // No need to filter again since the backend already filtered by search term
+        setSearchedCustomers(customers);
       }
     } catch (error) {
       console.error('Error searching customers:', error);
