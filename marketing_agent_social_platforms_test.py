@@ -122,10 +122,11 @@ class MarketingAgentSocialPlatformsTester:
             marketing_agent_data = {
                 "agent_type": "marketing_agent",
                 "agent_name": "Test Social Platforms Fix",
+                "mode": "adhoc",  # Required field
                 "marketing_content_type": "topic",
                 "topic": "Pet Health Tips",
                 "marketing_channels": ["social_media"],
-                "social_platforms": {
+                "marketing_social_platforms": {  # Correct field name for marketing agents
                     "facebook": True,
                     "instagram": True,
                     "twitter": False,
