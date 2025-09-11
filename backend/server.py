@@ -401,8 +401,8 @@ class Pet(BaseModel):
 
 class Customer(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    first_name: str
-    last_name: str
+    first_name: Optional[str] = None  # Made optional for backward compatibility
+    last_name: Optional[str] = None   # Made optional for backward compatibility
     name: Optional[str] = None  # Legacy field for backward compatibility
     pets: Optional[List[Pet]] = []  # New structured pets array
     pet_name: Optional[str] = None  # Legacy field for backward compatibility
