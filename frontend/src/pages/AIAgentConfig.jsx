@@ -833,6 +833,9 @@ Best regards,
           description: 'Generate timesheets on-demand when needed'
         }
       ];
+    } else if (agentType === 'marketing_agent') {
+      // Marketing Agent - no tabs needed, just the campaign form
+      return [];
     } else if (agentType === 'email') {
       // Email Agent tabs with specific IDs to avoid conflicts
       return [
