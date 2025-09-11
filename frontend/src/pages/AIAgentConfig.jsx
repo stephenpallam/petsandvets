@@ -7296,25 +7296,19 @@ Example:
                   </div>
                 </div>
 
-                {/* Save/Run Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200">
+                {/* Save Button */}
+                <div className="flex justify-center pt-6 border-t border-gray-200">
                   <button
                     type="button"
                     onClick={() => handleSave(false)}
                     disabled={loading || !marketingMode.agentName.trim() || marketingMode.channels.length === 0}
-                    className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+                    className="px-8 py-3 rounded-lg font-medium text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+                    style={{ backgroundColor: 'rgb(41, 173, 211)', ':hover': { backgroundColor: 'rgb(31, 163, 201)' } }}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = 'rgb(31, 163, 201)'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = 'rgb(41, 173, 211)'}
                   >
                     <Save className="h-4 w-4 mr-2" />
                     {loading ? 'Saving...' : isEditMode ? 'Update Agent Configuration' : 'Save Agent'}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleSave(true)}
-                    disabled={loading || !marketingMode.agentName.trim() || marketingMode.channels.length === 0}
-                    className="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
-                  >
-                    <Play className="h-4 w-4 mr-2" />
-                    {loading ? 'Updating & Running...' : 'Save & Run Agent'}
                   </button>
                 </div>
               </div>
