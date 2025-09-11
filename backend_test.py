@@ -406,13 +406,29 @@ class MarketingAgentTester:
             headers = {"Authorization": f"Bearer {self.auth_token}"}
             
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                url = f"{self.backend_url}/api/ai-agents/{self.created_agent_id}"
+                url = f"{self.backend_url}/api/ai-agents"  # Use list endpoint instead of individual
                 async with session.get(url, headers=headers, timeout=10) as response:
                     response_text = await response.text()
                     
                     if response.status == 200:
                         try:
-                            agent_data = json.loads(response_text)
+                            agents_list = json.loads(response_text)
+                            
+                            # Find our specific agent
+                            agent_data = None
+                            for agent in agents_list:
+                                if agent.get("id") == self.created_agent_id:
+                                    agent_data = agent
+                                    break
+                            
+                            if not agent_data:
+                                self.log_test_result(
+                                    "Marketing Agent Retrieval",
+                                    False,
+                                    "Agent not found in agents list",
+                                    {"Agent ID": self.created_agent_id, "Total Agents": len(agents_list)}
+                                )
+                                return False, None
                             
                             # Verify all expected fields are present and correct
                             expected_fields = {
