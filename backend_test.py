@@ -518,7 +518,7 @@ class MarketingAgentTester:
                     "name": "Missing agent_type",
                     "data": {
                         "agent_name": "Test Marketing Campaign",
-                        "mode": "write",
+                        "mode": "adhoc",
                         "marketing_content_type": "topic",
                         "topic": "Pet Health Tips"
                     },
