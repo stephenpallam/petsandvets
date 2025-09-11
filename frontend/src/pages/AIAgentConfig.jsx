@@ -1784,6 +1784,61 @@ Best regards,
             use_customer_database: true
           };
         }
+      } else if (agentType === 'marketing_agent') {
+        // Handle Marketing Agent
+        agentData = {
+          agent_type: 'marketing_agent',
+          mode: 'adhoc', // Marketing agents are typically adhoc/one-time campaigns
+          agent_name: marketingMode.agentName,
+          
+          // Marketing-specific fields
+          marketing_content_type: marketingMode.contentType, // 'topic', 'holidays', 'custom_campaign'
+          marketing_channels: marketingMode.channels, // Array: ['social_media', 'email', 'sms']
+          
+          // Content Type specific data
+          ...(marketingMode.contentType === 'topic' && {
+            topic: marketingMode.selectedTopic === 'Custom' ? marketingMode.customTopic : marketingMode.selectedTopic
+          }),
+          ...(marketingMode.contentType === 'holidays' && {
+            selected_holidays: marketingMode.selectedHolidays
+          }),
+          ...(marketingMode.contentType === 'custom_campaign' && {
+            marketing_custom_content: marketingMode.customCampaign
+          }),
+          
+          // Social Media Settings (if social_media channel selected)
+          ...(marketingMode.channels.includes('social_media') && {
+            social_platforms: marketingMode.socialPlatforms
+          }),
+          
+          // Email Settings (if email channel selected)
+          ...(marketingMode.channels.includes('email') && {
+            marketing_email_personalization: marketingMode.emailPersonalized,
+            email_content_template: marketingMode.emailTemplate
+          }),
+          
+          // SMS Settings (if sms channel selected)  
+          ...(marketingMode.channels.includes('sms') && {
+            marketing_sms_personalization: marketingMode.smsPersonalized,
+            sms_template: marketingMode.smsTemplate
+          }),
+          
+          // Campaign Settings
+          marketing_link: marketingMode.marketingLink,
+          post_date: marketingMode.scheduledDate,
+          post_time: marketingMode.postTime,
+          marketing_workflow_mode: marketingMode.workflowMode, // 'in_review', 'ready_to_publish', 'auto_publish'
+          
+          // Image Options
+          image_option: marketingMode.imageOption,
+          uploaded_images: marketingMode.uploadedImages,
+          image_text: marketingMode.imageText,
+          word_count: marketingMode.wordCount,
+          
+          // Standard fields
+          post_destination: marketingMode.workflowMode,
+          auto_post: marketingMode.workflowMode === 'auto_publish'
+        };
       } else {
         // Handle social media agents (existing logic)
         if (activeTab === 'social-media-recurring') {
