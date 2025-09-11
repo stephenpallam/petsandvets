@@ -1856,7 +1856,7 @@ Best regards,
           
           // Social Media Settings (if social_media channel selected)
           ...(marketingMode.channels.includes('social_media') && {
-            social_platforms: marketingMode.socialPlatforms
+            marketing_social_platforms: marketingMode.socialPlatforms
           }),
           
           // Email Settings (if email channel selected)
