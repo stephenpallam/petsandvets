@@ -935,6 +935,9 @@ Best regards,
       } else if (agentType === 'sms_agent') {
         fetchAvailableHolidays(); // SMS agents also use holidays for scheduled mode
         fetchAvailableCustomers(); // SMS agents also use customer database
+      } else if (agentType === 'marketing_agent') {
+        fetchAvailableHolidays(); // Marketing agents use holidays for holiday-based campaigns
+        fetchAvailableCustomers(); // Marketing agents use customer database for personalization
       }
     }
   }, [user, authLoading, canAccessManager, searchParams]);
