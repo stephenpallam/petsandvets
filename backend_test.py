@@ -418,7 +418,7 @@ class MarketingAgentTester:
                             expected_fields = {
                                 "agent_type": "marketing_agent",
                                 "agent_name": "Test Marketing Campaign",
-                                "mode": "write",
+                                "mode": "adhoc",
                                 "marketing_content_type": "topic",
                                 "topic": "Pet Health Tips",
                                 "marketing_channels": ["email", "sms"],
