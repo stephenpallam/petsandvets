@@ -71,7 +71,7 @@
         "id": "bec1fed5-00fb-4495-a62b-0a44a07fa8e1",
         "title": "Professional Veterinary Care",
         "description": "Compassionate care for your beloved pets with experienced veterinarians and modern facilities",
-        "image_url": "https://vetssms.preview.emergentagent.com/api/files/homepageslider/1756597186_priya_new.png",
+        "image_url": "https://petcare-agents.preview.emergentagent.com/api/files/homepageslider/1756597186_priya_new.png",
         "order": 0,
         "created_at": "2025-08-30 13:34:14.873000",
         "updated_at": "2025-08-30 23:39:48.521000"
@@ -81,7 +81,7 @@
         "id": "12c786a0-aa60-4270-a9a8-b5610b4f00c3",
         "title": "State-of-the-Art Facility",
         "description": "Modern equipment and comfortable environment for the best possible care for your furry family members",
-        "image_url": "https://vetssms.preview.emergentagent.com/api/files/homepageslider/1756597202_1.png",
+        "image_url": "https://petcare-agents.preview.emergentagent.com/api/files/homepageslider/1756597202_1.png",
         "order": 1,
         "created_at": "2025-08-30 13:35:57.156000",
         "updated_at": "2025-08-30 23:40:03.495000"
@@ -183,7 +183,7 @@
         "title": "Owner & Chief Veterinarian",
         "bio": "Dr. Vanama is a skilled veterinarian committed to delivering high-quality medical care, preventive health, and advanced treatments for pets. With professional expertise and compassion, Dr. Vanama ensures the well-being of every animal entrusted to their care",
         "credentials": "DVM",
-        "photo_url": "https://vetssms.preview.emergentagent.com/api/files/team/1756597274_priya_new.png",
+        "photo_url": "https://petcare-agents.preview.emergentagent.com/api/files/team/1756597274_priya_new.png",
         "order": 0,
         "created_at": "2025-08-27 17:41:26.077000",
         "updated_at": "2025-08-30 23:46:45.120000"
@@ -195,7 +195,7 @@
         "title": "Manager & Veterinary Technician",
         "bio": "Katie is a caring veterinary technician who treats every pet as if they were her own, providing gentle care and dedicated support to keep them healthy and happy.",
         "credentials": "",
-        "photo_url": "https://vetssms.preview.emergentagent.com/api/files/team/1756597241_Katie.jpg",
+        "photo_url": "https://petcare-agents.preview.emergentagent.com/api/files/team/1756597241_Katie.jpg",
         "order": 1,
         "created_at": "2025-08-27 19:09:11.166000",
         "updated_at": "2025-08-30 23:49:38.215000"
