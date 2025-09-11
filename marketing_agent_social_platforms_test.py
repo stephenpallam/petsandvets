@@ -196,8 +196,8 @@ class MarketingAgentSocialPlatformsTester:
                             )
                             return False, None
                     else:
-                        # Check if the error is related to social_platforms validation
-                        is_social_platforms_error = "social_platforms" in response_text and "Input should be a valid dictionary" in response_text
+                        # Check if the error is related to marketing_social_platforms validation
+                        is_social_platforms_error = "marketing_social_platforms" in response_text and "Input should be a valid dictionary" in response_text
                         
                         self.log_test_result(
                             "Create Marketing Agent with Social Platforms",
