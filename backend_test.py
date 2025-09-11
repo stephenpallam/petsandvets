@@ -222,7 +222,7 @@ class MarketingAgentTester:
                                 field_verification = {
                                     "agent_name": agent_doc.get("agent_name") == "Test Marketing Campaign",
                                     "agent_type": agent_doc.get("agent_type") == "marketing_agent",
-                                    "mode": agent_doc.get("mode") == "write",
+                                    "mode": agent_doc.get("mode") == "adhoc",
                                     "marketing_content_type": agent_doc.get("marketing_content_type") == "topic",
                                     "topic": agent_doc.get("topic") == "Pet Health Tips",
                                     "marketing_channels": agent_doc.get("marketing_channels") == ["email", "sms"],
