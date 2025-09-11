@@ -152,10 +152,10 @@ class MarketingAgentSocialPlatformsTester:
                             
                             success = agent_doc is not None and agent_doc.get("agent_type") == "marketing_agent"
                             
-                            # Check if social_platforms field was saved correctly
+                            # Check if marketing_social_platforms field was saved correctly
                             social_platforms_check = {}
                             if agent_doc:
-                                stored_social_platforms = agent_doc.get("social_platforms")
+                                stored_social_platforms = agent_doc.get("marketing_social_platforms")
                                 expected_social_platforms = {
                                     "facebook": True,
                                     "instagram": True,
