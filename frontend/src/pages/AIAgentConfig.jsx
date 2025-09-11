@@ -7345,7 +7345,7 @@ Example:
                 </div>
 
                 {/* Save Button */}
-                <div className="flex justify-center pt-6 border-t border-gray-200">
+                <div className="flex justify-end pt-6 border-t border-gray-200">
                   <button
                     type="button"
                     onClick={() => handleSave(false)}
@@ -7353,7 +7353,7 @@ Example:
                     className="px-8 py-3 rounded-lg font-medium text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
                     style={{ backgroundColor: 'rgb(41, 173, 211)', ':hover': { backgroundColor: 'rgb(31, 163, 201)' } }}
                     onMouseEnter={(e) => e.target.style.backgroundColor = 'rgb(31, 163, 201)'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = 'rgb(41, 173, 211)'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = 'rgb(41, 163, 201)'}
                   >
                     <Save className="h-4 w-4 mr-2" />
                     {loading ? 'Saving...' : isEditMode ? 'Update Agent Configuration' : 'Save Agent'}
