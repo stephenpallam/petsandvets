@@ -517,6 +517,9 @@ Your Veterinary Team`,
             } else {
               correctTabId = 'sms-recurring'; // Topic-based recurring SMS
             }
+          } else if (agentData.agent_type === 'marketing_agent') {
+            // Marketing agents don't use tabs, they have a single form
+            correctTabId = null;
           } else {
             // Social media agents
             correctTabId = `social-media-${tabMode}`;
