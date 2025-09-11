@@ -12,11 +12,11 @@ Test Focus:
 5. Verify Edit Success - Ensure the edit operation completes without validation errors and the social platforms are updated correctly
 
 Expected Results:
-- Marketing agent should be created successfully with social_platforms field as dictionary
-- No "social_platforms: Input should be a valid dictionary" validation errors
-- social_platforms field should be properly stored and retrieved
+- Marketing agent should be created successfully with marketing_social_platforms field as dictionary
+- No "marketing_social_platforms: Input should be a valid dictionary" validation errors
+- marketing_social_platforms field should be properly stored and retrieved
 - Agent editing should work correctly with different social platform selections
-- All CRUD operations should handle social_platforms field correctly
+- All CRUD operations should handle marketing_social_platforms field correctly
 """
 
 import asyncio
@@ -251,23 +251,24 @@ class MarketingAgentSocialPlatformsTester:
             verification_checks = {
                 "agent_type": agent_doc.get("agent_type") == "marketing_agent",
                 "agent_name": agent_doc.get("agent_name") == "Test Social Platforms Fix",
+                "mode": agent_doc.get("mode") == "adhoc",
                 "marketing_content_type": agent_doc.get("marketing_content_type") == "topic",
                 "topic": agent_doc.get("topic") == "Pet Health Tips",
                 "marketing_channels": agent_doc.get("marketing_channels") == ["social_media"],
-                "social_platforms_exists": "social_platforms" in agent_doc,
-                "social_platforms_is_dict": isinstance(agent_doc.get("social_platforms"), dict),
+                "marketing_social_platforms_exists": "marketing_social_platforms" in agent_doc,
+                "marketing_social_platforms_is_dict": isinstance(agent_doc.get("marketing_social_platforms"), dict),
                 "post_date": agent_doc.get("post_date") == "2025-01-20",
                 "post_time": agent_doc.get("post_time") == "10:00",
                 "marketing_workflow_mode": agent_doc.get("marketing_workflow_mode") == "in_review"
             }
             
-            # Check social platforms structure
-            social_platforms = agent_doc.get("social_platforms", {})
+            # Check marketing social platforms structure
+            marketing_social_platforms = agent_doc.get("marketing_social_platforms", {})
             social_platforms_checks = {
-                "facebook": social_platforms.get("facebook") == True,
-                "instagram": social_platforms.get("instagram") == True,
-                "twitter": social_platforms.get("twitter") == False,
-                "whatsapp": social_platforms.get("whatsapp") == False
+                "facebook": marketing_social_platforms.get("facebook") == True,
+                "instagram": marketing_social_platforms.get("instagram") == True,
+                "twitter": marketing_social_platforms.get("twitter") == False,
+                "whatsapp": marketing_social_platforms.get("whatsapp") == False
             }
             
             all_checks_passed = all(verification_checks.values()) and all(social_platforms_checks.values())
@@ -280,7 +281,7 @@ class MarketingAgentSocialPlatformsTester:
                     "Verification Checks": verification_checks,
                     "Social Platforms Checks": social_platforms_checks,
                     "All Checks Passed": all_checks_passed,
-                    "Stored Social Platforms": social_platforms
+                    "Stored Social Platforms": marketing_social_platforms
                 }
             )
             return all_checks_passed
@@ -295,7 +296,7 @@ class MarketingAgentSocialPlatformsTester:
             return False
     
     async def test_retrieve_agent(self):
-        """Test 3: Retrieve Agent - Test getting the created agent back and verify social_platforms field is properly stored and returned"""
+        """Test 3: Retrieve Agent - Test getting the created agent back and verify marketing_social_platforms field is properly stored and returned"""
         print("🔍 TEST 3: Retrieve Agent")
         print("=" * 60)
         
@@ -340,8 +341,8 @@ class MarketingAgentSocialPlatformsTester:
                                 )
                                 return False, None
                             
-                            # Verify social_platforms field is properly returned
-                            social_platforms = agent_data.get("social_platforms")
+                            # Verify marketing_social_platforms field is properly returned
+                            marketing_social_platforms = agent_data.get("marketing_social_platforms")
                             expected_social_platforms = {
                                 "facebook": True,
                                 "instagram": True,
@@ -351,9 +352,9 @@ class MarketingAgentSocialPlatformsTester:
                             
                             retrieval_checks = {
                                 "agent_found": True,
-                                "social_platforms_exists": social_platforms is not None,
-                                "social_platforms_is_dict": isinstance(social_platforms, dict),
-                                "social_platforms_correct": social_platforms == expected_social_platforms,
+                                "marketing_social_platforms_exists": marketing_social_platforms is not None,
+                                "marketing_social_platforms_is_dict": isinstance(marketing_social_platforms, dict),
+                                "marketing_social_platforms_correct": marketing_social_platforms == expected_social_platforms,
                                 "marketing_channels": agent_data.get("marketing_channels") == ["social_media"],
                                 "agent_name": agent_data.get("agent_name") == "Test Social Platforms Fix"
                             }
@@ -368,7 +369,7 @@ class MarketingAgentSocialPlatformsTester:
                                     "HTTP Status": response.status,
                                     "Retrieval Checks": retrieval_checks,
                                     "Expected Social Platforms": expected_social_platforms,
-                                    "Retrieved Social Platforms": social_platforms,
+                                    "Retrieved Social Platforms": marketing_social_platforms,
                                     "Agent Data Keys": list(agent_data.keys())
                                 }
                             )
@@ -428,10 +429,11 @@ class MarketingAgentSocialPlatformsTester:
             updated_agent_data = {
                 "agent_type": "marketing_agent",
                 "agent_name": "Test Social Platforms Fix",
+                "mode": "adhoc",
                 "marketing_content_type": "topic",
                 "topic": "Pet Health Tips",
                 "marketing_channels": ["social_media"],
-                "social_platforms": {
+                "marketing_social_platforms": {  # Using correct field name
                     "facebook": False,
                     "instagram": True,
                     "twitter": True,
@@ -463,8 +465,8 @@ class MarketingAgentSocialPlatformsTester:
                                 )
                                 return False
                             
-                            # Check if social_platforms field was updated correctly
-                            stored_social_platforms = agent_doc.get("social_platforms")
+                            # Check if marketing_social_platforms field was updated correctly
+                            stored_social_platforms = agent_doc.get("marketing_social_platforms")
                             expected_social_platforms = {
                                 "facebook": False,
                                 "instagram": True,
@@ -473,7 +475,7 @@ class MarketingAgentSocialPlatformsTester:
                             }
                             
                             edit_checks = {
-                                "social_platforms_updated": stored_social_platforms == expected_social_platforms,
+                                "marketing_social_platforms_updated": stored_social_platforms == expected_social_platforms,
                                 "facebook_changed": stored_social_platforms.get("facebook") == False,
                                 "twitter_enabled": stored_social_platforms.get("twitter") == True,
                                 "instagram_still_enabled": stored_social_platforms.get("instagram") == True,
@@ -505,8 +507,8 @@ class MarketingAgentSocialPlatformsTester:
                             )
                             return False
                     else:
-                        # Check if the error is related to social_platforms validation
-                        is_social_platforms_error = "social_platforms" in response_text and "Input should be a valid dictionary" in response_text
+                        # Check if the error is related to marketing_social_platforms validation
+                        is_social_platforms_error = "marketing_social_platforms" in response_text and "Input should be a valid dictionary" in response_text
                         
                         self.log_test_result(
                             "Edit Agent",
@@ -556,8 +558,8 @@ class MarketingAgentSocialPlatformsTester:
                 )
                 return False
             
-            # Check the final state of social platforms
-            stored_social_platforms = agent_doc.get("social_platforms")
+            # Check the final state of marketing social platforms
+            stored_social_platforms = agent_doc.get("marketing_social_platforms")
             expected_final_platforms = {
                 "facebook": False,
                 "instagram": True,
@@ -566,8 +568,8 @@ class MarketingAgentSocialPlatformsTester:
             }
             
             verification_checks = {
-                "social_platforms_exists": stored_social_platforms is not None,
-                "social_platforms_is_dict": isinstance(stored_social_platforms, dict),
+                "marketing_social_platforms_exists": stored_social_platforms is not None,
+                "marketing_social_platforms_is_dict": isinstance(stored_social_platforms, dict),
                 "platforms_match_expected": stored_social_platforms == expected_final_platforms,
                 "facebook_disabled": stored_social_platforms.get("facebook") == False,
                 "instagram_enabled": stored_social_platforms.get("instagram") == True,
@@ -603,7 +605,7 @@ class MarketingAgentSocialPlatformsTester:
         """Run comprehensive social platforms fix tests"""
         print("🔍 STARTING MARKETING AGENT SOCIAL PLATFORMS FIX TESTING")
         print("=" * 80)
-        print("Testing Marketing Agent social_platforms field functionality")
+        print("Testing Marketing Agent marketing_social_platforms field functionality")
         print("=" * 80)
         
         try:
@@ -688,22 +690,22 @@ class MarketingAgentSocialPlatformsTester:
                 status = "✅ PASS" if success else "❌ FAIL"
                 if success:
                     if i == 0:
-                        print(f"✅ CREATION: Marketing agent created successfully with social_platforms dictionary")
+                        print(f"✅ CREATION: Marketing agent created successfully with marketing_social_platforms dictionary")
                     elif i == 1:
                         print(f"✅ VERIFICATION: Agent creation verified - no validation errors")
                     elif i == 2:
-                        print(f"✅ RETRIEVAL: Agent retrieved successfully with social_platforms field intact")
+                        print(f"✅ RETRIEVAL: Agent retrieved successfully with marketing_social_platforms field intact")
                     elif i == 3:
                         print(f"✅ EDITING: Agent updated successfully with different social platform selections")
                     elif i == 4:
                         print(f"✅ EDIT VERIFICATION: Edit operation completed successfully")
                 else:
                     if i == 0:
-                        print(f"❌ CREATION: Failed to create marketing agent with social_platforms")
+                        print(f"❌ CREATION: Failed to create marketing agent with marketing_social_platforms")
                     elif i == 1:
                         print(f"❌ VERIFICATION: Agent creation verification failed")
                     elif i == 2:
-                        print(f"❌ RETRIEVAL: Failed to retrieve agent or social_platforms field incorrect")
+                        print(f"❌ RETRIEVAL: Failed to retrieve agent or marketing_social_platforms field incorrect")
                     elif i == 3:
                         print(f"❌ EDITING: Failed to update agent with new social platform selections")
                     elif i == 4:
@@ -722,9 +724,9 @@ class MarketingAgentSocialPlatformsTester:
             # Final Assessment
             if all(test_results):
                 print("🎉 SOCIAL PLATFORMS FIX IS WORKING CORRECTLY!")
-                print("   - Marketing agents can be created with social_platforms dictionary")
+                print("   - Marketing agents can be created with marketing_social_platforms dictionary")
                 print("   - No 'Input should be a valid dictionary' validation errors")
-                print("   - social_platforms field is properly stored and retrieved")
+                print("   - marketing_social_platforms field is properly stored and retrieved")
                 print("   - Agent editing works correctly with different platform selections")
             else:
                 print("⚠️  SOCIAL PLATFORMS FIX NEEDS ATTENTION")
