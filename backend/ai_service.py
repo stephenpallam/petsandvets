@@ -43,7 +43,7 @@ class AIContentGenerator:
         use_web_research: bool = False,
         image_text: Optional[str] = None
     ) -> Dict[str, Any]:
-        """Format custom written content for different social media platforms"""
+        """Format custom written content for specific social media platforms"""
         
         try:
             # Generate title if not provided
@@ -52,34 +52,46 @@ class AIContentGenerator:
                 generated_title = await self._generate_title_from_content(post_content)
                 logger.info(f"Generated title from content: {generated_title}")
             
-            # Create system message for content formatting
-            system_message = """You are an expert social media content formatter for veterinary practices.
-            Your job is to take user-written content and format it appropriately for different social media platforms
+            # Get platform-specific characteristics
+            platform = platforms[0] if platforms else "general"
+            platform_info = self._get_platform_characteristics(platform)
+            
+            # Create system message for content formatting with platform specifics
+            system_message = f"""You are an expert social media content formatter for veterinary practices, specialized in {platform_info['name']}.
+            Your job is to take user-written content and format it appropriately for {platform_info['name']}
             while maintaining the original message and professional veterinary tone.
+            
+            Platform-specific formatting for {platform_info['name']}:
+            - {platform_info['tone']}
+            - {platform_info['format']}
+            - {platform_info['hashtag_style']}
+            - {platform_info['length_guide']}
+            
             You can enhance the content with relevant information if requested to do web research."""
             
             # Create user prompt for formatting
-            research_instruction = """
-            Please also enhance this content with current, relevant veterinary information and trends if appropriate.
+            research_instruction = f"""
+            Please also enhance this content with current, relevant veterinary information and trends appropriate for {platform_info['name']} if helpful.
             """ if use_web_research else ""
             
-            user_prompt = f"""Format this veterinary social media content:
+            user_prompt = f"""Format this veterinary content for {platform_info['name']}:
 
 Title: {generated_title}
 Content: {post_content}
 
 Requirements:
-- Target word count: {word_count} words maximum
-- Platforms: {', '.join(platforms)}
-- Maintain the original message and tone
-- Make it engaging and professional for pet owners
-- Include 3-5 relevant hashtags
-- Format appropriately for each platform
+- Platform: {platform_info['name']} - {platform_info['description']}
+- Word count: {word_count} words maximum
+- {platform_info['hashtag_instruction']}
+- Use {platform_info['tone']}
+- {platform_info['length_guide']}
+{platform_info['special_requirements']}
 {research_instruction}
 
 Please format the response as:
-Content: [the formatted post content]
-Hashtags: [comma-separated hashtags without # symbol]
+Title: [optimized title for {platform_info['name']}, {platform_info['title_length']}]
+Content: [formatted content optimized for {platform_info['name']}]
+Hashtags: [comma-separated hashtags without # symbol, {platform_info['hashtag_count']}]
 """
 
             # Initialize LLM chat
