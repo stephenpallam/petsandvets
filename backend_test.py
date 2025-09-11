@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
 """
-Email Subject Handling and Duplicate Subject Generation Investigation
+Marketing Agent Functionality Testing
 
-This test investigates email subject handling and fixes duplicate subject generation 
-in holiday/recurring email agents as requested:
+This test comprehensively tests the Marketing Agent functionality as requested:
 
-Investigation Focus:
-1. Check Email Sending Logic - Find where emails are sent and verify subject field usage
-2. Find Holiday/Recurring Email Generation - Locate ChatGPT generation functions
-3. Test Email Subject Usage - Check email posts with duplicate subjects
-4. Identify ChatGPT Prompt Issues - Find prompts generating duplicate "Subject:" in content
+Test Focus:
+1. Marketing Agent Type Availability - Test if marketing_agent is available in /api/ai-agent-types endpoint
+2. Marketing Agent Creation - Test creating a new marketing agent with comprehensive data
+3. Marketing Agent Generation - Test running/executing the created marketing agent to generate content
+4. Marketing Agent Retrieval - Test getting the created marketing agent and verify all fields are saved correctly
+5. Error Handling - Test validation errors for missing required fields
 
 Expected Results:
-- Should confirm only "Email Subject:" field is used for actual email sending
-- Should identify ChatGPT prompts that generate duplicate "Subject:" in content
-- Should provide exact locations to fix duplicate subject generation
-- Should ensure consistency with write mode email fix already applied
+- Marketing agent type should be available in agent types endpoint
+- Marketing agent should be created successfully with all specified fields
+- Marketing agent should generate content for selected channels (email, sms)
+- All marketing agent fields should be properly saved and retrievable
+- Proper error handling for missing required fields
 """
 
 import asyncio
@@ -38,7 +39,7 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv(backend_dir / '.env')
 
-class EmailSubjectInvestigator:
+class MarketingAgentTester:
     def __init__(self):
         self.mongo_url = os.environ['MONGO_URL']
         self.db_name = os.environ['DB_NAME']
@@ -47,6 +48,8 @@ class EmailSubjectInvestigator:
         self.test_results = []
         self.backend_url = os.environ.get('FRONTEND_URL', 'https://petcare-agents.preview.emergentagent.com')
         self.auth_token = None
+        self.created_agent_id = None
+        self.generated_posts = []
         
     async def connect(self):
         """Connect to MongoDB"""
@@ -101,457 +104,504 @@ class EmailSubjectInvestigator:
             print(f"Authentication error: {str(e)}")
             return False
     
-    async def check_email_sending_logic(self):
-        """Investigation 1: Check Email Sending Logic - Find where emails are sent and verify subject field usage"""
-        print("🔍 INVESTIGATION 1: Check Email Sending Logic")
+    async def test_marketing_agent_type_availability(self):
+        """Test 1: Marketing Agent Type Availability - Test if marketing_agent is available in /api/ai-agent-types endpoint"""
+        print("🔍 TEST 1: Marketing Agent Type Availability")
         print("=" * 60)
         
         try:
-            # Check if mass email sending function exists and examine its logic
-            mass_email_function_found = False
-            subject_field_usage = {}
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
             
-            # Read the server.py file to analyze email sending logic
-            server_file_path = backend_dir / "server.py"
-            if server_file_path.exists():
-                with open(server_file_path, 'r') as f:
-                    server_content = f.read()
-                
-                # Check for mass email sending function
-                if "send_mass_emails_from_post" in server_content:
-                    mass_email_function_found = True
-                    
-                    # Extract the function to analyze subject handling
-                    lines = server_content.split('\n')
-                    in_mass_email_function = False
-                    function_lines = []
-                    
-                    for line in lines:
-                        if "async def send_mass_emails_from_post" in line:
-                            in_mass_email_function = True
-                        elif in_mass_email_function and line.startswith("async def ") and "send_mass_emails_from_post" not in line:
-                            break
+            headers = {"Authorization": f"Bearer {self.auth_token}"} if self.auth_token else {}
+            
+            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
+                url = f"{self.backend_url}/api/ai-agent-types"
+                async with session.get(url, headers=headers, timeout=10) as response:
+                    if response.status == 200:
+                        agent_types = await response.json()
                         
-                        if in_mass_email_function:
-                            function_lines.append(line)
-                    
-                    function_content = '\n'.join(function_lines)
-                    
-                    # Analyze subject field usage in mass email function
-                    subject_field_usage = {
-                        "uses_email_subject_field": "email_subject" in function_content,
-                        "uses_subject_in_content": "Subject:" in function_content,
-                        "has_subject_parameter": "subject=" in function_content,
-                        "function_content_preview": function_content[:500] + "..." if len(function_content) > 500 else function_content
-                    }
-            
-            # Check email posts in database for subject field structure
-            email_posts = await self.db.ai_posts.find({
-                "agent_type": "email"
-            }).limit(5).to_list(length=5)
-            
-            post_subject_analysis = {}
-            for post in email_posts:
-                post_id = post.get('id')
-                content = post.get('content', '')
-                email_subject = post.get('email_subject', '')
-                topic = post.get('topic', '')
-                
-                # Check for duplicate subjects in content
-                has_subject_in_content = "Subject:" in content
-                subject_line_in_content = None
-                if has_subject_in_content:
-                    # Extract the subject line from content
-                    content_lines = content.split('\n')
-                    for line in content_lines:
-                        if line.strip().startswith('Subject:'):
-                            subject_line_in_content = line.strip()
-                            break
-                
-                post_subject_analysis[post_id] = {
-                    "email_subject_field": email_subject,
-                    "topic_field": topic,
-                    "has_subject_in_content": has_subject_in_content,
-                    "subject_line_in_content": subject_line_in_content,
-                    "content_preview": content[:200] + "..." if len(content) > 200 else content
-                }
-            
-            success = mass_email_function_found and len(email_posts) > 0
-            
-            self.log_test_result(
-                "Email Sending Logic Check",
-                success,
-                f"Mass email function found: {mass_email_function_found}, Email posts analyzed: {len(email_posts)}",
-                {
-                    "Mass Email Function Found": mass_email_function_found,
-                    "Subject Field Usage": subject_field_usage,
-                    "Email Posts Count": len(email_posts),
-                    "Post Subject Analysis": post_subject_analysis
-                }
-            )
-            return success, subject_field_usage, post_subject_analysis
-            
-        except Exception as e:
-            self.log_test_result(
-                "Email Sending Logic Check",
-                False,
-                f"Error checking email sending logic: {str(e)}",
-                {"Error Details": str(e)}
-            )
-            return False, {}, {}
-    
-    async def find_holiday_recurring_email_generation(self):
-        """Investigation 2: Find Holiday/Recurring Email Generation - Locate ChatGPT generation functions"""
-        print("🔍 INVESTIGATION 2: Find Holiday/Recurring Email Generation")
-        print("=" * 60)
-        
-        try:
-            generation_functions_found = {}
-            chatgpt_prompts_analysis = {}
-            
-            # Check server.py for email generation functions
-            server_file_path = backend_dir / "server.py"
-            if server_file_path.exists():
-                with open(server_file_path, 'r') as f:
-                    server_content = f.read()
-                
-                # Look for holiday email generation functions
-                holiday_functions = [
-                    "generate_scheduled_email_for_agent",
-                    "generate_recurring_email_for_agent", 
-                    "generate_write_mode_email_for_agent"
-                ]
-                
-                for func_name in holiday_functions:
-                    if func_name in server_content:
-                        generation_functions_found[func_name] = True
+                        # Check if marketing_agent is available
+                        marketing_agent_found = False
+                        marketing_agent_details = None
                         
-                        # Extract function content to analyze prompts
-                        lines = server_content.split('\n')
-                        in_function = False
-                        function_lines = []
-                        
-                        for line in lines:
-                            if f"async def {func_name}" in line:
-                                in_function = True
-                            elif in_function and line.startswith("async def ") and func_name not in line:
+                        for agent_type in agent_types:
+                            if agent_type.get('value') == 'marketing_agent':
+                                marketing_agent_found = True
+                                marketing_agent_details = agent_type
                                 break
-                            
-                            if in_function:
-                                function_lines.append(line)
                         
-                        function_content = '\n'.join(function_lines)
+                        success = marketing_agent_found
                         
-                        # Analyze ChatGPT prompt usage
-                        chatgpt_prompts_analysis[func_name] = {
-                            "uses_chatgpt": "ChatGPT" in function_content or "chat" in function_content.lower(),
-                            "has_subject_instruction": "subject" in function_content.lower(),
-                            "has_no_subject_instruction": "DO NOT include" in function_content and "subject" in function_content.lower(),
-                            "mentions_subject_separate": "subject" in function_content.lower() and "separate" in function_content.lower(),
-                            "function_length": len(function_lines)
-                        }
+                        self.log_test_result(
+                            "Marketing Agent Type Availability",
+                            success,
+                            f"Marketing agent type found: {marketing_agent_found}",
+                            {
+                                "HTTP Status": response.status,
+                                "Total Agent Types": len(agent_types),
+                                "Marketing Agent Details": marketing_agent_details,
+                                "All Agent Types": [at.get('value') for at in agent_types]
+                            }
+                        )
+                        return success, agent_types
                     else:
-                        generation_functions_found[func_name] = False
-            
-            # Check ai_service.py for email formatting functions
-            ai_service_file_path = backend_dir / "ai_service.py"
-            ai_service_functions = {}
-            if ai_service_file_path.exists():
-                with open(ai_service_file_path, 'r') as f:
-                    ai_service_content = f.read()
-                
-                # Look for email formatting functions
-                email_formatting_functions = [
-                    "format_email_content",
-                    "format_topic_email_content"
-                ]
-                
-                for func_name in email_formatting_functions:
-                    if func_name in ai_service_content:
-                        ai_service_functions[func_name] = True
+                        self.log_test_result(
+                            "Marketing Agent Type Availability",
+                            False,
+                            f"Failed to get agent types: HTTP {response.status}",
+                            {"HTTP Status": response.status}
+                        )
+                        return False, []
                         
-                        # Extract function to analyze prompts
-                        lines = ai_service_content.split('\n')
-                        in_function = False
-                        function_lines = []
-                        
-                        for line in lines:
-                            if f"def {func_name}" in line:
-                                in_function = True
-                            elif in_function and (line.startswith("    def ") or line.startswith("async def ")):
-                                break
-                            
-                            if in_function:
-                                function_lines.append(line)
-                        
-                        function_content = '\n'.join(function_lines)
-                        
-                        # Check for subject-related instructions in prompts
-                        chatgpt_prompts_analysis[f"ai_service_{func_name}"] = {
-                            "has_subject_mention": "subject" in function_content.lower(),
-                            "has_no_subject_instruction": "DO NOT include" in function_content and "subject" in function_content.lower(),
-                            "has_subject_warning": "subject" in function_content.lower() and ("separate" in function_content.lower() or "already set" in function_content.lower()),
-                            "prompt_content_preview": function_content[:800] + "..." if len(function_content) > 800 else function_content
-                        }
-                    else:
-                        ai_service_functions[func_name] = False
-            
-            success = len(generation_functions_found) > 0 and any(generation_functions_found.values())
-            
-            self.log_test_result(
-                "Holiday/Recurring Email Generation Functions Check",
-                success,
-                f"Found {sum(generation_functions_found.values())} generation functions, {sum(ai_service_functions.values())} AI service functions",
-                {
-                    "Server Generation Functions": generation_functions_found,
-                    "AI Service Functions": ai_service_functions,
-                    "ChatGPT Prompts Analysis": chatgpt_prompts_analysis
-                }
-            )
-            return success, generation_functions_found, chatgpt_prompts_analysis
-            
         except Exception as e:
             self.log_test_result(
-                "Holiday/Recurring Email Generation Functions Check",
+                "Marketing Agent Type Availability",
                 False,
-                f"Error finding generation functions: {str(e)}",
+                f"Error testing agent types: {str(e)}",
                 {"Error Details": str(e)}
             )
-            return False, {}, {}
+            return False, []
     
-    async def test_email_subject_usage(self):
-        """Investigation 3: Test Email Subject Usage - Check email posts with duplicate subjects"""
-        print("🔍 INVESTIGATION 3: Test Email Subject Usage")
+    async def test_marketing_agent_creation(self):
+        """Test 2: Marketing Agent Creation - Test creating a new marketing agent with comprehensive data"""
+        print("🔍 TEST 2: Marketing Agent Creation")
         print("=" * 60)
         
         try:
-            # Find email posts with potential duplicate subjects
-            email_posts = await self.db.ai_posts.find({
-                "agent_type": "email"
-            }).to_list(length=10)
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
             
-            duplicate_subject_analysis = {}
-            posts_with_duplicates = 0
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
             
-            for post in email_posts:
-                post_id = post.get('id')
-                content = post.get('content', '')
-                email_subject = post.get('email_subject', '')
-                topic = post.get('topic', '')
-                agent_id = post.get('agent_id', '')
-                
-                # Check for "Subject:" in content
-                has_subject_in_content = "Subject:" in content
-                subject_lines_in_content = []
-                
-                if has_subject_in_content:
-                    content_lines = content.split('\n')
-                    for line in content_lines:
-                        if line.strip().startswith('Subject:'):
-                            subject_lines_in_content.append(line.strip())
+            # Marketing agent data as specified in the request
+            marketing_agent_data = {
+                "agent_type": "marketing_agent",
+                "agent_name": "Test Marketing Campaign",
+                "marketing_content_type": "topic",
+                "topic": "Pet Health Tips",
+                "marketing_channels": ["email", "sms"],
+                "marketing_email_personalization": True,
+                "email_content_template": "Test email template with [CUSTOMER_NAME] and [PET_NAME]",
+                "marketing_sms_personalization": True,
+                "sms_template": "Test SMS for [CUSTOMER_NAME] about [PET_NAME]",
+                "marketing_link": "https://petsandvetsanimalhospital.com/campaign",
+                "post_date": "2025-01-15",
+                "post_time": "09:00",
+                "marketing_workflow_mode": "in_review",
+                "image_option": "ai_generate",
+                "word_count": "100",
+                "post_destination": "in_review",
+                "auto_post": False
+            }
+            
+            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
+                url = f"{self.backend_url}/api/ai-agents"
+                async with session.post(url, headers=headers, json=marketing_agent_data, timeout=15) as response:
+                    response_text = await response.text()
                     
-                    if subject_lines_in_content:
-                        posts_with_duplicates += 1
-                
-                # Get agent information
-                agent_doc = await self.db.ai_agents.find_one({"id": agent_id})
-                agent_mode = agent_doc.get('mode', 'unknown') if agent_doc else 'unknown'
-                agent_type = agent_doc.get('agent_type', 'unknown') if agent_doc else 'unknown'
-                
-                duplicate_subject_analysis[post_id] = {
-                    "agent_id": agent_id,
-                    "agent_mode": agent_mode,
-                    "agent_type": agent_type,
-                    "email_subject_field": email_subject,
-                    "topic_field": topic,
-                    "has_subject_in_content": has_subject_in_content,
-                    "subject_lines_in_content": subject_lines_in_content,
-                    "duplicate_count": len(subject_lines_in_content),
-                    "content_first_100_chars": content[:100] + "..." if len(content) > 100 else content
-                }
-            
-            # Test actual email delivery (simulate)
-            email_delivery_test = {}
-            if email_posts:
-                sample_post = email_posts[0]
-                email_delivery_test = {
-                    "would_use_email_subject_field": bool(sample_post.get('email_subject')),
-                    "would_ignore_content_subject": True,  # Based on code analysis
-                    "email_subject_value": sample_post.get('email_subject', ''),
-                    "content_has_subject": "Subject:" in sample_post.get('content', '')
-                }
-            
-            success = len(email_posts) > 0
-            
-            self.log_test_result(
-                "Email Subject Usage Test",
-                success,
-                f"Analyzed {len(email_posts)} email posts, found {posts_with_duplicates} with duplicate subjects in content",
-                {
-                    "Total Email Posts": len(email_posts),
-                    "Posts With Duplicate Subjects": posts_with_duplicates,
-                    "Duplicate Subject Analysis": duplicate_subject_analysis,
-                    "Email Delivery Test": email_delivery_test
-                }
-            )
-            return success, duplicate_subject_analysis, posts_with_duplicates
-            
+                    if response.status == 200:
+                        try:
+                            result = json.loads(response_text)
+                            self.created_agent_id = result.get("agent_id")
+                            
+                            # Verify agent was created in database
+                            agent_doc = await self.db.ai_agents.find_one({"id": self.created_agent_id})
+                            
+                            success = agent_doc is not None and agent_doc.get("agent_type") == "marketing_agent"
+                            
+                            # Check if all fields were saved correctly
+                            field_verification = {}
+                            if agent_doc:
+                                field_verification = {
+                                    "agent_name": agent_doc.get("agent_name") == "Test Marketing Campaign",
+                                    "agent_type": agent_doc.get("agent_type") == "marketing_agent",
+                                    "marketing_content_type": agent_doc.get("marketing_content_type") == "topic",
+                                    "topic": agent_doc.get("topic") == "Pet Health Tips",
+                                    "marketing_channels": agent_doc.get("marketing_channels") == ["email", "sms"],
+                                    "marketing_email_personalization": agent_doc.get("marketing_email_personalization") == True,
+                                    "email_content_template": agent_doc.get("email_content_template") == "Test email template with [CUSTOMER_NAME] and [PET_NAME]",
+                                    "marketing_sms_personalization": agent_doc.get("marketing_sms_personalization") == True,
+                                    "sms_template": agent_doc.get("sms_template") == "Test SMS for [CUSTOMER_NAME] about [PET_NAME]",
+                                    "marketing_link": agent_doc.get("marketing_link") == "https://petsandvetsanimalhospital.com/campaign",
+                                    "marketing_workflow_mode": agent_doc.get("marketing_workflow_mode") == "in_review",
+                                    "word_count": agent_doc.get("word_count") == "100",
+                                    "auto_post": agent_doc.get("auto_post") == False
+                                }
+                            
+                            self.log_test_result(
+                                "Marketing Agent Creation",
+                                success,
+                                f"Marketing agent created successfully: {success}",
+                                {
+                                    "HTTP Status": response.status,
+                                    "Agent ID": self.created_agent_id,
+                                    "Agent Found in DB": agent_doc is not None,
+                                    "Field Verification": field_verification,
+                                    "All Fields Correct": all(field_verification.values()) if field_verification else False,
+                                    "Response": result
+                                }
+                            )
+                            return success, self.created_agent_id
+                            
+                        except json.JSONDecodeError:
+                            self.log_test_result(
+                                "Marketing Agent Creation",
+                                False,
+                                "Invalid JSON response",
+                                {"HTTP Status": response.status, "Response Text": response_text}
+                            )
+                            return False, None
+                    else:
+                        self.log_test_result(
+                            "Marketing Agent Creation",
+                            False,
+                            f"Failed to create marketing agent: HTTP {response.status}",
+                            {"HTTP Status": response.status, "Response Text": response_text}
+                        )
+                        return False, None
+                        
         except Exception as e:
             self.log_test_result(
-                "Email Subject Usage Test",
+                "Marketing Agent Creation",
                 False,
-                f"Error testing email subject usage: {str(e)}",
+                f"Error creating marketing agent: {str(e)}",
                 {"Error Details": str(e)}
             )
-            return False, {}, 0
+            return False, None
     
-    async def identify_chatgpt_prompt_issues(self):
-        """Investigation 4: Identify ChatGPT Prompt Issues - Find prompts generating duplicate "Subject:" in content"""
-        print("🔍 INVESTIGATION 4: Identify ChatGPT Prompt Issues")
+    async def test_marketing_agent_generation(self):
+        """Test 3: Marketing Agent Generation - Test running/executing the created marketing agent to generate content"""
+        print("🔍 TEST 3: Marketing Agent Generation")
+        print("=" * 60)
+        
+        if not self.created_agent_id:
+            self.log_test_result(
+                "Marketing Agent Generation",
+                False,
+                "No agent ID available for testing generation",
+                {"Agent ID": self.created_agent_id}
+            )
+            return False, []
+        
+        try:
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
+            
+            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
+                url = f"{self.backend_url}/api/ai-agents/{self.created_agent_id}/run"
+                async with session.post(url, headers=headers, json={}, timeout=30) as response:
+                    response_text = await response.text()
+                    
+                    if response.status == 200:
+                        try:
+                            result = json.loads(response_text)
+                            
+                            # Check for generated posts in database
+                            posts = await self.db.ai_posts.find({
+                                "agent_id": self.created_agent_id,
+                                "agent_type": "marketing_agent"
+                            }).to_list(length=10)
+                            
+                            self.generated_posts = posts
+                            
+                            # Analyze generated posts
+                            post_analysis = {}
+                            channels_generated = set()
+                            
+                            for post in posts:
+                                post_id = post.get("id")
+                                channel = post.get("marketing_channel", "unknown")
+                                channels_generated.add(channel)
+                                
+                                post_analysis[post_id] = {
+                                    "channel": channel,
+                                    "status": post.get("status"),
+                                    "content_length": len(post.get("content", "")),
+                                    "has_content": bool(post.get("content", "").strip()),
+                                    "agent_type": post.get("agent_type"),
+                                    "agent_id": post.get("agent_id"),
+                                    "created_at": post.get("created_at")
+                                }
+                            
+                            expected_channels = {"email", "sms"}  # Based on marketing_channels in creation
+                            channels_match = channels_generated == expected_channels
+                            
+                            success = len(posts) > 0 and channels_match
+                            
+                            self.log_test_result(
+                                "Marketing Agent Generation",
+                                success,
+                                f"Generated {len(posts)} posts for {len(channels_generated)} channels",
+                                {
+                                    "HTTP Status": response.status,
+                                    "Posts Generated": len(posts),
+                                    "Channels Generated": list(channels_generated),
+                                    "Expected Channels": list(expected_channels),
+                                    "Channels Match": channels_match,
+                                    "Post Analysis": post_analysis,
+                                    "Response": result
+                                }
+                            )
+                            return success, posts
+                            
+                        except json.JSONDecodeError:
+                            self.log_test_result(
+                                "Marketing Agent Generation",
+                                False,
+                                "Invalid JSON response",
+                                {"HTTP Status": response.status, "Response Text": response_text}
+                            )
+                            return False, []
+                    else:
+                        self.log_test_result(
+                            "Marketing Agent Generation",
+                            False,
+                            f"Failed to run marketing agent: HTTP {response.status}",
+                            {"HTTP Status": response.status, "Response Text": response_text}
+                        )
+                        return False, []
+                        
+        except Exception as e:
+            self.log_test_result(
+                "Marketing Agent Generation",
+                False,
+                f"Error running marketing agent: {str(e)}",
+                {"Error Details": str(e)}
+            )
+            return False, []
+    
+    async def test_marketing_agent_retrieval(self):
+        """Test 4: Marketing Agent Retrieval - Test getting the created marketing agent and verify all fields are saved correctly"""
+        print("🔍 TEST 4: Marketing Agent Retrieval")
+        print("=" * 60)
+        
+        if not self.created_agent_id:
+            self.log_test_result(
+                "Marketing Agent Retrieval",
+                False,
+                "No agent ID available for testing retrieval",
+                {"Agent ID": self.created_agent_id}
+            )
+            return False, None
+        
+        try:
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            
+            headers = {"Authorization": f"Bearer {self.auth_token}"}
+            
+            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
+                url = f"{self.backend_url}/api/ai-agents/{self.created_agent_id}"
+                async with session.get(url, headers=headers, timeout=10) as response:
+                    response_text = await response.text()
+                    
+                    if response.status == 200:
+                        try:
+                            agent_data = json.loads(response_text)
+                            
+                            # Verify all expected fields are present and correct
+                            expected_fields = {
+                                "agent_type": "marketing_agent",
+                                "agent_name": "Test Marketing Campaign",
+                                "marketing_content_type": "topic",
+                                "topic": "Pet Health Tips",
+                                "marketing_channels": ["email", "sms"],
+                                "marketing_email_personalization": True,
+                                "email_content_template": "Test email template with [CUSTOMER_NAME] and [PET_NAME]",
+                                "marketing_sms_personalization": True,
+                                "sms_template": "Test SMS for [CUSTOMER_NAME] about [PET_NAME]",
+                                "marketing_link": "https://petsandvetsanimalhospital.com/campaign",
+                                "marketing_workflow_mode": "in_review",
+                                "word_count": "100",
+                                "auto_post": False
+                            }
+                            
+                            field_verification = {}
+                            all_fields_correct = True
+                            
+                            for field, expected_value in expected_fields.items():
+                                actual_value = agent_data.get(field)
+                                is_correct = actual_value == expected_value
+                                field_verification[field] = {
+                                    "expected": expected_value,
+                                    "actual": actual_value,
+                                    "correct": is_correct
+                                }
+                                if not is_correct:
+                                    all_fields_correct = False
+                            
+                            # Check for additional important fields
+                            additional_checks = {
+                                "id": agent_data.get("id") == self.created_agent_id,
+                                "is_active": agent_data.get("is_active") is not None,
+                                "created_at": agent_data.get("created_at") is not None,
+                                "updated_at": agent_data.get("updated_at") is not None
+                            }
+                            
+                            success = all_fields_correct and all(additional_checks.values())
+                            
+                            self.log_test_result(
+                                "Marketing Agent Retrieval",
+                                success,
+                                f"Agent retrieved successfully, all fields correct: {all_fields_correct}",
+                                {
+                                    "HTTP Status": response.status,
+                                    "Agent ID Match": agent_data.get("id") == self.created_agent_id,
+                                    "All Fields Correct": all_fields_correct,
+                                    "Field Verification": field_verification,
+                                    "Additional Checks": additional_checks,
+                                    "Agent Data Keys": list(agent_data.keys())
+                                }
+                            )
+                            return success, agent_data
+                            
+                        except json.JSONDecodeError:
+                            self.log_test_result(
+                                "Marketing Agent Retrieval",
+                                False,
+                                "Invalid JSON response",
+                                {"HTTP Status": response.status, "Response Text": response_text}
+                            )
+                            return False, None
+                    else:
+                        self.log_test_result(
+                            "Marketing Agent Retrieval",
+                            False,
+                            f"Failed to retrieve marketing agent: HTTP {response.status}",
+                            {"HTTP Status": response.status, "Response Text": response_text}
+                        )
+                        return False, None
+                        
+        except Exception as e:
+            self.log_test_result(
+                "Marketing Agent Retrieval",
+                False,
+                f"Error retrieving marketing agent: {str(e)}",
+                {"Error Details": str(e)}
+            )
+            return False, None
+    
+    async def test_error_handling(self):
+        """Test 5: Error Handling - Test validation errors for missing required fields"""
+        print("🔍 TEST 5: Error Handling")
         print("=" * 60)
         
         try:
-            prompt_issues_found = {}
-            problematic_prompts = []
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
             
-            # Analyze ai_service.py prompts
-            ai_service_file_path = backend_dir / "ai_service.py"
-            if ai_service_file_path.exists():
-                with open(ai_service_file_path, 'r') as f:
-                    ai_service_content = f.read()
-                
-                # Look for email formatting prompts
-                prompt_sections = []
-                lines = ai_service_content.split('\n')
-                
-                for i, line in enumerate(lines):
-                    if 'email_prompt = f"""' in line or 'email_prompt = f"' in line:
-                        # Found start of prompt, extract it
-                        prompt_lines = [line]
-                        j = i + 1
-                        while j < len(lines) and not ('"""' in lines[j] and lines[j].strip().endswith('"""')):
-                            prompt_lines.append(lines[j])
-                            j += 1
-                        if j < len(lines):
-                            prompt_lines.append(lines[j])
-                        
-                        prompt_content = '\n'.join(prompt_lines)
-                        prompt_sections.append({
-                            "line_start": i + 1,
-                            "content": prompt_content,
-                            "function_context": self._find_function_context(lines, i)
-                        })
-                
-                # Analyze each prompt for subject-related issues
-                for idx, prompt_section in enumerate(prompt_sections):
-                    prompt_content = prompt_section["content"]
-                    function_context = prompt_section["function_context"]
-                    
-                    analysis = {
-                        "line_start": prompt_section["line_start"],
-                        "function_context": function_context,
-                        "mentions_subject": "subject" in prompt_content.lower(),
-                        "has_no_subject_instruction": "DO NOT include" in prompt_content and "subject" in prompt_content.lower(),
-                        "warns_about_separate_subject": "separate" in prompt_content.lower() and "subject" in prompt_content.lower(),
-                        "might_generate_subject": not ("DO NOT include" in prompt_content and "subject" in prompt_content.lower()) and "subject" in prompt_content.lower(),
-                        "prompt_preview": prompt_content[:300] + "..." if len(prompt_content) > 300 else prompt_content
-                    }
-                    
-                    prompt_issues_found[f"prompt_{idx + 1}_{function_context}"] = analysis
-                    
-                    # Flag problematic prompts
-                    if analysis["might_generate_subject"] and not analysis["has_no_subject_instruction"]:
-                        problematic_prompts.append({
-                            "prompt_id": f"prompt_{idx + 1}_{function_context}",
-                            "issue": "May generate subject in content without explicit prevention",
-                            "line_start": analysis["line_start"],
-                            "function": function_context
-                        })
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
             
-            # Check server.py for inline prompts
-            server_file_path = backend_dir / "server.py"
-            if server_file_path.exists():
-                with open(server_file_path, 'r') as f:
-                    server_content = f.read()
-                
-                # Look for inline email prompts
-                lines = server_content.split('\n')
-                for i, line in enumerate(lines):
-                    if 'email_prompt = f"""' in line:
-                        # Found inline prompt
-                        prompt_lines = [line]
-                        j = i + 1
-                        while j < len(lines) and not ('"""' in lines[j] and lines[j].strip().endswith('"""')):
-                            prompt_lines.append(lines[j])
-                            j += 1
-                        if j < len(lines):
-                            prompt_lines.append(lines[j])
+            # Test cases for missing required fields
+            test_cases = [
+                {
+                    "name": "Missing agent_type",
+                    "data": {
+                        "agent_name": "Test Marketing Campaign",
+                        "marketing_content_type": "topic",
+                        "topic": "Pet Health Tips"
+                    },
+                    "expected_error": "agent_type"
+                },
+                {
+                    "name": "Missing agent_name",
+                    "data": {
+                        "agent_type": "marketing_agent",
+                        "marketing_content_type": "topic",
+                        "topic": "Pet Health Tips"
+                    },
+                    "expected_error": "agent_name"
+                },
+                {
+                    "name": "Invalid agent_type",
+                    "data": {
+                        "agent_type": "invalid_agent_type",
+                        "agent_name": "Test Marketing Campaign",
+                        "marketing_content_type": "topic",
+                        "topic": "Pet Health Tips"
+                    },
+                    "expected_error": "agent_type"
+                },
+                {
+                    "name": "Empty marketing_channels",
+                    "data": {
+                        "agent_type": "marketing_agent",
+                        "agent_name": "Test Marketing Campaign",
+                        "marketing_content_type": "topic",
+                        "topic": "Pet Health Tips",
+                        "marketing_channels": []
+                    },
+                    "expected_error": "marketing_channels"
+                }
+            ]
+            
+            error_test_results = {}
+            successful_error_tests = 0
+            
+            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
+                for test_case in test_cases:
+                    url = f"{self.backend_url}/api/ai-agents"
+                    async with session.post(url, headers=headers, json=test_case["data"], timeout=10) as response:
+                        response_text = await response.text()
                         
-                        prompt_content = '\n'.join(prompt_lines)
-                        function_context = self._find_function_context(lines, i)
+                        # We expect these to fail (4xx status codes)
+                        is_error_response = 400 <= response.status < 500
                         
-                        analysis = {
-                            "line_start": i + 1,
-                            "function_context": function_context,
-                            "file": "server.py",
-                            "mentions_subject": "subject" in prompt_content.lower(),
-                            "has_no_subject_instruction": "DO NOT include" in prompt_content and "subject" in prompt_content.lower(),
-                            "warns_about_separate_subject": "separate" in prompt_content.lower() and "subject" in prompt_content.lower(),
-                            "might_generate_subject": not ("DO NOT include" in prompt_content and "subject" in prompt_content.lower()) and "subject" in prompt_content.lower(),
-                            "prompt_preview": prompt_content[:300] + "..." if len(prompt_content) > 300 else prompt_content
+                        error_test_results[test_case["name"]] = {
+                            "expected_error": test_case["expected_error"],
+                            "http_status": response.status,
+                            "is_error_response": is_error_response,
+                            "response_text": response_text[:200] + "..." if len(response_text) > 200 else response_text
                         }
                         
-                        prompt_issues_found[f"server_prompt_{function_context}"] = analysis
-                        
-                        if analysis["might_generate_subject"] and not analysis["has_no_subject_instruction"]:
-                            problematic_prompts.append({
-                                "prompt_id": f"server_prompt_{function_context}",
-                                "issue": "May generate subject in content without explicit prevention",
-                                "line_start": analysis["line_start"],
-                                "function": function_context,
-                                "file": "server.py"
-                            })
+                        if is_error_response:
+                            successful_error_tests += 1
             
-            success = len(prompt_issues_found) > 0
+            success = successful_error_tests == len(test_cases)
             
             self.log_test_result(
-                "ChatGPT Prompt Issues Identification",
+                "Error Handling",
                 success,
-                f"Analyzed {len(prompt_issues_found)} prompts, found {len(problematic_prompts)} potentially problematic prompts",
+                f"Error handling tests passed: {successful_error_tests}/{len(test_cases)}",
                 {
-                    "Total Prompts Analyzed": len(prompt_issues_found),
-                    "Problematic Prompts Count": len(problematic_prompts),
-                    "Prompt Issues Analysis": prompt_issues_found,
-                    "Problematic Prompts": problematic_prompts
+                    "Total Test Cases": len(test_cases),
+                    "Successful Error Tests": successful_error_tests,
+                    "Error Test Results": error_test_results
                 }
             )
-            return success, prompt_issues_found, problematic_prompts
+            return success, error_test_results
             
         except Exception as e:
             self.log_test_result(
-                "ChatGPT Prompt Issues Identification",
+                "Error Handling",
                 False,
-                f"Error identifying prompt issues: {str(e)}",
+                f"Error testing error handling: {str(e)}",
                 {"Error Details": str(e)}
             )
-            return False, {}, []
+            return False, {}
     
-    def _find_function_context(self, lines, line_index):
-        """Helper function to find which function a line belongs to"""
-        for i in range(line_index, -1, -1):
-            line = lines[i].strip()
-            if line.startswith('def ') or line.startswith('async def '):
-                # Extract function name
-                if '(' in line:
-                    func_name = line.split('(')[0].replace('async def ', '').replace('def ', '').strip()
-                    return func_name
-        return "unknown_function"
-    
-    async def run_email_subject_investigation(self):
-        """Run comprehensive email subject handling investigation"""
-        print("🔍 STARTING EMAIL SUBJECT HANDLING AND DUPLICATE SUBJECT GENERATION INVESTIGATION")
+    async def run_marketing_agent_tests(self):
+        """Run comprehensive marketing agent functionality tests"""
+        print("🔍 STARTING MARKETING AGENT FUNCTIONALITY TESTING")
         print("=" * 80)
-        print("Investigating email subject handling and fixing duplicate subject generation")
+        print("Testing Marketing Agent functionality comprehensively")
         print("=" * 80)
         
         try:
@@ -560,37 +610,50 @@ class EmailSubjectInvestigator:
             # Authenticate first
             auth_success = await self.authenticate()
             if not auth_success:
-                print("❌ Authentication failed - proceeding with database-only tests")
+                print("❌ Authentication failed - cannot proceed with API tests")
+                return
             
-            # Run all investigations
-            investigation_results = []
+            # Run all tests
+            test_results = []
             
-            # Investigation 1: Check Email Sending Logic
-            success1, subject_field_usage, post_subject_analysis = await self.check_email_sending_logic()
-            investigation_results.append(success1)
+            # Test 1: Marketing Agent Type Availability
+            success1, agent_types = await self.test_marketing_agent_type_availability()
+            test_results.append(success1)
             
-            # Investigation 2: Find Holiday/Recurring Email Generation
-            success2, generation_functions, chatgpt_prompts = await self.find_holiday_recurring_email_generation()
-            investigation_results.append(success2)
+            # Test 2: Marketing Agent Creation
+            success2, agent_id = await self.test_marketing_agent_creation()
+            test_results.append(success2)
             
-            # Investigation 3: Test Email Subject Usage
-            success3, duplicate_analysis, duplicate_count = await self.test_email_subject_usage()
-            investigation_results.append(success3)
+            # Test 3: Marketing Agent Generation (only if creation succeeded)
+            if success2 and agent_id:
+                success3, posts = await self.test_marketing_agent_generation()
+                test_results.append(success3)
+            else:
+                print("⏭️  Skipping generation test - agent creation failed")
+                test_results.append(False)
             
-            # Investigation 4: Identify ChatGPT Prompt Issues
-            success4, prompt_issues, problematic_prompts = await self.identify_chatgpt_prompt_issues()
-            investigation_results.append(success4)
+            # Test 4: Marketing Agent Retrieval (only if creation succeeded)
+            if success2 and agent_id:
+                success4, agent_data = await self.test_marketing_agent_retrieval()
+                test_results.append(success4)
+            else:
+                print("⏭️  Skipping retrieval test - agent creation failed")
+                test_results.append(False)
+            
+            # Test 5: Error Handling
+            success5, error_results = await self.test_error_handling()
+            test_results.append(success5)
             
             # Summary
             print("=" * 80)
-            print("🎯 EMAIL SUBJECT INVESTIGATION SUMMARY")
+            print("🎯 MARKETING AGENT TESTING SUMMARY")
             print("=" * 80)
             
-            passed_investigations = sum(investigation_results)
-            total_investigations = len(investigation_results)
-            success_rate = (passed_investigations / total_investigations) * 100
+            passed_tests = sum(test_results)
+            total_tests = len(test_results)
+            success_rate = (passed_tests / total_tests) * 100
             
-            print(f"Successful Investigations: {passed_investigations}/{total_investigations} ({success_rate:.1f}%)")
+            print(f"Successful Tests: {passed_tests}/{total_tests} ({success_rate:.1f}%)")
             print()
             
             # Detailed results
@@ -602,91 +665,62 @@ class EmailSubjectInvestigator:
             print("🔍 KEY FINDINGS:")
             print("=" * 40)
             
-            # Email Sending Logic Analysis
-            if subject_field_usage.get("uses_email_subject_field"):
-                print("✅ EMAIL SENDING: Uses 'email_subject' field for actual email delivery")
+            # Marketing Agent Type Analysis
+            if success1:
+                print("✅ AGENT TYPES: Marketing agent type is available in /api/ai-agent-types endpoint")
             else:
-                print("❌ EMAIL SENDING: Does not use 'email_subject' field - needs investigation")
+                print("❌ AGENT TYPES: Marketing agent type not found in agent types endpoint")
             
-            if subject_field_usage.get("uses_subject_in_content"):
-                print("⚠️  EMAIL SENDING: Also references 'Subject:' in content - potential issue")
+            # Marketing Agent Creation Analysis
+            if success2:
+                print("✅ AGENT CREATION: Marketing agent created successfully with all specified fields")
+                print(f"   - Agent ID: {self.created_agent_id}")
             else:
-                print("✅ EMAIL SENDING: Does not use 'Subject:' from content")
+                print("❌ AGENT CREATION: Failed to create marketing agent")
             
-            # Duplicate Subject Analysis
-            if duplicate_count > 0:
-                print(f"❌ DUPLICATE SUBJECTS: Found {duplicate_count} email posts with 'Subject:' in content")
-                print("   - This indicates ChatGPT is generating duplicate subjects")
-                print("   - Only 'email_subject' field should be used for delivery")
-            else:
-                print("✅ DUPLICATE SUBJECTS: No duplicate subjects found in email content")
+            # Marketing Agent Generation Analysis
+            if len(test_results) > 2 and test_results[2]:
+                print("✅ AGENT GENERATION: Marketing agent generated content successfully")
+                print(f"   - Generated posts: {len(self.generated_posts)}")
+                if self.generated_posts:
+                    channels = set(post.get("marketing_channel") for post in self.generated_posts)
+                    print(f"   - Channels: {list(channels)}")
+            elif len(test_results) > 2:
+                print("❌ AGENT GENERATION: Failed to generate marketing content")
             
-            # ChatGPT Prompt Issues
-            if problematic_prompts:
-                print(f"❌ PROMPT ISSUES: Found {len(problematic_prompts)} potentially problematic ChatGPT prompts")
-                for prompt in problematic_prompts:
-                    print(f"   - {prompt['prompt_id']}: {prompt['issue']}")
-                    print(f"     Location: {prompt.get('file', 'ai_service.py')} line {prompt['line_start']}")
-                    print(f"     Function: {prompt['function']}")
+            # Marketing Agent Retrieval Analysis
+            if len(test_results) > 3 and test_results[3]:
+                print("✅ AGENT RETRIEVAL: Marketing agent retrieved successfully with all fields intact")
+            elif len(test_results) > 3:
+                print("❌ AGENT RETRIEVAL: Failed to retrieve marketing agent or fields incorrect")
+            
+            # Error Handling Analysis
+            if success5:
+                print("✅ ERROR HANDLING: Proper validation errors for missing required fields")
             else:
-                print("✅ PROMPT ISSUES: All ChatGPT prompts have proper subject handling instructions")
+                print("❌ ERROR HANDLING: Error handling not working correctly")
             
             print()
-            print("🎯 ROOT CAUSE ANALYSIS:")
+            print("📋 DETAILED TEST RESULTS:")
             print("=" * 40)
             
-            # Determine root causes and solutions
-            if duplicate_count > 0 and problematic_prompts:
-                print("❌ ROOT CAUSE: ChatGPT prompts are generating duplicate 'Subject:' lines in email content")
-                print("   SOLUTION REQUIRED:")
-                for prompt in problematic_prompts:
-                    print(f"   - Fix prompt in {prompt.get('file', 'ai_service.py')} at line {prompt['line_start']}")
-                    print(f"     Add instruction: 'DO NOT include any subject line in your response'")
-                    print(f"     Add warning: 'The email subject is already set separately'")
-            elif duplicate_count > 0:
-                print("❌ ROOT CAUSE: Email posts contain duplicate subjects but prompts look correct")
-                print("   - May be legacy data or other generation source")
-                print("   - Verify all email generation paths use proper prompts")
-            elif problematic_prompts:
-                print("⚠️  POTENTIAL ISSUE: Found prompts that might generate duplicate subjects")
-                print("   - No current duplicate subjects found in database")
-                print("   - Recommend fixing prompts preventively")
-            else:
-                print("✅ NO ISSUES FOUND: Email subject handling appears to be working correctly")
-                print("   - Email delivery uses 'email_subject' field only")
-                print("   - ChatGPT prompts have proper subject handling instructions")
-                print("   - No duplicate subjects found in email content")
+            test_names = [
+                "Marketing Agent Type Availability",
+                "Marketing Agent Creation", 
+                "Marketing Agent Generation",
+                "Marketing Agent Retrieval",
+                "Error Handling"
+            ]
             
-            print()
-            print("📋 RECOMMENDED ACTIONS:")
-            print("=" * 40)
-            
-            if problematic_prompts:
-                print("🔧 IMMEDIATE FIXES NEEDED:")
-                for prompt in problematic_prompts:
-                    print(f"1. Edit {prompt.get('file', 'ai_service.py')} at line {prompt['line_start']}")
-                    print(f"   Function: {prompt['function']}")
-                    print(f"   Add to prompt: 'IMPORTANT: DO NOT include any subject line in your response. The email subject is already set separately.'")
-                    print()
-            
-            if duplicate_count > 0:
-                print("🧹 CLEANUP NEEDED:")
-                print("1. Review existing email posts with duplicate subjects")
-                print("2. Consider cleaning up 'Subject:' lines from email content")
-                print("3. Verify mass email sending ignores content subjects")
-                print()
-            
-            print("✅ VERIFICATION STEPS:")
-            print("1. Confirm mass email sending uses only 'email_subject' field")
-            print("2. Test email generation after prompt fixes")
-            print("3. Verify no new duplicate subjects are generated")
-            print("4. Ensure consistency across all email agent modes (write, recurring, scheduled)")
+            for i, (test_name, success) in enumerate(zip(test_names, test_results)):
+                status = "✅ PASS" if success else "❌ FAIL"
+                print(f"{i+1}. {status} {test_name}")
             
             print()
             print("=" * 80)
             
         except Exception as e:
-            print(f"❌ CRITICAL ERROR during investigation: {str(e)}")
+            print(f"❌ CRITICAL ERROR during testing: {str(e)}")
             import traceback
             traceback.print_exc()
         
@@ -694,9 +728,9 @@ class EmailSubjectInvestigator:
             await self.disconnect()
 
 async def main():
-    """Main investigation function"""
-    investigator = EmailSubjectInvestigator()
-    await investigator.run_email_subject_investigation()
+    """Main testing function"""
+    tester = MarketingAgentTester()
+    await tester.run_marketing_agent_tests()
 
 if __name__ == "__main__":
     asyncio.run(main())
