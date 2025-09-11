@@ -562,6 +562,49 @@ const AIAgentsDashboard = () => {
     return colors[mode] || '#29add3';
   };
 
+  // Helper function to get holiday details for marketing agents
+  const getHolidayDetails = (holidayIds) => {
+    if (!holidayIds || holidayIds.length === 0) return 'No holidays selected';
+    
+    // If we have holiday data, format it nicely
+    const holidayNames = holidayIds.map(holidayId => {
+      // Try to find holiday name if we have the data
+      // For now, just return the ID or try to format it
+      return holidayId;
+    });
+    
+    if (holidayNames.length === 1) {
+      return holidayNames[0];
+    } else if (holidayNames.length <= 3) {
+      return holidayNames.join(', ');
+    } else {
+      return `${holidayNames.slice(0, 2).join(', ')} and ${holidayNames.length - 2} more`;
+    }
+  };
+
+  // Helper function to format marketing agent content type display
+  const getMarketingContentTypeDisplay = (agent) => {
+    const contentType = agent.marketing_content_type;
+    
+    if (contentType === 'topic') {
+      const topicName = agent.topic || agent.marketing_selected_topic || 'Unnamed Topic';
+      return `Topic - ${topicName}`;
+    } else if (contentType === 'holidays') {
+      const holidays = agent.selected_holidays || agent.marketing_selected_holidays || [];
+      if (holidays.length === 0) {
+        return 'Holidays - None selected';
+      } else if (holidays.length === 1) {
+        return `Holiday - ${holidays[0]}`;
+      } else {
+        return `Holidays - ${holidays.length} selected`;
+      }
+    } else if (contentType === 'custom_campaign') {
+      return 'Custom Campaign';
+    } else {
+      return 'Topic'; // Default fallback
+    }
+  };
+
   const getModeLabel = (mode, agentType, selectedHolidays) => {
     // Special case for Marketing Agent - always show Campaign Mode
     if (agentType === 'marketing_agent') {
