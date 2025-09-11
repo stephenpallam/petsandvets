@@ -6675,6 +6675,516 @@ Example:
             </div>
           </div>
         </div>
+
+        {/* Marketing Agent Form */}
+        {searchParams.get('agent_type') === 'marketing_agent' && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+              <div className="px-6 py-4 bg-gradient-to-r from-purple-50 to-blue-50 border-b border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <Bot className="h-5 w-5 mr-2 text-purple-600" />
+                  Your Campaign
+                </h3>
+                <p className="text-sm text-gray-600 mt-1">Create comprehensive multi-channel marketing campaigns</p>
+              </div>
+              
+              <div className="p-6 space-y-6">
+                {/* Agent Name */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <Bot className="h-4 w-4 inline mr-2" />
+                      Agent Name *
+                    </label>
+                    <input
+                      type="text"
+                      value={marketingMode.agentName}
+                      onChange={(e) => setMarketingMode(prev => ({ ...prev, agentName: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="e.g., Holiday Promotion Campaign"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Select Content Type */}
+                <div className="space-y-4">
+                  <label className="block text-sm font-medium text-gray-700">
+                    <FileText className="h-4 w-4 inline mr-2" />
+                    Select Content Type *
+                  </label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Topic Option */}
+                    <label className="relative">
+                      <input
+                        type="radio"
+                        name="contentType"
+                        value="topic"
+                        checked={marketingMode.contentType === 'topic'}
+                        onChange={(e) => setMarketingMode(prev => ({ ...prev, contentType: e.target.value }))}
+                        className="sr-only"
+                      />
+                      <div className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                        marketingMode.contentType === 'topic' 
+                          ? 'border-blue-500 bg-blue-50' 
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}>
+                        <div className="flex items-center space-x-2">
+                          <Hash className="h-5 w-5 text-blue-600" />
+                          <span className="font-medium">Topic</span>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">Generate content based on a specific topic</p>
+                      </div>
+                    </label>
+
+                    {/* Holidays Option */}
+                    <label className="relative">
+                      <input
+                        type="radio"
+                        name="contentType"
+                        value="holidays"
+                        checked={marketingMode.contentType === 'holidays'}
+                        onChange={(e) => setMarketingMode(prev => ({ ...prev, contentType: e.target.value }))}
+                        className="sr-only"
+                      />
+                      <div className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                        marketingMode.contentType === 'holidays' 
+                          ? 'border-green-500 bg-green-50' 
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}>
+                        <div className="flex items-center space-x-2">
+                          <CalendarDays className="h-5 w-5 text-green-600" />
+                          <span className="font-medium">Holidays</span>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">Create holiday-themed marketing content</p>
+                      </div>
+                    </label>
+
+                    {/* Custom Campaign Option */}
+                    <label className="relative">
+                      <input
+                        type="radio"
+                        name="contentType"
+                        value="custom_campaign"
+                        checked={marketingMode.contentType === 'custom_campaign'}
+                        onChange={(e) => setMarketingMode(prev => ({ ...prev, contentType: e.target.value }))}
+                        className="sr-only"
+                      />
+                      <div className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                        marketingMode.contentType === 'custom_campaign' 
+                          ? 'border-purple-500 bg-purple-50' 
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}>
+                        <div className="flex items-center space-x-2">
+                          <FileText className="h-5 w-5 text-purple-600" />
+                          <span className="font-medium">Custom Campaign</span>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">Write your own campaign content</p>
+                      </div>
+                    </label>
+                  </div>
+
+                  {/* Content Type Specific Fields */}
+                  {marketingMode.contentType === 'topic' && (
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Select Topic *</label>
+                      <select
+                        value={marketingMode.selectedTopic}
+                        onChange={(e) => setMarketingMode(prev => ({ ...prev, selectedTopic: e.target.value }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      >
+                        <option value="">Choose a topic...</option>
+                        <option value="Pet Health Tips">Pet Health Tips</option>
+                        <option value="Vaccination Reminders">Vaccination Reminders</option>
+                        <option value="Seasonal Pet Care">Seasonal Pet Care</option>
+                        <option value="Pet Nutrition">Pet Nutrition</option>
+                        <option value="Pet Dental Care">Pet Dental Care</option>
+                        <option value="Emergency Pet Care">Emergency Pet Care</option>
+                        <option value="Pet Grooming">Pet Grooming</option>
+                        <option value="Senior Pet Care">Senior Pet Care</option>
+                        <option value="Puppy/Kitten Care">Puppy/Kitten Care</option>
+                        <option value="Custom">Custom Topic</option>
+                      </select>
+                      {marketingMode.selectedTopic === 'Custom' && (
+                        <input
+                          type="text"
+                          placeholder="Enter your custom topic..."
+                          className="w-full mt-2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          onChange={(e) => setMarketingMode(prev => ({ ...prev, customTopic: e.target.value }))}
+                        />
+                      )}
+                    </div>
+                  )}
+
+                  {marketingMode.contentType === 'holidays' && (
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Select Holidays *</label>
+                      <div className="border border-gray-300 rounded-md p-4 max-h-48 overflow-y-auto bg-gray-50">
+                        {availableHolidays.map((holiday) => (
+                          <label key={holiday.id} className="flex items-center space-x-2 py-1">
+                            <input
+                              type="checkbox"
+                              checked={marketingMode.selectedHolidays.includes(holiday.id)}
+                              onChange={(e) => {
+                                const isChecked = e.target.checked;
+                                setMarketingMode(prev => ({
+                                  ...prev,
+                                  selectedHolidays: isChecked 
+                                    ? [...prev.selectedHolidays, holiday.id]
+                                    : prev.selectedHolidays.filter(id => id !== holiday.id)
+                                }));
+                              }}
+                              className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                            />
+                            <span className="text-sm text-gray-700">{holiday.name}</span>
+                            <span className="text-xs text-gray-500">({holiday.date})</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {marketingMode.contentType === 'custom_campaign' && (
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Campaign Content *</label>
+                      <textarea
+                        value={marketingMode.customCampaign}
+                        onChange={(e) => setMarketingMode(prev => ({ ...prev, customCampaign: e.target.value }))}
+                        rows={8}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Write your campaign content here..."
+                        required
+                      />
+                      <p className="text-sm text-gray-500 mt-1">
+                        Use placeholders: [CUSTOMER_NAME], [PET_NAME], [LINK] for personalization
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Select Channels */}
+                <div className="space-y-4">
+                  <label className="block text-sm font-medium text-gray-700">
+                    <Share2 className="h-4 w-4 inline mr-2" />
+                    Select Channels *
+                  </label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Social Media Channel */}
+                    <label className="relative">
+                      <input
+                        type="checkbox"
+                        checked={marketingMode.channels.includes('social_media')}
+                        onChange={(e) => {
+                          const isChecked = e.target.checked;
+                          setMarketingMode(prev => ({
+                            ...prev,
+                            channels: isChecked 
+                              ? [...prev.channels, 'social_media']
+                              : prev.channels.filter(c => c !== 'social_media')
+                          }));
+                        }}
+                        className="sr-only"
+                      />
+                      <div className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                        marketingMode.channels.includes('social_media') 
+                          ? 'border-blue-500 bg-blue-50' 
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}>
+                        <div className="flex items-center space-x-2">
+                          <Globe className="h-5 w-5 text-blue-600" />
+                          <span className="font-medium">Social Media</span>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">Facebook, Instagram, Twitter, WhatsApp</p>
+                      </div>
+                    </label>
+
+                    {/* Email Channel */}
+                    <label className="relative">
+                      <input
+                        type="checkbox"
+                        checked={marketingMode.channels.includes('email')}
+                        onChange={(e) => {
+                          const isChecked = e.target.checked;
+                          setMarketingMode(prev => ({
+                            ...prev,
+                            channels: isChecked 
+                              ? [...prev.channels, 'email']
+                              : prev.channels.filter(c => c !== 'email')
+                          }));
+                        }}
+                        className="sr-only"
+                      />
+                      <div className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                        marketingMode.channels.includes('email') 
+                          ? 'border-green-500 bg-green-50' 
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}>
+                        <div className="flex items-center space-x-2">
+                          <Mail className="h-5 w-5 text-green-600" />
+                          <span className="font-medium">Email</span>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">Email marketing campaigns</p>
+                      </div>
+                    </label>
+
+                    {/* SMS Channel */}
+                    <label className="relative">
+                      <input
+                        type="checkbox"
+                        checked={marketingMode.channels.includes('sms')}
+                        onChange={(e) => {
+                          const isChecked = e.target.checked;
+                          setMarketingMode(prev => ({
+                            ...prev,
+                            channels: isChecked 
+                              ? [...prev.channels, 'sms']
+                              : prev.channels.filter(c => c !== 'sms')
+                          }));
+                        }}
+                        className="sr-only"
+                      />
+                      <div className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                        marketingMode.channels.includes('sms') 
+                          ? 'border-purple-500 bg-purple-50' 
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}>
+                        <div className="flex items-center space-x-2">
+                          <MessageCircle className="h-5 w-5 text-purple-600" />
+                          <span className="font-medium">SMS</span>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">Text message campaigns</p>
+                      </div>
+                    </label>
+                  </div>
+
+                  {/* Channel Specific Options */}
+                  {marketingMode.channels.includes('social_media') && (
+                    <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                      <h4 className="font-medium text-gray-900 mb-3">Social Media Platforms</h4>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        {Object.entries(marketingMode.socialPlatforms).map(([platform, enabled]) => (
+                          <label key={platform} className="flex items-center space-x-2">
+                            <input
+                              type="checkbox"
+                              checked={enabled}
+                              onChange={(e) => setMarketingMode(prev => ({
+                                ...prev,
+                                socialPlatforms: {
+                                  ...prev.socialPlatforms,
+                                  [platform]: e.target.checked
+                                }
+                              }))}
+                              className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                            />
+                            <span className="text-sm text-gray-700 capitalize">
+                              {platform === 'twitter' ? 'X (Twitter)' : platform}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {marketingMode.channels.includes('email') && (
+                    <div className="mt-4 p-4 bg-green-50 rounded-lg">
+                      <h4 className="font-medium text-gray-900 mb-3">Email Configuration</h4>
+                      <label className="flex items-center space-x-2 mb-3">
+                        <input
+                          type="checkbox"
+                          checked={marketingMode.emailPersonalized}
+                          onChange={(e) => setMarketingMode(prev => ({ ...prev, emailPersonalized: e.target.checked }))}
+                          className="h-4 w-4 text-green-600 rounded border-gray-300 focus:ring-green-500"
+                        />
+                        <span className="text-sm text-gray-700">Personalize emails with customer and pet names</span>
+                      </label>
+                      <p className="text-xs text-gray-500 mb-3">📊 Customer database will be used for sending emails</p>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Email Template</label>
+                        <textarea
+                          value={marketingMode.emailTemplate}
+                          onChange={(e) => setMarketingMode(prev => ({ ...prev, emailTemplate: e.target.value }))}
+                          rows={4}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
+                          placeholder="Email template content..."
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {marketingMode.channels.includes('sms') && (
+                    <div className="mt-4 p-4 bg-purple-50 rounded-lg">
+                      <h4 className="font-medium text-gray-900 mb-3">SMS Configuration</h4>
+                      <label className="flex items-center space-x-2 mb-3">
+                        <input
+                          type="checkbox"
+                          checked={marketingMode.smsPersonalized}
+                          onChange={(e) => setMarketingMode(prev => ({ ...prev, smsPersonalized: e.target.checked }))}
+                          className="h-4 w-4 text-purple-600 rounded border-gray-300 focus:ring-purple-500"
+                        />
+                        <span className="text-sm text-gray-700">Personalize SMS with customer and pet names</span>
+                      </label>
+                      <p className="text-xs text-gray-500 mb-3">📊 Customer database will be used for sending SMS</p>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">SMS Template</label>
+                        <textarea
+                          value={marketingMode.smsTemplate}
+                          onChange={(e) => setMarketingMode(prev => ({ ...prev, smsTemplate: e.target.value }))}
+                          rows={3}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                          placeholder="SMS template content..."
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Keep under 160 characters for single SMS</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Scheduled Date and Post Time */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <Calendar className="h-4 w-4 inline mr-2" />
+                      Scheduled Date
+                    </label>
+                    <input
+                      type="date"
+                      value={marketingMode.scheduledDate}
+                      onChange={(e) => setMarketingMode(prev => ({ ...prev, scheduledDate: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <Clock className="h-4 w-4 inline mr-2" />
+                      Post Time
+                    </label>
+                    <input
+                      type="time"
+                      value={marketingMode.postTime}
+                      onChange={(e) => setMarketingMode(prev => ({ ...prev, postTime: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Add Link */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <Globe className="h-4 w-4 inline mr-2" />
+                    Campaign Link
+                  </label>
+                  <input
+                    type="url"
+                    value={marketingMode.marketingLink}
+                    onChange={(e) => setMarketingMode(prev => ({ ...prev, marketingLink: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="https://petsandvetsanimalhospital.com"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Use [LINK] placeholder in content to insert this URL</p>
+                </div>
+
+                {/* Image Options */}
+                <div className="space-y-4">
+                  <label className="block text-sm font-medium text-gray-700">
+                    <ImageIcon className="h-4 w-4 inline mr-2" />
+                    Image Options
+                  </label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {[
+                      { id: 'ai_generate', label: 'AI Generate', icon: Bot },
+                      { id: 'upload', label: 'Upload', icon: Upload },
+                      { id: 'reference', label: 'Reference', icon: ImageIcon },
+                      { id: 'none', label: 'No Image', icon: X }
+                    ].map(({ id, label, icon: Icon }) => (
+                      <label key={id} className="flex items-center space-x-2">
+                        <input
+                          type="radio"
+                          name="imageOption"
+                          value={id}
+                          checked={marketingMode.imageOption === id}
+                          onChange={(e) => setMarketingMode(prev => ({ ...prev, imageOption: e.target.value }))}
+                          className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                        />
+                        <Icon className="h-4 w-4 text-gray-600" />
+                        <span className="text-sm text-gray-700">{label}</span>
+                      </label>
+                    ))}
+                  </div>
+                  
+                  {marketingMode.imageOption === 'ai_generate' && (
+                    <div className="mt-3">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Image Description</label>
+                      <textarea
+                        value={marketingMode.imageText}
+                        onChange={(e) => setMarketingMode(prev => ({ ...prev, imageText: e.target.value }))}
+                        rows={2}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Describe the image you want to generate..."
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Workflow Mode */}
+                <div className="space-y-4">
+                  <label className="block text-sm font-medium text-gray-700">
+                    <Bot className="h-4 w-4 inline mr-2" />
+                    Workflow Mode *
+                  </label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {[
+                      { id: 'in_review', label: 'In Review', desc: 'Review before publishing', color: 'blue' },
+                      { id: 'ready_to_publish', label: 'Ready to Publish', desc: 'Ready for manual publish', color: 'green' },
+                      { id: 'auto_publish', label: 'Auto Publish', desc: 'Publish automatically', color: 'purple' }
+                    ].map(({ id, label, desc, color }) => (
+                      <label key={id} className="relative">
+                        <input
+                          type="radio"
+                          name="workflowMode"
+                          value={id}
+                          checked={marketingMode.workflowMode === id}
+                          onChange={(e) => setMarketingMode(prev => ({ ...prev, workflowMode: e.target.value }))}
+                          className="sr-only"
+                        />
+                        <div className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                          marketingMode.workflowMode === id 
+                            ? `border-${color}-500 bg-${color}-50` 
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}>
+                          <div className="font-medium">{label}</div>
+                          <p className="text-sm text-gray-600 mt-1">{desc}</p>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Save/Run Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200">
+                  <button
+                    type="button"
+                    onClick={() => handleSave(false)}
+                    disabled={loading || !marketingMode.agentName.trim() || marketingMode.channels.length === 0}
+                    className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+                  >
+                    <Save className="h-4 w-4 mr-2" />
+                    {loading ? 'Saving...' : isEditMode ? 'Update Agent Configuration' : 'Save Agent'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleSave(true)}
+                    disabled={loading || !marketingMode.agentName.trim() || marketingMode.channels.length === 0}
+                    className="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+                  >
+                    <Play className="h-4 w-4 mr-2" />
+                    {loading ? 'Updating & Running...' : 'Save & Run Agent'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       
       {/* Loading Modal for Save & Redirect */}
