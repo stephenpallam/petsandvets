@@ -10031,8 +10031,8 @@ async def get_customers(
     # Get total count for pagination
     total_count = await db.customers.count_documents(query)
     
-    # Get customers with pagination, sorted by first_name then last_name
-    customers_cursor = db.customers.find(query).sort([("first_name", 1), ("last_name", 1)]).skip(skip).limit(limit)
+    # Get customers with pagination, sorted with fallback for legacy data
+    customers_cursor = db.customers.find(query).sort([("name", 1)]).skip(skip).limit(limit)
     customers = await customers_cursor.to_list(length=limit)
     
     # Convert to Customer objects with legacy data conversion
