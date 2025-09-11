@@ -6210,6 +6210,237 @@ async def generate_sms_for_agent(agent_id: str, agent_data: dict):
         logger.error(f"Error in generate_sms_for_agent: {str(e)}")
         raise
 
+async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict):
+    """Generate multi-channel marketing campaign for an AI Marketing agent"""
+    try:
+        now = await business_now_async()
+        created_posts = []
+        
+        # Get marketing configuration
+        content_type = agent_data.get('marketing_content_type', 'topic')
+        channels = agent_data.get('marketing_channels', [])
+        workflow_mode = agent_data.get('marketing_workflow_mode', 'in_review')
+        
+        logger.info(f"Generating marketing campaign for agent {agent_id} with channels: {channels}")
+        
+        # Determine base content based on content type
+        base_content_info = {}
+        if content_type == 'topic':
+            base_content_info = {
+                'type': 'topic',
+                'topic': agent_data.get('marketing_selected_topic', ''),
+                'custom_topic': agent_data.get('marketing_selected_topic') if agent_data.get('marketing_selected_topic') else None
+            }
+        elif content_type == 'holidays':
+            base_content_info = {
+                'type': 'holidays',
+                'selected_holidays': agent_data.get('marketing_selected_holidays', [])
+            }
+        elif content_type == 'custom_campaign':
+            base_content_info = {
+                'type': 'custom_campaign',
+                'custom_content': agent_data.get('marketing_custom_campaign', '')
+            }
+        
+        # Generate content for each selected channel
+        for channel in channels:
+            if channel == 'social_media':
+                # Generate social media posts for each selected platform
+                social_platforms = agent_data.get('marketing_social_platforms', {})
+                enabled_platforms = [platform for platform, enabled in social_platforms.items() if enabled]
+                
+                for platform in enabled_platforms:
+                    post_id = str(uuid.uuid4())
+                    
+                    # Create post record for this platform
+                    post_data = {
+                        "id": post_id,
+                        "agent_id": agent_id,
+                        "agent_name": agent_data.get('agent_name', 'Marketing Agent'),
+                        "agent_type": "marketing_agent",
+                        "marketing_channel": "social_media",
+                        "marketing_platform": platform,
+                        "topic": base_content_info.get('topic', 'Marketing Campaign'),
+                        "content": "",
+                        "image_url": "",
+                        "image_text": agent_data.get('image_text', ''),
+                        "hashtags": [],
+                        "platforms": [platform],
+                        "status": PostStatus.GENERATING,
+                        "scheduled_for": None,
+                        "published_at": None,
+                        "social_media_links": [],
+                        "error_message": "",
+                        "created_at": now,
+                        "updated_at": now
+                    }
+                    
+                    await db.ai_posts.insert_one(post_data)
+                    created_posts.append({"post_id": post_id, "channel": "social_media", "platform": platform})
+                    
+            elif channel == 'email':
+                # Generate email campaign
+                post_id = str(uuid.uuid4())
+                
+                post_data = {
+                    "id": post_id,
+                    "agent_id": agent_id,
+                    "agent_name": agent_data.get('agent_name', 'Marketing Agent'),
+                    "agent_type": "marketing_agent",
+                    "marketing_channel": "email",
+                    "topic": base_content_info.get('topic', 'Marketing Campaign'),
+                    "content": "",
+                    "email_subject": "",
+                    "email_template": agent_data.get('marketing_email_template', ''),
+                    "email_personalized": agent_data.get('marketing_email_personalized', True),
+                    "status": PostStatus.GENERATING,
+                    "scheduled_for": None,
+                    "published_at": None,
+                    "error_message": "",
+                    "created_at": now,
+                    "updated_at": now
+                }
+                
+                await db.ai_posts.insert_one(post_data)
+                created_posts.append({"post_id": post_id, "channel": "email"})
+                
+            elif channel == 'sms':
+                # Generate SMS campaign
+                post_id = str(uuid.uuid4())
+                
+                post_data = {
+                    "id": post_id,
+                    "agent_id": agent_id,
+                    "agent_name": agent_data.get('agent_name', 'Marketing Agent'),
+                    "agent_type": "marketing_agent",
+                    "marketing_channel": "sms",
+                    "topic": base_content_info.get('topic', 'Marketing Campaign'),
+                    "content": "",
+                    "sms_template": agent_data.get('marketing_sms_template', ''),
+                    "sms_personalized": agent_data.get('marketing_sms_personalized', True),
+                    "sms_provider": agent_data.get('sms_provider', 'twilio'),
+                    "status": PostStatus.GENERATING,
+                    "scheduled_for": None,
+                    "published_at": None,
+                    "error_message": "",
+                    "created_at": now,
+                    "updated_at": now
+                }
+                
+                await db.ai_posts.insert_one(post_data)
+                created_posts.append({"post_id": post_id, "channel": "sms"})
+        
+        # Generate content for each created post
+        for post_info in created_posts:
+            post_id = post_info["post_id"]
+            channel = post_info["channel"]
+            platform = post_info.get("platform", "")
+            
+            try:
+                content_result = None
+                
+                if channel == "social_media":
+                    # Generate platform-specific social media content
+                    if content_type == 'topic':
+                        content_result = await ai_service.generate_social_media_content(
+                            topic=base_content_info.get('topic', ''),
+                            word_count=agent_data.get('word_count', '100'),
+                            platforms=[platform],
+                            custom_topic=base_content_info.get('custom_topic'),
+                            image_text=agent_data.get('image_text'),
+                            track_usage=True,
+                            user_id="admin",
+                            agent_id=agent_id
+                        )
+                    elif content_type == 'custom_campaign':
+                        content_result = await ai_service.format_custom_content(
+                            post_title=f"Marketing Campaign - {platform}",
+                            post_content=base_content_info.get('custom_content', ''),
+                            word_count=agent_data.get('word_count', '100'),
+                            platforms=[platform],
+                            use_web_research=agent_data.get('use_web_research', False),
+                            image_text=agent_data.get('image_text')
+                        )
+                
+                elif channel == "email":
+                    # Generate email content (similar to email agent logic)
+                    if content_type == 'topic':
+                        content_result = {
+                            'title': f"Marketing Email - {base_content_info.get('topic', '')}",
+                            'content': agent_data.get('marketing_email_template', 'Your marketing email content here...'),
+                            'hashtags': []
+                        }
+                    elif content_type == 'custom_campaign':
+                        content_result = {
+                            'title': 'Marketing Email Campaign',
+                            'content': base_content_info.get('custom_content', ''),
+                            'hashtags': []
+                        }
+                
+                elif channel == "sms":
+                    # Generate SMS content (similar to SMS agent logic)
+                    if content_type == 'topic':
+                        content_result = {
+                            'title': f"Marketing SMS - {base_content_info.get('topic', '')}",
+                            'content': agent_data.get('marketing_sms_template', 'Your marketing SMS content here...'),
+                            'hashtags': []
+                        }
+                    elif content_type == 'custom_campaign':
+                        content_result = {
+                            'title': 'Marketing SMS Campaign',
+                            'content': base_content_info.get('custom_content', ''),
+                            'hashtags': []
+                        }
+                
+                # Update post with generated content
+                if content_result:
+                    update_data = {
+                        "content": content_result.get('content', ''),
+                        "hashtags": content_result.get('hashtags', []),
+                        "updated_at": now
+                    }
+                    
+                    # Set workflow status
+                    if workflow_mode == 'auto_publish':
+                        update_data["status"] = PostStatus.READY
+                        update_data["published_at"] = now
+                    elif workflow_mode == 'ready_to_publish':
+                        update_data["status"] = PostStatus.READY
+                    else:  # in_review
+                        update_data["status"] = PostStatus.IN_REVIEW
+                    
+                    # Add channel-specific fields
+                    if channel == "email":
+                        update_data["email_subject"] = content_result.get('title', '')
+                    elif channel == "social_media":
+                        update_data["image_url"] = content_result.get('image_url', '')
+                    
+                    await db.ai_posts.update_one(
+                        {"id": post_id},
+                        {"$set": update_data}
+                    )
+                    
+                    logger.info(f"Successfully generated {channel} content for post {post_id} (platform: {platform})")
+                
+            except Exception as content_error:
+                # Update post with error status
+                await db.ai_posts.update_one(
+                    {"id": post_id},
+                    {"$set": {
+                        "status": PostStatus.FAILED,
+                        "error_message": str(content_error),
+                        "updated_at": now
+                    }}
+                )
+                logger.error(f"Error generating {channel} content for post {post_id}: {str(content_error)}")
+        
+        logger.info(f"Successfully generated marketing campaign for agent {agent_id} with {len(created_posts)} posts")
+        return created_posts
+        
+    except Exception as e:
+        logger.error(f"Error in generate_marketing_campaign_for_agent: {str(e)}")
+        raise
+
 async def schedule_post_generation(agent_id: str, agent_data: dict):
     """Schedule post generation for later (placeholder for now)"""
     # For now, we'll just generate immediately
