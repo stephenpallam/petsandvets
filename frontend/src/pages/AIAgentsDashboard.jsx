@@ -1317,6 +1317,8 @@ const AIAgentsDashboard = () => {
         
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           {/* Header */}
+        {/* Sticky Header - Dashboard Title and Filters */}
+        <div className="sticky top-24 z-40 bg-white rounded-xl shadow-lg overflow-hidden mb-6">
           <div className="px-4 sm:px-6 py-4 bg-gray-50 border-b border-gray-200">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div className="flex items-center space-x-3">
