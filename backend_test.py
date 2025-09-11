@@ -518,6 +518,7 @@ class MarketingAgentTester:
                     "name": "Missing agent_type",
                     "data": {
                         "agent_name": "Test Marketing Campaign",
+                        "mode": "write",
                         "marketing_content_type": "topic",
                         "topic": "Pet Health Tips"
                     },
@@ -527,31 +528,32 @@ class MarketingAgentTester:
                     "name": "Missing agent_name",
                     "data": {
                         "agent_type": "marketing_agent",
+                        "mode": "write",
                         "marketing_content_type": "topic",
                         "topic": "Pet Health Tips"
                     },
                     "expected_error": "agent_name"
                 },
                 {
-                    "name": "Invalid agent_type",
-                    "data": {
-                        "agent_type": "invalid_agent_type",
-                        "agent_name": "Test Marketing Campaign",
-                        "marketing_content_type": "topic",
-                        "topic": "Pet Health Tips"
-                    },
-                    "expected_error": "agent_type"
-                },
-                {
-                    "name": "Empty marketing_channels",
+                    "name": "Missing mode",
                     "data": {
                         "agent_type": "marketing_agent",
                         "agent_name": "Test Marketing Campaign",
                         "marketing_content_type": "topic",
-                        "topic": "Pet Health Tips",
-                        "marketing_channels": []
+                        "topic": "Pet Health Tips"
                     },
-                    "expected_error": "marketing_channels"
+                    "expected_error": "mode"
+                },
+                {
+                    "name": "Invalid agent_type",
+                    "data": {
+                        "agent_type": "invalid_agent_type",
+                        "agent_name": "Test Marketing Campaign",
+                        "mode": "write",
+                        "marketing_content_type": "topic",
+                        "topic": "Pet Health Tips"
+                    },
+                    "expected_error": "agent_type"
                 }
             ]
             
