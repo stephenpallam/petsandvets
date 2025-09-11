@@ -2152,6 +2152,8 @@ Best regards,
                           ? 'Make changes and run your email agent'
                           : agentType === 'sms_agent'
                           ? 'Make changes and run your SMS agent'
+                          : agentType === 'marketing_agent'
+                          ? 'Make changes and run your marketing agent'
                           : 'Make changes and run your social media agent';
                       } else if (isEditMode) {
                         return agentType === 'time_sheet'
