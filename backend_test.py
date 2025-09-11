@@ -183,7 +183,7 @@ class MarketingAgentTester:
             marketing_agent_data = {
                 "agent_type": "marketing_agent",
                 "agent_name": "Test Marketing Campaign",
-                "mode": "write",  # Required field - using write mode for marketing campaigns
+                "mode": "adhoc",  # Using adhoc mode instead of write mode for marketing campaigns
                 "marketing_content_type": "topic",
                 "topic": "Pet Health Tips",
                 "marketing_channels": ["email", "sms"],
