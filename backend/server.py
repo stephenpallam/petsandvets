@@ -4730,7 +4730,7 @@ async def generate_post_for_agent(agent_id: str, agent_data: dict):
         if agent_type == AIAgentType.TIME_SHEET:
             # Handle timesheet agent - generate timesheet report
             return await generate_timesheet_report_for_agent(agent_id, agent_data)
-        elif agent_type == AIAgentType.EMAIL:
+        elif agent_type == AIAgentType.EMAIL_AGENT:
             # Handle email agent - generate email content
             return await generate_email_for_agent(agent_id, agent_data)
         elif agent_type == AIAgentType.SMS_AGENT:
