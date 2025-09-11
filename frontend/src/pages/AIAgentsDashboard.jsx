@@ -1734,201 +1734,159 @@ const AIAgentsDashboard = () => {
                                 </div>
                               )}
                             </div>
-                          ) : (
-                            // Email and SMS Agent Display (existing logic)
-                            (agent.agent_type === 'email' || agent.agent_type === 'sms_agent') ? (
-                                      <span className="text-sm text-gray-600">All employees</span>
+                          ) : agent.agent_type === 'marketing_agent' ? (
+                            // Marketing Agent Display
+                            <div className="space-y-4">
+                              {/* Row 1: Content Type and Channels */}
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Content Type</span>
+                                  <p className="text-sm text-gray-900 mt-1 capitalize">
+                                    {agent.marketing_content_type === 'custom_campaign' ? 'Custom Campaign' : 
+                                     agent.marketing_content_type === 'holidays' ? 'Holidays' : 'Topic'}
+                                  </p>
+                                </div>
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Channels</span>
+                                  <p className="text-sm text-gray-900 mt-1">
+                                    {agent.marketing_channels && agent.marketing_channels.length > 0 ? (
+                                      agent.marketing_channels.map(channel => 
+                                        channel === 'social_media' ? 'Social Media' : 
+                                        channel.charAt(0).toUpperCase() + channel.slice(1)
+                                      ).join(', ')
+                                    ) : 'None selected'}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Row 2: Email & SMS Status */}
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Settings</span>
+                                  <div className="mt-1">
+                                    {agent.marketing_channels && agent.marketing_channels.includes('email') ? (
+                                      <div className="space-y-1">
+                                        <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-700">
+                                          Enabled
+                                        </span>
+                                        <p className="text-xs text-gray-600">
+                                          {agent.marketing_email_personalization ? 'Personalized' : 'Generic'}
+                                        </p>
+                                      </div>
+                                    ) : (
+                                      <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
+                                        Disabled
+                                      </span>
                                     )}
                                   </div>
                                 </div>
                                 <div className="flex flex-col">
-                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Recipients</span>
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">SMS Settings</span>
                                   <div className="mt-1">
-                                    {agent.email_recipients && agent.email_recipients.length > 0 ? (
-                                      <div className="flex flex-wrap gap-2">
-                                        {agent.email_recipients.slice(0, 2).map((email, index) => (
-                                          <span 
-                                            key={index}
-                                            className="text-sm text-gray-900"
-                                          >
-                                            {email}{index < Math.min(agent.email_recipients.length, 2) - 1 ? ',' : ''}
-                                          </span>
-                                        ))}
-                                        {agent.email_recipients.length > 2 && (
-                                          <span className="text-sm text-gray-600">
-                                            and {agent.email_recipients.length - 2} more
-                                          </span>
-                                        )}
+                                    {agent.marketing_channels && agent.marketing_channels.includes('sms') ? (
+                                      <div className="space-y-1">
+                                        <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-700">
+                                          Enabled
+                                        </span>
+                                        <p className="text-xs text-gray-600">
+                                          {agent.marketing_sms_personalization ? 'Personalized' : 'Generic'}
+                                        </p>
                                       </div>
                                     ) : (
-                                      <span className="text-sm text-gray-600">No email recipients</span>
+                                      <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
+                                        Disabled
+                                      </span>
                                     )}
                                   </div>
                                 </div>
                               </div>
 
-                              {/* Pay Period & Next Run - Combined with Last Manual Run */}
-                              {((agent.mode === 'auto' || agent.mode === 'recurring') && agent.agent_type === 'time_sheet') && (
-                                <div className="flex flex-col pt-3 border-t border-gray-100">
-                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Pay Period & Next Run</span>
-                                  <div className="mt-1 grid grid-cols-1 lg:grid-cols-2 gap-4">
-                                    {/* Left Column: Pay Period Info */}
-                                    <div className="p-3 bg-orange-50 border border-orange-200 rounded-md">
-                                      {(() => {
-                                        const periodInfo = calculatePayPeriodAndRunDate(agent);
-                                        if (!periodInfo) return null;
-                                        
-                                        return (
-                                          <div className="space-y-2">
-                                            <div>
-                                              <label className="text-xs font-semibold text-orange-700 uppercase tracking-wide">Current Pay Period</label>
-                                              <p className="text-sm font-medium text-orange-900">
-                                                {periodInfo.payPeriodRange}
-                                              </p>
-                                            </div>
-                                            <div>
-                                              <label className="text-xs font-semibold text-orange-700 uppercase tracking-wide">Scheduled Next Run</label>
-                                              <p className="text-sm font-medium text-orange-900">
-                                                {periodInfo.nextRunDate}
-                                              </p>
-                                              <p className="text-xs text-orange-600 mt-1">
-                                                Run {periodInfo.daysAfter} day(s) after pay period end
-                                              </p>
-                                            </div>
-                                          </div>
-                                        );
-                                      })()}
-                                    </div>
-                                    
-                                    {/* Right Column: Last Manual Run */}
-                                    <div className="p-3 bg-gray-50 border border-gray-200 rounded-md">
-                                      <div className="space-y-2">
-                                        <div>
-                                          <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Last Manual Run</label>
-                                          <p className="text-sm font-medium text-gray-900">
-                                            {agent.last_manual_run ? formatDate(agent.last_manual_run) : 'Never run manually'}
-                                          </p>
-                                        </div>
-                                        <div>
-                                          <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Run Status</label>
-                                          <p className="text-sm font-medium text-gray-900">
-                                            {agent.last_manual_run ? 'Completed' : 'Not run yet'}
-                                          </p>
-                                        </div>
+                              {/* Row 3: Content Previews */}
+                              {((agent.marketing_channels && agent.marketing_channels.includes('email')) || 
+                                (agent.marketing_channels && agent.marketing_channels.includes('sms'))) && (
+                                <div className="space-y-3">
+                                  {agent.marketing_channels && agent.marketing_channels.includes('email') && agent.email_content_template && (
+                                    <div className="flex flex-col">
+                                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Content Preview</span>
+                                      <div className="mt-2 p-3 bg-white rounded-md border border-gray-200">
+                                        <p className="text-sm text-gray-900 line-clamp-2">
+                                          {agent.email_content_template}
+                                        </p>
                                       </div>
                                     </div>
-                                  </div>
+                                  )}
+                                  {agent.marketing_channels && agent.marketing_channels.includes('sms') && agent.sms_template && (
+                                    <div className="flex flex-col">
+                                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">SMS Content Preview</span>
+                                      <div className="mt-2 p-3 bg-white rounded-md border border-gray-200">
+                                        <p className="text-sm text-gray-900 line-clamp-2">
+                                          {agent.sms_template}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
                               )}
-                              
-                              {/* Next Run & Last Run for Adhoc Timesheet Agents */}
-                              {agent.mode === 'adhoc' && agent.agent_type === 'time_sheet' && (
-                                <div className="pt-3 border-t border-gray-100">
-                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {/* Scheduled Next Run - Left Column */}
-                                    <div className="flex flex-col p-4 bg-purple-50 rounded-lg border border-purple-200">
-                                      <span className="text-xs font-semibold text-purple-600 uppercase tracking-wide mb-2">
-                                        📅 Scheduled Next Run
-                                      </span>
-                                      <div className="space-y-1">
-                                        {agent.post_date && agent.post_time ? (
-                                          // Agent has scheduled date/time - show formatted date with past date logic
-                                          (() => {
-                                            try {
-                                              const date = new Date(agent.post_date);
-                                              const [hours, minutes] = agent.post_time.split(':');
-                                              date.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-                                              const now = new Date();
-                                              
-                                              const formattedDate = date.toLocaleDateString('en-US', {
-                                                weekday: 'short',
-                                                month: 'short',
-                                                day: 'numeric',
-                                                year: 'numeric'
-                                              });
-                                              
-                                              if (date < now) {
-                                                // Past date - show suggestion message
-                                                return (
-                                                  <div>
-                                                    <p className="text-sm text-gray-500 line-through">
-                                                      {formattedDate} at {formatTime(agent.post_time)}
-                                                    </p>
-                                                    <p className="text-xs text-amber-600 mt-1 italic">
-                                                      Schedule your next run or run it adhoc when you need
-                                                    </p>
-                                                  </div>
-                                                );
-                                              } else {
-                                                // Future date - show normally
-                                                return (
-                                                  <p className="text-sm font-medium text-purple-900">
-                                                    {formattedDate} at {formatTime(agent.post_time)}
-                                                  </p>
-                                                );
-                                              }
-                                            } catch (error) {
-                                              console.error('Error formatting date:', error);
-                                              return (
-                                                <p className="text-sm font-medium text-purple-900">
-                                                  {agent.post_date} at {formatTime(agent.post_time)}
-                                                </p>
-                                              );
-                                            }
-                                          })()
-                                        ) : (
-                                          // No scheduled date/time - show manual options
-                                          <p className="text-sm font-medium text-purple-900">Manual trigger only</p>
-                                        )}
-                                      </div>
-                                    </div>
-                                    
-                                    {/* Last Manual Run - Right Column */}
-                                    <div className="flex flex-col p-4 bg-gray-50 rounded-lg border border-gray-200">
-                                      <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">
-                                        📝 Last Manual Run
-                                      </span>
-                                      <p className="text-sm text-gray-900">
-                                        {(() => {
-                                          // For write mode agents, prioritize actual manual run time over scheduled dates
-                                          if (agent.last_manual_run) {
-                                            return new Date(agent.last_manual_run).toLocaleDateString('en-US', {
-                                              year: 'numeric',
-                                              month: 'short',
-                                              day: 'numeric',
-                                              hour: '2-digit',
-                                              minute: '2-digit'
-                                            });
+
+                              {/* Row 4: Scheduled Date & Last Run */}
+                              {agent.post_date && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  {/* Scheduled Date - Left Column */}
+                                  <div className="flex flex-col p-4 bg-blue-50 rounded-lg border border-blue-200">
+                                    <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-2">
+                                      📅 Scheduled Date
+                                    </span>
+                                    <div className="space-y-1">
+                                      {(() => {
+                                        try {
+                                          // Use business time for proper timezone handling
+                                          const scheduledDate = new Date(agent.post_date);
+                                          if (agent.post_time) {
+                                            const [hours, minutes] = agent.post_time.split(':');
+                                            scheduledDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
                                           }
                                           
-                                          // If no manual run time, check if there's a scheduled date in the past as fallback
-                                          if (agent.post_date && agent.post_time) {
-                                            try {
-                                              const scheduledDate = new Date(agent.post_date);
-                                              const [hours, minutes] = agent.post_time.split(':');
-                                              scheduledDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-                                              const now = new Date();
-                                              
-                                              if (scheduledDate < now) {
-                                                // Past scheduled date - show as fallback
-                                                const formattedDate = scheduledDate.toLocaleDateString('en-US', {
-                                                  weekday: 'short',
-                                                  month: 'short',
-                                                  day: 'numeric',
-                                                  year: 'numeric'
-                                                });
-                                                return `${formattedDate} at ${formatTime(agent.post_time)}`;
-                                              }
-                                            } catch (error) {
-                                              console.error('Error parsing scheduled date:', error);
-                                            }
-                                          }
+                                          const formattedDate = scheduledDate.toLocaleDateString('en-US', {
+                                            weekday: 'short',
+                                            month: 'short',
+                                            day: 'numeric',
+                                            year: 'numeric'
+                                          });
                                           
-                                          // Final fallback
-                                          return 'Never run manually';
-                                        })()}
-                                      </p>
+                                          return (
+                                            <p className="text-sm font-medium text-blue-900">
+                                              {formattedDate} at {agent.post_time || '09:00'}
+                                            </p>
+                                          );
+                                        } catch (error) {
+                                          console.error('Error formatting marketing agent date:', error);
+                                          return (
+                                            <p className="text-sm font-medium text-blue-900">
+                                              {agent.post_date} at {agent.post_time || '09:00'}
+                                            </p>
+                                          );
+                                        }
+                                      })()}
                                     </div>
+                                  </div>
+                                  
+                                  {/* Last Manual Run - Right Column */}
+                                  <div className="flex flex-col p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                    <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">
+                                      📝 Last Manual Run
+                                    </span>
+                                    <p className="text-sm text-gray-900">
+                                      {agent.last_manual_run ? 
+                                        new Date(agent.last_manual_run).toLocaleDateString('en-US', {
+                                          year: 'numeric',
+                                          month: 'short',
+                                          day: 'numeric',
+                                          hour: '2-digit',
+                                          minute: '2-digit'
+                                        }) : 
+                                        'Never run manually'
+                                      }
+                                    </p>
                                   </div>
                                 </div>
                               )}
