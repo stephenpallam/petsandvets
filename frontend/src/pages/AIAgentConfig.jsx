@@ -7316,6 +7316,7 @@ Example:
             </div>
           </div>
         )}
+        </> {/* End Content Area */}
       </div>
       
       {/* Loading Modal for Save & Redirect */}
