@@ -9968,6 +9968,23 @@ async def delete_shift_preset(
     return {"message": "Shift preset deleted successfully"}
 
 
+# Helper function to convert legacy customer data to new format
+def convert_legacy_customer_data(customer_dict: dict) -> dict:
+    """Convert legacy customer data to include first_name and last_name if missing"""
+    # If first_name and last_name are missing but name exists, try to split it
+    if not customer_dict.get('first_name') and not customer_dict.get('last_name') and customer_dict.get('name'):
+        name_parts = customer_dict['name'].strip().split(' ', 1)  # Split into max 2 parts
+        customer_dict['first_name'] = name_parts[0] if name_parts else ''
+        customer_dict['last_name'] = name_parts[1] if len(name_parts) > 1 else ''
+    
+    # Ensure we have at least empty strings for first_name and last_name
+    if 'first_name' not in customer_dict:
+        customer_dict['first_name'] = ''
+    if 'last_name' not in customer_dict:
+        customer_dict['last_name'] = ''
+    
+    return customer_dict
+
 # Helper function to get customer's full name
 def get_customer_full_name(customer: dict) -> str:
     """Get the full name of a customer, handling both new and legacy data formats"""
