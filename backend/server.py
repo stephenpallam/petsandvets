@@ -4334,6 +4334,21 @@ class AIAgentUpdate(BaseModel):
     last_post_published: Optional[datetime] = None
     platforms: Optional[List[str]] = None
     status: Optional[str] = None
+    # Marketing agent specific fields
+    marketing_content_type: Optional[str] = None  # topic, holidays, custom_campaign
+    marketing_selected_topic: Optional[str] = None  # Selected topic for marketing content
+    marketing_selected_holidays: Optional[List[str]] = None  # Holiday IDs for marketing campaigns
+    marketing_custom_campaign: Optional[str] = None  # Custom campaign content
+    marketing_channels: Optional[List[str]] = None  # Selected channels: social_media, email, sms
+    marketing_social_platforms: Optional[Dict[str, bool]] = None  # Social media platforms for marketing
+    marketing_email_personalized: Optional[bool] = None  # Whether to personalize marketing emails
+    marketing_sms_personalized: Optional[bool] = None  # Whether to personalize marketing SMS
+    marketing_email_template: Optional[str] = None  # Email template for marketing campaigns
+    marketing_sms_template: Optional[str] = None  # SMS template for marketing campaigns
+    marketing_link: Optional[str] = None  # Marketing campaign link
+    marketing_scheduled_date: Optional[str] = None  # Scheduled date for marketing campaign
+    marketing_post_time: Optional[str] = None  # Scheduled time for marketing campaign
+    marketing_workflow_mode: Optional[str] = None  # in_review, ready_to_publish, auto_publish
 
 class AIPost(BaseModel):
     id: str
