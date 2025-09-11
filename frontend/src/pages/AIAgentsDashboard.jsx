@@ -1645,7 +1645,37 @@ const AIAgentsDashboard = () => {
                                 </div>
                               </div>
 
-                              {/* Row 3: Content Previews */}
+                              {/* Row 3: Social Media Platforms (if social_media channel selected) */}
+                              {agent.marketing_channels && agent.marketing_channels.includes('social_media') && (
+                                <div className="grid grid-cols-1 gap-4">
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Social Media Platforms</span>
+                                    <div className="mt-1">
+                                      {agent.marketing_social_platforms && Object.keys(agent.marketing_social_platforms).length > 0 ? (
+                                        <div className="flex flex-wrap gap-2">
+                                          {Object.entries(agent.marketing_social_platforms)
+                                            .filter(([platform, enabled]) => enabled)
+                                            .map(([platform]) => (
+                                              <span 
+                                                key={platform}
+                                                className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-700"
+                                              >
+                                                {platform === 'twitter' ? 'X (Twitter)' : platform.charAt(0).toUpperCase() + platform.slice(1)}
+                                              </span>
+                                            ))}
+                                          {Object.values(agent.marketing_social_platforms).every(enabled => !enabled) && (
+                                            <span className="text-sm text-gray-600">No platforms selected</span>
+                                          )}
+                                        </div>
+                                      ) : (
+                                        <span className="text-sm text-gray-600">No platforms configured</span>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Row 4: Content Previews */}
                               {((agent.marketing_channels && agent.marketing_channels.includes('email')) || 
                                 (agent.marketing_channels && agent.marketing_channels.includes('sms'))) && (
                                 <div className="space-y-3">
