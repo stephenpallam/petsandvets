@@ -105,8 +105,8 @@ Hashtags: [comma-separated hashtags without # symbol, {platform_info['hashtag_co
             user_message = UserMessage(text=user_prompt)
             response = await chat.send_message(user_message)
             
-            # Parse response
-            content, hashtags = self._parse_content_response(response)
+            # Parse response with title
+            generated_title_from_response, content, hashtags = self._parse_content_with_title_response(response)
             
             return {
                 "content": content,
