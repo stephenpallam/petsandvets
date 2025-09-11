@@ -10150,7 +10150,8 @@ async def update_customer(
     )
     
     updated_customer = await db.customers.find_one({"id": customer_id})
-    return Customer(**updated_customer)
+    converted_customer = convert_legacy_customer_data(updated_customer)
+    return Customer(**converted_customer)
 
 
 @api_router.delete("/customers/{customer_id}")
