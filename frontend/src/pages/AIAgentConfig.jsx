@@ -1274,10 +1274,14 @@ Best regards,
 
       if (response.ok) {
         const data = await response.json();
+        console.log('Customer search API response:', data);
         // The API returns paginated results with a customers array
         const customers = data.customers || [];
+        console.log('Extracted customers:', customers);
         // No need to filter again since the backend already filtered by search term
         setSearchedCustomers(customers);
+      } else {
+        console.error('Customer search API error:', response.status, response.statusText);
       }
     } catch (error) {
       console.error('Error searching customers:', error);
