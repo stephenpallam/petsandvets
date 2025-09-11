@@ -1825,10 +1825,20 @@ const AIAgentsDashboard = () => {
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="flex flex-col">
                                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Content Type</span>
-                                  <p className="text-sm text-gray-900 mt-1 capitalize">
-                                    {agent.marketing_content_type === 'custom_campaign' ? 'Custom Campaign' : 
-                                     agent.marketing_content_type === 'holidays' ? 'Holidays' : 'Topic'}
-                                  </p>
+                                  <div className="mt-1">
+                                    <p className="text-sm text-gray-900 font-medium">
+                                      {getMarketingContentTypeDisplay(agent)}
+                                    </p>
+                                    {/* Show content preview for custom campaign */}
+                                    {agent.marketing_content_type === 'custom_campaign' && agent.marketing_custom_content && (
+                                      <div className="mt-2 p-2 bg-gray-50 rounded border">
+                                        <p className="text-xs text-gray-600 font-medium mb-1">Content Preview:</p>
+                                        <p className="text-xs text-gray-800 line-clamp-2">
+                                          {agent.marketing_custom_content}
+                                        </p>
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
                                 <div className="flex flex-col">
                                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Channels</span>
