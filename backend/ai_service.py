@@ -123,34 +123,45 @@ Hashtags: [comma-separated hashtags without # symbol]
         user_id: str = None,
         agent_id: str = None
     ) -> Dict[str, Any]:
-        """Generate social media content for veterinary posts"""
+        """Generate platform-specific social media content for veterinary posts"""
         
         try:
             # Determine the actual topic
             actual_topic = custom_topic if topic == "Custom" and custom_topic else topic
             
-            # Create system message for veterinary content
-            system_message = """You are an expert veterinary social media content creator. 
+            # Get platform-specific characteristics
+            platform = platforms[0] if platforms else "general"
+            platform_info = self._get_platform_characteristics(platform)
+            
+            # Create system message for veterinary content with platform specifics
+            system_message = f"""You are an expert veterinary social media content creator specialized in creating content for {platform_info['name']}. 
             Create engaging, informative, and professional posts about veterinary topics that would be suitable for pet owners.
             Always maintain a caring, professional tone while being informative and engaging.
-            Include relevant hashtags at the end of each post.
+            
+            Platform-specific requirements for {platform_info['name']}:
+            - {platform_info['tone']}
+            - {platform_info['format']}
+            - {platform_info['hashtag_style']}
+            - {platform_info['length_guide']}
+            
             Focus on pet health, wellness, and care advice."""
             
-            # Create user prompt based on topic and word count
-            user_prompt = f"""Create a social media post about: {actual_topic}
+            # Create user prompt based on topic and platform characteristics
+            user_prompt = f"""Create a {platform_info['name']} post about: {actual_topic}
 
 Requirements:
 - Word count: {word_count} words maximum
-- Platforms: {', '.join(platforms)}
+- Platform: {platform_info['name']} - {platform_info['description']}
 - Make it engaging and informative for pet owners
-- Include 3-5 relevant hashtags
-- Professional veterinary tone
+- {platform_info['hashtag_instruction']}
+- Professional veterinary tone with {platform_info['tone']}
 - Focus on practical advice or interesting facts
+{platform_info['special_requirements']}
 
 Please format the response as:
-Title: [catchy title for the post, 5-8 words max]
-Content: [the main post content]
-Hashtags: [comma-separated hashtags without # symbol]
+Title: [catchy title optimized for {platform_info['name']}, {platform_info['title_length']}]
+Content: [the main post content optimized for {platform_info['name']}]
+Hashtags: [comma-separated hashtags without # symbol, {platform_info['hashtag_count']}]
 """
 
             # Initialize LLM chat
