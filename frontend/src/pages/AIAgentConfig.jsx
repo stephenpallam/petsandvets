@@ -527,8 +527,45 @@ Your Veterinary Team`,
           
           setActiveTab(correctTabId);
           
-          // Pre-populate form fields based on agent mode
-          if (agentData.mode === 'auto' || agentData.mode === 'recurring') {
+          // Pre-populate form fields based on agent type and mode
+          if (agentData.agent_type === 'marketing_agent') {
+            // Marketing Agent - populate marketingMode state
+            setMarketingMode({
+              agentName: agentData.agent_name || agentData.name || '',
+              contentType: agentData.marketing_content_type || 'topic',
+              selectedTopic: agentData.topic || '',
+              customTopic: agentData.custom_topic || '',
+              customCampaign: agentData.marketing_custom_content || '',
+              selectedHolidays: agentData.selected_holidays || [],
+              channels: agentData.marketing_channels || [],
+              socialPlatforms: {
+                facebook: Array.isArray(agentData.social_platforms) 
+                  ? agentData.social_platforms.includes('facebook')
+                  : agentData.social_platforms?.facebook || false,
+                instagram: Array.isArray(agentData.social_platforms)
+                  ? agentData.social_platforms.includes('instagram')
+                  : agentData.social_platforms?.instagram || false,
+                twitter: Array.isArray(agentData.social_platforms)
+                  ? agentData.social_platforms.includes('x') || agentData.social_platforms.includes('twitter')
+                  : agentData.social_platforms?.twitter || false,
+                whatsapp: Array.isArray(agentData.social_platforms)
+                  ? agentData.social_platforms.includes('whatsapp')
+                  : agentData.social_platforms?.whatsapp || false
+              },
+              emailPersonalized: agentData.marketing_email_personalization !== undefined ? agentData.marketing_email_personalization : true,
+              emailTemplate: agentData.email_content_template || '',
+              smsPersonalized: agentData.marketing_sms_personalization !== undefined ? agentData.marketing_sms_personalization : true,
+              smsTemplate: agentData.sms_template || '',
+              scheduledDate: agentData.post_date || '',
+              postTime: agentData.post_time || '09:00',
+              marketingLink: agentData.marketing_link || '',
+              imageOption: agentData.image_option || 'ai_generate',
+              uploadedImages: [],
+              imageText: agentData.image_text || '',
+              wordCount: agentData.word_count?.toString() || '100',
+              workflowMode: agentData.marketing_workflow_mode || 'in_review'
+            });
+          } else if (agentData.mode === 'auto' || agentData.mode === 'recurring') {
             setRecurringMode({
               agentName: agentData.name || agentData.agent_name || '',
               topic: agentData.topic || '',
