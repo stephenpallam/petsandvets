@@ -2224,7 +2224,8 @@ Best regards,
               </div>
             )}
 
-            {/* Tab Navigation */}
+            {/* Tab Navigation - Only show if tabs exist */}
+            {tabs.length > 0 && (
             <div className="border border-gray-200 rounded-lg mb-4 sm:mb-6">
               <div className="border-b border-gray-200">
                 <nav className="flex flex-col sm:flex-row sm:space-x-8 px-3 sm:px-6" aria-label="Tabs">
