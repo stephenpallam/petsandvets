@@ -1398,6 +1398,7 @@ const AIAgentsDashboard = () => {
               </div>
             </div>
           </div>
+        </div>
 
           {/* Content Area */}
           <div className="p-6">
