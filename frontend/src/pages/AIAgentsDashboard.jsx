@@ -1386,6 +1386,7 @@ const AIAgentsDashboard = () => {
                       <option value="time_sheet" style={{ backgroundColor: 'white', color: 'black' }}>Timesheet Agents</option>
                       <option value="email" style={{ backgroundColor: 'white', color: 'black' }}>Email Agents</option>
                       <option value="sms_agent" style={{ backgroundColor: 'white', color: 'black' }}>SMS Agents</option>
+                      <option value="marketing_agent" style={{ backgroundColor: 'white', color: 'black' }}>Marketing Agents</option>
                       <option value="social_media" style={{ backgroundColor: 'white', color: 'black' }}>Social Media Agents</option>
                     </select>
                     <button
