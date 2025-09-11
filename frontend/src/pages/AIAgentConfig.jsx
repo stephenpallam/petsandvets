@@ -1233,7 +1233,9 @@ Best regards,
       });
 
       if (response.ok) {
-        const customers = await response.json();
+        const data = await response.json();
+        // The API returns paginated results with a customers array
+        const customers = data.customers || [];
         setAvailableCustomers(customers);
       }
     } catch (error) {
