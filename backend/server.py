@@ -6368,7 +6368,7 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                 created_posts.append({"post_id": post_id, "channel": "email"})
                 
             elif channel == 'sms':
-                # Generate SMS campaign
+                # Generate SMS campaign using consistent base content
                 post_id = str(uuid.uuid4())
                 
                 post_data = {
@@ -6377,7 +6377,7 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                     "agent_name": agent_data.get('agent_name', 'Marketing Agent'),
                     "agent_type": "marketing_agent",
                     "marketing_channel": "sms",
-                    "topic": base_content_info.get('topic', 'Marketing Campaign'),
+                    "topic": agent_data.get('topic', 'Marketing Campaign'),
                     "content": "",
                     "sms_template": agent_data.get('marketing_sms_template', ''),
                     "sms_personalized": agent_data.get('marketing_sms_personalized', True),
