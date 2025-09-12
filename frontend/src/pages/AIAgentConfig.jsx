@@ -554,9 +554,9 @@ Your Veterinary Team`,
                   ? agentData.marketing_social_platforms.includes('whatsapp')
                   : agentData.marketing_social_platforms?.whatsapp || false
               },
-              emailPersonalized: agentData.marketing_email_personalization !== undefined ? agentData.marketing_email_personalization : true,
+              emailPersonalized: agentData.marketing_email_personalized !== undefined ? agentData.marketing_email_personalized : true,
               emailTemplate: agentData.email_content_template || '',
-              smsPersonalized: agentData.marketing_sms_personalization !== undefined ? agentData.marketing_sms_personalization : true,
+              smsPersonalized: agentData.marketing_sms_personalized !== undefined ? agentData.marketing_sms_personalized : true,
               smsTemplate: agentData.sms_template || '',
               scheduledDate: agentData.post_date || '',
               postTime: agentData.post_time || '09:00',
