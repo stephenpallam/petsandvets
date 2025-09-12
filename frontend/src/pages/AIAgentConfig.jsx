@@ -537,7 +537,7 @@ Your Veterinary Team`,
               contentType: agentData.marketing_content_type || 'topic',
               selectedTopic: agentData.topic || '',
               customTopic: agentData.custom_topic || '',
-              customCampaign: agentData.marketing_custom_content || '',
+              customCampaign: agentData.marketing_custom_campaign || '',
               selectedHolidays: agentData.selected_holidays || [],
               channels: agentData.marketing_channels || [],
               socialPlatforms: {
