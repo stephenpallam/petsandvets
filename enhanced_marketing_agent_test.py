@@ -418,7 +418,7 @@ class EnhancedMarketingAgentTester:
                             self.created_agent_ids.append(agent_id)
                             
                             # Run the agent to generate content
-                            run_url = f"{self.backend_url}/api/ai-agents/{agent_id}/generate"
+                            run_url = f"{self.backend_url}/api/ai-agents/{agent_id}/run"
                             async with session.post(run_url, headers=headers, timeout=30) as run_response:
                                 if run_response.status == 200:
                                     # Get generated posts
@@ -532,7 +532,7 @@ class EnhancedMarketingAgentTester:
                             self.created_agent_ids.append(agent_id)
                             
                             # Run the agent to generate content
-                            run_url = f"{self.backend_url}/api/ai-agents/{agent_id}/generate"
+                            run_url = f"{self.backend_url}/api/ai-agents/{agent_id}/run"
                             async with session.post(run_url, headers=headers, timeout=30) as run_response:
                                 if run_response.status == 200:
                                     # Get generated posts
