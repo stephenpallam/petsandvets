@@ -1171,6 +1171,15 @@ class BlockedSlotUpdate(BaseModel):
 
 
 # Auth Utilities
+def get_full_customer_name(customer: dict) -> str:
+    """Get full customer name from customer document"""
+    if customer.get('first_name') and customer.get('last_name'):
+        return f"{customer['first_name']} {customer['last_name']}"
+    elif customer.get('name'):
+        return customer['name']
+    else:
+        return "Customer"
+
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
