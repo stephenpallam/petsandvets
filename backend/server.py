@@ -6260,7 +6260,36 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
         elif content_type == 'custom_campaign':
             custom_content = agent_data.get('marketing_custom_campaign', '')
             campaign_title = "Marketing Campaign - Custom"
-            base_campaign_content = custom_content if custom_content else "Custom marketing message for [CUSTOMER_NAME] and [PET_NAME]. Learn more about [PET_NAMES] care."
+            
+            if custom_content:
+                # STEP 1.1: Enhance user's custom content with ChatGPT for professional marketing
+                try:
+                    enhanced_content_result = await ai_service.format_custom_content(
+                        post_title="Marketing Campaign Content Enhancement",
+                        post_content=custom_content,
+                        word_count=agent_data.get('word_count', '100'),
+                        platforms=['general'],  # Generic platform for consistency
+                        use_web_research=agent_data.get('use_web_research', False),
+                        image_text=agent_data.get('image_text', ''),
+                        track_usage=True,
+                        user_id="admin",
+                        agent_id=agent_id
+                    )
+                    
+                    if enhanced_content_result and enhanced_content_result.get('content'):
+                        base_campaign_content = enhanced_content_result['content']
+                        logger.info(f"Enhanced custom campaign content: {base_campaign_content[:100]}...")
+                    else:
+                        # Fallback to original content if enhancement fails
+                        base_campaign_content = custom_content
+                        logger.warning("Content enhancement failed, using original custom content")
+                        
+                except Exception as e:
+                    logger.error(f"Error enhancing custom campaign content: {str(e)}")
+                    # Fallback to original content if enhancement fails
+                    base_campaign_content = custom_content
+            else:
+                base_campaign_content = "Custom marketing message for [CUSTOMER_NAME] and [PET_NAME]. Learn more about [PET_NAMES] care."
         
         # STEP 2: Get sample customer data for personalization (shared across all channels)
         sample_customer_data = {}
