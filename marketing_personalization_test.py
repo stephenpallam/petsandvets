@@ -320,8 +320,10 @@ class MarketingPersonalizationTester:
             return False
         
         try:
-            email_posts = [p for p in posts if p.get("agent_type") == "email"]
-            sms_posts = [p for p in posts if p.get("agent_type") == "sms"]
+            # Marketing agent posts use marketing_channel field to distinguish types
+            email_posts = [p for p in posts if p.get("marketing_channel") == "email" or "email_subject" in p]
+            sms_posts = [p for p in posts if p.get("marketing_channel") == "sms" or "sms_template" in p]
+            social_posts = [p for p in posts if p.get("marketing_channel") == "social_media" or ("email_subject" not in p and "sms_template" not in p)]
             
             email_verification = {}
             sms_verification = {}
@@ -333,8 +335,9 @@ class MarketingPersonalizationTester:
                     "has_sample_customer_name": "sample_customer_name" in email_post,
                     "has_sample_pet_names": "sample_pet_names" in email_post,
                     "has_sample_customer_email": "sample_customer_email" in email_post,
-                    "content_has_personalization": any(placeholder in email_post.get("content", "") for placeholder in ["[CUSTOMER_NAME]", "[PET_NAME]", "[PET_NAMES]"]),
-                    "template_stored": "email_content_template" in email_post or "template" in email_post
+                    "content_personalized": "[CUSTOMER_NAME]" not in email_post.get("content", "") and "[PET_NAME]" not in email_post.get("content", ""),  # Placeholders should be replaced
+                    "template_stored": "email_template" in email_post or "email_subject" in email_post,
+                    "has_email_subject": "email_subject" in email_post
                 }
             
             # Check SMS posts for personalization fields
@@ -344,8 +347,9 @@ class MarketingPersonalizationTester:
                     "has_sample_customer_name": "sample_customer_name" in sms_post,
                     "has_sample_pet_names": "sample_pet_names" in sms_post,
                     "has_sample_customer_phone": "sample_customer_phone" in sms_post,
-                    "content_has_personalization": any(placeholder in sms_post.get("content", "") for placeholder in ["[CUSTOMER_NAME]", "[PET_NAME]", "[PET_NAMES]"]),
-                    "template_stored": "sms_template" in sms_post or "template" in sms_post
+                    "content_personalized": "[CUSTOMER_NAME]" not in sms_post.get("content", "") and "[PET_NAME]" not in sms_post.get("content", ""),  # Placeholders should be replaced
+                    "template_stored": "sms_template" in sms_post,
+                    "has_sms_fields": "sms_personalized" in sms_post
                 }
             
             # Overall success criteria
@@ -358,14 +362,26 @@ class MarketingPersonalizationTester:
                 success,
                 f"Personalized content verification: {success}",
                 {
+                    "Total Posts": len(posts),
                     "Email Posts Count": len(email_posts),
                     "SMS Posts Count": len(sms_posts),
+                    "Social Posts Count": len(social_posts),
                     "Email Verification": email_verification,
                     "SMS Verification": sms_verification,
                     "Email Success": email_success,
                     "SMS Success": sms_success,
                     "Sample Email Content": email_posts[0].get("content", "")[:200] + "..." if email_posts else "No email posts",
-                    "Sample SMS Content": sms_posts[0].get("content", "")[:200] + "..." if sms_posts else "No SMS posts"
+                    "Sample SMS Content": sms_posts[0].get("content", "")[:200] + "..." if sms_posts else "No SMS posts",
+                    "Email Customer Data": {
+                        "name": email_posts[0].get("sample_customer_name") if email_posts else None,
+                        "email": email_posts[0].get("sample_customer_email") if email_posts else None,
+                        "pets": email_posts[0].get("sample_pet_names") if email_posts else None
+                    },
+                    "SMS Customer Data": {
+                        "name": sms_posts[0].get("sample_customer_name") if sms_posts else None,
+                        "phone": sms_posts[0].get("sample_customer_phone") if sms_posts else None,
+                        "pets": sms_posts[0].get("sample_pet_names") if sms_posts else None
+                    }
                 }
             )
             return success
