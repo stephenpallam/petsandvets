@@ -6237,37 +6237,84 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
         
         # Determine base content based on content type
         base_content_info = {}
-        # STEP 1: Generate consistent base content for all channels
+        # STEP 1: Generate professional ChatGPT content based on campaign type
         base_campaign_content = ""
         campaign_title = ""
         
         if content_type == 'topic':
             topic = agent_data.get('topic', 'Pet Care')
             campaign_title = f"Marketing Campaign - {topic}"
-            # Generate one consistent content for all channels based on topic
-            base_campaign_content = f"Important information about {topic} for [CUSTOMER_NAME] and [PET_NAME]. Contact us for more details about [PET_NAMES] care."
+            
+            # Generate 150-200 word professional content using ChatGPT
+            try:
+                topic_content_result = await ai_service.generate_social_media_content(
+                    topic=topic,
+                    word_count="180",  # 150-200 words as requested
+                    platforms=['general'],  # Generic platform for base content
+                    custom_topic=None,
+                    image_text=agent_data.get('image_text', ''),
+                    track_usage=True,
+                    user_id="admin",
+                    agent_id=agent_id
+                )
+                
+                if topic_content_result and topic_content_result.get('content'):
+                    base_campaign_content = topic_content_result['content']
+                    logger.info(f"Generated topic-based content: {base_campaign_content[:100]}...")
+                else:
+                    # Fallback content if generation fails
+                    base_campaign_content = f"Learn about {topic} and how it can benefit your pet's health and wellbeing. Our expert team provides comprehensive care and guidance for all your pet's needs. Contact us today to schedule a consultation and discover the best solutions for your furry family member."
+                    logger.warning("Topic content generation failed, using fallback content")
+                    
+            except Exception as e:
+                logger.error(f"Error generating topic content: {str(e)}")
+                base_campaign_content = f"Learn about {topic} and how it can benefit your pet's health and wellbeing. Our expert team provides comprehensive care and guidance for all your pet's needs. Contact us today to schedule a consultation and discover the best solutions for your furry family member."
             
         elif content_type == 'holidays':
             selected_holidays = agent_data.get('selected_holidays', [])
             if selected_holidays:
                 holiday_name = selected_holidays[0] if selected_holidays else "Holiday"
                 campaign_title = f"Marketing Campaign - {holiday_name}"
-                base_campaign_content = f"Special {holiday_name} offer for [CUSTOMER_NAME] and [PET_NAME]! Don't miss out on [PET_NAMES] special care."
+                
+                # Generate 150-200 word professional holiday content using ChatGPT
+                try:
+                    holiday_content_result = await ai_service.generate_social_media_content(
+                        topic=f"{holiday_name} pet care special",
+                        word_count="180",  # 150-200 words as requested
+                        platforms=['general'],  # Generic platform for base content
+                        custom_topic=f"Create engaging {holiday_name} marketing content for pet care services",
+                        image_text=agent_data.get('image_text', ''),
+                        track_usage=True,
+                        user_id="admin",
+                        agent_id=agent_id
+                    )
+                    
+                    if holiday_content_result and holiday_content_result.get('content'):
+                        base_campaign_content = holiday_content_result['content']
+                        logger.info(f"Generated holiday-based content: {base_campaign_content[:100]}...")
+                    else:
+                        # Fallback content if generation fails
+                        base_campaign_content = f"Celebrate {holiday_name} with special care for your beloved pets! This {holiday_name} season, show your furry family members how much you care with our comprehensive pet care services. From health checkups to grooming and specialized treatments, we're here to keep your pets happy and healthy during this special time of year."
+                        logger.warning("Holiday content generation failed, using fallback content")
+                        
+                except Exception as e:
+                    logger.error(f"Error generating holiday content: {str(e)}")
+                    base_campaign_content = f"Celebrate {holiday_name} with special care for your beloved pets! This {holiday_name} season, show your furry family members how much you care with our comprehensive pet care services. From health checkups to grooming and specialized treatments, we're here to keep your pets happy and healthy during this special time of year."
             else:
                 campaign_title = "Marketing Campaign - Holiday"
-                base_campaign_content = "Special holiday offer for [CUSTOMER_NAME] and [PET_NAME]! Contact us about [PET_NAMES] care."
+                base_campaign_content = "Celebrate the holiday season with special care for your beloved pets! Show your furry family members how much you care with our comprehensive pet care services."
                 
         elif content_type == 'custom_campaign':
             custom_content = agent_data.get('marketing_custom_campaign', '')
             campaign_title = "Marketing Campaign - Custom"
             
             if custom_content:
-                # STEP 1.1: Enhance user's custom content with ChatGPT for professional marketing
+                # Generate enhanced ChatGPT content based on user's custom input
                 try:
                     enhanced_content_result = await ai_service.format_custom_content(
-                        post_title="Marketing Campaign Content Enhancement",
+                        post_title="Professional Marketing Campaign Content",
                         post_content=custom_content,
-                        word_count=agent_data.get('word_count', '100'),
+                        word_count=agent_data.get('word_count', '180'),
                         platforms=['general'],  # Generic platform for consistency
                         use_web_research=agent_data.get('use_web_research', False),
                         image_text=agent_data.get('image_text', ''),
@@ -6289,7 +6336,7 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                     # Fallback to original content if enhancement fails
                     base_campaign_content = custom_content
             else:
-                base_campaign_content = "Custom marketing message for [CUSTOMER_NAME] and [PET_NAME]. Learn more about [PET_NAMES] care."
+                base_campaign_content = "Experience exceptional pet care services tailored to your furry family member's unique needs. Our expert team is dedicated to providing the highest quality care and support."
         
         # STEP 2: Get sample customer data for personalization (shared across all channels)
         sample_customer_data = {}
