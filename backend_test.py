@@ -38,7 +38,7 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv(backend_dir / '.env')
 
-class MarketingAgentTester:
+class MarketingAgentFieldTester:
     def __init__(self):
         self.mongo_url = os.environ['MONGO_URL']
         self.db_name = os.environ['DB_NAME']
@@ -47,8 +47,7 @@ class MarketingAgentTester:
         self.test_results = []
         self.backend_url = os.environ.get('FRONTEND_URL', 'https://petcare-agents.preview.emergentagent.com')
         self.auth_token = None
-        self.created_agent_id = None
-        self.generated_posts = []
+        self.created_agent_ids = []  # Store multiple agent IDs
         
     async def connect(self):
         """Connect to MongoDB"""
@@ -103,69 +102,9 @@ class MarketingAgentTester:
             print(f"Authentication error: {str(e)}")
             return False
     
-    async def test_marketing_agent_type_availability(self):
-        """Test 1: Marketing Agent Type Availability - Test if marketing_agent is available in /api/ai-agent-types endpoint"""
-        print("🔍 TEST 1: Marketing Agent Type Availability")
-        print("=" * 60)
-        
-        try:
-            ssl_context = ssl.create_default_context()
-            ssl_context.check_hostname = False
-            ssl_context.verify_mode = ssl.CERT_NONE
-            
-            headers = {"Authorization": f"Bearer {self.auth_token}"} if self.auth_token else {}
-            
-            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                url = f"{self.backend_url}/api/ai-agent-types"
-                async with session.get(url, headers=headers, timeout=10) as response:
-                    if response.status == 200:
-                        agent_types = await response.json()
-                        
-                        # Check if marketing_agent is available
-                        marketing_agent_found = False
-                        marketing_agent_details = None
-                        
-                        for agent_type in agent_types:
-                            if agent_type.get('value') == 'marketing_agent':
-                                marketing_agent_found = True
-                                marketing_agent_details = agent_type
-                                break
-                        
-                        success = marketing_agent_found
-                        
-                        self.log_test_result(
-                            "Marketing Agent Type Availability",
-                            success,
-                            f"Marketing agent type found: {marketing_agent_found}",
-                            {
-                                "HTTP Status": response.status,
-                                "Total Agent Types": len(agent_types),
-                                "Marketing Agent Details": marketing_agent_details,
-                                "All Agent Types": [at.get('value') for at in agent_types]
-                            }
-                        )
-                        return success, agent_types
-                    else:
-                        self.log_test_result(
-                            "Marketing Agent Type Availability",
-                            False,
-                            f"Failed to get agent types: HTTP {response.status}",
-                            {"HTTP Status": response.status}
-                        )
-                        return False, []
-                        
-        except Exception as e:
-            self.log_test_result(
-                "Marketing Agent Type Availability",
-                False,
-                f"Error testing agent types: {str(e)}",
-                {"Error Details": str(e)}
-            )
-            return False, []
-    
-    async def test_marketing_agent_creation(self):
-        """Test 2: Marketing Agent Creation - Test creating a new marketing agent with comprehensive data"""
-        print("🔍 TEST 2: Marketing Agent Creation")
+    async def test_create_marketing_agent_with_custom_content(self):
+        """Test 1: Create Marketing Agent with Custom Campaign Content"""
+        print("🔍 TEST 1: Create Marketing Agent with Custom Campaign Content")
         print("=" * 60)
         
         try:
@@ -181,23 +120,16 @@ class MarketingAgentTester:
             # Marketing agent data as specified in the request
             marketing_agent_data = {
                 "agent_type": "marketing_agent",
-                "agent_name": "Test Marketing Campaign",
-                "mode": "adhoc",  # Using adhoc mode instead of write mode for marketing campaigns
-                "marketing_content_type": "topic",
-                "topic": "Pet Health Tips",
+                "agent_name": "Test Custom Content Fix",
+                "mode": "adhoc",
+                "marketing_content_type": "custom_campaign",
+                "marketing_custom_campaign": "This is my custom marketing campaign content that should be saved and displayed in the dashboard!",
                 "marketing_channels": ["email", "sms"],
-                "marketing_email_personalized": True,  # Fixed field name
-                "marketing_email_template": "Test email template with [CUSTOMER_NAME] and [PET_NAME]",  # Fixed field name
-                "marketing_sms_personalized": True,  # Fixed field name
-                "marketing_sms_template": "Test SMS for [CUSTOMER_NAME] about [PET_NAME]",  # Fixed field name
-                "marketing_link": "https://petsandvetsanimalhospital.com/campaign",
-                "post_date": "2025-01-15",
-                "post_time": "09:00",
-                "marketing_workflow_mode": "in_review",
-                "image_option": "ai_generate",
-                "word_count": "100",
-                "post_destination": "in_review",
-                "auto_post": False
+                "marketing_email_personalized": True,
+                "marketing_sms_personalized": False,
+                "post_date": "2025-01-25",
+                "post_time": "14:00",
+                "marketing_workflow_mode": "in_review"
             }
             
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
@@ -208,10 +140,11 @@ class MarketingAgentTester:
                     if response.status == 200:
                         try:
                             result = json.loads(response_text)
-                            self.created_agent_id = result.get("agent_id")
+                            agent_id = result.get("agent_id")
+                            self.created_agent_ids.append(agent_id)
                             
                             # Verify agent was created in database
-                            agent_doc = await self.db.ai_agents.find_one({"id": self.created_agent_id})
+                            agent_doc = await self.db.ai_agents.find_one({"id": agent_id})
                             
                             success = agent_doc is not None and agent_doc.get("agent_type") == "marketing_agent"
                             
@@ -219,40 +152,35 @@ class MarketingAgentTester:
                             field_verification = {}
                             if agent_doc:
                                 field_verification = {
-                                    "agent_name": agent_doc.get("agent_name") == "Test Marketing Campaign",
+                                    "agent_name": agent_doc.get("agent_name") == "Test Custom Content Fix",
                                     "agent_type": agent_doc.get("agent_type") == "marketing_agent",
-                                    "mode": agent_doc.get("mode") == "adhoc",
-                                    "marketing_content_type": agent_doc.get("marketing_content_type") == "topic",
-                                    "topic": agent_doc.get("topic") == "Pet Health Tips",
+                                    "marketing_content_type": agent_doc.get("marketing_content_type") == "custom_campaign",
+                                    "marketing_custom_campaign": agent_doc.get("marketing_custom_campaign") == "This is my custom marketing campaign content that should be saved and displayed in the dashboard!",
                                     "marketing_channels": agent_doc.get("marketing_channels") == ["email", "sms"],
                                     "marketing_email_personalized": agent_doc.get("marketing_email_personalized") == True,
-                                    "marketing_email_template": agent_doc.get("marketing_email_template") == "Test email template with [CUSTOMER_NAME] and [PET_NAME]",
-                                    "marketing_sms_personalized": agent_doc.get("marketing_sms_personalized") == True,
-                                    "marketing_sms_template": agent_doc.get("marketing_sms_template") == "Test SMS for [CUSTOMER_NAME] about [PET_NAME]",
-                                    "marketing_link": agent_doc.get("marketing_link") == "https://petsandvetsanimalhospital.com/campaign",
-                                    "marketing_workflow_mode": agent_doc.get("marketing_workflow_mode") == "in_review",
-                                    "word_count": agent_doc.get("word_count") == "100",
-                                    "auto_post": agent_doc.get("auto_post") == False
+                                    "marketing_sms_personalized": agent_doc.get("marketing_sms_personalized") == False,
+                                    "post_date": agent_doc.get("post_date") == "2025-01-25",
+                                    "post_time": agent_doc.get("post_time") == "14:00"
                                 }
                             
                             self.log_test_result(
-                                "Marketing Agent Creation",
+                                "Create Marketing Agent with Custom Content",
                                 success,
                                 f"Marketing agent created successfully: {success}",
                                 {
                                     "HTTP Status": response.status,
-                                    "Agent ID": self.created_agent_id,
+                                    "Agent ID": agent_id,
                                     "Agent Found in DB": agent_doc is not None,
                                     "Field Verification": field_verification,
                                     "All Fields Correct": all(field_verification.values()) if field_verification else False,
-                                    "Response": result
+                                    "Custom Campaign Content": agent_doc.get("marketing_custom_campaign") if agent_doc else None
                                 }
                             )
-                            return success, self.created_agent_id
+                            return success, agent_id
                             
                         except json.JSONDecodeError:
                             self.log_test_result(
-                                "Marketing Agent Creation",
+                                "Create Marketing Agent with Custom Content",
                                 False,
                                 "Invalid JSON response",
                                 {"HTTP Status": response.status, "Response Text": response_text}
@@ -260,7 +188,7 @@ class MarketingAgentTester:
                             return False, None
                     else:
                         self.log_test_result(
-                            "Marketing Agent Creation",
+                            "Create Marketing Agent with Custom Content",
                             False,
                             f"Failed to create marketing agent: HTTP {response.status}",
                             {"HTTP Status": response.status, "Response Text": response_text}
@@ -269,131 +197,24 @@ class MarketingAgentTester:
                         
         except Exception as e:
             self.log_test_result(
-                "Marketing Agent Creation",
+                "Create Marketing Agent with Custom Content",
                 False,
                 f"Error creating marketing agent: {str(e)}",
                 {"Error Details": str(e)}
             )
             return False, None
     
-    async def test_marketing_agent_generation(self):
-        """Test 3: Marketing Agent Generation - Test running/executing the created marketing agent to generate content"""
-        print("🔍 TEST 3: Marketing Agent Generation")
+    async def test_verify_field_storage(self, agent_id):
+        """Test 2: Verify Field Storage - Retrieve agent and confirm fields are properly saved"""
+        print("🔍 TEST 2: Verify Field Storage")
         print("=" * 60)
         
-        if not self.created_agent_id:
+        if not agent_id:
             self.log_test_result(
-                "Marketing Agent Generation",
+                "Verify Field Storage",
                 False,
-                "No agent ID available for testing generation",
-                {"Agent ID": self.created_agent_id}
-            )
-            return False, []
-        
-        try:
-            ssl_context = ssl.create_default_context()
-            ssl_context.check_hostname = False
-            ssl_context.verify_mode = ssl.CERT_NONE
-            
-            headers = {
-                "Authorization": f"Bearer {self.auth_token}",
-                "Content-Type": "application/json"
-            }
-            
-            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                url = f"{self.backend_url}/api/ai-agents/{self.created_agent_id}/run"
-                async with session.post(url, headers=headers, json={}, timeout=30) as response:
-                    response_text = await response.text()
-                    
-                    if response.status == 200:
-                        try:
-                            result = json.loads(response_text)
-                            
-                            # Check for generated posts in database
-                            posts = await self.db.ai_posts.find({
-                                "agent_id": self.created_agent_id,
-                                "agent_type": "marketing_agent"
-                            }).to_list(length=10)
-                            
-                            self.generated_posts = posts
-                            
-                            # Analyze generated posts
-                            post_analysis = {}
-                            channels_generated = set()
-                            
-                            for post in posts:
-                                post_id = post.get("id")
-                                channel = post.get("marketing_channel", "unknown")
-                                channels_generated.add(channel)
-                                
-                                post_analysis[post_id] = {
-                                    "channel": channel,
-                                    "status": post.get("status"),
-                                    "content_length": len(post.get("content", "")),
-                                    "has_content": bool(post.get("content", "").strip()),
-                                    "agent_type": post.get("agent_type"),
-                                    "agent_id": post.get("agent_id"),
-                                    "created_at": post.get("created_at")
-                                }
-                            
-                            expected_channels = {"email", "sms"}  # Based on marketing_channels in creation
-                            channels_match = channels_generated == expected_channels
-                            
-                            success = len(posts) > 0 and channels_match
-                            
-                            self.log_test_result(
-                                "Marketing Agent Generation",
-                                success,
-                                f"Generated {len(posts)} posts for {len(channels_generated)} channels",
-                                {
-                                    "HTTP Status": response.status,
-                                    "Posts Generated": len(posts),
-                                    "Channels Generated": list(channels_generated),
-                                    "Expected Channels": list(expected_channels),
-                                    "Channels Match": channels_match,
-                                    "Post Analysis": post_analysis,
-                                    "Response": result
-                                }
-                            )
-                            return success, posts
-                            
-                        except json.JSONDecodeError:
-                            self.log_test_result(
-                                "Marketing Agent Generation",
-                                False,
-                                "Invalid JSON response",
-                                {"HTTP Status": response.status, "Response Text": response_text}
-                            )
-                            return False, []
-                    else:
-                        self.log_test_result(
-                            "Marketing Agent Generation",
-                            False,
-                            f"Failed to run marketing agent: HTTP {response.status}",
-                            {"HTTP Status": response.status, "Response Text": response_text}
-                        )
-                        return False, []
-                        
-        except Exception as e:
-            self.log_test_result(
-                "Marketing Agent Generation",
-                False,
-                f"Error running marketing agent: {str(e)}",
-                {"Error Details": str(e)}
-            )
-            return False, []
-    
-    async def test_marketing_agent_retrieval(self):
-        """Test 4: Marketing Agent Retrieval - Test getting the created marketing agent and verify all fields are saved correctly"""
-        print("🔍 TEST 4: Marketing Agent Retrieval")
-        print("=" * 60)
-        
-        if not self.created_agent_id:
-            self.log_test_result(
-                "Marketing Agent Retrieval",
-                False,
-                "No agent ID available for testing retrieval",
-                {"Agent ID": self.created_agent_id}
+                "No agent ID available for testing field storage",
+                {"Agent ID": agent_id}
             )
             return False, None
         
@@ -405,7 +226,7 @@ class MarketingAgentTester:
             headers = {"Authorization": f"Bearer {self.auth_token}"}
             
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                url = f"{self.backend_url}/api/ai-agents"  # Use list endpoint instead of individual
+                url = f"{self.backend_url}/api/ai-agents"
                 async with session.get(url, headers=headers, timeout=10) as response:
                     response_text = await response.text()
                     
@@ -416,79 +237,49 @@ class MarketingAgentTester:
                             # Find our specific agent
                             agent_data = None
                             for agent in agents_list:
-                                if agent.get("id") == self.created_agent_id:
+                                if agent.get("id") == agent_id:
                                     agent_data = agent
                                     break
                             
                             if not agent_data:
                                 self.log_test_result(
-                                    "Marketing Agent Retrieval",
+                                    "Verify Field Storage",
                                     False,
                                     "Agent not found in agents list",
-                                    {"Agent ID": self.created_agent_id, "Total Agents": len(agents_list)}
+                                    {"Agent ID": agent_id, "Total Agents": len(agents_list)}
                                 )
                                 return False, None
                             
-                            # Verify all expected fields are present and correct
-                            expected_fields = {
-                                "agent_type": "marketing_agent",
-                                "agent_name": "Test Marketing Campaign",
-                                "mode": "adhoc",
-                                "marketing_content_type": "topic",
-                                "topic": "Pet Health Tips",
-                                "marketing_channels": ["email", "sms"],
-                                "marketing_email_personalized": True,
-                                "marketing_email_template": "Test email template with [CUSTOMER_NAME] and [PET_NAME]",
-                                "marketing_sms_personalized": True,
-                                "marketing_sms_template": "Test SMS for [CUSTOMER_NAME] about [PET_NAME]",
-                                "marketing_link": "https://petsandvetsanimalhospital.com/campaign",
-                                "marketing_workflow_mode": "in_review",
-                                "word_count": "100",
-                                "auto_post": False
+                            # Verify specific fields are properly stored
+                            field_checks = {
+                                "marketing_custom_campaign_exists": "marketing_custom_campaign" in agent_data,
+                                "marketing_custom_campaign_correct": agent_data.get("marketing_custom_campaign") == "This is my custom marketing campaign content that should be saved and displayed in the dashboard!",
+                                "marketing_email_personalized_exists": "marketing_email_personalized" in agent_data,
+                                "marketing_email_personalized_correct": agent_data.get("marketing_email_personalized") == True,
+                                "marketing_sms_personalized_exists": "marketing_sms_personalized" in agent_data,
+                                "marketing_sms_personalized_correct": agent_data.get("marketing_sms_personalized") == False
                             }
                             
-                            field_verification = {}
-                            all_fields_correct = True
-                            
-                            for field, expected_value in expected_fields.items():
-                                actual_value = agent_data.get(field)
-                                is_correct = actual_value == expected_value
-                                field_verification[field] = {
-                                    "expected": expected_value,
-                                    "actual": actual_value,
-                                    "correct": is_correct
-                                }
-                                if not is_correct:
-                                    all_fields_correct = False
-                            
-                            # Check for additional important fields
-                            additional_checks = {
-                                "id": agent_data.get("id") == self.created_agent_id,
-                                "is_active": agent_data.get("is_active") is not None,
-                                "created_at": agent_data.get("created_at") is not None,
-                                "updated_at": agent_data.get("updated_at") is not None
-                            }
-                            
-                            success = all_fields_correct and all(additional_checks.values())
+                            success = all(field_checks.values())
                             
                             self.log_test_result(
-                                "Marketing Agent Retrieval",
+                                "Verify Field Storage",
                                 success,
-                                f"Agent retrieved successfully, all fields correct: {all_fields_correct}",
+                                f"Field storage verification: {success}",
                                 {
                                     "HTTP Status": response.status,
-                                    "Agent ID Match": agent_data.get("id") == self.created_agent_id,
-                                    "All Fields Correct": all_fields_correct,
-                                    "Field Verification": field_verification,
-                                    "Additional Checks": additional_checks,
-                                    "Agent Data Keys": list(agent_data.keys())
+                                    "Agent ID Match": agent_data.get("id") == agent_id,
+                                    "Field Checks": field_checks,
+                                    "marketing_custom_campaign": agent_data.get("marketing_custom_campaign"),
+                                    "marketing_email_personalized": agent_data.get("marketing_email_personalized"),
+                                    "marketing_sms_personalized": agent_data.get("marketing_sms_personalized")
                                 }
                             )
                             return success, agent_data
                             
                         except json.JSONDecodeError:
                             self.log_test_result(
-                                "Marketing Agent Retrieval",
+                                "Verify Field Storage",
                                 False,
                                 "Invalid JSON response",
                                 {"HTTP Status": response.status, "Response Text": response_text}
@@ -496,7 +287,7 @@ class MarketingAgentTester:
                             return False, None
                     else:
                         self.log_test_result(
-                            "Marketing Agent Retrieval",
+                            "Verify Field Storage",
                             False,
                             f"Failed to retrieve marketing agent: HTTP {response.status}",
                             {"HTTP Status": response.status, "Response Text": response_text}
@@ -505,16 +296,16 @@ class MarketingAgentTester:
                         
         except Exception as e:
             self.log_test_result(
-                "Marketing Agent Retrieval",
+                "Verify Field Storage",
                 False,
-                f"Error retrieving marketing agent: {str(e)}",
+                f"Error verifying field storage: {str(e)}",
                 {"Error Details": str(e)}
             )
             return False, None
     
-    async def test_error_handling(self):
-        """Test 5: Error Handling - Test validation errors for missing required fields"""
-        print("🔍 TEST 5: Error Handling")
+    async def test_create_second_agent_different_settings(self):
+        """Test 3: Create Second Agent with Different Settings"""
+        print("🔍 TEST 3: Create Second Agent with Different Settings")
         print("=" * 60)
         
         try:
@@ -527,101 +318,191 @@ class MarketingAgentTester:
                 "Content-Type": "application/json"
             }
             
-            # Test cases for missing required fields
-            test_cases = [
-                {
-                    "name": "Missing agent_type",
-                    "data": {
-                        "agent_name": "Test Marketing Campaign",
-                        "mode": "adhoc",
-                        "marketing_content_type": "topic",
-                        "topic": "Pet Health Tips"
-                    },
-                    "expected_error": "agent_type"
-                },
-                {
-                    "name": "Missing agent_name",
-                    "data": {
-                        "agent_type": "marketing_agent",
-                        "mode": "adhoc",
-                        "marketing_content_type": "topic",
-                        "topic": "Pet Health Tips"
-                    },
-                    "expected_error": "agent_name"
-                },
-                {
-                    "name": "Missing mode",
-                    "data": {
-                        "agent_type": "marketing_agent",
-                        "agent_name": "Test Marketing Campaign",
-                        "marketing_content_type": "topic",
-                        "topic": "Pet Health Tips"
-                    },
-                    "expected_error": "mode"
-                },
-                {
-                    "name": "Invalid agent_type",
-                    "data": {
-                        "agent_type": "invalid_agent_type",
-                        "agent_name": "Test Marketing Campaign",
-                        "mode": "adhoc",
-                        "marketing_content_type": "topic",
-                        "topic": "Pet Health Tips"
-                    },
-                    "expected_error": "agent_type"
-                }
-            ]
-            
-            error_test_results = {}
-            successful_error_tests = 0
+            # Second marketing agent with different personalization settings
+            marketing_agent_data = {
+                "agent_type": "marketing_agent",
+                "agent_name": "Test Different Personalization Settings",
+                "mode": "adhoc",
+                "marketing_content_type": "custom_campaign",
+                "marketing_custom_campaign": "Another test campaign with different personalization settings",
+                "marketing_channels": ["email", "sms"],
+                "marketing_email_personalized": False,  # Different from first agent
+                "marketing_sms_personalized": True,     # Different from first agent
+                "post_date": "2025-01-26",
+                "post_time": "15:00",
+                "marketing_workflow_mode": "in_review"
+            }
             
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                for test_case in test_cases:
-                    url = f"{self.backend_url}/api/ai-agents"
-                    async with session.post(url, headers=headers, json=test_case["data"], timeout=10) as response:
-                        response_text = await response.text()
+                url = f"{self.backend_url}/api/ai-agents"
+                async with session.post(url, headers=headers, json=marketing_agent_data, timeout=15) as response:
+                    response_text = await response.text()
+                    
+                    if response.status == 200:
+                        try:
+                            result = json.loads(response_text)
+                            agent_id = result.get("agent_id")
+                            self.created_agent_ids.append(agent_id)
+                            
+                            # Verify agent was created in database
+                            agent_doc = await self.db.ai_agents.find_one({"id": agent_id})
+                            
+                            success = agent_doc is not None and agent_doc.get("agent_type") == "marketing_agent"
+                            
+                            # Check if all fields were saved correctly with different settings
+                            field_verification = {}
+                            if agent_doc:
+                                field_verification = {
+                                    "agent_name": agent_doc.get("agent_name") == "Test Different Personalization Settings",
+                                    "marketing_custom_campaign": agent_doc.get("marketing_custom_campaign") == "Another test campaign with different personalization settings",
+                                    "marketing_email_personalized": agent_doc.get("marketing_email_personalized") == False,  # Should be False
+                                    "marketing_sms_personalized": agent_doc.get("marketing_sms_personalized") == True      # Should be True
+                                }
+                            
+                            self.log_test_result(
+                                "Create Second Agent with Different Settings",
+                                success,
+                                f"Second marketing agent created successfully: {success}",
+                                {
+                                    "HTTP Status": response.status,
+                                    "Agent ID": agent_id,
+                                    "Agent Found in DB": agent_doc is not None,
+                                    "Field Verification": field_verification,
+                                    "All Fields Correct": all(field_verification.values()) if field_verification else False,
+                                    "Email Personalized": agent_doc.get("marketing_email_personalized") if agent_doc else None,
+                                    "SMS Personalized": agent_doc.get("marketing_sms_personalized") if agent_doc else None
+                                }
+                            )
+                            return success, agent_id
+                            
+                        except json.JSONDecodeError:
+                            self.log_test_result(
+                                "Create Second Agent with Different Settings",
+                                False,
+                                "Invalid JSON response",
+                                {"HTTP Status": response.status, "Response Text": response_text}
+                            )
+                            return False, None
+                    else:
+                        self.log_test_result(
+                            "Create Second Agent with Different Settings",
+                            False,
+                            f"Failed to create second marketing agent: HTTP {response.status}",
+                            {"HTTP Status": response.status, "Response Text": response_text}
+                        )
+                        return False, None
                         
-                        # We expect these to fail (4xx status codes)
-                        is_error_response = 400 <= response.status < 500
-                        
-                        error_test_results[test_case["name"]] = {
-                            "expected_error": test_case["expected_error"],
-                            "http_status": response.status,
-                            "is_error_response": is_error_response,
-                            "response_text": response_text[:200] + "..." if len(response_text) > 200 else response_text
-                        }
-                        
-                        if is_error_response:
-                            successful_error_tests += 1
-            
-            success = successful_error_tests == len(test_cases)
-            
-            self.log_test_result(
-                "Error Handling",
-                success,
-                f"Error handling tests passed: {successful_error_tests}/{len(test_cases)}",
-                {
-                    "Total Test Cases": len(test_cases),
-                    "Successful Error Tests": successful_error_tests,
-                    "Error Test Results": error_test_results
-                }
-            )
-            return success, error_test_results
-            
         except Exception as e:
             self.log_test_result(
-                "Error Handling",
+                "Create Second Agent with Different Settings",
                 False,
-                f"Error testing error handling: {str(e)}",
+                f"Error creating second marketing agent: {str(e)}",
                 {"Error Details": str(e)}
             )
-            return False, {}
+            return False, None
     
-    async def run_marketing_agent_tests(self):
-        """Run comprehensive marketing agent functionality tests"""
-        print("🔍 STARTING MARKETING AGENT FUNCTIONALITY TESTING")
+    async def test_edit_operation(self, agent_id):
+        """Test 4: Test Edit Operation - Update agent's custom content and personalization"""
+        print("🔍 TEST 4: Test Edit Operation")
+        print("=" * 60)
+        
+        if not agent_id:
+            self.log_test_result(
+                "Test Edit Operation",
+                False,
+                "No agent ID available for testing edit operation",
+                {"Agent ID": agent_id}
+            )
+            return False, None
+        
+        try:
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
+            
+            # Update data for the first agent
+            update_data = {
+                "marketing_custom_campaign": "Updated custom campaign content to test edit functionality",
+                "marketing_email_personalized": False  # Change from True to False
+            }
+            
+            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
+                url = f"{self.backend_url}/api/ai-agents/{agent_id}"
+                async with session.put(url, headers=headers, json=update_data, timeout=15) as response:
+                    response_text = await response.text()
+                    
+                    if response.status == 200:
+                        try:
+                            result = json.loads(response_text)
+                            
+                            # Verify agent was updated in database
+                            agent_doc = await self.db.ai_agents.find_one({"id": agent_id})
+                            
+                            success = agent_doc is not None
+                            
+                            # Check if fields were updated correctly
+                            field_verification = {}
+                            if agent_doc:
+                                field_verification = {
+                                    "marketing_custom_campaign_updated": agent_doc.get("marketing_custom_campaign") == "Updated custom campaign content to test edit functionality",
+                                    "marketing_email_personalized_updated": agent_doc.get("marketing_email_personalized") == False,
+                                    "marketing_sms_personalized_unchanged": agent_doc.get("marketing_sms_personalized") == False  # Should remain unchanged
+                                }
+                            
+                            success = success and all(field_verification.values())
+                            
+                            self.log_test_result(
+                                "Test Edit Operation",
+                                success,
+                                f"Marketing agent updated successfully: {success}",
+                                {
+                                    "HTTP Status": response.status,
+                                    "Agent ID": agent_id,
+                                    "Agent Found in DB": agent_doc is not None,
+                                    "Field Verification": field_verification,
+                                    "All Fields Correct": all(field_verification.values()) if field_verification else False,
+                                    "Updated Custom Campaign": agent_doc.get("marketing_custom_campaign") if agent_doc else None,
+                                    "Updated Email Personalized": agent_doc.get("marketing_email_personalized") if agent_doc else None
+                                }
+                            )
+                            return success, agent_doc
+                            
+                        except json.JSONDecodeError:
+                            self.log_test_result(
+                                "Test Edit Operation",
+                                False,
+                                "Invalid JSON response",
+                                {"HTTP Status": response.status, "Response Text": response_text}
+                            )
+                            return False, None
+                    else:
+                        self.log_test_result(
+                            "Test Edit Operation",
+                            False,
+                            f"Failed to update marketing agent: HTTP {response.status}",
+                            {"HTTP Status": response.status, "Response Text": response_text}
+                        )
+                        return False, None
+                        
+        except Exception as e:
+            self.log_test_result(
+                "Test Edit Operation",
+                False,
+                f"Error updating marketing agent: {str(e)}",
+                {"Error Details": str(e)}
+            )
+            return False, None
+    
+    async def run_marketing_agent_field_tests(self):
+        """Run comprehensive marketing agent field fixes tests"""
+        print("🔍 STARTING MARKETING AGENT FIELD FIXES TESTING")
         print("=" * 80)
-        print("Testing Marketing Agent functionality comprehensively")
+        print("Testing Marketing Agent field fixes comprehensively")
         print("=" * 80)
         
         try:
@@ -636,37 +517,33 @@ class MarketingAgentTester:
             # Run all tests
             test_results = []
             
-            # Test 1: Marketing Agent Type Availability
-            success1, agent_types = await self.test_marketing_agent_type_availability()
+            # Test 1: Create Marketing Agent with Custom Campaign Content
+            success1, agent_id1 = await self.test_create_marketing_agent_with_custom_content()
             test_results.append(success1)
             
-            # Test 2: Marketing Agent Creation
-            success2, agent_id = await self.test_marketing_agent_creation()
-            test_results.append(success2)
-            
-            # Test 3: Marketing Agent Generation (only if creation succeeded)
-            if success2 and agent_id:
-                success3, posts = await self.test_marketing_agent_generation()
-                test_results.append(success3)
+            # Test 2: Verify Field Storage (only if creation succeeded)
+            if success1 and agent_id1:
+                success2, agent_data = await self.test_verify_field_storage(agent_id1)
+                test_results.append(success2)
             else:
-                print("⏭️  Skipping generation test - agent creation failed")
+                print("⏭️  Skipping field storage test - agent creation failed")
                 test_results.append(False)
             
-            # Test 4: Marketing Agent Retrieval (only if creation succeeded)
-            if success2 and agent_id:
-                success4, agent_data = await self.test_marketing_agent_retrieval()
+            # Test 3: Create Second Agent with Different Settings
+            success3, agent_id2 = await self.test_create_second_agent_different_settings()
+            test_results.append(success3)
+            
+            # Test 4: Test Edit Operation (only if first creation succeeded)
+            if success1 and agent_id1:
+                success4, updated_agent = await self.test_edit_operation(agent_id1)
                 test_results.append(success4)
             else:
-                print("⏭️  Skipping retrieval test - agent creation failed")
+                print("⏭️  Skipping edit operation test - first agent creation failed")
                 test_results.append(False)
-            
-            # Test 5: Error Handling
-            success5, error_results = await self.test_error_handling()
-            test_results.append(success5)
             
             # Summary
             print("=" * 80)
-            print("🎯 MARKETING AGENT TESTING SUMMARY")
+            print("🎯 MARKETING AGENT FIELD FIXES TESTING SUMMARY")
             print("=" * 80)
             
             passed_tests = sum(test_results)
@@ -685,51 +562,41 @@ class MarketingAgentTester:
             print("🔍 KEY FINDINGS:")
             print("=" * 40)
             
-            # Marketing Agent Type Analysis
+            # Test 1 Analysis
             if success1:
-                print("✅ AGENT TYPES: Marketing agent type is available in /api/ai-agent-types endpoint")
+                print("✅ CUSTOM CONTENT CREATION: Marketing agent with custom campaign content created successfully")
+                print(f"   - Agent ID: {agent_id1}")
             else:
-                print("❌ AGENT TYPES: Marketing agent type not found in agent types endpoint")
+                print("❌ CUSTOM CONTENT CREATION: Failed to create marketing agent with custom content")
             
-            # Marketing Agent Creation Analysis
-            if success2:
-                print("✅ AGENT CREATION: Marketing agent created successfully with all specified fields")
-                print(f"   - Agent ID: {self.created_agent_id}")
+            # Test 2 Analysis
+            if len(test_results) > 1 and test_results[1]:
+                print("✅ FIELD STORAGE: marketing_custom_campaign, marketing_email_personalized, marketing_sms_personalized fields properly saved")
+            elif len(test_results) > 1:
+                print("❌ FIELD STORAGE: Field storage verification failed")
+            
+            # Test 3 Analysis
+            if success3:
+                print("✅ DIFFERENT SETTINGS: Second agent with different personalization settings created successfully")
+                print(f"   - Agent ID: {agent_id2}")
             else:
-                print("❌ AGENT CREATION: Failed to create marketing agent")
+                print("❌ DIFFERENT SETTINGS: Failed to create second agent with different settings")
             
-            # Marketing Agent Generation Analysis
-            if len(test_results) > 2 and test_results[2]:
-                print("✅ AGENT GENERATION: Marketing agent generated content successfully")
-                print(f"   - Generated posts: {len(self.generated_posts)}")
-                if self.generated_posts:
-                    channels = set(post.get("marketing_channel") for post in self.generated_posts)
-                    print(f"   - Channels: {list(channels)}")
-            elif len(test_results) > 2:
-                print("❌ AGENT GENERATION: Failed to generate marketing content")
-            
-            # Marketing Agent Retrieval Analysis
+            # Test 4 Analysis
             if len(test_results) > 3 and test_results[3]:
-                print("✅ AGENT RETRIEVAL: Marketing agent retrieved successfully with all fields intact")
+                print("✅ EDIT OPERATION: Marketing agent edit operation working correctly")
             elif len(test_results) > 3:
-                print("❌ AGENT RETRIEVAL: Failed to retrieve marketing agent or fields incorrect")
-            
-            # Error Handling Analysis
-            if success5:
-                print("✅ ERROR HANDLING: Proper validation errors for missing required fields")
-            else:
-                print("❌ ERROR HANDLING: Error handling not working correctly")
+                print("❌ EDIT OPERATION: Edit operation failed")
             
             print()
             print("📋 DETAILED TEST RESULTS:")
             print("=" * 40)
             
             test_names = [
-                "Marketing Agent Type Availability",
-                "Marketing Agent Creation", 
-                "Marketing Agent Generation",
-                "Marketing Agent Retrieval",
-                "Error Handling"
+                "Create Marketing Agent with Custom Content",
+                "Verify Field Storage", 
+                "Create Second Agent with Different Settings",
+                "Test Edit Operation"
             ]
             
             for i, (test_name, success) in enumerate(zip(test_names, test_results)):
@@ -749,8 +616,8 @@ class MarketingAgentTester:
 
 async def main():
     """Main testing function"""
-    tester = MarketingAgentTester()
-    await tester.run_marketing_agent_tests()
+    tester = MarketingAgentFieldTester()
+    await tester.run_marketing_agent_field_tests()
 
 if __name__ == "__main__":
     asyncio.run(main())
