@@ -6532,6 +6532,26 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                         "updated_at": now
                     }
                     
+                    # Add email personalization fields
+                    if 'email_template' in content_result:
+                        update_data["email_template"] = content_result['email_template']
+                    if 'sample_customer_name' in content_result:
+                        update_data["sample_customer_name"] = content_result['sample_customer_name']
+                    if 'sample_pet_names' in content_result:
+                        update_data["sample_pet_names"] = content_result['sample_pet_names']
+                    if 'sample_customer_email' in content_result:
+                        update_data["sample_customer_email"] = content_result['sample_customer_email']
+                    if 'ready_for_mass_email' in content_result:
+                        update_data["ready_for_mass_email"] = content_result['ready_for_mass_email']
+                    
+                    # Add SMS personalization fields
+                    if 'sms_template' in content_result:
+                        update_data["sms_template"] = content_result['sms_template']
+                    if 'sample_customer_phone' in content_result:
+                        update_data["sample_customer_phone"] = content_result['sample_customer_phone']
+                    if 'ready_for_mass_sms' in content_result:
+                        update_data["ready_for_mass_sms"] = content_result['ready_for_mass_sms']
+                    
                     # Set workflow status
                     if workflow_mode == 'auto_publish':
                         update_data["status"] = PostStatus.READY
