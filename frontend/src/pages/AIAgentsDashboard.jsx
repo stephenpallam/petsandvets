@@ -1849,15 +1849,6 @@ const AIAgentsDashboard = () => {
                                     <p className="text-sm text-gray-900 font-medium">
                                       {getMarketingContentTypeDisplay(agent)}
                                     </p>
-                                    {/* Show content preview for custom campaign */}
-                                    {agent.marketing_content_type === 'custom_campaign' && agent.marketing_custom_campaign && (
-                                      <div className="mt-2 p-2 bg-gray-50 rounded border">
-                                        <p className="text-xs text-gray-600 font-medium mb-1">Content Preview:</p>
-                                        <p className="text-xs text-gray-800 line-clamp-2">
-                                          {agent.marketing_custom_campaign}
-                                        </p>
-                                      </div>
-                                    )}
                                   </div>
                                 </div>
                                 <div className="flex flex-col">
