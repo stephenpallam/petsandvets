@@ -721,9 +721,9 @@ class EnhancedMarketingAgentTester:
             
             if self.generated_posts:
                 total_posts = len(self.generated_posts)
-                social_media_posts = [p for p in self.generated_posts if "social_media" in p.get("agent_type", "") or p.get("platform") in ["facebook", "instagram"]]
-                email_posts = [p for p in self.generated_posts if "email" in p.get("agent_type", "") or p.get("email_template")]
-                sms_posts = [p for p in self.generated_posts if "sms" in p.get("agent_type", "") or p.get("sms_template")]
+                social_media_posts = [p for p in self.generated_posts if not p.get("email_template") and not p.get("sms_template")]
+                email_posts = [p for p in self.generated_posts if p.get("email_template")]
+                sms_posts = [p for p in self.generated_posts if p.get("sms_template")]
                 
                 print(f"Total Posts Generated: {total_posts}")
                 print(f"Social Media Posts: {len(social_media_posts)}")
