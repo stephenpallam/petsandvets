@@ -103,10 +103,10 @@ class EnhancedMarketingAgentTester:
             print(f"Authentication error: {str(e)}")
             return False
     
-    async def test_create_marketing_agent_multi_channel_custom_campaign(self):
-        """Test 1: Create Marketing Agent with Multi-Channel Campaign using custom content"""
-        print("🔍 TEST 1: Create Marketing Agent with Multi-Channel Campaign (Custom Content)")
-        print("=" * 80)
+    async def test_create_topic_based_marketing_agent(self):
+        """Test 1: Create Topic-Based Marketing Agent with ChatGPT content generation"""
+        print("🔍 TEST 1: Create Topic-Based Marketing Agent")
+        print("=" * 60)
         
         try:
             ssl_context = ssl.create_default_context()
@@ -121,17 +121,19 @@ class EnhancedMarketingAgentTester:
             # Marketing agent data as specified in the request
             marketing_agent_data = {
                 "agent_type": "marketing_agent",
-                "agent_name": "Test Consistent Content Generation",
+                "agent_name": "Test ChatGPT Enhanced Content Generation",
                 "mode": "adhoc",
-                "marketing_content_type": "custom_campaign",
-                "marketing_custom_campaign": "Hello [CUSTOMER_NAME]! Special offer for [PET_NAME]. Don't miss out on [PET_NAMES] care!",
+                "marketing_content_type": "topic",
+                "topic": "Pet Health Tips",
                 "marketing_channels": ["social_media", "email", "sms"],
                 "marketing_social_platforms": {"facebook": True, "instagram": True},
                 "marketing_email_personalized": True,
-                "email_content_template": "Hello [CUSTOMER_NAME]! Special offer for [PET_NAME]. Don't miss out on [PET_NAMES] care!",
+                "email_content_template": "Hello [CUSTOMER_NAME]! Important update about [PET_NAME]. Learn more about [PET_NAMES] health.",
                 "marketing_sms_personalized": True,
-                "sms_template": "Hello [CUSTOMER_NAME]! Special offer for [PET_NAME]. Don't miss out on [PET_NAMES] care!",
-                "marketing_workflow_mode": "in_review"
+                "sms_template": "Hi [CUSTOMER_NAME]! [PET_NAME] health update. Call us about [PET_NAMES].",
+                "marketing_workflow_mode": "in_review",
+                "post_date": "2025-01-15",
+                "post_time": "10:00"
             }
             
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
@@ -154,30 +156,30 @@ class EnhancedMarketingAgentTester:
                             field_verification = {}
                             if agent_doc:
                                 field_verification = {
-                                    "agent_name": agent_doc.get("agent_name") == "Test Consistent Content Generation",
+                                    "agent_name": agent_doc.get("agent_name") == "Test ChatGPT Enhanced Content Generation",
                                     "agent_type": agent_doc.get("agent_type") == "marketing_agent",
-                                    "marketing_content_type": agent_doc.get("marketing_content_type") == "custom_campaign",
-                                    "marketing_custom_campaign": agent_doc.get("marketing_custom_campaign") == "Hello [CUSTOMER_NAME]! Special offer for [PET_NAME]. Don't miss out on [PET_NAMES] care!",
+                                    "marketing_content_type": agent_doc.get("marketing_content_type") == "topic",
+                                    "topic": agent_doc.get("topic") == "Pet Health Tips",
                                     "marketing_channels": set(agent_doc.get("marketing_channels", [])) == {"social_media", "email", "sms"},
                                     "marketing_social_platforms": agent_doc.get("marketing_social_platforms") == {"facebook": True, "instagram": True},
                                     "marketing_email_personalized": agent_doc.get("marketing_email_personalized") == True,
-                                    "email_content_template": agent_doc.get("email_content_template") == "Hello [CUSTOMER_NAME]! Special offer for [PET_NAME]. Don't miss out on [PET_NAMES] care!",
+                                    "email_content_template": agent_doc.get("email_content_template") == "Hello [CUSTOMER_NAME]! Important update about [PET_NAME]. Learn more about [PET_NAMES] health.",
                                     "marketing_sms_personalized": agent_doc.get("marketing_sms_personalized") == True,
-                                    "sms_template": agent_doc.get("sms_template") == "Hello [CUSTOMER_NAME]! Special offer for [PET_NAME]. Don't miss out on [PET_NAMES] care!",
+                                    "sms_template": agent_doc.get("sms_template") == "Hi [CUSTOMER_NAME]! [PET_NAME] health update. Call us about [PET_NAMES].",
                                     "marketing_workflow_mode": agent_doc.get("marketing_workflow_mode") == "in_review"
                                 }
                             
                             self.log_test_result(
-                                "Create Marketing Agent with Multi-Channel Campaign (Custom)",
+                                "Create Topic-Based Marketing Agent",
                                 success,
-                                f"Marketing agent created successfully: {success}",
+                                f"Topic-based marketing agent created successfully: {success}",
                                 {
                                     "HTTP Status": response.status,
                                     "Agent ID": agent_id,
                                     "Agent Found in DB": agent_doc is not None,
                                     "Field Verification": field_verification,
                                     "All Fields Correct": all(field_verification.values()) if field_verification else False,
-                                    "Custom Campaign Content": agent_doc.get("marketing_custom_campaign") if agent_doc else None,
+                                    "Topic": agent_doc.get("topic") if agent_doc else None,
                                     "Channels": agent_doc.get("marketing_channels") if agent_doc else None,
                                     "Social Platforms": agent_doc.get("marketing_social_platforms") if agent_doc else None
                                 }
@@ -186,7 +188,7 @@ class EnhancedMarketingAgentTester:
                             
                         except json.JSONDecodeError:
                             self.log_test_result(
-                                "Create Marketing Agent with Multi-Channel Campaign (Custom)",
+                                "Create Topic-Based Marketing Agent",
                                 False,
                                 "Invalid JSON response",
                                 {"HTTP Status": response.status, "Response Text": response_text}
@@ -194,7 +196,7 @@ class EnhancedMarketingAgentTester:
                             return False, None
                     else:
                         self.log_test_result(
-                            "Create Marketing Agent with Multi-Channel Campaign (Custom)",
+                            "Create Topic-Based Marketing Agent",
                             False,
                             f"Failed to create marketing agent: HTTP {response.status}",
                             {"HTTP Status": response.status, "Response Text": response_text}
@@ -203,21 +205,21 @@ class EnhancedMarketingAgentTester:
                         
         except Exception as e:
             self.log_test_result(
-                "Create Marketing Agent with Multi-Channel Campaign (Custom)",
+                "Create Topic-Based Marketing Agent",
                 False,
                 f"Error creating marketing agent: {str(e)}",
                 {"Error Details": str(e)}
             )
             return False, None
     
-    async def test_run_marketing_agent(self, agent_id):
-        """Test 2: Run Marketing Agent and verify content generation"""
-        print("🔍 TEST 2: Run Marketing Agent")
-        print("=" * 80)
+    async def test_run_marketing_agent_and_verify_content(self, agent_id):
+        """Test 2: Run Marketing Agent and Verify Content Quality"""
+        print("🔍 TEST 2: Run Marketing Agent and Verify Content Quality")
+        print("=" * 60)
         
         if not agent_id:
             self.log_test_result(
-                "Run Marketing Agent",
+                "Run Marketing Agent and Verify Content Quality",
                 False,
                 "No agent ID available for running marketing agent",
                 {"Agent ID": agent_id}
@@ -231,8 +233,9 @@ class EnhancedMarketingAgentTester:
             
             headers = {"Authorization": f"Bearer {self.auth_token}"}
             
+            # Run the marketing agent
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                url = f"{self.backend_url}/api/ai-agents/{agent_id}/run"
+                url = f"{self.backend_url}/api/ai-agents/{agent_id}/generate"
                 async with session.post(url, headers=headers, timeout=30) as response:
                     response_text = await response.text()
                     
@@ -244,32 +247,29 @@ class EnhancedMarketingAgentTester:
                             posts = await self.db.ai_posts.find({"agent_id": agent_id}).to_list(length=None)
                             self.generated_posts.extend(posts)
                             
-                            # Analyze posts by channel
-                            social_media_posts = [p for p in posts if p.get("agent_type") == "social_media"]
-                            email_posts = [p for p in posts if p.get("agent_type") == "email"]
-                            sms_posts = [p for p in posts if p.get("agent_type") == "sms_agent"]
+                            # Analyze content quality
+                            content_analysis = await self.analyze_content_quality(posts)
                             
-                            success = len(posts) > 0
+                            success = len(posts) > 0 and content_analysis["overall_success"]
                             
                             self.log_test_result(
-                                "Run Marketing Agent",
+                                "Run Marketing Agent and Verify Content Quality",
                                 success,
-                                f"Marketing agent executed successfully: {success}",
+                                f"Marketing agent executed and content analyzed: {success}",
                                 {
                                     "HTTP Status": response.status,
-                                    "Total Posts Generated": len(posts),
-                                    "Social Media Posts": len(social_media_posts),
-                                    "Email Posts": len(email_posts),
-                                    "SMS Posts": len(sms_posts),
-                                    "Post IDs": [p.get("id") for p in posts],
-                                    "Post Statuses": [p.get("status") for p in posts]
+                                    "Posts Generated": len(posts),
+                                    "Content Analysis": content_analysis,
+                                    "Social Media Posts": content_analysis.get("social_media_count", 0),
+                                    "Email Posts": content_analysis.get("email_count", 0),
+                                    "SMS Posts": content_analysis.get("sms_count", 0)
                                 }
                             )
                             return success, posts
                             
                         except json.JSONDecodeError:
                             self.log_test_result(
-                                "Run Marketing Agent",
+                                "Run Marketing Agent and Verify Content Quality",
                                 False,
                                 "Invalid JSON response",
                                 {"HTTP Status": response.status, "Response Text": response_text}
@@ -277,7 +277,7 @@ class EnhancedMarketingAgentTester:
                             return False, []
                     else:
                         self.log_test_result(
-                            "Run Marketing Agent",
+                            "Run Marketing Agent and Verify Content Quality",
                             False,
                             f"Failed to run marketing agent: HTTP {response.status}",
                             {"HTTP Status": response.status, "Response Text": response_text}
@@ -286,175 +286,97 @@ class EnhancedMarketingAgentTester:
                         
         except Exception as e:
             self.log_test_result(
-                "Run Marketing Agent",
+                "Run Marketing Agent and Verify Content Quality",
                 False,
                 f"Error running marketing agent: {str(e)}",
                 {"Error Details": str(e)}
             )
             return False, []
     
-    async def test_verify_content_consistency(self, posts):
-        """Test 3: Verify Content Consistency across all channels"""
-        print("🔍 TEST 3: Verify Content Consistency")
-        print("=" * 80)
+    async def analyze_content_quality(self, posts):
+        """Analyze the quality and characteristics of generated content"""
+        analysis = {
+            "social_media_count": 0,
+            "email_count": 0,
+            "sms_count": 0,
+            "social_media_no_personalization": True,
+            "social_media_professional_content": True,
+            "social_media_word_count_ok": True,
+            "email_has_personalization": True,
+            "sms_has_personalization": True,
+            "content_consistency": True,
+            "overall_success": True
+        }
         
-        if not posts:
-            self.log_test_result(
-                "Verify Content Consistency",
-                False,
-                "No posts available for content consistency verification",
-                {"Posts Count": len(posts)}
-            )
-            return False
+        social_media_posts = []
+        email_posts = []
+        sms_posts = []
         
-        try:
-            # Analyze posts by channel
-            social_media_posts = [p for p in posts if p.get("agent_type") == "social_media"]
-            email_posts = [p for p in posts if p.get("agent_type") == "email"]
-            sms_posts = [p for p in posts if p.get("agent_type") == "sms_agent"]
+        # Categorize posts
+        for post in posts:
+            agent_type = post.get("agent_type", "")
+            content = post.get("content", "")
             
-            # Check for consistent base content
-            base_template = "Hello [CUSTOMER_NAME]! Special offer for [PET_NAME]. Don't miss out on [PET_NAMES] care!"
-            expected_personalized = "Hello Stephen Pallam! Special offer for Bolt. Don't miss out on Bolt care!"
+            if "social_media" in agent_type or post.get("platform") in ["facebook", "instagram"]:
+                social_media_posts.append(post)
+                analysis["social_media_count"] += 1
+            elif "email" in agent_type or post.get("email_template"):
+                email_posts.append(post)
+                analysis["email_count"] += 1
+            elif "sms" in agent_type or post.get("sms_template"):
+                sms_posts.append(post)
+                analysis["sms_count"] += 1
+        
+        # Analyze social media posts
+        for post in social_media_posts:
+            content = post.get("content", "")
             
-            consistency_checks = {
-                "social_media_posts_exist": len(social_media_posts) > 0,
-                "email_posts_exist": len(email_posts) > 0,
-                "sms_posts_exist": len(sms_posts) > 0,
-                "total_posts_generated": len(posts) > 0
-            }
+            # Check for personalization (should NOT have customer names)
+            if "[CUSTOMER_NAME]" in content or "Stephen Pallam" in content:
+                analysis["social_media_no_personalization"] = False
             
-            # Check content consistency for each channel
-            content_analysis = {}
+            # Check word count (should be 150-200 words)
+            word_count = len(content.split())
+            if word_count < 100 or word_count > 250:  # Allow some flexibility
+                analysis["social_media_word_count_ok"] = False
             
-            # Social Media Posts Analysis
-            if social_media_posts:
-                sm_content_consistent = True
-                sm_contents = []
-                for post in social_media_posts:
-                    content = post.get("content", "")
-                    sm_contents.append(content)
-                    # Check if content contains personalized elements or base template elements
-                    if not any(keyword in content.lower() for keyword in ["special offer", "stephen", "pallam", "bolt", "care"]):
-                        sm_content_consistent = False
-                
-                content_analysis["social_media"] = {
-                    "posts_count": len(social_media_posts),
-                    "content_consistent": sm_content_consistent,
-                    "sample_content": sm_contents[0] if sm_contents else None
-                }
+            # Check for professional content (not generic messages)
+            if "Important information about" in content or len(content.strip()) < 50:
+                analysis["social_media_professional_content"] = False
+        
+        # Analyze email posts
+        for post in email_posts:
+            content = post.get("content", "")
             
-            # Email Posts Analysis
-            if email_posts:
-                email_content_consistent = True
-                email_metadata_complete = True
-                email_contents = []
-                
-                for post in email_posts:
-                    content = post.get("content", "")
-                    email_contents.append(content)
-                    
-                    # Check for required email metadata fields
-                    required_fields = ["email_template", "sample_customer_name", "sample_customer_email", "sample_pet_names"]
-                    for field in required_fields:
-                        if field not in post:
-                            email_metadata_complete = False
-                    
-                    # Check content consistency
-                    if not any(keyword in content.lower() for keyword in ["special offer", "stephen", "pallam", "bolt", "care"]):
-                        email_content_consistent = False
-                
-                content_analysis["email"] = {
-                    "posts_count": len(email_posts),
-                    "content_consistent": email_content_consistent,
-                    "metadata_complete": email_metadata_complete,
-                    "sample_content": email_contents[0] if email_contents else None,
-                    "has_email_template": "email_template" in email_posts[0] if email_posts else False,
-                    "has_customer_data": "sample_customer_name" in email_posts[0] if email_posts else False
-                }
+            # Check for personalization (should HAVE customer data)
+            if not ("[CUSTOMER_NAME]" in content or "Stephen Pallam" in content or post.get("sample_customer_name")):
+                analysis["email_has_personalization"] = False
+        
+        # Analyze SMS posts
+        for post in sms_posts:
+            content = post.get("content", "")
             
-            # SMS Posts Analysis
-            if sms_posts:
-                sms_content_consistent = True
-                sms_metadata_complete = True
-                sms_contents = []
-                
-                for post in sms_posts:
-                    content = post.get("content", "")
-                    sms_contents.append(content)
-                    
-                    # Check for required SMS metadata fields
-                    required_fields = ["sms_template", "sample_customer_name", "sample_customer_phone", "sample_pet_names"]
-                    for field in required_fields:
-                        if field not in post:
-                            sms_metadata_complete = False
-                    
-                    # Check content consistency
-                    if not any(keyword in content.lower() for keyword in ["special offer", "stephen", "pallam", "bolt", "care"]):
-                        sms_content_consistent = False
-                
-                content_analysis["sms"] = {
-                    "posts_count": len(sms_posts),
-                    "content_consistent": sms_content_consistent,
-                    "metadata_complete": sms_metadata_complete,
-                    "sample_content": sms_contents[0] if sms_contents else None,
-                    "has_sms_template": "sms_template" in sms_posts[0] if sms_posts else False,
-                    "has_customer_data": "sample_customer_name" in sms_posts[0] if sms_posts else False
-                }
-            
-            # Overall consistency check
-            all_channels_consistent = True
-            if social_media_posts and email_posts and sms_posts:
-                # Check if all channels have similar personalized content
-                all_contents = []
-                for post in posts:
-                    content = post.get("content", "").lower()
-                    all_contents.append(content)
-                
-                # Check for consistent personalization across channels
-                personalization_consistent = all(
-                    "stephen pallam" in content and "bolt" in content 
-                    for content in all_contents if content
-                )
-                all_channels_consistent = personalization_consistent
-            
-            success = (
-                consistency_checks["total_posts_generated"] and
-                all_channels_consistent and
-                (not email_posts or content_analysis.get("email", {}).get("metadata_complete", False)) and
-                (not sms_posts or content_analysis.get("sms", {}).get("metadata_complete", False))
-            )
-            
-            self.log_test_result(
-                "Verify Content Consistency",
-                success,
-                f"Content consistency verification: {success}",
-                {
-                    "Consistency Checks": consistency_checks,
-                    "Content Analysis": content_analysis,
-                    "All Channels Consistent": all_channels_consistent,
-                    "Posts by Channel": {
-                        "social_media": len(social_media_posts),
-                        "email": len(email_posts),
-                        "sms": len(sms_posts)
-                    }
-                }
-            )
-            return success
-            
-        except Exception as e:
-            self.log_test_result(
-                "Verify Content Consistency",
-                False,
-                f"Error verifying content consistency: {str(e)}",
-                {"Error Details": str(e)}
-            )
-            return False
+            # Check for personalization (should HAVE customer data)
+            if not ("[CUSTOMER_NAME]" in content or "Stephen Pallam" in content or post.get("sample_customer_name")):
+                analysis["sms_has_personalization"] = False
+        
+        # Overall success calculation
+        analysis["overall_success"] = (
+            analysis["social_media_count"] > 0 and
+            analysis["email_count"] > 0 and
+            analysis["sms_count"] > 0 and
+            analysis["social_media_no_personalization"] and
+            analysis["social_media_professional_content"] and
+            analysis["email_has_personalization"] and
+            analysis["sms_has_personalization"]
+        )
+        
+        return analysis
     
-    async def test_topic_based_campaign(self):
-        """Test 4: Test Topic-Based Campaign for consistency"""
-        print("🔍 TEST 4: Test Topic-Based Campaign")
-        print("=" * 80)
+    async def test_custom_campaign_content(self):
+        """Test 3: Test Custom Campaign Content"""
+        print("🔍 TEST 3: Test Custom Campaign Content")
+        print("=" * 60)
         
         try:
             ssl_context = ssl.create_default_context()
@@ -466,22 +388,25 @@ class EnhancedMarketingAgentTester:
                 "Content-Type": "application/json"
             }
             
-            # Topic-based marketing agent data
+            # Marketing agent with custom campaign
             marketing_agent_data = {
                 "agent_type": "marketing_agent",
-                "agent_name": "Test Topic-Based Consistency",
+                "agent_name": "Test Custom Campaign Enhanced",
                 "mode": "adhoc",
-                "marketing_content_type": "topic",
-                "topic": "Pet Health Tips",
+                "marketing_content_type": "custom_campaign",
+                "marketing_custom_campaign": "Special offer: 20% off all pet vaccines this month!",
                 "marketing_channels": ["social_media", "email", "sms"],
                 "marketing_social_platforms": {"facebook": True, "instagram": True},
                 "marketing_email_personalized": True,
+                "email_content_template": "Hello [CUSTOMER_NAME]! Special vaccine offer for [PET_NAME]. Save on [PET_NAMES] vaccines!",
                 "marketing_sms_personalized": True,
-                "marketing_workflow_mode": "in_review"
+                "sms_template": "Hi [CUSTOMER_NAME]! 20% off vaccines for [PET_NAME]. Book now for [PET_NAMES]!",
+                "marketing_workflow_mode": "in_review",
+                "post_date": "2025-01-16",
+                "post_time": "11:00"
             }
             
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                # Create agent
                 url = f"{self.backend_url}/api/ai-agents"
                 async with session.post(url, headers=headers, json=marketing_agent_data, timeout=15) as response:
                     response_text = await response.text()
@@ -492,63 +417,53 @@ class EnhancedMarketingAgentTester:
                             agent_id = result.get("agent_id")
                             self.created_agent_ids.append(agent_id)
                             
-                            # Run the agent
-                            run_url = f"{self.backend_url}/api/ai-agents/{agent_id}/run"
+                            # Run the agent to generate content
+                            run_url = f"{self.backend_url}/api/ai-agents/{agent_id}/generate"
                             async with session.post(run_url, headers=headers, timeout=30) as run_response:
                                 if run_response.status == 200:
                                     # Get generated posts
                                     posts = await self.db.ai_posts.find({"agent_id": agent_id}).to_list(length=None)
+                                    self.generated_posts.extend(posts)
                                     
-                                    # Analyze topic-based consistency
-                                    topic_consistency = True
-                                    topic_posts_analysis = {}
+                                    # Verify custom campaign content is used
+                                    custom_content_used = False
+                                    chatgpt_enhanced = False
                                     
                                     for post in posts:
-                                        content = post.get("content", "").lower()
-                                        agent_type = post.get("agent_type")
-                                        
-                                        # Check if content relates to "Pet Health Tips"
-                                        health_keywords = ["health", "tips", "care", "pet", "wellness", "advice"]
-                                        has_health_content = any(keyword in content for keyword in health_keywords)
-                                        
-                                        if agent_type not in topic_posts_analysis:
-                                            topic_posts_analysis[agent_type] = []
-                                        
-                                        topic_posts_analysis[agent_type].append({
-                                            "has_health_content": has_health_content,
-                                            "content_preview": content[:100] + "..." if len(content) > 100 else content
-                                        })
-                                        
-                                        if not has_health_content:
-                                            topic_consistency = False
+                                        content = post.get("content", "")
+                                        if "vaccine" in content.lower() or "20%" in content:
+                                            custom_content_used = True
+                                        if len(content.split()) > 20:  # ChatGPT should enhance the content
+                                            chatgpt_enhanced = True
                                     
-                                    success = len(posts) > 0 and topic_consistency
+                                    success = len(posts) > 0 and custom_content_used and chatgpt_enhanced
                                     
                                     self.log_test_result(
-                                        "Test Topic-Based Campaign",
+                                        "Test Custom Campaign Content",
                                         success,
-                                        f"Topic-based campaign consistency: {success}",
+                                        f"Custom campaign content test: {success}",
                                         {
+                                            "HTTP Status": response.status,
                                             "Agent ID": agent_id,
-                                            "Total Posts": len(posts),
-                                            "Topic Consistency": topic_consistency,
-                                            "Posts Analysis": topic_posts_analysis,
-                                            "Topic": "Pet Health Tips"
+                                            "Posts Generated": len(posts),
+                                            "Custom Content Used": custom_content_used,
+                                            "ChatGPT Enhanced": chatgpt_enhanced,
+                                            "Custom Campaign": "Special offer: 20% off all pet vaccines this month!"
                                         }
                                     )
                                     return success, agent_id
                                 else:
                                     self.log_test_result(
-                                        "Test Topic-Based Campaign",
+                                        "Test Custom Campaign Content",
                                         False,
-                                        f"Failed to run topic-based agent: HTTP {run_response.status}",
-                                        {"HTTP Status": run_response.status}
+                                        f"Failed to run custom campaign agent: HTTP {run_response.status}",
+                                        {"Run HTTP Status": run_response.status}
                                     )
-                                    return False, None
+                                    return False, agent_id
                             
                         except json.JSONDecodeError:
                             self.log_test_result(
-                                "Test Topic-Based Campaign",
+                                "Test Custom Campaign Content",
                                 False,
                                 "Invalid JSON response",
                                 {"HTTP Status": response.status, "Response Text": response_text}
@@ -556,27 +471,144 @@ class EnhancedMarketingAgentTester:
                             return False, None
                     else:
                         self.log_test_result(
-                            "Test Topic-Based Campaign",
+                            "Test Custom Campaign Content",
                             False,
-                            f"Failed to create topic-based marketing agent: HTTP {response.status}",
+                            f"Failed to create custom campaign agent: HTTP {response.status}",
                             {"HTTP Status": response.status, "Response Text": response_text}
                         )
                         return False, None
                         
         except Exception as e:
             self.log_test_result(
-                "Test Topic-Based Campaign",
+                "Test Custom Campaign Content",
                 False,
-                f"Error testing topic-based campaign: {str(e)}",
+                f"Error testing custom campaign content: {str(e)}",
+                {"Error Details": str(e)}
+            )
+            return False, None
+    
+    async def test_non_personalized_settings(self):
+        """Test 4: Test Non-Personalized Settings"""
+        print("🔍 TEST 4: Test Non-Personalized Settings")
+        print("=" * 60)
+        
+        try:
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
+            
+            # Marketing agent with personalization disabled
+            marketing_agent_data = {
+                "agent_type": "marketing_agent",
+                "agent_name": "Test Non-Personalized Settings",
+                "mode": "adhoc",
+                "marketing_content_type": "topic",
+                "topic": "Pet Health Tips",
+                "marketing_channels": ["social_media", "email", "sms"],
+                "marketing_social_platforms": {"facebook": True, "instagram": True},
+                "marketing_email_personalized": False,  # Disabled
+                "email_content_template": "Important health tips for your pets. Visit our clinic for professional care.",
+                "marketing_sms_personalized": False,  # Disabled
+                "sms_template": "Pet health tips available. Call us for more information.",
+                "marketing_workflow_mode": "in_review",
+                "post_date": "2025-01-17",
+                "post_time": "12:00"
+            }
+            
+            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
+                url = f"{self.backend_url}/api/ai-agents"
+                async with session.post(url, headers=headers, json=marketing_agent_data, timeout=15) as response:
+                    response_text = await response.text()
+                    
+                    if response.status == 200:
+                        try:
+                            result = json.loads(response_text)
+                            agent_id = result.get("agent_id")
+                            self.created_agent_ids.append(agent_id)
+                            
+                            # Run the agent to generate content
+                            run_url = f"{self.backend_url}/api/ai-agents/{agent_id}/generate"
+                            async with session.post(run_url, headers=headers, timeout=30) as run_response:
+                                if run_response.status == 200:
+                                    # Get generated posts
+                                    posts = await self.db.ai_posts.find({"agent_id": agent_id}).to_list(length=None)
+                                    self.generated_posts.extend(posts)
+                                    
+                                    # Verify non-personalized content
+                                    no_placeholders = True
+                                    generic_content = True
+                                    
+                                    for post in posts:
+                                        content = post.get("content", "")
+                                        # Should not have personalization placeholders
+                                        if "[CUSTOMER_NAME]" in content or "[PET_NAME]" in content:
+                                            no_placeholders = False
+                                        # Should have generic content
+                                        if "Stephen Pallam" in content or post.get("sample_customer_name"):
+                                            generic_content = False
+                                    
+                                    success = len(posts) > 0 and no_placeholders and generic_content
+                                    
+                                    self.log_test_result(
+                                        "Test Non-Personalized Settings",
+                                        success,
+                                        f"Non-personalized settings test: {success}",
+                                        {
+                                            "HTTP Status": response.status,
+                                            "Agent ID": agent_id,
+                                            "Posts Generated": len(posts),
+                                            "No Placeholders": no_placeholders,
+                                            "Generic Content": generic_content,
+                                            "Email Personalized": False,
+                                            "SMS Personalized": False
+                                        }
+                                    )
+                                    return success, agent_id
+                                else:
+                                    self.log_test_result(
+                                        "Test Non-Personalized Settings",
+                                        False,
+                                        f"Failed to run non-personalized agent: HTTP {run_response.status}",
+                                        {"Run HTTP Status": run_response.status}
+                                    )
+                                    return False, agent_id
+                            
+                        except json.JSONDecodeError:
+                            self.log_test_result(
+                                "Test Non-Personalized Settings",
+                                False,
+                                "Invalid JSON response",
+                                {"HTTP Status": response.status, "Response Text": response_text}
+                            )
+                            return False, None
+                    else:
+                        self.log_test_result(
+                            "Test Non-Personalized Settings",
+                            False,
+                            f"Failed to create non-personalized agent: HTTP {response.status}",
+                            {"HTTP Status": response.status, "Response Text": response_text}
+                        )
+                        return False, None
+                        
+        except Exception as e:
+            self.log_test_result(
+                "Test Non-Personalized Settings",
+                False,
+                f"Error testing non-personalized settings: {str(e)}",
                 {"Error Details": str(e)}
             )
             return False, None
     
     async def run_enhanced_marketing_agent_tests(self):
         """Run comprehensive enhanced marketing agent tests"""
-        print("🔍 STARTING ENHANCED MARKETING AGENT TESTING")
+        print("🔍 STARTING ENHANCED MARKETING AGENT WITH CHATGPT CONTENT GENERATION TESTING")
         print("=" * 80)
-        print("Testing Enhanced Marketing Agent with consistent content and proper display format")
+        print("Testing Enhanced Marketing Agent with proper ChatGPT content generation and personalization rules")
         print("=" * 80)
         
         try:
@@ -591,29 +623,24 @@ class EnhancedMarketingAgentTester:
             # Run all tests
             test_results = []
             
-            # Test 1: Create Marketing Agent with Multi-Channel Campaign (Custom)
-            success1, agent_id1 = await self.test_create_marketing_agent_multi_channel_custom_campaign()
+            # Test 1: Create Topic-Based Marketing Agent
+            success1, agent_id1 = await self.test_create_topic_based_marketing_agent()
             test_results.append(success1)
             
-            # Test 2: Run Marketing Agent (only if creation succeeded)
-            posts = []
+            # Test 2: Run Marketing Agent and Verify Content Quality (only if creation succeeded)
             if success1 and agent_id1:
-                success2, posts = await self.test_run_marketing_agent(agent_id1)
+                success2, posts = await self.test_run_marketing_agent_and_verify_content(agent_id1)
                 test_results.append(success2)
             else:
-                print("⏭️  Skipping marketing agent run test - agent creation failed")
+                print("⏭️  Skipping content quality test - agent creation failed")
                 test_results.append(False)
             
-            # Test 3: Verify Content Consistency (only if posts were generated)
-            if posts:
-                success3 = await self.test_verify_content_consistency(posts)
-                test_results.append(success3)
-            else:
-                print("⏭️  Skipping content consistency test - no posts generated")
-                test_results.append(False)
+            # Test 3: Test Custom Campaign Content
+            success3, agent_id3 = await self.test_custom_campaign_content()
+            test_results.append(success3)
             
-            # Test 4: Test Topic-Based Campaign
-            success4, agent_id2 = await self.test_topic_based_campaign()
+            # Test 4: Test Non-Personalized Settings
+            success4, agent_id4 = await self.test_non_personalized_settings()
             test_results.append(success4)
             
             # Summary
@@ -639,52 +666,48 @@ class EnhancedMarketingAgentTester:
             
             # Test 1 Analysis
             if success1:
-                print("✅ MULTI-CHANNEL CREATION: Marketing agent with consistent content created successfully")
+                print("✅ TOPIC-BASED AGENT: Marketing agent with ChatGPT content generation created successfully")
                 print(f"   - Agent ID: {agent_id1}")
+                print("   - Topic: Pet Health Tips")
                 print("   - Channels: social_media, email, sms")
-                print("   - Same base content configured for all channels")
+                print("   - Social Platforms: facebook, instagram")
             else:
-                print("❌ MULTI-CHANNEL CREATION: Failed to create marketing agent with multi-channel setup")
+                print("❌ TOPIC-BASED AGENT: Failed to create topic-based marketing agent")
             
             # Test 2 Analysis
             if len(test_results) > 1 and test_results[1]:
-                print("✅ AGENT EXECUTION: Marketing agent executed and generated posts successfully")
-                print(f"   - Total posts generated: {len(posts)}")
-                social_count = len([p for p in posts if p.get("agent_type") == "social_media"])
-                email_count = len([p for p in posts if p.get("agent_type") == "email"])
-                sms_count = len([p for p in posts if p.get("agent_type") == "sms_agent"])
-                print(f"   - Social media posts: {social_count}")
-                print(f"   - Email posts: {email_count}")
-                print(f"   - SMS posts: {sms_count}")
+                print("✅ CONTENT QUALITY: ChatGPT content generation and personalization rules working correctly")
+                print("   - Social media posts have NO personalization")
+                print("   - Social media posts have professional ChatGPT-generated content")
+                print("   - Email/SMS posts have proper personalization")
             elif len(test_results) > 1:
-                print("❌ AGENT EXECUTION: Failed to execute marketing agent or generate posts")
+                print("❌ CONTENT QUALITY: Content quality verification failed")
             
             # Test 3 Analysis
-            if len(test_results) > 2 and test_results[2]:
-                print("✅ CONTENT CONSISTENCY: All channels use the same base content with proper personalization")
-                print("   - Same personalized content across all channels")
-                print("   - Email posts include proper metadata fields")
-                print("   - SMS posts include proper metadata fields")
-            elif len(test_results) > 2:
-                print("❌ CONTENT CONSISTENCY: Content consistency verification failed")
+            if success3:
+                print("✅ CUSTOM CAMPAIGN: Custom campaign content enhanced by ChatGPT successfully")
+                print(f"   - Agent ID: {agent_id3}")
+                print("   - Custom Campaign: Special offer: 20% off all pet vaccines this month!")
+            else:
+                print("❌ CUSTOM CAMPAIGN: Failed to test custom campaign content")
             
             # Test 4 Analysis
             if success4:
-                print("✅ TOPIC-BASED CAMPAIGN: Topic-based campaign generates consistent content")
-                print(f"   - Agent ID: {agent_id2}")
-                print("   - All channels generate content based on the same topic")
+                print("✅ NON-PERSONALIZED: Non-personalized settings working correctly")
+                print(f"   - Agent ID: {agent_id4}")
+                print("   - Email/SMS content removes placeholders and creates generic content")
             else:
-                print("❌ TOPIC-BASED CAMPAIGN: Topic-based campaign consistency failed")
+                print("❌ NON-PERSONALIZED: Failed to test non-personalized settings")
             
             print()
             print("📋 DETAILED TEST RESULTS:")
             print("=" * 40)
             
             test_names = [
-                "Create Marketing Agent with Multi-Channel Campaign (Custom)",
-                "Run Marketing Agent",
-                "Verify Content Consistency", 
-                "Test Topic-Based Campaign"
+                "Create Topic-Based Marketing Agent",
+                "Run Marketing Agent and Verify Content Quality", 
+                "Test Custom Campaign Content",
+                "Test Non-Personalized Settings"
             ]
             
             for i, (test_name, success) in enumerate(zip(test_names, test_results)):
@@ -692,19 +715,26 @@ class EnhancedMarketingAgentTester:
                 print(f"{i+1}. {status} {test_name}")
             
             print()
-            print("🎯 CONSISTENCY VERIFICATION:")
+            print("📊 CONTENT ANALYSIS SUMMARY:")
             print("=" * 40)
             
-            if passed_tests >= 3:
-                print("✅ ENHANCED MARKETING AGENT WITH CONSISTENT CONTENT IS WORKING")
-                print("   - All channels use the same base content")
-                print("   - Email and SMS posts have proper metadata fields")
-                print("   - Content is consistent across channels while maintaining personalization")
-                print("   - Both custom_campaign and topic-based campaigns work consistently")
-            else:
-                print("❌ ENHANCED MARKETING AGENT NEEDS FIXES")
-                print("   - Some consistency issues found")
-                print("   - Check individual test results for specific problems")
+            if self.generated_posts:
+                total_posts = len(self.generated_posts)
+                social_media_posts = [p for p in self.generated_posts if "social_media" in p.get("agent_type", "") or p.get("platform") in ["facebook", "instagram"]]
+                email_posts = [p for p in self.generated_posts if "email" in p.get("agent_type", "") or p.get("email_template")]
+                sms_posts = [p for p in self.generated_posts if "sms" in p.get("agent_type", "") or p.get("sms_template")]
+                
+                print(f"Total Posts Generated: {total_posts}")
+                print(f"Social Media Posts: {len(social_media_posts)}")
+                print(f"Email Posts: {len(email_posts)}")
+                print(f"SMS Posts: {len(sms_posts)}")
+                
+                # Sample content analysis
+                if social_media_posts:
+                    sample_social = social_media_posts[0].get("content", "")
+                    word_count = len(sample_social.split())
+                    print(f"Sample Social Media Word Count: {word_count}")
+                    print(f"Sample Social Media Content Preview: {sample_social[:100]}...")
             
             print()
             print("=" * 80)
