@@ -1663,15 +1663,15 @@ const AIAgentsDashboard = () => {
                                   <div className="mt-1">
                                     {agent.marketing_channels && agent.marketing_channels.includes('email') ? (
                                       <div className="space-y-1">
-                                        <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-700">
+                                        <span className="text-sm text-gray-900 font-medium">
                                           Enabled
                                         </span>
                                         <p className="text-xs text-gray-600">
-                                          {agent.marketing_email_personalization ? 'Personalized' : 'Generic'}
+                                          {agent.marketing_email_personalization ? 'Personalized' : 'Non Personalized'}
                                         </p>
                                       </div>
                                     ) : (
-                                      <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
+                                      <span className="text-sm text-gray-600">
                                         Disabled
                                       </span>
                                     )}
@@ -1682,15 +1682,15 @@ const AIAgentsDashboard = () => {
                                   <div className="mt-1">
                                     {agent.marketing_channels && agent.marketing_channels.includes('sms') ? (
                                       <div className="space-y-1">
-                                        <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-700">
+                                        <span className="text-sm text-gray-900 font-medium">
                                           Enabled
                                         </span>
                                         <p className="text-xs text-gray-600">
-                                          {agent.marketing_sms_personalization ? 'Personalized' : 'Generic'}
+                                          {agent.marketing_sms_personalization ? 'Personalized' : 'Non Personalized'}
                                         </p>
                                       </div>
                                     ) : (
-                                      <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
+                                      <span className="text-sm text-gray-600">
                                         Disabled
                                       </span>
                                     )}
