@@ -6393,7 +6393,7 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                 await db.ai_posts.insert_one(post_data)
                 created_posts.append({"post_id": post_id, "channel": "sms"})
         
-        # Generate content for each created post
+        # STEP 5: Generate consistent content for each created post using the same base content
         for post_info in created_posts:
             post_id = post_info["post_id"]
             channel = post_info["channel"]
@@ -6403,177 +6403,67 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                 content_result = None
                 
                 if channel == "social_media":
-                    # Generate platform-specific social media content
-                    if content_type == 'topic':
-                        content_result = await ai_service.generate_social_media_content(
-                            topic=base_content_info.get('topic', ''),
-                            word_count=agent_data.get('word_count', '100'),
-                            platforms=[platform],
-                            custom_topic=base_content_info.get('custom_topic'),
-                            image_text=agent_data.get('image_text'),
-                            track_usage=True,
-                            user_id="admin",
-                            agent_id=agent_id
-                        )
-                    elif content_type == 'custom_campaign':
-                        content_result = await ai_service.format_custom_content(
-                            post_title=f"Marketing Campaign - {platform}",
-                            post_content=base_content_info.get('custom_content', ''),
-                            word_count=agent_data.get('word_count', '100'),
-                            platforms=[platform],
-                            use_web_research=agent_data.get('use_web_research', False),
-                            image_text=agent_data.get('image_text')
-                        )
+                    # Use the same base content for social media, just format it for the platform
+                    personalized_content = personalize_content(base_campaign_content, sample_customer_data) if sample_customer_data else base_campaign_content
+                    
+                    content_result = {
+                        'title': campaign_title,
+                        'content': personalized_content,
+                        'hashtags': [],
+                        'image_url': ''
+                    }
                 
                 elif channel == "email":
-                    # Generate personalized email content (similar to email agent logic)
-                    if agent_data.get('marketing_email_personalized', True):
-                        # Get a sample customer for preview (similar to email agents)
-                        customers_cursor = db.customers.find().limit(1)
-                        customers_list = await customers_cursor.to_list(length=1)
+                    # Use the same base content for email with proper email formatting
+                    if agent_data.get('marketing_email_personalized', True) and sample_customer_data:
+                        # Get email template or use base content
+                        email_template = agent_data.get('email_content_template', base_campaign_content)
+                        personalized_content = personalize_content(email_template, sample_customer_data)
                         
-                        if customers_list:
-                            sample_customer = customers_list[0]
-                            customer_name = get_full_customer_name(sample_customer)
-                            customer_email = sample_customer.get('email', 'customer@example.com')
-                            
-                            # Get pet names for this customer
-                            pets_cursor = db.pets.find({"customer_id": sample_customer['id']})
-                            pets_list = await pets_cursor.to_list(length=None)
-                            pet_names = [pet.get('name', 'Pet') for pet in pets_list] if pets_list else ['Pet']
-                        else:
-                            # Default sample data if no customers
-                            customer_name = "John Doe"
-                            customer_email = "customer@example.com"
-                            pet_names = ["Buddy"]
-                        
-                        # Get email template
-                        email_template = agent_data.get('email_content_template', 'Your marketing email content here...')
-                        
-                        # Generate personalized content using template
-                        if content_type == 'topic':
-                            topic = base_content_info.get('topic', 'Pet Care')
-                            # Replace placeholders in template with sample data
-                            personalized_content = email_template.replace('[CUSTOMER_NAME]', customer_name)
-                            personalized_content = personalized_content.replace('[PET_NAME]', pet_names[0] if pet_names else 'Pet')
-                            personalized_content = personalized_content.replace('[PET_NAMES]', ', '.join(pet_names))
-                            
-                            content_result = {
-                                'title': f"Marketing Email - {topic}",
-                                'content': personalized_content,
-                                'hashtags': [],
-                                'email_template': email_template,  # Store original template
-                                'sample_customer_name': customer_name,
-                                'sample_pet_names': pet_names,
-                                'sample_customer_email': customer_email,
-                                'ready_for_mass_email': False
-                            }
-                        elif content_type == 'custom_campaign':
-                            custom_content = base_content_info.get('custom_content', '')
-                            # Replace placeholders in custom content
-                            personalized_content = custom_content.replace('[CUSTOMER_NAME]', customer_name)
-                            personalized_content = personalized_content.replace('[PET_NAME]', pet_names[0] if pet_names else 'Pet')
-                            personalized_content = personalized_content.replace('[PET_NAMES]', ', '.join(pet_names))
-                            
-                            content_result = {
-                                'title': 'Marketing Email Campaign',
-                                'content': personalized_content,
-                                'hashtags': [],
-                                'email_template': custom_content,  # Store original template
-                                'sample_customer_name': customer_name,
-                                'sample_pet_names': pet_names,
-                                'sample_customer_email': customer_email,
-                                'ready_for_mass_email': False
-                            }
+                        content_result = {
+                            'title': campaign_title,
+                            'content': personalized_content,
+                            'hashtags': [],
+                            'email_template': email_template,  # Store original template for mass sending
+                            'sample_customer_name': sample_customer_data['customer_name'],
+                            'sample_pet_names': sample_customer_data['pet_names'],
+                            'sample_customer_email': sample_customer_data['customer_email'],
+                            'ready_for_mass_email': False
+                        }
                     else:
                         # Generic email without personalization
-                        if content_type == 'topic':
-                            content_result = {
-                                'title': f"Marketing Email - {base_content_info.get('topic', '')}",
-                                'content': agent_data.get('email_content_template', 'Your marketing email content here...'),
-                                'hashtags': []
-                            }
-                        elif content_type == 'custom_campaign':
-                            content_result = {
-                                'title': 'Marketing Email Campaign',
-                                'content': base_content_info.get('custom_content', ''),
-                                'hashtags': []
-                            }
+                        email_content = agent_data.get('email_content_template', base_campaign_content)
+                        content_result = {
+                            'title': campaign_title,
+                            'content': email_content,
+                            'hashtags': []
+                        }
                 
                 elif channel == "sms":
-                    # Generate personalized SMS content (similar to SMS agent logic)
-                    if agent_data.get('marketing_sms_personalized', True):
-                        # Get a sample customer for preview (similar to SMS agents)
-                        customers_cursor = db.customers.find().limit(1)
-                        customers_list = await customers_cursor.to_list(length=1)
+                    # Use the same base content for SMS with proper SMS formatting
+                    if agent_data.get('marketing_sms_personalized', True) and sample_customer_data:
+                        # Get SMS template or use base content
+                        sms_template = agent_data.get('sms_template', base_campaign_content)
+                        personalized_content = personalize_content(sms_template, sample_customer_data)
                         
-                        if customers_list:
-                            sample_customer = customers_list[0]
-                            customer_name = get_full_customer_name(sample_customer)
-                            customer_phone = sample_customer.get('phone', '555-0123')
-                            
-                            # Get pet names for this customer
-                            pets_cursor = db.pets.find({"customer_id": sample_customer['id']})
-                            pets_list = await pets_cursor.to_list(length=None)
-                            pet_names = [pet.get('name', 'Pet') for pet in pets_list] if pets_list else ['Pet']
-                        else:
-                            # Default sample data if no customers
-                            customer_name = "John Doe"
-                            customer_phone = "555-0123"
-                            pet_names = ["Buddy"]
-                        
-                        # Get SMS template
-                        sms_template = agent_data.get('sms_template', 'Your marketing SMS content here...')
-                        
-                        # Generate personalized content using template
-                        if content_type == 'topic':
-                            topic = base_content_info.get('topic', 'Pet Care')
-                            # Replace placeholders in template with sample data
-                            personalized_content = sms_template.replace('[CUSTOMER_NAME]', customer_name)
-                            personalized_content = personalized_content.replace('[PET_NAME]', pet_names[0] if pet_names else 'Pet')
-                            personalized_content = personalized_content.replace('[PET_NAMES]', ', '.join(pet_names))
-                            
-                            content_result = {
-                                'title': f"Marketing SMS - {topic}",
-                                'content': personalized_content,
-                                'hashtags': [],
-                                'sms_template': sms_template,  # Store original template
-                                'sample_customer_name': customer_name,
-                                'sample_pet_names': pet_names,
-                                'sample_customer_phone': customer_phone,
-                                'ready_for_mass_sms': False
-                            }
-                        elif content_type == 'custom_campaign':
-                            custom_content = base_content_info.get('custom_content', '')
-                            # Replace placeholders in custom content
-                            personalized_content = custom_content.replace('[CUSTOMER_NAME]', customer_name)
-                            personalized_content = personalized_content.replace('[PET_NAME]', pet_names[0] if pet_names else 'Pet')
-                            personalized_content = personalized_content.replace('[PET_NAMES]', ', '.join(pet_names))
-                            
-                            content_result = {
-                                'title': 'Marketing SMS Campaign',
-                                'content': personalized_content,
-                                'hashtags': [],
-                                'sms_template': custom_content,  # Store original template
-                                'sample_customer_name': customer_name,
-                                'sample_pet_names': pet_names,
-                                'sample_customer_phone': customer_phone,
-                                'ready_for_mass_sms': False
-                            }
+                        content_result = {
+                            'title': campaign_title,
+                            'content': personalized_content,
+                            'hashtags': [],
+                            'sms_template': sms_template,  # Store original template for mass sending
+                            'sample_customer_name': sample_customer_data['customer_name'],
+                            'sample_pet_names': sample_customer_data['pet_names'],
+                            'sample_customer_phone': sample_customer_data['customer_phone'],
+                            'ready_for_mass_sms': False
+                        }
                     else:
                         # Generic SMS without personalization
-                        if content_type == 'topic':
-                            content_result = {
-                                'title': f"Marketing SMS - {base_content_info.get('topic', '')}",
-                                'content': agent_data.get('sms_template', 'Your marketing SMS content here...'),
-                                'hashtags': []
-                            }
-                        elif content_type == 'custom_campaign':
-                            content_result = {
-                                'title': 'Marketing SMS Campaign',
-                                'content': base_content_info.get('custom_content', ''),
-                                'hashtags': []
-                            }
+                        sms_content = agent_data.get('sms_template', base_campaign_content)
+                        content_result = {
+                            'title': campaign_title,
+                            'content': sms_content,
+                            'hashtags': []
+                        }
                 
                 # Update post with generated content
                 if content_result:
