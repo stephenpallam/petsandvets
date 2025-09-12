@@ -317,13 +317,14 @@ class EnhancedMarketingAgentTester:
             agent_type = post.get("agent_type", "")
             content = post.get("content", "")
             
-            if "social_media" in agent_type or post.get("platform") in ["facebook", "instagram"]:
+            # Social media posts are those without email_template or sms_template
+            if not post.get("email_template") and not post.get("sms_template"):
                 social_media_posts.append(post)
                 analysis["social_media_count"] += 1
-            elif "email" in agent_type or post.get("email_template"):
+            elif post.get("email_template"):
                 email_posts.append(post)
                 analysis["email_count"] += 1
-            elif "sms" in agent_type or post.get("sms_template"):
+            elif post.get("sms_template"):
                 sms_posts.append(post)
                 analysis["sms_count"] += 1
         
