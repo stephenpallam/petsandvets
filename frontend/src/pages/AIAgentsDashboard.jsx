@@ -1640,6 +1640,7 @@ const AIAgentsDashboard = () => {
                                     {agent.marketing_channels && agent.marketing_channels.length > 0 ? (
                                       agent.marketing_channels.map(channel => 
                                         channel === 'social_media' ? 'Social Media' : 
+                                        channel === 'sms' ? 'SMS' :
                                         channel.charAt(0).toUpperCase() + channel.slice(1)
                                       ).join(', ')
                                     ) : 'None selected'}
