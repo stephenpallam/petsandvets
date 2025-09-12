@@ -6237,22 +6237,73 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
         
         # Determine base content based on content type
         base_content_info = {}
+        # STEP 1: Generate consistent base content for all channels
+        base_campaign_content = ""
+        campaign_title = ""
+        
         if content_type == 'topic':
-            base_content_info = {
-                'type': 'topic',
-                'topic': agent_data.get('marketing_selected_topic', ''),
-                'custom_topic': agent_data.get('marketing_selected_topic') if agent_data.get('marketing_selected_topic') else None
-            }
+            topic = agent_data.get('topic', 'Pet Care')
+            campaign_title = f"Marketing Campaign - {topic}"
+            # Generate one consistent content for all channels based on topic
+            base_campaign_content = f"Important information about {topic} for [CUSTOMER_NAME] and [PET_NAME]. Contact us for more details about [PET_NAMES] care."
+            
         elif content_type == 'holidays':
-            base_content_info = {
-                'type': 'holidays',
-                'selected_holidays': agent_data.get('marketing_selected_holidays', [])
-            }
+            selected_holidays = agent_data.get('selected_holidays', [])
+            if selected_holidays:
+                holiday_name = selected_holidays[0] if selected_holidays else "Holiday"
+                campaign_title = f"Marketing Campaign - {holiday_name}"
+                base_campaign_content = f"Special {holiday_name} offer for [CUSTOMER_NAME] and [PET_NAME]! Don't miss out on [PET_NAMES] special care."
+            else:
+                campaign_title = "Marketing Campaign - Holiday"
+                base_campaign_content = "Special holiday offer for [CUSTOMER_NAME] and [PET_NAME]! Contact us about [PET_NAMES] care."
+                
         elif content_type == 'custom_campaign':
-            base_content_info = {
-                'type': 'custom_campaign',
-                'custom_content': agent_data.get('marketing_custom_campaign', '')
-            }
+            custom_content = agent_data.get('marketing_custom_campaign', '')
+            campaign_title = "Marketing Campaign - Custom"
+            base_campaign_content = custom_content if custom_content else "Custom marketing message for [CUSTOMER_NAME] and [PET_NAME]. Learn more about [PET_NAMES] care."
+        
+        # STEP 2: Get sample customer data for personalization (shared across all channels)
+        sample_customer_data = {}
+        if any(agent_data.get(f'marketing_{channel}_personalized', True) for channel in ['email', 'sms'] if channel in [ch.replace('social_media', 'social') for ch in channels]):
+            customers_cursor = db.customers.find().limit(1)
+            customers_list = await customers_cursor.to_list(length=1)
+            
+            if customers_list:
+                sample_customer = customers_list[0]
+                customer_name = get_full_customer_name(sample_customer)
+                customer_email = sample_customer.get('email', 'customer@example.com')
+                customer_phone = sample_customer.get('phone', '555-0123')
+                
+                # Get pet names for this customer
+                pets_cursor = db.pets.find({"customer_id": sample_customer['id']})
+                pets_list = await pets_cursor.to_list(length=None)
+                pet_names = [pet.get('name', 'Pet') for pet in pets_list] if pets_list else ['Pet']
+                
+                sample_customer_data = {
+                    'customer_name': customer_name,
+                    'customer_email': customer_email,
+                    'customer_phone': customer_phone,
+                    'pet_names': pet_names
+                }
+            else:
+                # Default sample data if no customers
+                sample_customer_data = {
+                    'customer_name': "John Doe",
+                    'customer_email': "customer@example.com",
+                    'customer_phone': "555-0123",
+                    'pet_names': ["Buddy"]
+                }
+        
+        # STEP 3: Generate personalized content using the same base content
+        def personalize_content(content, customer_data):
+            """Apply personalization to content"""
+            if not customer_data:
+                return content
+            
+            personalized = content.replace('[CUSTOMER_NAME]', customer_data['customer_name'])
+            personalized = personalized.replace('[PET_NAME]', customer_data['pet_names'][0] if customer_data['pet_names'] else 'Pet')
+            personalized = personalized.replace('[PET_NAMES]', ', '.join(customer_data['pet_names']))
+            return personalized
         
         # Generate content for each selected channel
         for channel in channels:
