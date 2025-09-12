@@ -1,22 +1,21 @@
 #!/usr/bin/env python3
 """
-Marketing Agent Functionality Testing
+Marketing Agent Field Fixes Testing
 
-This test comprehensively tests the Marketing Agent functionality as requested:
+This test comprehensively tests the Marketing Agent field fixes as requested:
 
 Test Focus:
-1. Marketing Agent Type Availability - Test if marketing_agent is available in /api/ai-agent-types endpoint
-2. Marketing Agent Creation - Test creating a new marketing agent with comprehensive data
-3. Marketing Agent Generation - Test running/executing the created marketing agent to generate content
-4. Marketing Agent Retrieval - Test getting the created marketing agent and verify all fields are saved correctly
-5. Error Handling - Test validation errors for missing required fields
+1. Create Marketing Agent with Custom Campaign Content - Test creating marketing agent with custom campaign content
+2. Verify Field Storage - Test that marketing_custom_campaign, marketing_email_personalized, marketing_sms_personalized are properly saved
+3. Create Second Agent with Different Settings - Test with different personalization settings
+4. Test Edit Operation - Test updating marketing agent's custom content and personalization settings
 
 Expected Results:
-- Marketing agent type should be available in agent types endpoint
-- Marketing agent should be created successfully with all specified fields
-- Marketing agent should generate content for selected channels (email, sms)
-- All marketing agent fields should be properly saved and retrievable
-- Proper error handling for missing required fields
+- Marketing agents should be created successfully with custom campaign content
+- marketing_custom_campaign field should be properly saved and retrieved
+- marketing_email_personalized and marketing_sms_personalized should work correctly
+- Edit operations should update the fields correctly
+- All corrected field names should work in both create and update operations
 """
 
 import asyncio
