@@ -425,10 +425,30 @@ class MarketingAgentFieldTester:
                 "Content-Type": "application/json"
             }
             
-            # Update data for the first agent
+            # Get the current agent data first to preserve required fields
+            agent_doc = await self.db.ai_agents.find_one({"id": agent_id})
+            if not agent_doc:
+                self.log_test_result(
+                    "Test Edit Operation",
+                    False,
+                    "Agent not found in database for edit operation",
+                    {"Agent ID": agent_id}
+                )
+                return False, None
+            
+            # Update data for the first agent - include required fields from existing agent
             update_data = {
+                "agent_type": agent_doc.get("agent_type"),
+                "agent_name": agent_doc.get("agent_name"),
+                "mode": agent_doc.get("mode"),
+                "marketing_content_type": agent_doc.get("marketing_content_type"),
                 "marketing_custom_campaign": "Updated custom campaign content to test edit functionality",
-                "marketing_email_personalized": False  # Change from True to False
+                "marketing_channels": agent_doc.get("marketing_channels"),
+                "marketing_email_personalized": False,  # Change from True to False
+                "marketing_sms_personalized": agent_doc.get("marketing_sms_personalized"),
+                "post_date": agent_doc.get("post_date"),
+                "post_time": agent_doc.get("post_time"),
+                "marketing_workflow_mode": agent_doc.get("marketing_workflow_mode")
             }
             
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
