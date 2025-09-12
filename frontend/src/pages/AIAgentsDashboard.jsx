@@ -1740,9 +1740,21 @@ const AIAgentsDashboard = () => {
                               )}
 
                               {/* Row 4: Content Previews */}
-                              {((agent.marketing_channels && agent.marketing_channels.includes('email')) || 
-                                (agent.marketing_channels && agent.marketing_channels.includes('sms'))) && (
+                              {(agent.marketing_content_type === 'custom_campaign' && agent.marketing_custom_content) || 
+                               ((agent.marketing_channels && agent.marketing_channels.includes('email')) || 
+                                (agent.marketing_channels && agent.marketing_channels.includes('sms'))) ? (
                                 <div className="space-y-3">
+                                  {/* Custom Campaign Content Preview */}
+                                  {agent.marketing_content_type === 'custom_campaign' && agent.marketing_custom_content && (
+                                    <div className="flex flex-col">
+                                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Custom Campaign Content Preview</span>
+                                      <div className="mt-2 p-3 bg-white rounded-md border border-gray-200">
+                                        <p className="text-sm text-gray-900 line-clamp-3">
+                                          {agent.marketing_custom_content}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  )}
                                   {agent.marketing_channels && agent.marketing_channels.includes('email') && agent.email_content_template && (
                                     <div className="flex flex-col">
                                       <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Content Preview</span>
