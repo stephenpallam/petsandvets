@@ -6305,7 +6305,7 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
             personalized = personalized.replace('[PET_NAMES]', ', '.join(customer_data['pet_names']))
             return personalized
         
-        # Generate content for each selected channel
+        # STEP 4: Generate content for each selected channel using the same base content
         for channel in channels:
             if channel == 'social_media':
                 # Generate social media posts for each selected platform
@@ -6323,7 +6323,7 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                         "agent_type": "marketing_agent",
                         "marketing_channel": "social_media",
                         "marketing_platform": platform,
-                        "topic": base_content_info.get('topic', 'Marketing Campaign'),
+                        "topic": agent_data.get('topic', 'Marketing Campaign'),
                         "content": "",
                         "image_url": "",
                         "image_text": agent_data.get('image_text', ''),
