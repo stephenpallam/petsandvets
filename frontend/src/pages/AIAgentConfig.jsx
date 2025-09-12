@@ -1851,7 +1851,7 @@ Best regards,
             selected_holidays: marketingMode.selectedHolidays
           }),
           ...(marketingMode.contentType === 'custom_campaign' && {
-            marketing_custom_content: marketingMode.customCampaign
+            marketing_custom_campaign: marketingMode.customCampaign
           }),
           
           // Social Media Settings (if social_media channel selected)
@@ -1861,13 +1861,13 @@ Best regards,
           
           // Email Settings (if email channel selected)
           ...(marketingMode.channels.includes('email') && {
-            marketing_email_personalization: marketingMode.emailPersonalized,
+            marketing_email_personalized: marketingMode.emailPersonalized,
             email_content_template: marketingMode.emailTemplate
           }),
           
           // SMS Settings (if sms channel selected)  
           ...(marketingMode.channels.includes('sms') && {
-            marketing_sms_personalization: marketingMode.smsPersonalized,
+            marketing_sms_personalized: marketingMode.smsPersonalized,
             sms_template: marketingMode.smsTemplate
           }),
           
