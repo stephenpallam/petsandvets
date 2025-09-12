@@ -1698,9 +1698,9 @@ const AIAgentsDashboard = () => {
                                 </div>
                               </div>
 
-                              {/* Row 3: Social Media Platforms (if social_media channel selected) */}
+                              {/* Row 3: Social Media Platforms & ChatGPT (if social_media channel selected) */}
                               {agent.marketing_channels && agent.marketing_channels.includes('social_media') && (
-                                <div className="grid grid-cols-1 gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                   <div className="flex flex-col">
                                     <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Social Media Platforms</span>
                                     <div className="mt-1">
@@ -1723,6 +1723,17 @@ const AIAgentsDashboard = () => {
                                       ) : (
                                         <span className="text-sm text-gray-600">No platforms configured</span>
                                       )}
+                                    </div>
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">ChatGPT Enabled</span>
+                                    <div className="mt-1">
+                                      <span className="text-sm text-gray-900 font-medium">
+                                        {(agent.use_chatgpt_formatting || agent.useChatGPTFormatting || agent.use_chatgpt_email_formatting || agent.marketing_use_chatgpt) ? 'Yes' : 'No'}
+                                      </span>
+                                      <p className="text-xs text-gray-600">
+                                        Content formatting assistance
+                                      </p>
                                     </div>
                                   </div>
                                 </div>
