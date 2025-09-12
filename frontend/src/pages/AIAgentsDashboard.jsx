@@ -1686,7 +1686,7 @@ const AIAgentsDashboard = () => {
                                           Enabled
                                         </span>
                                         <p className="text-xs text-gray-600">
-                                          {agent.marketing_sms_personalization ? 'Personalized' : 'Non Personalized'}
+                                          {agent.marketing_sms_personalized ? 'Personalized' : 'Non Personalized'}
                                         </p>
                                       </div>
                                     ) : (
@@ -1912,7 +1912,7 @@ const AIAgentsDashboard = () => {
                                           Enabled
                                         </span>
                                         <p className="text-xs text-gray-600">
-                                          {agent.marketing_sms_personalization ? 'Personalized' : 'Non Personalized'}
+                                          {agent.marketing_sms_personalized ? 'Personalized' : 'Non Personalized'}
                                         </p>
                                       </div>
                                     ) : (
