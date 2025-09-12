@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
 """
-Enhanced Marketing Agent with Consistent Content Testing
+Enhanced Marketing Agent with ChatGPT Content Generation Testing
 
-This test comprehensively tests the enhanced Marketing Agent with consistent content and proper display format as requested:
+This test comprehensively tests the Enhanced Marketing Agent with proper ChatGPT content generation and personalization rules as requested:
 
 Test Focus:
-1. Create Marketing Agent with Multi-Channel Campaign using consistent content
-2. Run Marketing Agent and verify all channels use the SAME base content
-3. Verify Content Consistency across all channels
-4. Test Topic-Based Campaign for consistency
+1. Create Topic-Based Marketing Agent - Test creating and running a marketing agent with proper ChatGPT content generation
+2. Run Marketing Agent and Verify Content Quality - Execute the marketing agent and check content quality
+3. Test Custom Campaign Content - Create another marketing agent with custom campaign
+4. Test Non-Personalized Settings - Create a third agent with personalization disabled
 
 Expected Results:
-- All channels should use the SAME base content (no more different messages per channel)
-- Email and SMS posts should include the same metadata fields as dedicated agents for proper display
-- Content should be consistent across all channels while maintaining personalization
-- Both custom_campaign and topic-based campaigns should work consistently
+- Social media posts have NO personalization (no customer names)
+- Social media posts have 150-200 word professional ChatGPT-generated content about Pet Health Tips
+- Email posts have personalization WITH customer data + ChatGPT content + templates
+- SMS posts have personalization WITH customer data + ChatGPT content + templates (concise for SMS)
+- All channels use the same base ChatGPT-generated content as foundation
 """
 
 import asyncio
