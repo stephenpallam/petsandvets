@@ -6469,7 +6469,7 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                 await db.ai_posts.insert_one(post_data)
                 created_posts.append({"post_id": post_id, "channel": "sms"})
         
-        # STEP 5: Generate consistent content for each created post using the same base content
+        # STEP 5: Generate content for each created post using the ChatGPT-generated base content
         for post_info in created_posts:
             post_id = post_info["post_id"]
             channel = post_info["channel"]
@@ -6479,65 +6479,297 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                 content_result = None
                 
                 if channel == "social_media":
-                    # Use the same base content for social media, just format it for the platform
-                    personalized_content = personalize_content(base_campaign_content, sample_customer_data) if sample_customer_data else base_campaign_content
-                    
-                    content_result = {
-                        'title': campaign_title,
-                        'content': personalized_content,
-                        'hashtags': [],
-                        'image_url': ''
-                    }
-                
-                elif channel == "email":
-                    # Use the same base content for email with proper email formatting
-                    if agent_data.get('marketing_email_personalized', True) and sample_customer_data:
-                        # Get email template or use base content
-                        email_template = agent_data.get('email_content_template', base_campaign_content)
-                        personalized_content = personalize_content(email_template, sample_customer_data)
+                    # SOCIAL MEDIA: Use base content, format for platform, NO personalization
+                    try:
+                        # Format the ChatGPT-generated content for specific social media platform
+                        platform_content_result = await ai_service.format_custom_content(
+                            post_title=campaign_title,
+                            post_content=base_campaign_content,
+                            word_count=agent_data.get('word_count', '100'),
+                            platforms=[platform],
+                            use_web_research=agent_data.get('use_web_research', False),
+                            image_text=agent_data.get('image_text', ''),
+                            track_usage=True,
+                            user_id="admin",
+                            agent_id=agent_id
+                        )
                         
+                        if platform_content_result and platform_content_result.get('content'):
+                            content_result = {
+                                'title': campaign_title,
+                                'content': platform_content_result['content'],  # Platform-specific formatted content
+                                'hashtags': platform_content_result.get('hashtags', []),
+                                'image_url': platform_content_result.get('image_url', '')
+                            }
+                        else:
+                            # Fallback to base content if platform formatting fails
+                            content_result = {
+                                'title': campaign_title,
+                                'content': base_campaign_content,  # Use base content directly
+                                'hashtags': [],
+                                'image_url': ''
+                            }
+                    except Exception as e:
+                        logger.error(f"Error formatting social media content for {platform}: {str(e)}")
+                        # Fallback to base content
                         content_result = {
                             'title': campaign_title,
+                            'content': base_campaign_content,
+                            'hashtags': [],
+                            'image_url': ''
+                        }
+                
+                elif channel == "email":
+                    # EMAIL: Use base content + template + personalization (if enabled)
+                    email_template = agent_data.get('email_content_template', base_campaign_content)
+                    
+                    if agent_data.get('marketing_email_personalized', True) and sample_customer_data:
+                        # PERSONALIZED EMAIL: Use template with placeholders + base content + customer data
+                        try:
+                            # Generate email content using ChatGPT with template and base content
+                            email_content_prompt = f"""
+                            Base marketing content: {base_campaign_content}
+                            
+                            Email template: {email_template}
+                            
+                            Create a professional email combining the marketing content with the template format. 
+                            Use placeholders [CUSTOMER_NAME], [PET_NAME], and [PET_NAMES] for personalization.
+                            """
+                            
+                            email_content_result = await ai_service.format_custom_content(
+                                post_title=f"Email: {campaign_title}",
+                                post_content=email_content_prompt,
+                                word_count="200",
+                                platforms=['email'],
+                                use_web_research=False,
+                                image_text="",
+                                track_usage=True,
+                                user_id="admin",
+                                agent_id=agent_id
+                            )
+                            
+                            if email_content_result and email_content_result.get('content'):
+                                email_template_with_content = email_content_result['content']
+                            else:
+                                # Fallback: Combine template and base content
+                                email_template_with_content = f"{email_template}\n\n{base_campaign_content}"
+                            
+                            # Apply personalization to the generated email content
+                            personalized_content = email_template_with_content.replace('[CUSTOMER_NAME]', sample_customer_data['customer_name'])
+                            personalized_content = personalized_content.replace('[PET_NAME]', sample_customer_data['pet_names'][0] if sample_customer_data['pet_names'] else 'Pet')
+                            personalized_content = personalized_content.replace('[PET_NAMES]', ', '.join(sample_customer_data['pet_names']))
+                            
+                        except Exception as e:
+                            logger.error(f"Error generating personalized email content: {str(e)}")
+                            # Fallback to simple personalization
+                            email_template_with_content = f"{email_template}\n\n{base_campaign_content}"
+                            personalized_content = email_template_with_content.replace('[CUSTOMER_NAME]', sample_customer_data['customer_name'])
+                            personalized_content = personalized_content.replace('[PET_NAME]', sample_customer_data['pet_names'][0] if sample_customer_data['pet_names'] else 'Pet')
+                            personalized_content = personalized_content.replace('[PET_NAMES]', ', '.join(sample_customer_data['pet_names']))
+                        
+                        # Generate email subject
+                        try:
+                            subject_result = await ai_service.format_custom_content(
+                                post_title="Email Subject Generation",
+                                post_content=f"Create a compelling email subject line for: {campaign_title}",
+                                word_count="10",
+                                platforms=['email'],
+                                use_web_research=False,
+                                image_text="",
+                                track_usage=True,
+                                user_id="admin",
+                                agent_id=agent_id
+                            )
+                            email_subject = subject_result.get('content', campaign_title) if subject_result else campaign_title
+                        except Exception as e:
+                            logger.error(f"Error generating email subject: {str(e)}")
+                            email_subject = campaign_title
+                        
+                        content_result = {
+                            'title': email_subject,
                             'content': personalized_content,
                             'hashtags': [],
-                            'email_template': email_template,  # Store original template for mass sending
+                            'email_template': email_template_with_content,
                             'sample_customer_name': sample_customer_data['customer_name'],
                             'sample_pet_names': sample_customer_data['pet_names'],
                             'sample_customer_email': sample_customer_data['customer_email'],
                             'ready_for_mass_email': False
                         }
                     else:
-                        # Generic email without personalization
-                        email_content = agent_data.get('email_content_template', base_campaign_content)
+                        # NON-PERSONALIZED EMAIL: Use template + base content, ignore placeholders
+                        try:
+                            # Generate email content using ChatGPT, removing any customer placeholders
+                            email_content_prompt = f"""
+                            Base marketing content: {base_campaign_content}
+                            
+                            Email template: {email_template}
+                            
+                            Create a professional email combining the marketing content with the template format.
+                            Remove any customer placeholders like [CUSTOMER_NAME], [PET_NAME], [PET_NAMES] and create generic content.
+                            """
+                            
+                            email_content_result = await ai_service.format_custom_content(
+                                post_title=f"Generic Email: {campaign_title}",
+                                post_content=email_content_prompt,
+                                word_count="200",
+                                platforms=['email'],
+                                use_web_research=False,
+                                image_text="",
+                                track_usage=True,
+                                user_id="admin",
+                                agent_id=agent_id
+                            )
+                            
+                            if email_content_result and email_content_result.get('content'):
+                                final_email_content = email_content_result['content']
+                            else:
+                                # Fallback: Remove placeholders from template and combine with base content
+                                clean_template = email_template.replace('[CUSTOMER_NAME]', 'valued customer')
+                                clean_template = clean_template.replace('[PET_NAME]', 'your pet')
+                                clean_template = clean_template.replace('[PET_NAMES]', 'your pets')
+                                final_email_content = f"{clean_template}\n\n{base_campaign_content}"
+                            
+                        except Exception as e:
+                            logger.error(f"Error generating generic email content: {str(e)}")
+                            # Fallback: Remove placeholders and use base content
+                            clean_template = email_template.replace('[CUSTOMER_NAME]', 'valued customer')
+                            clean_template = clean_template.replace('[PET_NAME]', 'your pet') 
+                            clean_template = clean_template.replace('[PET_NAMES]', 'your pets')
+                            final_email_content = f"{clean_template}\n\n{base_campaign_content}"
+                        
+                        # Generate email subject
+                        try:
+                            subject_result = await ai_service.format_custom_content(
+                                post_title="Email Subject Generation",
+                                post_content=f"Create a compelling email subject line for: {campaign_title}",
+                                word_count="10",
+                                platforms=['email'],
+                                use_web_research=False,
+                                image_text="",
+                                track_usage=True,
+                                user_id="admin",
+                                agent_id=agent_id
+                            )
+                            email_subject = subject_result.get('content', campaign_title) if subject_result else campaign_title
+                        except Exception as e:
+                            logger.error(f"Error generating email subject: {str(e)}")
+                            email_subject = campaign_title
+                        
                         content_result = {
-                            'title': campaign_title,
-                            'content': email_content,
+                            'title': email_subject,
+                            'content': final_email_content,
                             'hashtags': []
                         }
                 
                 elif channel == "sms":
-                    # Use the same base content for SMS with proper SMS formatting
+                    # SMS: Use base content + template + personalization (if enabled)
+                    sms_template = agent_data.get('sms_template', base_campaign_content)
+                    
                     if agent_data.get('marketing_sms_personalized', True) and sample_customer_data:
-                        # Get SMS template or use base content
-                        sms_template = agent_data.get('sms_template', base_campaign_content)
-                        personalized_content = personalize_content(sms_template, sample_customer_data)
+                        # PERSONALIZED SMS: Use template with placeholders + base content + customer data
+                        try:
+                            # Generate SMS content using ChatGPT with template and base content
+                            sms_content_prompt = f"""
+                            Base marketing content: {base_campaign_content}
+                            
+                            SMS template: {sms_template}
+                            
+                            Create a concise SMS message (under 160 characters) combining the marketing content with the template format.
+                            Use placeholders [CUSTOMER_NAME], [PET_NAME], and [PET_NAMES] for personalization.
+                            Keep it brief and engaging for SMS format.
+                            """
+                            
+                            sms_content_result = await ai_service.format_custom_content(
+                                post_title=f"SMS: {campaign_title}",
+                                post_content=sms_content_prompt,
+                                word_count="50",  # Keep SMS concise
+                                platforms=['sms'],
+                                use_web_research=False,
+                                image_text="",
+                                track_usage=True,
+                                user_id="admin",
+                                agent_id=agent_id
+                            )
+                            
+                            if sms_content_result and sms_content_result.get('content'):
+                                sms_template_with_content = sms_content_result['content']
+                            else:
+                                # Fallback: Use template + base content (truncated for SMS)
+                                combined_content = f"{sms_template} {base_campaign_content}"
+                                sms_template_with_content = combined_content[:140] + "..." if len(combined_content) > 140 else combined_content
+                            
+                            # Apply personalization to the generated SMS content
+                            personalized_content = sms_template_with_content.replace('[CUSTOMER_NAME]', sample_customer_data['customer_name'])
+                            personalized_content = personalized_content.replace('[PET_NAME]', sample_customer_data['pet_names'][0] if sample_customer_data['pet_names'] else 'Pet')
+                            personalized_content = personalized_content.replace('[PET_NAMES]', ', '.join(sample_customer_data['pet_names']))
+                            
+                        except Exception as e:
+                            logger.error(f"Error generating personalized SMS content: {str(e)}")
+                            # Fallback to simple personalization
+                            combined_content = f"{sms_template} {base_campaign_content}"
+                            sms_template_with_content = combined_content[:140] + "..." if len(combined_content) > 140 else combined_content
+                            personalized_content = sms_template_with_content.replace('[CUSTOMER_NAME]', sample_customer_data['customer_name'])
+                            personalized_content = personalized_content.replace('[PET_NAME]', sample_customer_data['pet_names'][0] if sample_customer_data['pet_names'] else 'Pet')
+                            personalized_content = personalized_content.replace('[PET_NAMES]', ', '.join(sample_customer_data['pet_names']))
                         
                         content_result = {
                             'title': campaign_title,
                             'content': personalized_content,
                             'hashtags': [],
-                            'sms_template': sms_template,  # Store original template for mass sending
+                            'sms_template': sms_template_with_content,
                             'sample_customer_name': sample_customer_data['customer_name'],
                             'sample_pet_names': sample_customer_data['pet_names'],
                             'sample_customer_phone': sample_customer_data['customer_phone'],
                             'ready_for_mass_sms': False
                         }
                     else:
-                        # Generic SMS without personalization
-                        sms_content = agent_data.get('sms_template', base_campaign_content)
+                        # NON-PERSONALIZED SMS: Use template + base content, ignore placeholders
+                        try:
+                            # Generate SMS content using ChatGPT, removing any customer placeholders
+                            sms_content_prompt = f"""
+                            Base marketing content: {base_campaign_content}
+                            
+                            SMS template: {sms_template}
+                            
+                            Create a concise SMS message (under 160 characters) combining the marketing content with the template format.
+                            Remove any customer placeholders like [CUSTOMER_NAME], [PET_NAME], [PET_NAMES] and create generic content.
+                            Keep it brief and engaging for SMS format.
+                            """
+                            
+                            sms_content_result = await ai_service.format_custom_content(
+                                post_title=f"Generic SMS: {campaign_title}",
+                                post_content=sms_content_prompt,
+                                word_count="50",  # Keep SMS concise
+                                platforms=['sms'],
+                                use_web_research=False,
+                                image_text="",
+                                track_usage=True,
+                                user_id="admin",
+                                agent_id=agent_id
+                            )
+                            
+                            if sms_content_result and sms_content_result.get('content'):
+                                final_sms_content = sms_content_result['content']
+                            else:
+                                # Fallback: Remove placeholders from template and combine with base content
+                                clean_template = sms_template.replace('[CUSTOMER_NAME]', 'valued customer')
+                                clean_template = clean_template.replace('[PET_NAME]', 'your pet')
+                                clean_template = clean_template.replace('[PET_NAMES]', 'your pets')
+                                combined_content = f"{clean_template} {base_campaign_content}"
+                                final_sms_content = combined_content[:140] + "..." if len(combined_content) > 140 else combined_content
+                            
+                        except Exception as e:
+                            logger.error(f"Error generating generic SMS content: {str(e)}")
+                            # Fallback: Remove placeholders and use base content
+                            clean_template = sms_template.replace('[CUSTOMER_NAME]', 'valued customer')
+                            clean_template = clean_template.replace('[PET_NAME]', 'your pet')
+                            clean_template = clean_template.replace('[PET_NAMES]', 'your pets')
+                            combined_content = f"{clean_template} {base_campaign_content}"
+                            final_sms_content = combined_content[:140] + "..." if len(combined_content) > 140 else combined_content
+                        
                         content_result = {
                             'title': campaign_title,
-                            'content': sms_content,
+                            'content': final_sms_content,
                             'hashtags': []
                         }
                 
