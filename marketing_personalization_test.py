@@ -448,8 +448,8 @@ class MarketingPersonalizationTester:
                                     self.created_post_ids.extend([post.get("id") for post in posts])
                                     
                                     # Verify custom campaign personalization
-                                    email_posts = [p for p in posts if p.get("agent_type") == "email"]
-                                    sms_posts = [p for p in posts if p.get("agent_type") == "sms"]
+                                    email_posts = [p for p in posts if "email_subject" in p or p.get("marketing_channel") == "email"]
+                                    sms_posts = [p for p in posts if "sms_template" in p or p.get("marketing_channel") == "sms"]
                                     
                                     custom_campaign_verification = {
                                         "agent_created": True,
