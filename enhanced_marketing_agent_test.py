@@ -235,7 +235,7 @@ class EnhancedMarketingAgentTester:
             
             # Run the marketing agent
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                url = f"{self.backend_url}/api/ai-agents/{agent_id}/generate"
+                url = f"{self.backend_url}/api/ai-agents/{agent_id}/run"
                 async with session.post(url, headers=headers, timeout=30) as response:
                     response_text = await response.text()
                     
