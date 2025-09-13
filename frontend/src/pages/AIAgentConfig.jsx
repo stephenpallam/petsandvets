@@ -7583,6 +7583,147 @@ Example:
           </div>
         </div>
       )}
+
+      {/* Full-Screen Email Editor Modal */}
+      {showFullScreenEditor && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex flex-col">
+          {/* Sticky Header */}
+          <div className="bg-white shadow-lg border-b border-gray-200 flex-shrink-0">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center justify-between h-16">
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
+                    <Mail className="h-6 w-6 text-blue-600" />
+                    <h2 className="text-xl font-semibold text-gray-900">{fullScreenEditorTitle}</h2>
+                  </div>
+                  <div className="hidden sm:flex items-center space-x-2 text-sm text-gray-500">
+                    <kbd className="px-2 py-1 bg-gray-100 rounded text-xs">Ctrl+S</kbd>
+                    <span>to save</span>
+                    <kbd className="px-2 py-1 bg-gray-100 rounded text-xs">Esc</kbd>
+                    <span>to close</span>
+                  </div>
+                </div>
+                <button
+                  onClick={closeFullScreenEditor}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Scrollable Content Area */}
+          <div className="flex-1 overflow-y-auto bg-gray-50">
+            <div className="max-w-4xl mx-auto p-6">
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div className="p-6">
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Email Content
+                    </label>
+                    <div className="relative">
+                      <textarea
+                        value={fullScreenEditorContent}
+                        onChange={(e) => setFullScreenEditorContent(e.target.value)}
+                        className="w-full h-96 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-mono resize-none"
+                        placeholder="Enter your email content here...
+
+You can use placeholders like:
+[CUSTOMER_NAME] - Customer's name
+[PET_NAME] - Pet's name  
+[PET_NAMES] - All pet names
+[WEBSITE_LINK] - Website URL
+[BOOK_NOW_LINK] - Booking URL
+[PHONE_NUMBER] - Business phone
+[BUSINESS_NAME] - Business name
+[BUSINESS_ADDRESS] - Business address"
+                        autoFocus
+                      />
+                      <div className="absolute bottom-3 right-3 text-xs text-gray-400 bg-white px-2 py-1 rounded">
+                        {fullScreenEditorContent.length} characters
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Helpful Tips */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 className="text-sm font-medium text-blue-900 mb-2">💡 Email Template Tips:</h4>
+                    <div className="text-sm text-blue-800 space-y-1">
+                      <p>• Use <strong>[CUSTOMER_NAME]</strong> and <strong>[PET_NAME]</strong> for personalization</p>
+                      <p>• Include <strong>[WEBSITE_LINK]</strong> or <strong>[BOOK_NOW_LINK]</strong> for call-to-actions</p>
+                      <p>• Keep paragraphs short for better readability</p>
+                      <p>• Use bullet points (•) or numbered lists for services/offers</p>
+                      <p>• End with a clear call-to-action and contact information</p>
+                    </div>
+                  </div>
+
+                  {/* Available Placeholders Reference */}
+                  <div className="mt-4 bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <h4 className="text-sm font-medium text-gray-900 mb-3">📋 Available Placeholders:</h4>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
+                      <div className="bg-white p-2 rounded border">
+                        <code className="text-blue-600">[CUSTOMER_NAME]</code>
+                        <p className="text-gray-600 mt-1">Customer's full name</p>
+                      </div>
+                      <div className="bg-white p-2 rounded border">
+                        <code className="text-blue-600">[PET_NAME]</code>
+                        <p className="text-gray-600 mt-1">Primary pet's name</p>
+                      </div>
+                      <div className="bg-white p-2 rounded border">
+                        <code className="text-blue-600">[PET_NAMES]</code>
+                        <p className="text-gray-600 mt-1">All pet names</p>
+                      </div>
+                      <div className="bg-white p-2 rounded border">
+                        <code className="text-blue-600">[WEBSITE_LINK]</code>
+                        <p className="text-gray-600 mt-1">Website URL</p>
+                      </div>
+                      <div className="bg-white p-2 rounded border">
+                        <code className="text-blue-600">[BOOK_NOW_LINK]</code>
+                        <p className="text-gray-600 mt-1">Booking URL</p>
+                      </div>
+                      <div className="bg-white p-2 rounded border">
+                        <code className="text-blue-600">[PHONE_NUMBER]</code>
+                        <p className="text-gray-600 mt-1">Business phone</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Sticky Footer */}
+          <div className="bg-white shadow-lg border-t border-gray-200 flex-shrink-0">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center justify-between h-16">
+                <div className="flex items-center space-x-4">
+                  <div className="text-sm text-gray-500">
+                    {fullScreenEditorContent.length} characters • Auto-saved
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <button
+                    type="button"
+                    onClick={closeFullScreenEditor}
+                    className="px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={saveFullScreenEditor}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                  >
+                    <Save className="h-4 w-4 mr-2" />
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
     </div>
     </div>
