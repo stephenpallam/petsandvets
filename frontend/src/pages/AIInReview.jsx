@@ -1277,7 +1277,7 @@ const AIInReview = () => {
                                     <span className="text-sm font-medium text-gray-700">Email Preview</span>
                                   </div>
                                   <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-purple-400">
-                                    <div className="whitespace-pre-wrap text-gray-900 leading-relaxed font-mono text-sm">
+                                    <div className="whitespace-pre-wrap text-gray-900 leading-relaxed">
                                       {post.content}
                                     </div>
                                   </div>
