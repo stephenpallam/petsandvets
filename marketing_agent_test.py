@@ -135,8 +135,9 @@ class MarketingAgentTester:
             agent_data = {
                 "agent_type": "marketing_agent",
                 "agent_name": "Test Marketing Agent - Post Duplication Check",
-                "marketing_content_type": "topic",
+                "mode": "adhoc",
                 "topic": "Pet Health and Wellness",
+                "marketing_content_type": "topic",
                 "marketing_channels": ["social_media", "email", "sms"],
                 "marketing_social_platforms": {
                     "facebook": True,
@@ -149,9 +150,8 @@ class MarketingAgentTester:
                 "marketing_email_personalized": True,
                 "email_content_template": "Hello [CUSTOMER_NAME]! We have important health tips for [PET_NAME]. Visit our clinic for [PET_NAMES] care.",
                 "marketing_sms_personalized": True,
-                "sms_template": "Hi [CUSTOMER_NAME]! [PET_NAME] needs attention. Call us about [PET_NAMES] health.",
-                "marketing_workflow_mode": "in_review",
-                "mode": "adhoc"
+                "marketing_sms_template": "Hi [CUSTOMER_NAME]! [PET_NAME] needs attention. Call us about [PET_NAMES] health.",
+                "marketing_workflow_mode": "in_review"
             }
             
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
