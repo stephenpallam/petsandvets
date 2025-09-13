@@ -6311,6 +6311,21 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
     """Generate multi-channel marketing campaign for an AI Marketing agent"""
     try:
         now = await business_now_async()
+        
+        # Check for duplicate execution - prevent multiple campaigns within 30 seconds
+        recent_posts = await db.ai_posts.find({
+            "agent_id": agent_id,
+            "created_at": {"$gte": now - timedelta(seconds=30)}
+        }).to_list(length=1)
+        
+        if recent_posts:
+            logger.warning(f"Duplicate marketing campaign generation attempt detected for agent {agent_id} - skipping")
+            return {
+                "status": "skipped",
+                "message": "Campaign generation skipped - recent execution detected",
+                "agent_id": agent_id
+            }
+        
         created_posts = []
         
         # Get marketing configuration
