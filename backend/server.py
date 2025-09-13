@@ -6793,6 +6793,10 @@ Located at: [BUSINESS_ADDRESS]"""
                             
                             if email_content_result and email_content_result.get('content'):
                                 final_email_content = email_content_result['content']
+                                # Clean up any markdown formatting
+                                final_email_content = final_email_content.replace('**Title:**', '').replace('**Content:**', '')
+                                final_email_content = final_email_content.replace('**', '').replace('Title:', '').replace('Content:', '')
+                                final_email_content = final_email_content.strip()
                             else:
                                 # Fallback: Remove placeholders from template and combine with base content
                                 clean_template = email_template.replace('[CUSTOMER_NAME]', 'valued customer')
