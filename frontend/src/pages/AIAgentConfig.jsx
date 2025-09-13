@@ -7432,6 +7432,7 @@ Example:
                           onSelect={(templateContent) => setMarketingMode(prev => ({ ...prev, emailTemplate: templateContent }))}
                           placeholder="Select an email template..."
                           templateType="email"
+                          isPersonalized={marketingMode.emailPersonalized}
                         />
                         <div className="flex items-center justify-between mb-2">
                           <label className="block text-sm font-medium text-gray-700">Email Template</label>
@@ -7440,6 +7441,7 @@ Example:
                             title="Marketing Campaign - Email Template"
                             onSave={(content) => setMarketingMode(prev => ({ ...prev, emailTemplate: content }))}
                             className="text-xs"
+                            isPersonalized={marketingMode.emailPersonalized}
                           />
                         </div>
                         <textarea
