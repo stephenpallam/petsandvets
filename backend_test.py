@@ -112,9 +112,9 @@ class MarketingCampaignDuplicatePreventionTester:
         except Exception as e:
             print(f"Warning: Could not clean up test data: {e}")
     
-    async def test_initialize_default_templates(self):
-        """Test 1: Initialize Default Templates and Placeholders"""
-        print("🔍 TEST 1: Initialize Default Templates and Placeholders")
+    async def test_duplicate_prevention_basic(self):
+        """Test 1: Basic Duplicate Prevention - Only 4 posts created"""
+        print("🔍 TEST 1: Basic Duplicate Prevention")
         print("=" * 60)
         
         try:
@@ -127,80 +127,111 @@ class MarketingCampaignDuplicatePreventionTester:
                 "Content-Type": "application/json"
             }
             
+            # Create marketing agent with 2 social platforms + email + SMS
+            agent_data = {
+                "agent_type": "marketing_agent",
+                "agent_name": "Test Duplicate Prevention Agent 1",
+                "marketing_content_type": "topic",
+                "topic": "Pet Health Tips",
+                "marketing_channels": ["social_media", "email", "sms"],
+                "marketing_social_platforms": {
+                    "facebook": True,
+                    "instagram": True,
+                    "twitter": False,
+                    "whatsapp": False
+                },
+                "marketing_email_personalized": True,
+                "email_content_template": "Hello [CUSTOMER_NAME]! Important health tips for [PET_NAME]. Visit [WEBSITE_LINK] for more info.",
+                "marketing_sms_personalized": True,
+                "sms_template": "Hi [CUSTOMER_NAME]! [PET_NAME] health tips available. Call [PHONE_NUMBER].",
+                "marketing_workflow_mode": "in_review"
+            }
+            
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                url = f"{self.backend_url}/api/templates/initialize-defaults"
-                async with session.post(url, headers=headers, timeout=15) as response:
-                    response_text = await response.text()
-                    
-                    if response.status == 200:
-                        try:
-                            result = json.loads(response_text)
-                            
-                            # Verify default templates were created
-                            templates = await self.db.templates.find().to_list(length=None)
-                            placeholders = await self.db.global_placeholders.find().to_list(length=None)
-                            
-                            # Check for expected default templates
-                            expected_email_templates = ["Appointment Reminder", "Welcome New Customer", "Marketing Promotion"]
-                            expected_sms_templates = ["Appointment Reminder", "Welcome New Customer", "Marketing Promotion"]
-                            expected_placeholders = ["Website Link", "Book Now Link", "Phone Number", "Business Name", "Business Address"]
-                            
-                            email_templates = [t for t in templates if t.get("type") == "email"]
-                            sms_templates = [t for t in templates if t.get("type") == "sms"]
-                            
-                            email_names = [t.get("name") for t in email_templates]
-                            sms_names = [t.get("name") for t in sms_templates]
-                            placeholder_names = [p.get("name") for p in placeholders]
-                            
-                            success = (
-                                all(name in email_names for name in expected_email_templates) and
-                                all(name in sms_names for name in expected_sms_templates) and
-                                all(name in placeholder_names for name in expected_placeholders)
-                            )
-                            
-                            self.log_test_result(
-                                "Initialize Default Templates and Placeholders",
-                                success,
-                                f"Default initialization: {success}",
-                                {
-                                    "HTTP Status": response.status,
-                                    "Response Message": result.get("message"),
-                                    "Total Templates": len(templates),
-                                    "Email Templates": len(email_templates),
-                                    "SMS Templates": len(sms_templates),
-                                    "Global Placeholders": len(placeholders),
-                                    "Expected Email Templates Found": all(name in email_names for name in expected_email_templates),
-                                    "Expected SMS Templates Found": all(name in sms_names for name in expected_sms_templates),
-                                    "Expected Placeholders Found": all(name in placeholder_names for name in expected_placeholders),
-                                    "Email Template Names": email_names,
-                                    "SMS Template Names": sms_names,
-                                    "Placeholder Names": placeholder_names
-                                }
-                            )
-                            return success
-                            
-                        except json.JSONDecodeError:
-                            self.log_test_result(
-                                "Initialize Default Templates and Placeholders",
-                                False,
-                                "Invalid JSON response",
-                                {"HTTP Status": response.status, "Response Text": response_text}
-                            )
-                            return False
-                    else:
+                # Create the marketing agent
+                url = f"{self.backend_url}/api/ai-agents"
+                async with session.post(url, headers=headers, json=agent_data, timeout=30) as response:
+                    if response.status != 200:
                         self.log_test_result(
-                            "Initialize Default Templates and Placeholders",
+                            "Basic Duplicate Prevention - Agent Creation",
                             False,
-                            f"Failed to initialize defaults: HTTP {response.status}",
-                            {"HTTP Status": response.status, "Response Text": response_text}
+                            f"Failed to create marketing agent: HTTP {response.status}",
+                            {"HTTP Status": response.status, "Response": await response.text()}
                         )
                         return False
-                        
+                    
+                    agent_result = await response.json()
+                    agent_id = agent_result.get("id")
+                    self.created_agent_ids.append(agent_id)
+                
+                # Wait a moment for agent creation to complete
+                await asyncio.sleep(2)
+                
+                # Run the marketing campaign generation
+                url = f"{self.backend_url}/api/ai-agents/{agent_id}/run"
+                async with session.post(url, headers=headers, timeout=60) as response:
+                    if response.status != 200:
+                        self.log_test_result(
+                            "Basic Duplicate Prevention - Campaign Generation",
+                            False,
+                            f"Failed to run marketing campaign: HTTP {response.status}",
+                            {"HTTP Status": response.status, "Response": await response.text()}
+                        )
+                        return False
+                    
+                    campaign_result = await response.json()
+                
+                # Wait for posts to be generated
+                await asyncio.sleep(5)
+                
+                # Query database to verify post count and structure
+                posts = await self.db.ai_posts.find({"agent_id": agent_id}).to_list(length=None)
+                
+                # Analyze posts
+                total_posts = len(posts)
+                social_media_posts = [p for p in posts if p.get("marketing_channel") == "social_media"]
+                email_posts = [p for p in posts if p.get("marketing_channel") == "email"]
+                sms_posts = [p for p in posts if p.get("marketing_channel") == "sms"]
+                
+                facebook_posts = [p for p in social_media_posts if p.get("platform") == "facebook"]
+                instagram_posts = [p for p in social_media_posts if p.get("platform") == "instagram"]
+                
+                # Verify expected counts
+                expected_total = 4  # 1 Facebook + 1 Instagram + 1 Email + 1 SMS
+                success = (
+                    total_posts == expected_total and
+                    len(social_media_posts) == 2 and
+                    len(email_posts) == 1 and
+                    len(sms_posts) == 1 and
+                    len(facebook_posts) == 1 and
+                    len(instagram_posts) == 1
+                )
+                
+                self.log_test_result(
+                    "Basic Duplicate Prevention",
+                    success,
+                    f"Post count verification: {success}",
+                    {
+                        "Expected Total Posts": expected_total,
+                        "Actual Total Posts": total_posts,
+                        "Social Media Posts": len(social_media_posts),
+                        "Email Posts": len(email_posts),
+                        "SMS Posts": len(sms_posts),
+                        "Facebook Posts": len(facebook_posts),
+                        "Instagram Posts": len(instagram_posts),
+                        "Agent ID": agent_id,
+                        "Campaign Result": campaign_result.get("message", "No message"),
+                        "All Posts Have Proper Channels": all(p.get("marketing_channel") in ["social_media", "email", "sms"] for p in posts),
+                        "Social Media Posts Have Platforms": all(p.get("platform") in ["facebook", "instagram"] for p in social_media_posts)
+                    }
+                )
+                return success
+                
         except Exception as e:
             self.log_test_result(
-                "Initialize Default Templates and Placeholders",
+                "Basic Duplicate Prevention",
                 False,
-                f"Error initializing defaults: {str(e)}",
+                f"Error in basic duplicate prevention test: {str(e)}",
                 {"Error Details": str(e)}
             )
             return False
