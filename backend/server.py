@@ -6620,19 +6620,10 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                             email_template_with_content = f"{email_template}\n\n{base_campaign_content}"
                     
                     if agent_data.get('marketing_email_personalized', True) and sample_customer_data:
-                            
-                            # Apply personalization to the generated email content
-                            personalized_content = email_template_with_content.replace('[CUSTOMER_NAME]', sample_customer_data['customer_name'])
-                            personalized_content = personalized_content.replace('[PET_NAME]', sample_customer_data['pet_names'][0] if sample_customer_data['pet_names'] else 'Pet')
-                            personalized_content = personalized_content.replace('[PET_NAMES]', ', '.join(sample_customer_data['pet_names']))
-                            
-                        except Exception as e:
-                            logger.error(f"Error generating personalized email content: {str(e)}")
-                            # Fallback to simple personalization
-                            email_template_with_content = f"{email_template}\n\n{base_campaign_content}"
-                            personalized_content = email_template_with_content.replace('[CUSTOMER_NAME]', sample_customer_data['customer_name'])
-                            personalized_content = personalized_content.replace('[PET_NAME]', sample_customer_data['pet_names'][0] if sample_customer_data['pet_names'] else 'Pet')
-                            personalized_content = personalized_content.replace('[PET_NAMES]', ', '.join(sample_customer_data['pet_names']))
+                        # Apply personalization to the generated email content
+                        personalized_content = email_template_with_content.replace('[CUSTOMER_NAME]', sample_customer_data['customer_name'])
+                        personalized_content = personalized_content.replace('[PET_NAME]', sample_customer_data['pet_names'][0] if sample_customer_data['pet_names'] else 'Pet')
+                        personalized_content = personalized_content.replace('[PET_NAMES]', ', '.join(sample_customer_data['pet_names']))
                         
                         # Generate email subject
                         try:
