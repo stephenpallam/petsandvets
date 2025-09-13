@@ -39,7 +39,7 @@ class WriteEmailAgentTester:
                         self.base_url = line.split('=', 1)[1].strip()
                         break
         else:
-            self.base_url = "https://petcare-agents.preview.emergentagent.com"
+            self.base_url = "https://marketing-agent.preview.emergentagent.com"
         
         self.api_url = f"{self.base_url}/api"
         self.headers = {"Content-Type": "application/json"}

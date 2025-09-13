@@ -52,7 +52,7 @@ class SMSHolidaySchedulerTester:
                         self.backend_url = line.split('=', 1)[1].strip()
                         break
         else:
-            self.backend_url = "https://petcare-agents.preview.emergentagent.com"
+            self.backend_url = "https://marketing-agent.preview.emergentagent.com"
         
         self.api_url = f"{self.backend_url}/api"
         print(f"🔗 Using API URL: {self.api_url}")

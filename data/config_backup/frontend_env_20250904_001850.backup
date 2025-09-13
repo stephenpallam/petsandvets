@@ -1,2 +1,2 @@
-REACT_APP_BACKEND_URL=https://petcare-agents.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://marketing-agent.preview.emergentagent.com
 WDS_SOCKET_PORT=3001

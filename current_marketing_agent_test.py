@@ -55,7 +55,7 @@ class CurrentMarketingAgentTester:
         self.client = None
         self.db = None
         self.test_results = []
-        self.backend_url = os.environ.get('FRONTEND_URL', 'https://petcare-agents.preview.emergentagent.com')
+        self.backend_url = os.environ.get('FRONTEND_URL', 'https://marketing-agent.preview.emergentagent.com')
         self.auth_token = None
         self.created_agent_id = None
         
