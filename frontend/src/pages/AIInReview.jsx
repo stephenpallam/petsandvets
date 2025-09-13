@@ -1383,9 +1383,9 @@ const AIInReview = () => {
                                   </div>
                                   <div className="bg-gray-900 rounded-lg p-4 max-w-xs">
                                     <div className="bg-blue-500 text-white rounded-2xl rounded-bl-md px-4 py-2 text-sm">
-                                      <ContentWithLinks 
+                                      <SMSContentWithLinks 
                                         content={post.content} 
-                                        className="text-white"
+                                        className=""
                                       />
                                     </div>
                                     <div className="text-xs text-gray-400 mt-1 text-right">
