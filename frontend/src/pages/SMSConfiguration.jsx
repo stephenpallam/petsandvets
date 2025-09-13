@@ -665,71 +665,135 @@ const SMSConfiguration = () => {
                         </button>
                       </div>
 
-                      {/* Template Form */}
+                      {/* Template Form Modal */}
                       {showTemplateModal && (
-                        <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
-                          <h4 className="text-md font-medium text-gray-900 mb-4">
-                            {editingTemplate ? 'Edit Template' : 'Create New Template'}
-                          </h4>
-                          <div className="space-y-4">
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Template Name *
-                              </label>
-                              <input
-                                type="text"
-                                value={templateForm.name}
-                                onChange={(e) => setTemplateForm(prev => ({ ...prev, name: e.target.value }))}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
-                                style={{ '--tw-ring-color': '#29add3' }}
-                                placeholder="e.g., Appointment Reminder"
-                              />
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                          <div className="bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col">
+                            {/* Sticky Header */}
+                            <div className="px-6 py-4 border-b border-gray-200 rounded-t-lg" style={{ backgroundColor: 'rgb(41, 173, 211)' }}>
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h3 className="text-xl font-semibold text-white">
+                                    {editingTemplate ? 'Edit SMS Template' : 'Create New SMS Template'}
+                                  </h3>
+                                  <p className="text-white text-opacity-80 text-sm mt-1">
+                                    Create and manage SMS templates with placeholders (160 character limit)
+                                  </p>
+                                </div>
+                                <button
+                                  onClick={handleCancelTemplateForm}
+                                  className="text-white hover:text-gray-200 transition-colors p-2"
+                                >
+                                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                  </svg>
+                                </button>
+                              </div>
                             </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Description
-                              </label>
-                              <input
-                                type="text"
-                                value={templateForm.description}
-                                onChange={(e) => setTemplateForm(prev => ({ ...prev, description: e.target.value }))}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
-                                style={{ '--tw-ring-color': '#29add3' }}
-                                placeholder="Brief description of the template"
-                              />
+
+                            {/* Scrollable Content Area */}
+                            <div className="flex-1 overflow-y-auto px-6 py-6">
+                              <div className="space-y-6">
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Template Name *
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={templateForm.name}
+                                    onChange={(e) => setTemplateForm(prev => ({ ...prev, name: e.target.value }))}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                                    style={{ '--tw-ring-color': '#29add3' }}
+                                    placeholder="Enter template name"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Description
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={templateForm.description}
+                                    onChange={(e) => setTemplateForm(prev => ({ ...prev, description: e.target.value }))}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                                    style={{ '--tw-ring-color': '#29add3' }}
+                                    placeholder="Optional description for this template"
+                                  />
+                                </div>
+
+                                <div>
+                                  <div className="flex items-center justify-between mb-2">
+                                    <label className="block text-sm font-medium text-gray-700">
+                                      SMS Content * <span className="text-gray-500 text-xs">(160 char limit)</span>
+                                    </label>
+                                    <div className="text-xs text-gray-500">
+                                      Use placeholders: [CUSTOMER_NAME], [PET_NAME], [PHONE_NUMBER], etc.
+                                    </div>
+                                  </div>
+                                  <textarea
+                                    value={templateForm.content}
+                                    onChange={(e) => setTemplateForm(prev => ({ ...prev, content: e.target.value }))}
+                                    rows={6}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                                    style={{ '--tw-ring-color': '#29add3' }}
+                                    placeholder="Enter SMS content. Use placeholders like [CUSTOMER_NAME], [PET_NAME], [PHONE_NUMBER], etc."
+                                    maxLength={160}
+                                  />
+                                  <div className="text-xs text-gray-500 mt-1">
+                                    {templateForm.content.length}/160 characters
+                                  </div>
+                                </div>
+
+                                <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                                  <h4 className="text-sm font-medium text-orange-800 mb-2">Available SMS Placeholders:</h4>
+                                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs text-orange-700">
+                                    <span className="bg-orange-100 px-2 py-1 rounded">[CUSTOMER_NAME]</span>
+                                    <span className="bg-orange-100 px-2 py-1 rounded">[PET_NAME]</span>
+                                    <span className="bg-orange-100 px-2 py-1 rounded">[PET_NAMES]</span>
+                                    <span className="bg-orange-100 px-2 py-1 rounded">[BUSINESS_NAME]</span>
+                                    <span className="bg-orange-100 px-2 py-1 rounded">[PHONE_NUMBER]</span>
+                                    <span className="bg-orange-100 px-2 py-1 rounded">[WEBSITE_LINK]</span>
+                                    <span className="bg-orange-100 px-2 py-1 rounded">[BOOK_NOW_LINK]</span>
+                                    <span className="bg-orange-100 px-2 py-1 rounded">[BUSINESS_ADDRESS]</span>
+                                    <span className="bg-orange-100 px-2 py-1 rounded">[CHATGPT_CONTENT]</span>
+                                  </div>
+                                </div>
+
+                                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                                  <h4 className="text-sm font-medium text-amber-800 mb-2">📱 SMS Best Practices:</h4>
+                                  <ul className="text-xs text-amber-700 space-y-1">
+                                    <li>• Keep messages under 160 characters for single SMS</li>
+                                    <li>• Use clear, concise language</li>
+                                    <li>• Include a clear call-to-action</li>
+                                    <li>• Always include business name and contact info</li>
+                                  </ul>
+                                </div>
+                              </div>
                             </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                SMS Content *
-                              </label>
-                              <textarea
-                                value={templateForm.content}
-                                onChange={(e) => setTemplateForm(prev => ({ ...prev, content: e.target.value }))}
-                                rows={4}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
-                                style={{ '--tw-ring-color': '#29add3' }}
-                                placeholder="Enter SMS content. Use placeholders like [CUSTOMER_NAME], [PET_NAME], [PHONE_NUMBER], etc."
-                              />
+
+                            {/* Sticky Footer */}
+                            <div className="px-6 py-4 border-t border-gray-200 rounded-b-lg bg-gray-50">
+                              <div className="flex items-center justify-end space-x-3">
+                                <button
+                                  type="button"
+                                  onClick={handleCancelTemplateForm}
+                                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                                >
+                                  Cancel
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={editingTemplate ? handleUpdateTemplate : handleCreateTemplate}
+                                  className="px-6 py-2 text-white rounded-lg transition-colors font-medium"
+                                  style={{ backgroundColor: '#29add3' }}
+                                  onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                                  onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
+                                >
+                                  {editingTemplate ? 'Update Template' : 'Create Template'}
+                                </button>
+                              </div>
                             </div>
-                          </div>
-                          <div className="flex items-center space-x-3 mt-4">
-                            <button
-                              type="button"
-                              onClick={editingTemplate ? handleUpdateTemplate : handleCreateTemplate}
-                              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white transition-colors"
-                              style={{ backgroundColor: '#29add3' }}
-                              onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
-                              onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
-                            >
-                              {editingTemplate ? 'Update Template' : 'Create Template'}
-                            </button>
-                            <button
-                              type="button"
-                              onClick={handleCancelTemplateForm}
-                              className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors"
-                            >
-                              Cancel
-                            </button>
                           </div>
                         </div>
                       )}
