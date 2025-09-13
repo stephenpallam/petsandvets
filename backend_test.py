@@ -509,9 +509,16 @@ class TemplateManagementTester:
             validation_results = {}
             
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
+                # First verify our test templates still exist
+                url = f"{self.backend_url}/api/templates"
+                async with session.get(url, headers=headers, timeout=10) as response:
+                    current_templates = await response.json()
+                    template_names = [t.get("name") for t in current_templates]
+                    print(f"Current templates before validation test: {template_names}")
+                
                 # Test 4a: Try creating duplicate template name
                 duplicate_template_data = {
-                    "name": "Test Custom Email Template",  # This should already exist from previous test
+                    "name": "Test Updated Email Template",  # This should already exist from previous test (updated name)
                     "type": "email",
                     "content": "Duplicate template content",
                     "description": "This should fail due to duplicate name"
