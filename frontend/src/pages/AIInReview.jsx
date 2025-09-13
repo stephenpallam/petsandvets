@@ -1500,11 +1500,19 @@ const AIInReview = () => {
                                     <div className="space-y-2 text-sm">
                                       <div className="flex">
                                         <span className="text-gray-500 font-medium w-16">From:</span>
-                                        <span className="text-gray-900">Pets and Vets Animal Hospital &lt;info@petsandvetsanimalhospital.com&gt;</span>
+                                        <span className="text-gray-900">Pets and Vets Animal Hospital &lt;vet@petsandvetsanimalhospital.com&gt;</span>
                                       </div>
                                       <div className="flex">
                                         <span className="text-gray-500 font-medium w-16">To:</span>
-                                        <span className="text-gray-900">customer@email.com</span>
+                                        <span className="text-gray-900">
+                                          {post.marketing_email_personalized === false ? 
+                                            'All Customers' : 
+                                            (post.sample_customer_name ? 
+                                              `${post.sample_customer_name} <${post.sample_customer_name.toLowerCase().replace(/\s+/g, '.')}@email.com>` : 
+                                              'All Customers'
+                                            )
+                                          }
+                                        </span>
                                       </div>
                                       <div className="flex items-start">
                                         <span className="text-gray-500 font-medium w-16">Subject:</span>
