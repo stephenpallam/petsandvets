@@ -236,7 +236,7 @@ class MarketingCampaignDuplicatePreventionTester:
             )
             return False
     
-    async def test_template_crud_operations(self):
+    async def test_rapid_fire_prevention(self):
         """Test 2: Template CRUD Operations"""
         print("🔍 TEST 2: Template CRUD Operations")
         print("=" * 60)
