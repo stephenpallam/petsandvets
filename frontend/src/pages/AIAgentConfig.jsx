@@ -5451,10 +5451,18 @@ Example:
 
                         {/* Email Content */}
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            <FileText className="h-4 w-4 inline mr-2" />
-                            Email Content *
-                          </label>
+                          <div className="flex items-center justify-between mb-2">
+                            <label className="block text-sm font-medium text-gray-700">
+                              <FileText className="h-4 w-4 inline mr-2" />
+                              Email Content *
+                            </label>
+                            <FullScreenEditorButton
+                              content={emailWriteMode.emailContent}
+                              title="Write Email Agent - Email Content"
+                              onSave={(content) => handleEmailWriteModeChange('emailContent', content)}
+                              className="text-xs"
+                            />
+                          </div>
                           <textarea
                             value={emailWriteMode.emailContent}
                             onChange={(e) => handleEmailWriteModeChange('emailContent', e.target.value)}
