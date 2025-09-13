@@ -338,6 +338,8 @@ const CMSSettings = () => {
   };
 
   const handleCancelPlaceholderForm = () => {
+    console.log('Cancel button clicked');
+    setMessage({ type: '', text: '' });
     setPlaceholderForm({ name: '', placeholder: '', value: '', description: '' });
     setEditingPlaceholder(null);
     setShowPlaceholderForm(false);
