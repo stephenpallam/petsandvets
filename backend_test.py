@@ -530,7 +530,7 @@ class TemplateManagementTester:
                 
                 # Test 4b: Try creating duplicate placeholder name
                 duplicate_placeholder_data = {
-                    "name": "Test Custom Placeholder",  # This should already exist from previous test
+                    "name": "Test Updated Placeholder",  # This should already exist from previous test (updated name)
                     "placeholder": "[DUPLICATE_TEST]",
                     "value": "Duplicate value",
                     "description": "This should fail due to duplicate name"
