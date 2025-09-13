@@ -6532,10 +6532,24 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                 if channel == "social_media":
                     # SOCIAL MEDIA: Use base content, format for platform, NO personalization
                     try:
+                        # Create platform-specific prompts for varied content
+                        platform_specific_prompts = {
+                            'facebook': f"Create a Facebook post based on: {base_campaign_content}. Use engaging language, emojis, and encourage interaction. Facebook style: conversational, community-focused. Word count: 120-150 words.",
+                            'instagram': f"Create an Instagram post based on: {base_campaign_content}. Use trendy hashtags, emojis, and visual appeal. Instagram style: aesthetic, lifestyle-focused, shorter text. Word count: 80-120 words.",
+                            'twitter': f"Create a Twitter post based on: {base_campaign_content}. Use concise language, relevant hashtags, and strong call-to-action. Twitter style: brief, punchy, news-like. Word count: 50-80 words (under 280 characters).",
+                            'linkedin': f"Create a LinkedIn post based on: {base_campaign_content}. Use professional tone, industry insights, and business value. LinkedIn style: professional, informative, B2B focused. Word count: 100-130 words.",
+                            'youtube': f"Create a YouTube description based on: {base_campaign_content}. Use detailed description, keywords, and clear value proposition. YouTube style: descriptive, SEO-friendly, action-oriented. Word count: 150-200 words.",
+                            'tiktok': f"Create a TikTok caption based on: {base_campaign_content}. Use trendy language, fun emojis, and viral appeal. TikTok style: casual, entertaining, Gen-Z friendly. Word count: 60-100 words."
+                        }
+                        
+                        platform_prompt = platform_specific_prompts.get(platform.lower(), 
+                            f"Create a {platform} post based on: {base_campaign_content}. Use platform-appropriate style and formatting."
+                        )
+                        
                         # Format the ChatGPT-generated content for specific social media platform
                         platform_content_result = await ai_service.format_custom_content(
-                            post_title=campaign_title,
-                            post_content=base_campaign_content,
+                            post_title=f"{platform.title()} Post: {campaign_title}",
+                            post_content=platform_prompt,
                             word_count=agent_data.get('word_count', '100'),
                             platforms=[platform],
                             use_web_research=agent_data.get('use_web_research', False),
