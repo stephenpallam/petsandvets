@@ -1383,6 +1383,23 @@ Best regards,
     }
   };
 
+  // Helper function to check if template has customer personalization placeholders
+  const hasCustomerPlaceholders = (content) => {
+    const customerPlaceholders = ['[CUSTOMER_NAME]', '[PET_NAME]', '[PET_NAMES]'];
+    return customerPlaceholders.some(placeholder => content.includes(placeholder));
+  };
+
+  // Filter templates based on personalization setting
+  const filterTemplatesByPersonalization = (templates, isPersonalized) => {
+    if (isPersonalized) {
+      // Show all templates when personalization is enabled
+      return templates;
+    } else {
+      // Show only templates without customer placeholders when personalization is disabled
+      return templates.filter(template => !hasCustomerPlaceholders(template.content));
+    }
+  };
+
   // Fetch email and SMS templates
   const fetchTemplates = async () => {
     setLoadingTemplates(true);
