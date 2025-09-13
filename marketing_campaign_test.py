@@ -839,8 +839,8 @@ class MarketingCampaignTester:
                     
                     execution_result = await response.json()
                 
-                # Get generated posts
-                url = f"{self.backend_url}/api/ai-posts?agent_id={agent_id}"
+                # Get generated posts (they should be in review status)
+                url = f"{self.backend_url}/api/ai-posts/in-review"
                 async with session.get(url, headers=headers, timeout=10) as response:
                     if response.status != 200:
                         self.log_test_result(
@@ -852,7 +852,9 @@ class MarketingCampaignTester:
                         return False
                     
                     posts_data = await response.json()
-                    posts = posts_data.get("posts", [])
+                    all_posts = posts_data.get("posts", [])
+                    # Filter posts for this specific agent
+                    posts = [p for p in all_posts if p.get("agent_id") == agent_id]
                 
                 # Analyze SMS character limits
                 sms_posts = [p for p in posts if "sms" in str(p).lower() or len(p.get("content", "")) < 300]
