@@ -7523,6 +7523,7 @@ Example:
                           placeholder="Select an SMS template..."
                           templateType="sms"
                           isPersonalized={marketingMode.smsPersonalized}
+                          showCampaignTemplates={['topic', 'holiday'].includes(marketingMode.contentType)}
                         />
                         <label className="block text-sm font-medium text-gray-700 mb-2">SMS Template</label>
                         <textarea
