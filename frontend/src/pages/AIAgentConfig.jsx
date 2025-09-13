@@ -136,6 +136,11 @@ const AIAgentConfig = () => {
   const [availableEmployees, setAvailableEmployees] = useState([]);
   const [newEmailRecipient, setNewEmailRecipient] = useState('');
   
+  // Template management state
+  const [emailTemplates, setEmailTemplates] = useState([]);
+  const [smsTemplates, setSmsTemplates] = useState([]);
+  const [loadingTemplates, setLoadingTemplates] = useState(false);
+  
   // Pay period settings
   const [defaultPayPeriods, setDefaultPayPeriods] = useState([]);
   const [pastPayPeriods, setPastPayPeriods] = useState([]);
