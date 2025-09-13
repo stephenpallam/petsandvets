@@ -47,8 +47,7 @@ class MarketingCampaignDuplicatePreventionTester:
         self.test_results = []
         self.backend_url = os.environ.get('FRONTEND_URL', 'https://marketing-agent.preview.emergentagent.com')
         self.auth_token = None
-        self.created_template_ids = []
-        self.created_placeholder_ids = []
+        self.created_agent_ids = []
         
     async def connect(self):
         """Connect to MongoDB"""
