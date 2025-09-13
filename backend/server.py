@@ -11811,25 +11811,58 @@ async def initialize_default_templates(
             }
         ]
         
-        # Initialize default SMS templates
+        # Initialize default SMS templates (mix of personalized and non-personalized)
         default_sms_templates = [
+            # Personalized SMS templates (with customer/pet placeholders)
             {
-                "name": "Appointment Reminder",
+                "name": "Personalized Appointment Reminder",
                 "type": "sms",
                 "content": "Hi [CUSTOMER_NAME]! [PET_NAME] has an appointment with us soon. Need to reschedule? Call [PHONE_NUMBER]. Thanks!",
-                "description": "Standard appointment reminder SMS"
+                "description": "Personalized appointment reminder with customer and pet names"
             },
             {
-                "name": "Welcome New Customer",
+                "name": "Personalized Welcome SMS",
                 "type": "sms",
                 "content": "Welcome to [BUSINESS_NAME], [CUSTOMER_NAME]! We're excited to care for [PET_NAME]. Book online: [BOOK_NOW_LINK]",
-                "description": "Welcome SMS for new customers"
+                "description": "Personalized welcome SMS for new customers"
             },
             {
-                "name": "Marketing Promotion",
+                "name": "Personalized Special Offer",
                 "type": "sms",
                 "content": "Hi [CUSTOMER_NAME]! Special offer for [PET_NAME] at [BUSINESS_NAME]. Book now: [BOOK_NOW_LINK] or call [PHONE_NUMBER]",
-                "description": "General marketing promotion SMS"
+                "description": "Personalized marketing promotion SMS"
+            },
+            
+            # Non-personalized SMS templates (only global placeholders)
+            {
+                "name": "General Appointment Reminder",
+                "type": "sms",
+                "content": "Reminder: Your pet has an upcoming appointment at [BUSINESS_NAME]. Call [PHONE_NUMBER] to reschedule if needed.",
+                "description": "General appointment reminder without personalization"
+            },
+            {
+                "name": "Service Announcement",
+                "type": "sms", 
+                "content": "Important update from [BUSINESS_NAME]! Check our website [WEBSITE_LINK] or call [PHONE_NUMBER] for details.",
+                "description": "General service announcement SMS"
+            },
+            {
+                "name": "Holiday Hours Alert",
+                "type": "sms",
+                "content": "Holiday hours update from [BUSINESS_NAME]. Check [WEBSITE_LINK] or call [PHONE_NUMBER] for our schedule. Emergency care available!",
+                "description": "Holiday hours notification SMS"
+            },
+            {
+                "name": "Health Tip of the Month",
+                "type": "sms",
+                "content": "Monthly pet health tip from [BUSINESS_NAME]: Regular checkups keep pets healthy! Schedule yours: [BOOK_NOW_LINK] or call [PHONE_NUMBER]",
+                "description": "Monthly health tip SMS for all customers"
+            },
+            {
+                "name": "Special Promotion Alert",
+                "type": "sms",
+                "content": "🎉 Special offer at [BUSINESS_NAME]! Limited time promotion on pet care services. Book now: [BOOK_NOW_LINK] or call [PHONE_NUMBER]",
+                "description": "General promotion alert without personalization"
             }
         ]
         
