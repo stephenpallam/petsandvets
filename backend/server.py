@@ -6291,7 +6291,7 @@ async def replace_global_placeholders(content: str, db) -> str:
             '[PHONE_NUMBER]': '(555) 123-4567',
             '[WEBSITE_LINK]': 'https://yourvet.com',
             '[BOOK_NOW_LINK]': 'https://yourvet.com/book',
-            '[BUSINESS_ADDRESS]': '123 Pet Care Avenue, Pet City, PC 12345'
+            '[BUSINESS_ADDRESS]': '43114 Peacock Market Plaza, Suite F110\nSouth Riding, VA 20152'
         }
         
         # Merge database placeholders with defaults
