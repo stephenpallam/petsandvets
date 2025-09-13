@@ -7803,6 +7803,10 @@ async def process_scheduled_sms_post(post: dict, current_time: datetime):
             raise Exception("Failed to generate SMS content")
         
         sms_content = content_result.get("content", "")
+        # Clean up any markdown formatting
+        sms_content = sms_content.replace('**Title:**', '').replace('**Content:**', '')
+        sms_content = sms_content.replace('**', '').replace('Title:', '').replace('Content:', '')
+        sms_content = sms_content.strip()
         
         # Update the post with generated content and mark as published
         await db.ai_posts.update_one(
