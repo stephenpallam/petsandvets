@@ -7376,7 +7376,15 @@ Example:
                           placeholder="Select an email template..."
                           templateType="email"
                         />
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Email Template</label>
+                        <div className="flex items-center justify-between mb-2">
+                          <label className="block text-sm font-medium text-gray-700">Email Template</label>
+                          <FullScreenEditorButton
+                            content={marketingMode.emailTemplate}
+                            title="Marketing Campaign - Email Template"
+                            onSave={(content) => setMarketingMode(prev => ({ ...prev, emailTemplate: content }))}
+                            className="text-xs"
+                          />
+                        </div>
                         <textarea
                           value={marketingMode.emailTemplate}
                           onChange={(e) => setMarketingMode(prev => ({ ...prev, emailTemplate: e.target.value }))}
