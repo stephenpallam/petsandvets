@@ -6706,6 +6706,10 @@ Located at: [BUSINESS_ADDRESS]"""
                                 
                                 if email_content_result and email_content_result.get('content'):
                                     email_template_with_content = email_content_result['content']
+                                    # Clean up any markdown formatting
+                                    email_template_with_content = email_template_with_content.replace('**Title:**', '').replace('**Content:**', '')
+                                    email_template_with_content = email_template_with_content.replace('**', '').replace('Title:', '').replace('Content:', '')
+                                    email_template_with_content = email_template_with_content.strip()
                                 else:
                                     # Fallback: Combine template and base content
                                     email_template_with_content = f"{email_template}\n\n{base_campaign_content}"
