@@ -1390,14 +1390,31 @@ Best regards,
     return customerPlaceholders.some(placeholder => content.includes(placeholder));
   };
 
-  // Filter templates based on personalization setting
-  const filterTemplatesByPersonalization = (templates, isPersonalized) => {
+  // Helper function to identify ChatGPT campaign templates
+  const isCampaignTemplate = (template) => {
+    return template.name.includes('Campaign') && template.name.includes('ChatGPT');
+  };
+
+  // Filter templates based on personalization setting and campaign type
+  const filterTemplatesByPersonalization = (templates, isPersonalized, showCampaignTemplates = false) => {
+    let filteredTemplates = templates;
+    
+    // First filter for campaign templates if needed
+    if (showCampaignTemplates) {
+      // Show only campaign templates for Topic/Holiday content types
+      filteredTemplates = templates.filter(template => isCampaignTemplate(template));
+    } else {
+      // Exclude campaign templates for other content types (custom campaigns)
+      filteredTemplates = templates.filter(template => !isCampaignTemplate(template));
+    }
+    
+    // Then filter by personalization
     if (isPersonalized) {
-      // Show all templates when personalization is enabled
-      return templates;
+      // Show all filtered templates when personalization is enabled
+      return filteredTemplates;
     } else {
       // Show only templates without customer placeholders when personalization is disabled
-      return templates.filter(template => !hasCustomerPlaceholders(template.content));
+      return filteredTemplates.filter(template => !hasCustomerPlaceholders(template.content));
     }
   };
 
