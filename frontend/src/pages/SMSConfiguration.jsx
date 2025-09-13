@@ -286,7 +286,7 @@ const SMSConfiguration = () => {
   const handleCancelTemplateForm = () => {
     setTemplateForm({ name: '', content: '', description: '' });
     setEditingTemplate(null);
-    setShowTemplateForm(false);
+    setShowTemplateModal(false);
   };
 
   if (authLoading || loading) {
