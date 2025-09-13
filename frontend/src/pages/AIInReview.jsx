@@ -401,7 +401,7 @@ const SMSContentPreview = ({ post }) => {
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
         <div className="text-sm text-gray-600 mb-2 font-medium">📝 Original Template</div>
         <div className="bg-white p-3 rounded border">
-          <SMSContentWithLinks 
+          <SMSCustomerContentWithLinks 
             content={post.content} 
             className="text-gray-700 text-sm"
           />
