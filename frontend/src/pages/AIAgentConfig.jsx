@@ -5718,6 +5718,17 @@ Example:
 
                         {/* SMS Template */}
                         <div className="space-y-4">
+                          <TemplateDropdown
+                            templates={smsTemplates}
+                            selectedValue={smsScheduledMode.smsContentTemplate}
+                            onSelect={(templateContent) => {
+                              if (templateContent.length <= 160) {
+                                setSmsScheduledMode(prev => ({ ...prev, smsContentTemplate: templateContent }));
+                              }
+                            }}
+                            placeholder="Select an SMS template..."
+                            templateType="sms"
+                          />
                           <label className="block text-sm font-medium text-gray-700 mb-2">
                             <MessageSquare className="h-4 w-4 inline mr-2" />
                             SMS Template * 
