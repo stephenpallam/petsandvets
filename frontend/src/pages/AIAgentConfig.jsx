@@ -1607,23 +1607,30 @@ Best regards,
     selectedValue, 
     onSelect, 
     placeholder = "Select a template...", 
-    templateType = "email" 
+    templateType = "email",
+    isPersonalized = true // New prop to control filtering
   }) => {
     const handleTemplateSelect = (template) => {
       onSelect(template.content);
     };
 
+    // Filter templates based on personalization setting
+    const filteredTemplates = filterTemplatesByPersonalization(templates, isPersonalized);
+
     return (
       <div className="mb-3">
         <label className="block text-sm font-medium text-gray-700 mb-2">
           📄 Quick Template Selection
+          {!isPersonalized && (
+            <span className="text-xs text-gray-500 ml-2">(Non-personalized templates only)</span>
+          )}
         </label>
         <div className="relative">
           <select
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm"
             onChange={(e) => {
               if (e.target.value) {
-                const template = templates.find(t => t.id === e.target.value);
+                const template = filteredTemplates.find(t => t.id === e.target.value);
                 if (template) {
                   handleTemplateSelect(template);
                 }
@@ -1632,7 +1639,7 @@ Best regards,
             defaultValue=""
           >
             <option value="" disabled>{placeholder}</option>
-            {templates.map(template => (
+            {filteredTemplates.map(template => (
               <option key={template.id} value={template.id}>
                 {template.name}
                 {template.description && ` - ${template.description.substring(0, 50)}${template.description.length > 50 ? '...' : ''}`}
@@ -1640,9 +1647,10 @@ Best regards,
             ))}
           </select>
         </div>
-        {templates.length === 0 && (
+        {filteredTemplates.length === 0 && (
           <p className="text-xs text-gray-500 mt-1">
-            No {templateType} templates available. Create templates in {templateType === 'email' ? 'Email' : 'SMS'} Configuration.
+            No {isPersonalized ? '' : 'non-personalized '}{templateType} templates available. 
+            {!isPersonalized && ' Create templates without [CUSTOMER_NAME] or [PET_NAME] placeholders in'} {templateType === 'email' ? 'Email' : 'SMS'} Configuration.
           </p>
         )}
       </div>
