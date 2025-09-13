@@ -190,6 +190,7 @@ async def test_email_subject_generation():
             agent_data = {
                 "agent_type": "marketing_agent",
                 "agent_name": "Email Subject Test Agent",
+                "mode": "adhoc",
                 "marketing_content_type": "topic",
                 "topic": "Winter Pet Care",
                 "marketing_channels": ["email"],
