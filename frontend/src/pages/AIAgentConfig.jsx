@@ -4387,6 +4387,13 @@ Best regards,
 
                         {/* Email Content Template */}
                         <div className="space-y-4">
+                          <TemplateDropdown
+                            templates={emailTemplates}
+                            selectedValue={emailScheduledMode.emailContentTemplate}
+                            onSelect={(templateContent) => handleEmailScheduledModeChange('emailContentTemplate', templateContent)}
+                            placeholder="Select an email template..."
+                            templateType="email"
+                          />
                           <label className="block text-sm font-medium text-gray-700 mb-2">
                             <FileText className="h-4 w-4 inline mr-2" />
                             Business Information & Email Content Template
