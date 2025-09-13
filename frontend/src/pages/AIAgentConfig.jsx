@@ -7723,20 +7723,32 @@ You can use placeholders like:
 
                 {/* Available Placeholders Reference */}
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                  <h4 className="text-sm font-medium text-gray-900 mb-3">📋 Available Placeholders:</h4>
+                  <h4 className="text-sm font-medium text-gray-900 mb-3">
+                    📋 Available Placeholders:
+                    {!fullScreenEditorPersonalized && (
+                      <span className="text-xs text-orange-600 ml-2">(Global placeholders only - personalization disabled)</span>
+                    )}
+                  </h4>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
-                    <div className="bg-white p-2 rounded border">
-                      <code style={{ color: 'rgb(41, 173, 211)' }}>[CUSTOMER_NAME]</code>
-                      <p className="text-gray-600 mt-1">Customer's full name</p>
-                    </div>
-                    <div className="bg-white p-2 rounded border">
-                      <code style={{ color: 'rgb(41, 173, 211)' }}>[PET_NAME]</code>
-                      <p className="text-gray-600 mt-1">Primary pet's name</p>
-                    </div>
-                    <div className="bg-white p-2 rounded border">
-                      <code style={{ color: 'rgb(41, 173, 211)' }}>[PET_NAMES]</code>
-                      <p className="text-gray-600 mt-1">All pet names</p>
-                    </div>
+                    {/* Customer/Pet placeholders - only show if personalization is enabled */}
+                    {fullScreenEditorPersonalized && (
+                      <>
+                        <div className="bg-white p-2 rounded border">
+                          <code style={{ color: 'rgb(41, 173, 211)' }}>[CUSTOMER_NAME]</code>
+                          <p className="text-gray-600 mt-1">Customer's full name</p>
+                        </div>
+                        <div className="bg-white p-2 rounded border">
+                          <code style={{ color: 'rgb(41, 173, 211)' }}>[PET_NAME]</code>
+                          <p className="text-gray-600 mt-1">Primary pet's name</p>
+                        </div>
+                        <div className="bg-white p-2 rounded border">
+                          <code style={{ color: 'rgb(41, 173, 211)' }}>[PET_NAMES]</code>
+                          <p className="text-gray-600 mt-1">All pet names</p>
+                        </div>
+                      </>
+                    )}
+                    
+                    {/* Global placeholders - always show */}
                     <div className="bg-white p-2 rounded border">
                       <code style={{ color: 'rgb(41, 173, 211)' }}>[WEBSITE_LINK]</code>
                       <p className="text-gray-600 mt-1">Website URL</p>
@@ -7748,6 +7760,14 @@ You can use placeholders like:
                     <div className="bg-white p-2 rounded border">
                       <code style={{ color: 'rgb(41, 173, 211)' }}>[PHONE_NUMBER]</code>
                       <p className="text-gray-600 mt-1">Business phone</p>
+                    </div>
+                    <div className="bg-white p-2 rounded border">
+                      <code style={{ color: 'rgb(41, 173, 211)' }}>[BUSINESS_NAME]</code>
+                      <p className="text-gray-600 mt-1">Business name</p>
+                    </div>
+                    <div className="bg-white p-2 rounded border">
+                      <code style={{ color: 'rgb(41, 173, 211)' }}>[BUSINESS_ADDRESS]</code>
+                      <p className="text-gray-600 mt-1">Business address</p>
                     </div>
                   </div>
                 </div>
