@@ -1372,6 +1372,36 @@ Best regards,
     }
   };
 
+  // Fetch email and SMS templates
+  const fetchTemplates = async () => {
+    setLoadingTemplates(true);
+    try {
+      // Fetch email templates
+      const emailResponse = await fetch(`${API_BASE_URL}/api/templates?template_type=email`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (emailResponse.ok) {
+        const emailData = await emailResponse.json();
+        setEmailTemplates(emailData);
+      }
+
+      // Fetch SMS templates
+      const smsResponse = await fetch(`${API_BASE_URL}/api/templates?template_type=sms`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (smsResponse.ok) {
+        const smsData = await smsResponse.json();
+        setSmsTemplates(smsData);
+      }
+    } catch (error) {
+      console.error('Error fetching templates:', error);
+    } finally {
+      setLoadingTemplates(false);
+    }
+  };
+
   // Helper function to get customer's full name
   const getCustomerFullName = (customer) => {
     if (customer.first_name && customer.last_name) {
