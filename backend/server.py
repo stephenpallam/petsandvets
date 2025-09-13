@@ -7025,8 +7025,19 @@ Located at: [BUSINESS_ADDRESS]"""
                             logger.info(f"Using ChatGPT campaign template for SMS with {len(condensed_content)} char content")
                         except Exception as e:
                             logger.error(f"Error generating condensed SMS content: {str(e)}")
-                            # Fallback: Use truncated content
-                            condensed_content = base_campaign_content[:80] + "..." if len(base_campaign_content) > 80 else base_campaign_content
+                            # Fallback: Create simple topic-based content
+                            topic_name = campaign_title.replace('Marketing Campaign - ', '')
+                            if 'nutrition' in topic_name.lower():
+                                condensed_content = "Proper nutrition keeps your pet healthy!"
+                            elif 'dental' in topic_name.lower():
+                                condensed_content = "Keep your pet's teeth clean!"
+                            elif 'grooming' in topic_name.lower():
+                                condensed_content = "Regular grooming keeps pets healthy!"
+                            elif 'vaccination' in topic_name.lower():
+                                condensed_content = "Protect your pet with vaccinations!"
+                            else:
+                                condensed_content = "Quality care for your pet!"
+                            
                             sms_template_with_content = sms_template.replace('[CHATGPT_CONTENT]', condensed_content)
                     elif not sms_template or sms_template == base_campaign_content:
                         # No template specified or template is just the base content - use default ChatGPT campaign template
