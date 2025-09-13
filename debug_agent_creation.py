@@ -16,7 +16,7 @@ backend_dir = Path(__file__).parent / "backend"
 load_dotenv(backend_dir / '.env')
 
 async def debug_agent_creation():
-    backend_url = os.environ.get('FRONTEND_URL', 'https://marketing-agent.preview.emergentagent.com')
+    backend_url = os.environ.get('FRONTEND_URL', 'https://petsai-templates.preview.emergentagent.com')
     
     # Authenticate first
     ssl_context = ssl.create_default_context()

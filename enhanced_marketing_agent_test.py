@@ -45,7 +45,7 @@ class EnhancedMarketingAgentTester:
         self.client = None
         self.db = None
         self.test_results = []
-        self.backend_url = os.environ.get('FRONTEND_URL', 'https://marketing-agent.preview.emergentagent.com')
+        self.backend_url = os.environ.get('FRONTEND_URL', 'https://petsai-templates.preview.emergentagent.com')
         self.auth_token = None
         self.created_agent_ids = []  # Store multiple agent IDs
         self.generated_posts = []  # Store generated posts for analysis

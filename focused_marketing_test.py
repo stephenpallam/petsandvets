@@ -32,7 +32,7 @@ async def test_platform_differentiation():
     """Test platform differentiation specifically"""
     mongo_url = os.environ['MONGO_URL']
     db_name = os.environ['DB_NAME']
-    backend_url = os.environ.get('FRONTEND_URL', 'https://marketing-agent.preview.emergentagent.com')
+    backend_url = os.environ.get('FRONTEND_URL', 'https://petsai-templates.preview.emergentagent.com')
     
     client = AsyncIOMotorClient(mongo_url)
     db = client[db_name]
@@ -157,7 +157,7 @@ async def test_email_subject_generation():
     """Test email subject generation specifically"""
     mongo_url = os.environ['MONGO_URL']
     db_name = os.environ['DB_NAME']
-    backend_url = os.environ.get('FRONTEND_URL', 'https://marketing-agent.preview.emergentagent.com')
+    backend_url = os.environ.get('FRONTEND_URL', 'https://petsai-templates.preview.emergentagent.com')
     
     client = AsyncIOMotorClient(mongo_url)
     db = client[db_name]

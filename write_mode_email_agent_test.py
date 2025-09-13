@@ -36,7 +36,7 @@ class WriteEmailAgentTester:
     def __init__(self):
         self.mongo_url = os.environ['MONGO_URL']
         self.db_name = os.environ['DB_NAME']
-        self.backend_url = os.environ.get('FRONTEND_URL', 'https://marketing-agent.preview.emergentagent.com')
+        self.backend_url = os.environ.get('FRONTEND_URL', 'https://petsai-templates.preview.emergentagent.com')
         self.api_url = f"{self.backend_url}/api"
         self.client = None
         self.db = None
