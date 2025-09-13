@@ -1801,6 +1801,27 @@ const AIInReview = () => {
                     />
                   </div>
 
+                  {/* Email Subject - only show for email posts */}
+                  {(editingPost.agent_type === 'email' || editingPost.agent_type === 'email_agent' || 
+                    (editingPost.agent_type === 'marketing_agent' && editingPost.marketing_channel === 'email')) && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Email Subject <span className="text-gray-500 text-xs">(max 100 characters)</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={editForm.email_subject}
+                        onChange={(e) => handleEditFormChange('email_subject', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter email subject line"
+                        maxLength={100}
+                      />
+                      <div className="text-xs text-gray-500 mt-1">
+                        {editForm.email_subject.length}/100 characters
+                      </div>
+                    </div>
+                  )}
+
                   {/* Content */}
                   <div>
                     <div className="flex items-center justify-between mb-2">
