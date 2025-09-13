@@ -602,7 +602,8 @@ const AIInReview = () => {
     setEditForm({
       content: post.content || '',
       image_text: post.image_text || '',
-      topic: post.topic || ''
+      topic: post.topic || '',
+      email_subject: post.email_subject || ''
     });
     setShowEditModal(true);
   };
