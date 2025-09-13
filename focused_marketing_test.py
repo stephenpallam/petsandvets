@@ -65,6 +65,7 @@ async def test_platform_differentiation():
             agent_data = {
                 "agent_type": "marketing_agent",
                 "agent_name": "Platform Test Agent",
+                "mode": "adhoc",
                 "marketing_content_type": "topic",
                 "topic": "Pet Vaccination Tips",
                 "marketing_channels": ["social_media"],
