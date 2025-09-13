@@ -6349,7 +6349,7 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
             try:
                 topic_content_result = await ai_service.format_custom_content(
                     post_title=f"Marketing Content: {topic}",
-                    post_content=f"Create professional, engaging marketing content about {topic} for a veterinary clinic. Write 150-200 words without any titles, headers, or formatting. Focus on benefits, importance, and actionable advice for pet owners. Write in a warm, professional tone suitable for email campaigns.",
+                    post_content=f"Create professional, engaging marketing content about {topic} for a veterinary clinic. Write 150-200 words with proper paragraph structure (use line breaks between paragraphs). Focus on benefits, importance, and actionable advice for pet owners. Write in a warm, professional tone suitable for email campaigns. Format with clear paragraph breaks for better readability.",
                     word_count="180",  # 150-200 words as requested
                     platforms=['general'],  # Generic platform for base content
                     use_web_research=agent_data.get('use_web_research', False),
