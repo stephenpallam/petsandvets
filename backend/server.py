@@ -6821,9 +6821,16 @@ Located at: [BUSINESS_ADDRESS]"""
                             
                             if email_content_result and email_content_result.get('content'):
                                 final_email_content = email_content_result['content']
-                                # Clean up any markdown formatting
-                                final_email_content = final_email_content.replace('**Title:**', '').replace('**Content:**', '')
-                                final_email_content = final_email_content.replace('**', '').replace('Title:', '').replace('Content:', '')
+                                # Clean up any markdown formatting - comprehensive cleanup
+                                import re
+                                # Remove markdown title patterns
+                                final_email_content = re.sub(r'\*\*Title:.*?\*\*', '', final_email_content, flags=re.IGNORECASE)
+                                final_email_content = re.sub(r'\*\*Content:\*\*', '', final_email_content, flags=re.IGNORECASE)
+                                final_email_content = re.sub(r'Title:.*?\n', '', final_email_content, flags=re.IGNORECASE)
+                                final_email_content = re.sub(r'Content:\s*', '', final_email_content, flags=re.IGNORECASE)
+                                # Remove any remaining markdown formatting
+                                final_email_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', final_email_content)  # Bold text
+                                final_email_content = re.sub(r'\*([^*]+)\*', r'\1', final_email_content)    # Italic text
                                 final_email_content = final_email_content.strip()
                             else:
                                 # Fallback: Remove placeholders from template and combine with base content
