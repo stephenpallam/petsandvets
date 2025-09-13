@@ -324,6 +324,13 @@ const SMSContentPreview = ({ post }) => {
     const smsLink = post.sms_link || 'https://petsandvetsanimalhospital.com';
     previewContent = previewContent.replace(/\[LINK\]/g, smsLink);
     
+    // Replace global placeholders with actual business information
+    previewContent = previewContent.replace(/\[BUSINESS_NAME\]/g, 'Pets and Vets Animal Hospital');
+    previewContent = previewContent.replace(/\[PHONE_NUMBER\]/g, '(703) 957-3297');
+    previewContent = previewContent.replace(/\[WEBSITE_LINK\]/g, 'https://petsandvetsanimalhospital.com');
+    previewContent = previewContent.replace(/\[BOOK_NOW_LINK\]/g, 'https://petsandvetsanimalhospital.com/book');
+    previewContent = previewContent.replace(/\[BUSINESS_ADDRESS\]/g, '43114 Peacock Market Plaza, Suite F110\nSouth Riding, VA 20152');
+    
     return previewContent;
   };
 
@@ -337,56 +344,70 @@ const SMSContentPreview = ({ post }) => {
   }
 
   if (error || !customerPreview) {
+    // For non-personalized SMS or when no customer data available
+    const isPersonalized = post.marketing_sms_personalized !== false && 
+                          (post.content && (post.content.includes('[CUSTOMER_NAME]') || 
+                                           post.content.includes('[PET_NAME]') || 
+                                           post.content.includes('[PET_NAMES]')));
+    
     return (
       <div className="space-y-4">
-        {/* Error/No Customer Message */}
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-          <div className="text-sm text-yellow-700 mb-2 font-medium">⚠️ SMS Preview Unavailable</div>
-          <div className="text-yellow-800 text-sm">
-            {error || 'No customers found in database. Please add customers to see personalized SMS preview.'}
+        {/* Show SMS content directly for non-personalized messages */}
+        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+          <div className="text-sm text-orange-600 mb-2 font-medium">
+            📱 {isPersonalized ? 'SMS Preview Unavailable' : 'SMS Preview Content'}
           </div>
-        </div>
-        
-        {/* Raw Template for Reference */}
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-          <div className="text-sm text-gray-600 mb-2 font-medium">📝 SMS Template</div>
-          <div className="whitespace-pre-wrap text-gray-700 text-sm bg-white p-3 rounded border">
-            {post.content}
-          </div>
+          {isPersonalized ? (
+            <div className="text-orange-800 text-sm">
+              {error || 'No customers found in database. Please add customers to see personalized SMS preview.'}
+            </div>
+          ) : (
+            <div className="bg-white p-3 rounded border">
+              <SMSCustomerContentWithLinks 
+                content={post.content} 
+                className="text-gray-900 leading-relaxed"
+              />
+            </div>
+          )}
         </div>
       </div>
     );
   }
 
+  // Check if this is a personalized SMS
+  const isPersonalized = post.marketing_sms_personalized !== false && 
+                        (post.content && (post.content.includes('[CUSTOMER_NAME]') || 
+                                         post.content.includes('[PET_NAME]') || 
+                                         post.content.includes('[PET_NAMES]')));
+
   return (
     <div className="space-y-4">
       {/* SMS Preview with Real Customer Data */}
       <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-        <div className="text-sm text-orange-600 mb-2 font-medium">📱 SMS Preview (First Customer)</div>
-        <div className="whitespace-pre-wrap text-gray-900 leading-relaxed bg-white p-3 rounded border">
-          {getPreviewContent()}
+        <div className="text-sm text-orange-600 mb-2 font-medium">
+          📱 {isPersonalized ? 'SMS Preview (First Customer)' : 'SMS Preview Content'}
         </div>
-        <div className="mt-2 text-xs text-orange-600">
-          Preview for: {customerPreview.customer_name || 
-                      customerPreview.name || 
-                      customerPreview.owner_first_name || 
-                      customerPreview.first_name || 
-                      'Customer'} 
-          {customerPreview.phone_number || 
-           customerPreview.phone || 
-           customerPreview.owner_phone ? 
-            ` (${customerPreview.phone_number || customerPreview.phone || customerPreview.owner_phone})` : 
-            ' (No phone number)'
-          }
+        <div className="bg-white p-3 rounded border">
+          <SMSCustomerContentWithLinks 
+            content={getPreviewContent()} 
+            className="text-gray-900 leading-relaxed"
+          />
         </div>
-      </div>
-      
-      {/* Raw Template for Reference */}
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-        <div className="text-sm text-gray-600 mb-2 font-medium">📝 Original Template</div>
-        <div className="whitespace-pre-wrap text-gray-700 text-sm bg-white p-3 rounded border">
-          {post.content}
-        </div>
+        {isPersonalized && (
+          <div className="mt-2 text-xs text-orange-600">
+            Preview for: {customerPreview.customer_name || 
+                        customerPreview.name || 
+                        customerPreview.owner_first_name || 
+                        customerPreview.first_name || 
+                        'Customer'} 
+            {customerPreview.phone_number || 
+             customerPreview.phone || 
+             customerPreview.owner_phone ? 
+              ` (${customerPreview.phone_number || customerPreview.phone || customerPreview.owner_phone})` : 
+              ' (No phone number)'
+            }
+          </div>
+        )}
       </div>
     </div>
   );
