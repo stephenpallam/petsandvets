@@ -6574,36 +6574,52 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                     # EMAIL: Use base content + template + personalization (if enabled)
                     email_template = agent_data.get('email_content_template', base_campaign_content)
                     
-                    if agent_data.get('marketing_email_personalized', True) and sample_customer_data:
-                        # PERSONALIZED EMAIL: Use template with placeholders + base content + customer data
-                        try:
-                            # Generate email content using ChatGPT with template and base content
-                            email_content_prompt = f"""
-                            Base marketing content: {base_campaign_content}
-                            
-                            Email template: {email_template}
-                            
-                            Create a professional email combining the marketing content with the template format. 
-                            Use placeholders [CUSTOMER_NAME], [PET_NAME], and [PET_NAMES] for personalization.
-                            """
-                            
-                            email_content_result = await ai_service.format_custom_content(
-                                post_title=f"Email: {campaign_title}",
-                                post_content=email_content_prompt,
-                                word_count="200",
-                                platforms=['email'],
-                                use_web_research=False,
-                                image_text="",
-                                track_usage=True,
-                                user_id="admin",
-                                agent_id=agent_id
-                            )
-                            
-                            if email_content_result and email_content_result.get('content'):
-                                email_template_with_content = email_content_result['content']
-                            else:
-                                # Fallback: Combine template and base content
+                    # Check if template has ChatGPT placeholder
+                    if '[CHATGPT_CONTENT]' in email_template:
+                        # Use ChatGPT campaign template - replace placeholder with generated content
+                        email_template_with_content = email_template.replace('[CHATGPT_CONTENT]', base_campaign_content)
+                        logger.info("Using ChatGPT campaign template for email")
+                    else:
+                        # Use traditional template logic
+                        if agent_data.get('marketing_email_personalized', True) and sample_customer_data:
+                            # PERSONALIZED EMAIL: Use template with placeholders + base content + customer data
+                            try:
+                                # Generate email content using ChatGPT with template and base content
+                                email_content_prompt = f"""
+                                Base marketing content: {base_campaign_content}
+                                
+                                Email template: {email_template}
+                                
+                                Create a professional email combining the marketing content with the template format. 
+                                Use placeholders [CUSTOMER_NAME], [PET_NAME], and [PET_NAMES] for personalization.
+                                """
+                                
+                                email_content_result = await ai_service.format_custom_content(
+                                    post_title=f"Email: {campaign_title}",
+                                    post_content=email_content_prompt,
+                                    word_count="200",
+                                    platforms=['email'],
+                                    use_web_research=False,
+                                    image_text="",
+                                    track_usage=True,
+                                    user_id="admin",
+                                    agent_id=agent_id
+                                )
+                                
+                                if email_content_result and email_content_result.get('content'):
+                                    email_template_with_content = email_content_result['content']
+                                else:
+                                    # Fallback: Combine template and base content
+                                    email_template_with_content = f"{email_template}\n\n{base_campaign_content}"
+                            except Exception as e:
+                                logger.error(f"Error generating personalized email content: {str(e)}")
+                                # Fallback to simple combination
                                 email_template_with_content = f"{email_template}\n\n{base_campaign_content}"
+                        else:
+                            # NON-PERSONALIZED EMAIL: Use template + base content without customer data
+                            email_template_with_content = f"{email_template}\n\n{base_campaign_content}"
+                    
+                    if agent_data.get('marketing_email_personalized', True) and sample_customer_data:
                             
                             # Apply personalization to the generated email content
                             personalized_content = email_template_with_content.replace('[CUSTOMER_NAME]', sample_customer_data['customer_name'])
