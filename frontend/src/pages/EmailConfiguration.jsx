@@ -633,7 +633,7 @@ const EmailConfiguration = () => {
                         </div>
                         <button
                           type="button"
-                          onClick={() => setShowTemplateForm(true)}
+                          onClick={() => setShowTemplateModal(true)}
                           className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white transition-colors"
                           style={{ backgroundColor: '#29add3' }}
                           onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
