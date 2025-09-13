@@ -4464,10 +4464,18 @@ Best regards,
                             placeholder="Select an email template..."
                             templateType="email"
                           />
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            <FileText className="h-4 w-4 inline mr-2" />
-                            Business Information & Email Content Template
-                          </label>
+                          <div className="flex items-center justify-between mb-2">
+                            <label className="block text-sm font-medium text-gray-700">
+                              <FileText className="h-4 w-4 inline mr-2" />
+                              Business Information & Email Content Template
+                            </label>
+                            <FullScreenEditorButton
+                              content={emailScheduledMode.emailContentTemplate}
+                              title="Holiday Email Agent - Email Template"
+                              onSave={(content) => handleEmailScheduledModeChange('emailContentTemplate', content)}
+                              className="text-xs"
+                            />
+                          </div>
                           <textarea
                             value={emailScheduledMode.emailContentTemplate}
                             onChange={(e) => handleEmailScheduledModeChange('emailContentTemplate', e.target.value)}
