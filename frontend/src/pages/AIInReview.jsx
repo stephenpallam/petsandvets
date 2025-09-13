@@ -64,15 +64,81 @@ const formatContentWithLinks = (content) => {
   return formattedContent;
 };
 
-// Component to render content with clickable links (for emails)
-const ContentWithLinks = ({ content, className = "" }) => {
-  const formattedContent = formatContentWithLinks(content);
+// Component for SMS customer preview with proper link styling
+const SMSCustomerContentWithLinks = ({ content, className = "" }) => {
+  if (!content) return <span className={className}>{content}</span>;
+  
+  // First handle text + URL patterns that should be replaced together
+  let processedContent = content;
+  
+  // Replace "book online: URL" or "book: URL" patterns with just "Book Now"
+  processedContent = processedContent.replace(
+    /(book\s*(?:online|now)?:\s*)(https:\/\/petsandvetsanimalhospital\.com\/book\b[^\s]*)/gi,
+    'BOOKNOW_PLACEHOLDER'
+  );
+  
+  // Replace "visit: URL" or "website: URL" patterns with just "Visit Our Website"  
+  processedContent = processedContent.replace(
+    /(visit|website):\s*(https:\/\/petsandvetsanimalhospital\.com\b[^\s]*)/gi,
+    'WEBSITE_PLACEHOLDER'
+  );
+  
+  // Split content by URLs and placeholders
+  const parts = processedContent.split(/(BOOKNOW_PLACEHOLDER|WEBSITE_PLACEHOLDER|https?:\/\/[^\s]+)/g);
   
   return (
-    <div 
-      className={`whitespace-pre-wrap ${className}`}
-      dangerouslySetInnerHTML={{ __html: formattedContent }}
-    />
+    <span className={className}>
+      {parts.map((part, index) => {
+        if (part === 'BOOKNOW_PLACEHOLDER') {
+          return (
+            <a 
+              key={index}
+              href="https://petsandvetsanimalhospital.com/book" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-800 font-medium underline"
+            >
+              Book Now
+            </a>
+          );
+        } else if (part === 'WEBSITE_PLACEHOLDER') {
+          return (
+            <a 
+              key={index}
+              href="https://petsandvetsanimalhospital.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-800 font-medium underline"
+            >
+              Visit Our Website
+            </a>
+          );
+        } else if (part.match(/^https?:\/\/[^\s]+$/)) {
+          // Handle remaining standalone URLs
+          let displayText = part;
+          if (part.includes('petsandvetsanimalhospital.com/book')) {
+            displayText = 'Book Now';
+          } else if (part.includes('petsandvetsanimalhospital.com')) {
+            displayText = 'Visit Our Website';
+          }
+          
+          return (
+            <a 
+              key={index}
+              href={part} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-800 font-medium underline"
+            >
+              {displayText}
+            </a>
+          );
+        } else {
+          // Regular text
+          return part;
+        }
+      })}
+    </span>
   );
 };
 
