@@ -208,7 +208,7 @@ const SMSConfiguration = () => {
       if (response.ok) {
         setSuccess('SMS template created successfully!');
         setTemplateForm({ name: '', content: '', description: '' });
-        setShowTemplateForm(false);
+        setShowTemplateModal(false);
         fetchTemplates();
       } else {
         const errorData = await response.json();
