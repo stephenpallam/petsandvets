@@ -11762,25 +11762,52 @@ async def initialize_default_templates(
                 )
                 await db.global_placeholders.insert_one(placeholder.dict())
         
-        # Initialize default email templates
+        # Initialize default email templates (mix of personalized and non-personalized)
         default_email_templates = [
+            # Personalized templates (with customer/pet placeholders)
             {
-                "name": "Appointment Reminder",
+                "name": "Personalized Appointment Reminder",
                 "type": "email",
                 "content": "Dear [CUSTOMER_NAME],\n\nThis is a reminder that [PET_NAME] has an appointment scheduled with us.\n\nIf you need to reschedule, please contact us at [PHONE_NUMBER] or visit [WEBSITE_LINK].\n\nThank you,\n[BUSINESS_NAME]",
-                "description": "Standard appointment reminder email"
+                "description": "Personalized appointment reminder with customer and pet names"
             },
             {
-                "name": "Welcome New Customer",
+                "name": "Personalized Welcome Email",
                 "type": "email", 
                 "content": "Welcome to [BUSINESS_NAME], [CUSTOMER_NAME]!\n\nWe're excited to provide the best care for [PET_NAMES]. Our team is dedicated to keeping your furry family members healthy and happy.\n\nYou can book appointments online at [BOOK_NOW_LINK] or call us at [PHONE_NUMBER].\n\nWelcome to our family!",
-                "description": "Welcome email for new customers"
+                "description": "Personalized welcome email for new customers"
             },
             {
-                "name": "Marketing Promotion",
+                "name": "Personalized Marketing Offer",
                 "type": "email",
                 "content": "Hello [CUSTOMER_NAME],\n\nWe have a special offer for [PET_NAME]! Take advantage of our current promotions and give [PET_NAMES] the care they deserve.\n\nBook your appointment today: [BOOK_NOW_LINK]\n\nContact us: [PHONE_NUMBER]\nVisit us: [BUSINESS_ADDRESS]\n\nBest regards,\n[BUSINESS_NAME]",
-                "description": "General marketing promotion email"
+                "description": "Personalized marketing promotion with customer and pet names"
+            },
+            
+            # Non-personalized templates (only global placeholders)
+            {
+                "name": "General Service Announcement",
+                "type": "email",
+                "content": "Dear Valued Customer,\n\nWe wanted to inform you about our comprehensive veterinary services at [BUSINESS_NAME].\n\nOur services include:\n• Routine checkups and vaccinations\n• Emergency care services\n• Dental care and surgery\n• Grooming and boarding\n\nSchedule your appointment today!\n📞 Phone: [PHONE_NUMBER]\n🌐 Website: [WEBSITE_LINK]\n📅 Book Online: [BOOK_NOW_LINK]\n\nVisit us at: [BUSINESS_ADDRESS]\n\nThank you for choosing [BUSINESS_NAME]!",
+                "description": "General service announcement without personalization"
+            },
+            {
+                "name": "Holiday Hours Notice",
+                "type": "email",
+                "content": "Dear Customers,\n\nWe hope this message finds you well! We wanted to inform you about our holiday hours and services.\n\n[BUSINESS_NAME] will have modified hours during the holiday season. Please check our website for the most up-to-date schedule.\n\nFor urgent care needs, please contact us at [PHONE_NUMBER].\n\nRegular appointments can be scheduled online at [BOOK_NOW_LINK].\n\nThank you for your understanding and continued trust in our services.\n\nWarm regards,\nThe [BUSINESS_NAME] Team\n\n📍 [BUSINESS_ADDRESS]\n📞 [PHONE_NUMBER]\n🌐 [WEBSITE_LINK]",
+                "description": "Holiday hours notification for all customers"
+            },
+            {
+                "name": "Monthly Health Tips",
+                "type": "email",
+                "content": "Monthly Pet Health Tips from [BUSINESS_NAME]\n\nDear Pet Owners,\n\nHere are this month's essential pet health tips to keep your furry friends happy and healthy:\n\n🐾 Regular Exercise: Ensure your pets get adequate daily exercise\n🐾 Balanced Nutrition: Feed age-appropriate, high-quality food\n🐾 Preventive Care: Stay up-to-date with vaccinations and checkups\n🐾 Dental Health: Regular brushing prevents dental disease\n🐾 Parasite Prevention: Keep up with flea, tick, and worm prevention\n\nNeed professional advice or care? We're here to help!\n\n📞 Call us: [PHONE_NUMBER]\n🌐 Visit: [WEBSITE_LINK]\n📅 Book online: [BOOK_NOW_LINK]\n\nYour trusted partner in pet health,\n[BUSINESS_NAME]\n[BUSINESS_ADDRESS]",
+                "description": "Monthly health tips newsletter for all pet owners"
+            },
+            {
+                "name": "Seasonal Pet Care Reminder",
+                "type": "email",
+                "content": "Seasonal Pet Care Tips from [BUSINESS_NAME]\n\nAs the seasons change, so do your pet's needs!\n\nImportant reminders for this season:\n• Schedule your seasonal checkup\n• Update parasite prevention protocols\n• Review dietary needs for seasonal changes\n• Check for seasonal allergies or skin issues\n\nOur experienced veterinary team is ready to help ensure your pets stay healthy all year round.\n\nContact [BUSINESS_NAME] today:\n📞 [PHONE_NUMBER]\n🌐 [WEBSITE_LINK]\n📅 [BOOK_NOW_LINK]\n\nLocated at: [BUSINESS_ADDRESS]\n\nCaring for your pets through every season!",
+                "description": "Seasonal care reminders for all pet owners"
             }
         ]
         
