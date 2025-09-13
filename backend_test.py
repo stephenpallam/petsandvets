@@ -163,7 +163,7 @@ class MarketingCampaignDuplicatePreventionTester:
                         return False
                     
                     agent_result = await response.json()
-                    agent_id = agent_result.get("id")
+                    agent_id = agent_result.get("agent_id")
                     self.created_agent_ids.append(agent_id)
                 
                 # Wait a moment for agent creation to complete
@@ -288,7 +288,7 @@ class MarketingCampaignDuplicatePreventionTester:
                         return False
                     
                     agent_result = await response.json()
-                    agent_id = agent_result.get("id")
+                    agent_id = agent_result.get("agent_id")
                     self.created_agent_ids.append(agent_id)
                 
                 # Wait a moment for agent creation to complete
@@ -413,7 +413,7 @@ class MarketingCampaignDuplicatePreventionTester:
                         return False
                     
                     agent_result = await response.json()
-                    agent_id = agent_result.get("id")
+                    agent_id = agent_result.get("agent_id")
                     self.created_agent_ids.append(agent_id)
                 
                 # Wait a moment for agent creation to complete
