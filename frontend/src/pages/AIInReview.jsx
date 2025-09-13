@@ -1233,20 +1233,57 @@ const AIInReview = () => {
                               </div>
                             </div>
 
-                            {/* Social Media/Email Post Content */}
+                            {/* Post Content - with channel-specific formatting */}
                             <div className="prose max-w-none">
-                              {/* Email Subject Line - only show for email posts */}
-                              {post.agent_type === 'email' && post.email_subject && (
+                              {/* Email Subject Line - for email posts and marketing agent email posts */}
+                              {((post.agent_type === 'email' || post.agent_type === 'email_agent') && post.email_subject) || 
+                               (post.agent_type === 'marketing_agent' && post.marketing_channel === 'email' && post.email_subject) ? (
                                 <div className="mb-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-400">
                                   <div className="text-sm font-medium text-blue-800 mb-1">Email Subject:</div>
                                   <div className="text-blue-900 font-semibold">{post.email_subject}</div>
                                 </div>
-                              )}
+                              ) : null}
                               
-                              {/* SMS Content with Customer Preview */}
-                              {post.agent_type === 'sms_agent' ? (
+                              {/* Marketing Agent Email Post */}
+                              {post.agent_type === 'marketing_agent' && post.marketing_channel === 'email' ? (
+                                <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                                  <div className="flex items-center space-x-2 mb-3">
+                                    <div className="w-3 h-3 rounded-full bg-purple-500"></div>
+                                    <span className="text-sm font-medium text-gray-700">Email Preview</span>
+                                  </div>
+                                  <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-purple-400">
+                                    <div className="whitespace-pre-wrap text-gray-900 leading-relaxed font-mono text-sm">
+                                      {post.content}
+                                    </div>
+                                  </div>
+                                </div>
+                              ) : 
+                              /* Marketing Agent SMS Post */
+                              post.agent_type === 'marketing_agent' && post.marketing_channel === 'sms' ? (
+                                <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                                  <div className="flex items-center space-x-2 mb-3">
+                                    <div className="w-3 h-3 rounded-full bg-orange-500"></div>
+                                    <span className="text-sm font-medium text-gray-700">SMS Preview</span>
+                                  </div>
+                                  <div className="bg-gray-900 rounded-lg p-4 max-w-xs">
+                                    <div className="bg-blue-500 text-white rounded-2xl rounded-bl-md px-4 py-2 text-sm">
+                                      {post.content}
+                                    </div>
+                                    <div className="text-xs text-gray-400 mt-1 text-right">
+                                      {post.content ? `${post.content.length}/160` : '0/160'}
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Show personalized preview if available */}
+                                  <SMSContentPreview post={post} />
+                                </div>
+                              ) : 
+                              /* Regular SMS Agent Posts */
+                              post.agent_type === 'sms_agent' ? (
                                 <SMSContentPreview post={post} />
-                              ) : (
+                              ) : 
+                              /* Default Content Display */
+                              (
                                 <div className="whitespace-pre-wrap text-gray-900 leading-relaxed">
                                   {post.content}
                                 </div>
