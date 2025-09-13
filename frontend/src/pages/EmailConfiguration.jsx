@@ -231,7 +231,7 @@ const EmailConfiguration = () => {
         setSuccess('Email template updated successfully!');
         setTemplateForm({ name: '', content: '', description: '' });
         setEditingTemplate(null);
-        setShowTemplateForm(false);
+        setShowTemplateModal(false);
         fetchTemplates();
       } else {
         const errorData = await response.json();
