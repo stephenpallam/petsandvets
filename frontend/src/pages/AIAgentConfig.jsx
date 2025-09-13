@@ -4958,6 +4958,14 @@ Example:
                                                 
                                                                         {/* Business Information & Email Content Template (from scheduled mode) */}
                                                                         <div className="space-y-4">
+                                                                          <TemplateDropdown
+                                                                            templates={emailTemplates}
+                                                                            selectedValue={emailRecurringMode.emailContentTemplate}
+                                                                            onSelect={(templateContent) => handleEmailRecurringModeChange('emailContentTemplate', templateContent)}
+                                                                            placeholder="Select an email template..."
+                                                                            templateType="email"
+                                                                            isPersonalized={true}
+                                                                          />
                                                                           <div className="flex items-center justify-between mb-2">
                                                                             <label className="block text-sm font-medium text-gray-700">
                                                                               <FileText className="h-4 w-4 inline mr-2" />
@@ -4968,6 +4976,7 @@ Example:
                                                                               title="Recurring Email Agent - Email Template"
                                                                               onSave={(content) => handleEmailRecurringModeChange('emailContentTemplate', content)}
                                                                               className="text-xs"
+                                                                              isPersonalized={true}
                                                                             />
                                                                           </div>
                                                                           <textarea
