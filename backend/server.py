@@ -6744,9 +6744,7 @@ Warm regards,
 [BUSINESS_NAME]
 📞 [PHONE_NUMBER]
 🌐 [WEBSITE_LINK]
-📅 [BOOK_NOW_LINK]
-
-Located at: [BUSINESS_ADDRESS]"""
+📅 [BOOK_NOW_LINK] | 📍 [BUSINESS_ADDRESS]"""
                         
                         email_template_with_content = default_template.replace('[CHATGPT_CONTENT]', base_campaign_content)
                         logger.info("Using default ChatGPT campaign template for email")
