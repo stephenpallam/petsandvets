@@ -6888,6 +6888,9 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                                 combined_content = f"{clean_template} {base_campaign_content}"
                                 final_sms_content = combined_content[:140] + "..." if len(combined_content) > 140 else combined_content
                             
+                            # Apply global placeholder replacement
+                            final_sms_content = await replace_global_placeholders(final_sms_content, db)
+                            
                         except Exception as e:
                             logger.error(f"Error generating generic SMS content: {str(e)}")
                             # Fallback: Remove placeholders and use base content
