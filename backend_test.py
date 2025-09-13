@@ -24,7 +24,8 @@ import os
 import json
 import aiohttp
 import ssl
-from datetime import datetime, date
+import time
+from datetime import datetime, date, timedelta
 from pathlib import Path
 
 # Add the backend directory to Python path
@@ -237,8 +238,8 @@ class MarketingCampaignDuplicatePreventionTester:
             return False
     
     async def test_rapid_fire_prevention(self):
-        """Test 2: Template CRUD Operations"""
-        print("🔍 TEST 2: Template CRUD Operations")
+        """Test 2: Rapid Fire Prevention - Second run within 30 seconds should be skipped"""
+        print("🔍 TEST 2: Rapid Fire Prevention")
         print("=" * 60)
         
         try:
@@ -251,173 +252,118 @@ class MarketingCampaignDuplicatePreventionTester:
                 "Content-Type": "application/json"
             }
             
+            # Create marketing agent for rapid fire test
+            agent_data = {
+                "agent_type": "marketing_agent",
+                "agent_name": "Test Duplicate Prevention Agent 2 - Rapid Fire",
+                "marketing_content_type": "topic",
+                "topic": "Pet Nutrition",
+                "marketing_channels": ["social_media", "email", "sms"],
+                "marketing_social_platforms": {
+                    "facebook": True,
+                    "instagram": True,
+                    "twitter": False,
+                    "whatsapp": False
+                },
+                "marketing_email_personalized": True,
+                "email_content_template": "Hello [CUSTOMER_NAME]! Nutrition tips for [PET_NAME]. Visit [WEBSITE_LINK].",
+                "marketing_sms_personalized": True,
+                "sms_template": "Hi [CUSTOMER_NAME]! [PET_NAME] nutrition info. Call [PHONE_NUMBER].",
+                "marketing_workflow_mode": "in_review"
+            }
+            
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                # Test 2a: GET all templates
-                url = f"{self.backend_url}/api/templates"
-                async with session.get(url, headers=headers, timeout=10) as response:
+                # Create the marketing agent
+                url = f"{self.backend_url}/api/ai-agents"
+                async with session.post(url, headers=headers, json=agent_data, timeout=30) as response:
                     if response.status != 200:
                         self.log_test_result(
-                            "Template CRUD - GET All Templates",
+                            "Rapid Fire Prevention - Agent Creation",
                             False,
-                            f"Failed to get templates: HTTP {response.status}",
+                            f"Failed to create marketing agent: HTTP {response.status}",
                             {"HTTP Status": response.status}
                         )
                         return False
                     
-                    all_templates = await response.json()
+                    agent_result = await response.json()
+                    agent_id = agent_result.get("id")
+                    self.created_agent_ids.append(agent_id)
                 
-                # Test 2b: GET templates filtered by email type
-                url = f"{self.backend_url}/api/templates?template_type=email"
-                async with session.get(url, headers=headers, timeout=10) as response:
+                # Wait a moment for agent creation to complete
+                await asyncio.sleep(2)
+                
+                # First run - should succeed
+                url = f"{self.backend_url}/api/ai-agents/{agent_id}/run"
+                async with session.post(url, headers=headers, timeout=60) as response:
                     if response.status != 200:
                         self.log_test_result(
-                            "Template CRUD - GET Email Templates",
+                            "Rapid Fire Prevention - First Run",
                             False,
-                            f"Failed to get email templates: HTTP {response.status}",
+                            f"Failed first campaign run: HTTP {response.status}",
                             {"HTTP Status": response.status}
                         )
                         return False
                     
-                    email_templates = await response.json()
+                    first_result = await response.json()
                 
-                # Test 2c: GET templates filtered by SMS type
-                url = f"{self.backend_url}/api/templates?template_type=sms"
-                async with session.get(url, headers=headers, timeout=10) as response:
-                    if response.status != 200:
-                        self.log_test_result(
-                            "Template CRUD - GET SMS Templates",
-                            False,
-                            f"Failed to get SMS templates: HTTP {response.status}",
-                            {"HTTP Status": response.status}
-                        )
-                        return False
-                    
-                    sms_templates = await response.json()
+                # Wait for first run to complete
+                await asyncio.sleep(3)
                 
-                # Test 2d: POST create custom email template
-                email_template_data = {
-                    "name": "Test Custom Email Template",
-                    "type": "email",
-                    "content": "Dear [CUSTOMER_NAME], this is a test email for [PET_NAME]. Visit [WEBSITE_LINK] for more info.",
-                    "description": "Test email template for comprehensive testing"
-                }
+                # Count posts after first run
+                posts_after_first = await self.db.ai_posts.find({"agent_id": agent_id}).to_list(length=None)
+                first_run_count = len(posts_after_first)
                 
-                url = f"{self.backend_url}/api/templates"
-                async with session.post(url, headers=headers, json=email_template_data, timeout=15) as response:
-                    if response.status != 200:
-                        self.log_test_result(
-                            "Template CRUD - POST Create Email Template",
-                            False,
-                            f"Failed to create email template: HTTP {response.status}",
-                            {"HTTP Status": response.status, "Response": await response.text()}
-                        )
-                        return False
-                    
-                    created_email_template = await response.json()
-                    email_template_id = created_email_template.get("id")
-                    self.created_template_ids.append(email_template_id)
+                # Second run immediately (within 30 seconds) - should be skipped
+                async with session.post(url, headers=headers, timeout=60) as response:
+                    second_result = await response.json()
+                    second_status = response.status
                 
-                # Test 2e: POST create custom SMS template
-                sms_template_data = {
-                    "name": "Test Custom SMS Template",
-                    "type": "sms",
-                    "content": "Hi [CUSTOMER_NAME]! Test SMS for [PET_NAME]. Call [PHONE_NUMBER].",
-                    "description": "Test SMS template for comprehensive testing"
-                }
+                # Wait a moment
+                await asyncio.sleep(2)
                 
-                async with session.post(url, headers=headers, json=sms_template_data, timeout=15) as response:
-                    if response.status != 200:
-                        self.log_test_result(
-                            "Template CRUD - POST Create SMS Template",
-                            False,
-                            f"Failed to create SMS template: HTTP {response.status}",
-                            {"HTTP Status": response.status, "Response": await response.text()}
-                        )
-                        return False
-                    
-                    created_sms_template = await response.json()
-                    sms_template_id = created_sms_template.get("id")
-                    self.created_template_ids.append(sms_template_id)
+                # Count posts after second run
+                posts_after_second = await self.db.ai_posts.find({"agent_id": agent_id}).to_list(length=None)
+                second_run_count = len(posts_after_second)
                 
-                # Test 2f: GET specific template
-                url = f"{self.backend_url}/api/templates/{email_template_id}"
-                async with session.get(url, headers=headers, timeout=10) as response:
-                    if response.status != 200:
-                        self.log_test_result(
-                            "Template CRUD - GET Specific Template",
-                            False,
-                            f"Failed to get specific template: HTTP {response.status}",
-                            {"HTTP Status": response.status}
-                        )
-                        return False
-                    
-                    specific_template = await response.json()
-                
-                # Test 2g: PUT update template
-                update_data = {
-                    "name": "Test Updated Email Template",
-                    "content": "Updated content for [CUSTOMER_NAME] and [PET_NAME]. Visit [WEBSITE_LINK].",
-                    "description": "Updated test email template"
-                }
-                
-                url = f"{self.backend_url}/api/templates/{email_template_id}"
-                async with session.put(url, headers=headers, json=update_data, timeout=15) as response:
-                    if response.status != 200:
-                        self.log_test_result(
-                            "Template CRUD - PUT Update Template",
-                            False,
-                            f"Failed to update template: HTTP {response.status}",
-                            {"HTTP Status": response.status, "Response": await response.text()}
-                        )
-                        return False
-                    
-                    updated_template = await response.json()
-                
-                # Verify all operations worked correctly
+                # Verify rapid fire prevention
                 success = (
-                    len(all_templates) > 0 and
-                    len(email_templates) > 0 and
-                    len(sms_templates) > 0 and
-                    all(t.get("type") == "email" for t in email_templates) and
-                    all(t.get("type") == "sms" for t in sms_templates) and
-                    created_email_template.get("name") == "Test Custom Email Template" and
-                    created_sms_template.get("name") == "Test Custom SMS Template" and
-                    specific_template.get("id") == email_template_id and
-                    updated_template.get("name") == "Test Updated Email Template"
+                    first_run_count == 4 and  # First run should create 4 posts
+                    second_run_count == 4 and  # Second run should not create additional posts
+                    first_run_count == second_run_count and  # Post count should remain the same
+                    (second_result.get("status") == "skipped" or 
+                     "skipped" in second_result.get("message", "").lower() or
+                     "recent execution" in second_result.get("message", "").lower())
                 )
                 
                 self.log_test_result(
-                    "Template CRUD Operations",
+                    "Rapid Fire Prevention",
                     success,
-                    f"Template CRUD operations: {success}",
+                    f"Rapid fire prevention: {success}",
                     {
-                        "Total Templates": len(all_templates),
-                        "Email Templates": len(email_templates),
-                        "SMS Templates": len(sms_templates),
-                        "Email Filter Working": all(t.get("type") == "email" for t in email_templates),
-                        "SMS Filter Working": all(t.get("type") == "sms" for t in sms_templates),
-                        "Email Template Created": created_email_template.get("name") == "Test Custom Email Template",
-                        "SMS Template Created": created_sms_template.get("name") == "Test Custom SMS Template",
-                        "Specific Template Retrieved": specific_template.get("id") == email_template_id,
-                        "Template Updated": updated_template.get("name") == "Test Updated Email Template",
-                        "Created Email Template ID": email_template_id,
-                        "Created SMS Template ID": sms_template_id
+                        "First Run Posts": first_run_count,
+                        "Second Run Posts": second_run_count,
+                        "Posts Count Unchanged": first_run_count == second_run_count,
+                        "Second Run Status": second_result.get("status", "unknown"),
+                        "Second Run Message": second_result.get("message", "No message"),
+                        "Second Run HTTP Status": second_status,
+                        "Agent ID": agent_id,
+                        "Duplicate Prevention Working": success
                     }
                 )
                 return success
                 
         except Exception as e:
             self.log_test_result(
-                "Template CRUD Operations",
+                "Rapid Fire Prevention",
                 False,
-                f"Error in template CRUD operations: {str(e)}",
+                f"Error in rapid fire prevention test: {str(e)}",
                 {"Error Details": str(e)}
             )
             return False
     
-    async def test_global_placeholder_crud_operations(self):
-        """Test 3: Global Placeholder CRUD Operations"""
-        print("🔍 TEST 3: Global Placeholder CRUD Operations")
+    async def test_post_quality_verification(self):
+        """Test 3: Verify Post Quality - Check proper channel labels and fields"""
+        print("🔍 TEST 3: Post Quality Verification")
         print("=" * 60)
         
         try:
@@ -430,268 +376,344 @@ class MarketingCampaignDuplicatePreventionTester:
                 "Content-Type": "application/json"
             }
             
+            # Create marketing agent for quality verification
+            agent_data = {
+                "agent_type": "marketing_agent",
+                "agent_name": "Test Duplicate Prevention Agent 3 - Quality Check",
+                "marketing_content_type": "custom_campaign",
+                "marketing_custom_campaign": "Special offer for [CUSTOMER_NAME] and [PET_NAME]! 20% off all services for [PET_NAMES].",
+                "marketing_channels": ["social_media", "email", "sms"],
+                "marketing_social_platforms": {
+                    "facebook": True,
+                    "instagram": True,
+                    "twitter": False,
+                    "whatsapp": False
+                },
+                "marketing_email_personalized": True,
+                "email_content_template": "Dear [CUSTOMER_NAME], [CHATGPT_CONTENT] Best regards, [BUSINESS_NAME]",
+                "marketing_sms_personalized": True,
+                "sms_template": "Hi [CUSTOMER_NAME]! [CHATGPT_CONTENT] Call [PHONE_NUMBER]",
+                "marketing_workflow_mode": "in_review"
+            }
+            
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                # Test 3a: GET all global placeholders
-                url = f"{self.backend_url}/api/global-placeholders"
-                async with session.get(url, headers=headers, timeout=10) as response:
+                # Create the marketing agent
+                url = f"{self.backend_url}/api/ai-agents"
+                async with session.post(url, headers=headers, json=agent_data, timeout=30) as response:
                     if response.status != 200:
                         self.log_test_result(
-                            "Global Placeholder CRUD - GET All Placeholders",
+                            "Post Quality Verification - Agent Creation",
                             False,
-                            f"Failed to get placeholders: HTTP {response.status}",
+                            f"Failed to create marketing agent: HTTP {response.status}",
                             {"HTTP Status": response.status}
                         )
                         return False
                     
-                    all_placeholders = await response.json()
+                    agent_result = await response.json()
+                    agent_id = agent_result.get("id")
+                    self.created_agent_ids.append(agent_id)
                 
-                # Test 3b: POST create custom placeholder
-                placeholder_data = {
-                    "name": "Test Custom Placeholder",
-                    "placeholder": "[TEST_CUSTOM]",
-                    "value": "Custom Test Value",
-                    "description": "Test placeholder for comprehensive testing"
-                }
+                # Wait a moment for agent creation to complete
+                await asyncio.sleep(2)
                 
-                url = f"{self.backend_url}/api/global-placeholders"
-                async with session.post(url, headers=headers, json=placeholder_data, timeout=15) as response:
+                # Run the marketing campaign generation
+                url = f"{self.backend_url}/api/ai-agents/{agent_id}/run"
+                async with session.post(url, headers=headers, timeout=60) as response:
                     if response.status != 200:
                         self.log_test_result(
-                            "Global Placeholder CRUD - POST Create Placeholder",
+                            "Post Quality Verification - Campaign Generation",
                             False,
-                            f"Failed to create placeholder: HTTP {response.status}",
-                            {"HTTP Status": response.status, "Response": await response.text()}
+                            f"Failed to run marketing campaign: HTTP {response.status}",
+                            {"HTTP Status": response.status}
                         )
                         return False
-                    
-                    created_placeholder = await response.json()
-                    placeholder_id = created_placeholder.get("id")
-                    self.created_placeholder_ids.append(placeholder_id)
                 
-                # Test 3c: PUT update placeholder
-                update_data = {
-                    "name": "Test Updated Placeholder",
-                    "value": "Updated Test Value",
-                    "description": "Updated test placeholder"
+                # Wait for posts to be generated
+                await asyncio.sleep(5)
+                
+                # Query database to verify post quality
+                posts = await self.db.ai_posts.find({"agent_id": agent_id}).to_list(length=None)
+                
+                # Analyze post quality
+                quality_checks = {
+                    "all_posts_have_content": all(p.get("content", "").strip() != "" for p in posts),
+                    "all_posts_have_marketing_channel": all(p.get("marketing_channel") in ["social_media", "email", "sms"] for p in posts),
+                    "all_posts_have_status": all(p.get("status") in ["in_review", "ready_to_publish", "generating"] for p in posts),
+                    "social_posts_have_platform": all(p.get("platform") in ["facebook", "instagram"] for p in posts if p.get("marketing_channel") == "social_media"),
+                    "email_posts_have_subject": all(p.get("email_subject", "").strip() != "" for p in posts if p.get("marketing_channel") == "email"),
+                    "email_posts_have_template": all(p.get("email_template", "").strip() != "" for p in posts if p.get("marketing_channel") == "email"),
+                    "sms_posts_have_template": all(p.get("sms_template", "").strip() != "" for p in posts if p.get("marketing_channel") == "sms"),
+                    "personalized_posts_have_customer_data": True  # Will check below
                 }
                 
-                url = f"{self.backend_url}/api/global-placeholders/{placeholder_id}"
-                async with session.put(url, headers=headers, json=update_data, timeout=15) as response:
-                    if response.status != 200:
-                        self.log_test_result(
-                            "Global Placeholder CRUD - PUT Update Placeholder",
-                            False,
-                            f"Failed to update placeholder: HTTP {response.status}",
-                            {"HTTP Status": response.status, "Response": await response.text()}
-                        )
-                        return False
-                    
-                    updated_placeholder = await response.json()
+                # Check personalization data
+                email_posts = [p for p in posts if p.get("marketing_channel") == "email"]
+                sms_posts = [p for p in posts if p.get("marketing_channel") == "sms"]
                 
-                # Verify all operations worked correctly
-                success = (
-                    len(all_placeholders) > 0 and
-                    created_placeholder.get("name") == "Test Custom Placeholder" and
-                    created_placeholder.get("placeholder") == "[TEST_CUSTOM]" and
-                    created_placeholder.get("value") == "Custom Test Value" and
-                    updated_placeholder.get("name") == "Test Updated Placeholder" and
-                    updated_placeholder.get("value") == "Updated Test Value"
+                email_personalization_ok = all(
+                    p.get("sample_customer_name", "").strip() != "" and
+                    p.get("sample_customer_email", "").strip() != ""
+                    for p in email_posts
                 )
                 
+                sms_personalization_ok = all(
+                    p.get("sample_customer_name", "").strip() != "" and
+                    p.get("sample_customer_phone", "").strip() != ""
+                    for p in sms_posts
+                )
+                
+                quality_checks["personalized_posts_have_customer_data"] = email_personalization_ok and sms_personalization_ok
+                
+                # Check content quality (no empty content, reasonable length)
+                content_quality_ok = all(
+                    len(p.get("content", "")) > 20  # At least 20 characters
+                    for p in posts
+                )
+                quality_checks["content_has_reasonable_length"] = content_quality_ok
+                
+                success = all(quality_checks.values()) and len(posts) == 4
+                
                 self.log_test_result(
-                    "Global Placeholder CRUD Operations",
+                    "Post Quality Verification",
                     success,
-                    f"Global placeholder CRUD operations: {success}",
+                    f"Post quality verification: {success}",
                     {
-                        "Total Placeholders": len(all_placeholders),
-                        "Placeholder Created": created_placeholder.get("name") == "Test Custom Placeholder",
-                        "Placeholder Value Correct": created_placeholder.get("value") == "Custom Test Value",
-                        "Placeholder Updated": updated_placeholder.get("name") == "Test Updated Placeholder",
-                        "Updated Value Correct": updated_placeholder.get("value") == "Updated Test Value",
-                        "Created Placeholder ID": placeholder_id
+                        "Total Posts": len(posts),
+                        "All Posts Have Content": quality_checks["all_posts_have_content"],
+                        "All Posts Have Marketing Channel": quality_checks["all_posts_have_marketing_channel"],
+                        "All Posts Have Status": quality_checks["all_posts_have_status"],
+                        "Social Posts Have Platform": quality_checks["social_posts_have_platform"],
+                        "Email Posts Have Subject": quality_checks["email_posts_have_subject"],
+                        "Email Posts Have Template": quality_checks["email_posts_have_template"],
+                        "SMS Posts Have Template": quality_checks["sms_posts_have_template"],
+                        "Personalized Posts Have Customer Data": quality_checks["personalized_posts_have_customer_data"],
+                        "Content Has Reasonable Length": quality_checks["content_has_reasonable_length"],
+                        "Agent ID": agent_id,
+                        "Email Posts Count": len(email_posts),
+                        "SMS Posts Count": len(sms_posts),
+                        "Social Media Posts Count": len([p for p in posts if p.get("marketing_channel") == "social_media"])
                     }
                 )
                 return success
                 
         except Exception as e:
             self.log_test_result(
-                "Global Placeholder CRUD Operations",
+                "Post Quality Verification",
                 False,
-                f"Error in placeholder CRUD operations: {str(e)}",
+                f"Error in post quality verification test: {str(e)}",
                 {"Error Details": str(e)}
             )
             return False
     
-    async def test_validation_and_error_handling(self):
-        """Test 4: Validation and Error Handling"""
-        print("🔍 TEST 4: Validation and Error Handling")
+    async def test_database_verification(self):
+        """Test 4: Database Verification - Count posts by agent_id and verify channel breakdown"""
+        print("🔍 TEST 4: Database Verification")
         print("=" * 60)
         
         try:
-            ssl_context = ssl.create_default_context()
-            ssl_context.check_hostname = False
-            ssl_context.verify_mode = ssl.CERT_NONE
+            # Verify all created agents have correct post counts
+            verification_results = {}
             
-            headers = {
-                "Authorization": f"Bearer {self.auth_token}",
-                "Content-Type": "application/json"
+            for agent_id in self.created_agent_ids:
+                posts = await self.db.ai_posts.find({"agent_id": agent_id}).to_list(length=None)
+                
+                # Count by channel
+                channel_counts = {}
+                platform_counts = {}
+                
+                for post in posts:
+                    channel = post.get("marketing_channel", "unknown")
+                    platform = post.get("platform", "unknown")
+                    
+                    channel_counts[channel] = channel_counts.get(channel, 0) + 1
+                    if platform != "unknown":
+                        platform_counts[platform] = platform_counts.get(platform, 0) + 1
+                
+                verification_results[agent_id] = {
+                    "total_posts": len(posts),
+                    "channel_counts": channel_counts,
+                    "platform_counts": platform_counts,
+                    "expected_total": 4,
+                    "expected_channels": {"social_media": 2, "email": 1, "sms": 1},
+                    "expected_platforms": {"facebook": 1, "instagram": 1}
+                }
+            
+            # Verify all agents have correct counts
+            all_correct = True
+            for agent_id, results in verification_results.items():
+                if (results["total_posts"] != results["expected_total"] or
+                    results["channel_counts"] != results["expected_channels"] or
+                    results["platform_counts"] != results["expected_platforms"]):
+                    all_correct = False
+                    break
+            
+            # Additional database integrity checks
+            all_posts = await self.db.ai_posts.find({"agent_id": {"$in": self.created_agent_ids}}).to_list(length=None)
+            
+            integrity_checks = {
+                "no_posts_without_agent_id": all(p.get("agent_id") for p in all_posts),
+                "no_posts_without_marketing_channel": all(p.get("marketing_channel") for p in all_posts),
+                "all_posts_have_created_at": all(p.get("created_at") for p in all_posts),
+                "all_posts_have_updated_at": all(p.get("updated_at") for p in all_posts),
+                "no_duplicate_post_ids": len(set(p.get("id") for p in all_posts)) == len(all_posts)
             }
             
-            validation_results = {}
+            success = all_correct and all(integrity_checks.values())
             
-            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                # First verify our test templates still exist
-                url = f"{self.backend_url}/api/templates"
-                async with session.get(url, headers=headers, timeout=10) as response:
-                    current_templates = await response.json()
-                    template_names = [t.get("name") for t in current_templates]
-                    print(f"Current templates before validation test: {template_names}")
-                
-                # Test 4a: Try creating duplicate template name
-                duplicate_template_data = {
-                    "name": "Test Updated Email Template",  # This should already exist from previous test (updated name)
-                    "type": "email",
-                    "content": "Duplicate template content",
-                    "description": "This should fail due to duplicate name"
+            self.log_test_result(
+                "Database Verification",
+                success,
+                f"Database verification: {success}",
+                {
+                    "Total Agents Tested": len(self.created_agent_ids),
+                    "All Agents Have Correct Post Counts": all_correct,
+                    "Total Posts in Database": len(all_posts),
+                    "No Posts Without Agent ID": integrity_checks["no_posts_without_agent_id"],
+                    "No Posts Without Marketing Channel": integrity_checks["no_posts_without_marketing_channel"],
+                    "All Posts Have Created At": integrity_checks["all_posts_have_created_at"],
+                    "All Posts Have Updated At": integrity_checks["all_posts_have_updated_at"],
+                    "No Duplicate Post IDs": integrity_checks["no_duplicate_post_ids"],
+                    "Verification Results": verification_results
                 }
-                
-                url = f"{self.backend_url}/api/templates"
-                async with session.post(url, headers=headers, json=duplicate_template_data, timeout=15) as response:
-                    validation_results["duplicate_template_rejected"] = response.status == 400
-                
-                # Test 4b: Try creating duplicate placeholder name
-                duplicate_placeholder_data = {
-                    "name": "Test Updated Placeholder",  # This should already exist from previous test (updated name)
-                    "placeholder": "[DUPLICATE_TEST]",
-                    "value": "Duplicate value",
-                    "description": "This should fail due to duplicate name"
-                }
-                
-                url = f"{self.backend_url}/api/global-placeholders"
-                async with session.post(url, headers=headers, json=duplicate_placeholder_data, timeout=15) as response:
-                    validation_results["duplicate_placeholder_name_rejected"] = response.status == 400
-                
-                # Test 4c: Try creating duplicate placeholder text
-                duplicate_placeholder_text_data = {
-                    "name": "Another Test Placeholder",
-                    "placeholder": "[TEST_CUSTOM]",  # This should already exist from previous test
-                    "value": "Another value",
-                    "description": "This should fail due to duplicate placeholder text"
-                }
-                
-                async with session.post(url, headers=headers, json=duplicate_placeholder_text_data, timeout=15) as response:
-                    validation_results["duplicate_placeholder_text_rejected"] = response.status == 400
-                
-                # Test 4d: Try accessing non-existent template
-                fake_template_id = "non-existent-template-id"
-                url = f"{self.backend_url}/api/templates/{fake_template_id}"
-                async with session.get(url, headers=headers, timeout=10) as response:
-                    validation_results["nonexistent_template_404"] = response.status == 404
-                
-                # Test 4e: Try accessing non-existent placeholder
-                fake_placeholder_id = "non-existent-placeholder-id"
-                url = f"{self.backend_url}/api/global-placeholders/{fake_placeholder_id}"
-                async with session.put(url, headers=headers, json={"name": "Test"}, timeout=10) as response:
-                    validation_results["nonexistent_placeholder_404"] = response.status == 404
-                
-                # Test 4f: Try deleting non-existent template
-                url = f"{self.backend_url}/api/templates/{fake_template_id}"
-                async with session.delete(url, headers=headers, timeout=10) as response:
-                    validation_results["delete_nonexistent_template_404"] = response.status == 404
-                
-                # Test 4g: Try deleting non-existent placeholder
-                url = f"{self.backend_url}/api/global-placeholders/{fake_placeholder_id}"
-                async with session.delete(url, headers=headers, timeout=10) as response:
-                    validation_results["delete_nonexistent_placeholder_404"] = response.status == 404
-                
-                # Verify all validation tests passed
-                success = all(validation_results.values())
-                
-                self.log_test_result(
-                    "Validation and Error Handling",
-                    success,
-                    f"Validation and error handling: {success}",
-                    {
-                        "Duplicate Template Rejected": validation_results.get("duplicate_template_rejected"),
-                        "Duplicate Placeholder Name Rejected": validation_results.get("duplicate_placeholder_name_rejected"),
-                        "Duplicate Placeholder Text Rejected": validation_results.get("duplicate_placeholder_text_rejected"),
-                        "Nonexistent Template 404": validation_results.get("nonexistent_template_404"),
-                        "Nonexistent Placeholder 404": validation_results.get("nonexistent_placeholder_404"),
-                        "Delete Nonexistent Template 404": validation_results.get("delete_nonexistent_template_404"),
-                        "Delete Nonexistent Placeholder 404": validation_results.get("delete_nonexistent_placeholder_404"),
-                        "All Validations Passed": success
-                    }
-                )
-                return success
-                
+            )
+            return success
+            
         except Exception as e:
             self.log_test_result(
-                "Validation and Error Handling",
+                "Database Verification",
                 False,
-                f"Error in validation testing: {str(e)}",
+                f"Error in database verification test: {str(e)}",
                 {"Error Details": str(e)}
             )
             return False
     
-    async def test_delete_operations(self):
-        """Test 5: Delete Operations (cleanup test data)"""
-        print("🔍 TEST 5: Delete Operations")
+    async def test_content_quality_check(self):
+        """Test 5: Content Quality Check - Verify ChatGPT content and proper formatting"""
+        print("🔍 TEST 5: Content Quality Check")
         print("=" * 60)
         
         try:
-            ssl_context = ssl.create_default_context()
-            ssl_context.check_hostname = False
-            ssl_context.verify_mode = ssl.CERT_NONE
+            # Get all posts from our test agents
+            all_posts = await self.db.ai_posts.find({"agent_id": {"$in": self.created_agent_ids}}).to_list(length=None)
             
-            headers = {
-                "Authorization": f"Bearer {self.auth_token}",
-                "Content-Type": "application/json"
+            content_quality_results = {
+                "posts_analyzed": len(all_posts),
+                "email_posts_analyzed": 0,
+                "sms_posts_analyzed": 0,
+                "social_posts_analyzed": 0,
+                "email_subjects_clean": 0,
+                "sms_within_limits": 0,
+                "social_platform_specific": 0,
+                "placeholder_replacement_working": 0,
+                "chatgpt_content_present": 0
             }
             
-            delete_results = {}
+            for post in all_posts:
+                channel = post.get("marketing_channel", "")
+                content = post.get("content", "")
+                
+                if channel == "email":
+                    content_quality_results["email_posts_analyzed"] += 1
+                    
+                    # Check email subject cleanliness (no markdown formatting)
+                    email_subject = post.get("email_subject", "")
+                    if email_subject and not any(marker in email_subject for marker in ["**", "##", "Title:", "Subject:"]):
+                        content_quality_results["email_subjects_clean"] += 1
+                    
+                elif channel == "sms":
+                    content_quality_results["sms_posts_analyzed"] += 1
+                    
+                    # Check SMS character limits (should be under 160 chars)
+                    if len(content) <= 160:
+                        content_quality_results["sms_within_limits"] += 1
+                    
+                elif channel == "social_media":
+                    content_quality_results["social_posts_analyzed"] += 1
+                    
+                    # Check platform-specific content (different content per platform)
+                    platform = post.get("platform", "")
+                    if platform in ["facebook", "instagram"] and content:
+                        content_quality_results["social_platform_specific"] += 1
+                
+                # Check placeholder replacement (should not contain unreplaced placeholders)
+                unreplaced_placeholders = ["[CUSTOMER_NAME]", "[PET_NAME]", "[PET_NAMES]", "[CHATGPT_CONTENT]"]
+                if not any(placeholder in content for placeholder in unreplaced_placeholders):
+                    content_quality_results["placeholder_replacement_working"] += 1
+                
+                # Check for ChatGPT-generated content (should have reasonable length and quality)
+                if len(content) > 50 and content.strip():  # At least 50 characters of meaningful content
+                    content_quality_results["chatgpt_content_present"] += 1
             
-            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                # Delete created templates
-                for template_id in self.created_template_ids:
-                    url = f"{self.backend_url}/api/templates/{template_id}"
-                    async with session.delete(url, headers=headers, timeout=10) as response:
-                        delete_results[f"template_{template_id}"] = response.status == 200
-                
-                # Delete created placeholders
-                for placeholder_id in self.created_placeholder_ids:
-                    url = f"{self.backend_url}/api/global-placeholders/{placeholder_id}"
-                    async with session.delete(url, headers=headers, timeout=10) as response:
-                        delete_results[f"placeholder_{placeholder_id}"] = response.status == 200
-                
-                success = all(delete_results.values()) if delete_results else True
-                
-                self.log_test_result(
-                    "Delete Operations",
-                    success,
-                    f"Delete operations: {success}",
-                    {
-                        "Templates Deleted": len([k for k in delete_results.keys() if k.startswith("template_")]),
-                        "Placeholders Deleted": len([k for k in delete_results.keys() if k.startswith("placeholder_")]),
-                        "All Deletes Successful": success,
-                        "Delete Results": delete_results
-                    }
-                )
-                return success
-                
+            # Calculate success rates
+            email_success_rate = (content_quality_results["email_subjects_clean"] / 
+                                content_quality_results["email_posts_analyzed"]) if content_quality_results["email_posts_analyzed"] > 0 else 1
+            
+            sms_success_rate = (content_quality_results["sms_within_limits"] / 
+                              content_quality_results["sms_posts_analyzed"]) if content_quality_results["sms_posts_analyzed"] > 0 else 1
+            
+            social_success_rate = (content_quality_results["social_platform_specific"] / 
+                                 content_quality_results["social_posts_analyzed"]) if content_quality_results["social_posts_analyzed"] > 0 else 1
+            
+            placeholder_success_rate = (content_quality_results["placeholder_replacement_working"] / 
+                                      content_quality_results["posts_analyzed"]) if content_quality_results["posts_analyzed"] > 0 else 1
+            
+            content_success_rate = (content_quality_results["chatgpt_content_present"] / 
+                                  content_quality_results["posts_analyzed"]) if content_quality_results["posts_analyzed"] > 0 else 1
+            
+            # Overall success criteria
+            success = (
+                email_success_rate >= 0.8 and  # 80% of email subjects should be clean
+                sms_success_rate >= 0.8 and    # 80% of SMS should be within limits
+                social_success_rate >= 0.8 and # 80% of social posts should be platform-specific
+                placeholder_success_rate >= 0.9 and # 90% should have proper placeholder replacement
+                content_success_rate >= 0.9    # 90% should have quality content
+            )
+            
+            self.log_test_result(
+                "Content Quality Check",
+                success,
+                f"Content quality check: {success}",
+                {
+                    "Posts Analyzed": content_quality_results["posts_analyzed"],
+                    "Email Posts": content_quality_results["email_posts_analyzed"],
+                    "SMS Posts": content_quality_results["sms_posts_analyzed"],
+                    "Social Posts": content_quality_results["social_posts_analyzed"],
+                    "Email Subject Success Rate": f"{email_success_rate:.2%}",
+                    "SMS Character Limit Success Rate": f"{sms_success_rate:.2%}",
+                    "Social Platform Specific Success Rate": f"{social_success_rate:.2%}",
+                    "Placeholder Replacement Success Rate": f"{placeholder_success_rate:.2%}",
+                    "Content Quality Success Rate": f"{content_success_rate:.2%}",
+                    "Overall Success": success
+                }
+            )
+            return success
+            
         except Exception as e:
             self.log_test_result(
-                "Delete Operations",
+                "Content Quality Check",
                 False,
-                f"Error in delete operations: {str(e)}",
+                f"Error in content quality check test: {str(e)}",
                 {"Error Details": str(e)}
             )
             return False
     
-    async def run_template_management_tests(self):
-        """Run comprehensive template management system tests"""
-        print("🔍 STARTING TEMPLATE MANAGEMENT SYSTEM TESTING")
+    async def cleanup_created_agents(self):
+        """Clean up agents created during testing"""
+        try:
+            for agent_id in self.created_agent_ids:
+                # Delete agent posts
+                await self.db.ai_posts.delete_many({"agent_id": agent_id})
+                # Delete agent
+                await self.db.ai_agents.delete_one({"id": agent_id})
+            print(f"🧹 Cleaned up {len(self.created_agent_ids)} test agents and their posts")
+        except Exception as e:
+            print(f"Warning: Could not clean up created agents: {e}")
+    
+    async def run_duplicate_prevention_tests(self):
+        """Run comprehensive duplicate prevention tests"""
+        print("🔍 STARTING MARKETING CAMPAIGN DUPLICATE PREVENTION TESTING")
         print("=" * 80)
-        print("Testing new Template Management System endpoints comprehensively")
+        print("Testing DUPLICATE PREVENTION fix for Marketing Campaign generation")
         print("=" * 80)
         
         try:
@@ -709,29 +731,29 @@ class MarketingCampaignDuplicatePreventionTester:
             # Run all tests
             test_results = []
             
-            # Test 1: Initialize Default Templates and Placeholders
-            success1 = await self.test_initialize_default_templates()
+            # Test 1: Basic Duplicate Prevention
+            success1 = await self.test_duplicate_prevention_basic()
             test_results.append(success1)
             
-            # Test 2: Template CRUD Operations
-            success2 = await self.test_template_crud_operations()
+            # Test 2: Rapid Fire Prevention
+            success2 = await self.test_rapid_fire_prevention()
             test_results.append(success2)
             
-            # Test 3: Global Placeholder CRUD Operations
-            success3 = await self.test_global_placeholder_crud_operations()
+            # Test 3: Post Quality Verification
+            success3 = await self.test_post_quality_verification()
             test_results.append(success3)
             
-            # Test 4: Validation and Error Handling
-            success4 = await self.test_validation_and_error_handling()
+            # Test 4: Database Verification
+            success4 = await self.test_database_verification()
             test_results.append(success4)
             
-            # Test 5: Delete Operations (cleanup)
-            success5 = await self.test_delete_operations()
+            # Test 5: Content Quality Check
+            success5 = await self.test_content_quality_check()
             test_results.append(success5)
             
             # Summary
             print("=" * 80)
-            print("🎯 TEMPLATE MANAGEMENT SYSTEM TESTING SUMMARY")
+            print("🎯 DUPLICATE PREVENTION TESTING SUMMARY")
             print("=" * 80)
             
             passed_tests = sum(test_results)
@@ -750,76 +772,50 @@ class MarketingCampaignDuplicatePreventionTester:
             print("🔍 KEY FINDINGS:")
             print("=" * 40)
             
-            # Test 1 Analysis
-            if success1:
-                print("✅ DEFAULT INITIALIZATION: Default templates and placeholders created successfully")
-                print("   - Email templates: Appointment Reminder, Welcome New Customer, Marketing Promotion")
-                print("   - SMS templates: Appointment Reminder, Welcome New Customer, Marketing Promotion")
-                print("   - Global placeholders: Website Link, Book Now Link, Phone Number, Business Name, Business Address")
-            else:
-                print("❌ DEFAULT INITIALIZATION: Failed to initialize default templates and placeholders")
-            
-            # Test 2 Analysis
-            if success2:
-                print("✅ TEMPLATE CRUD: All template CRUD operations working correctly")
-                print("   - GET all templates, GET filtered by type (email/SMS)")
-                print("   - POST create custom templates, GET specific template")
-                print("   - PUT update template, proper data persistence")
-            else:
-                print("❌ TEMPLATE CRUD: Template CRUD operations failed")
-            
-            # Test 3 Analysis
-            if success3:
-                print("✅ PLACEHOLDER CRUD: All global placeholder CRUD operations working correctly")
-                print("   - GET all placeholders, POST create custom placeholder")
-                print("   - PUT update placeholder, proper data persistence")
-            else:
-                print("❌ PLACEHOLDER CRUD: Global placeholder CRUD operations failed")
-            
-            # Test 4 Analysis
-            if success4:
-                print("✅ VALIDATION: All validation and error handling working correctly")
-                print("   - Duplicate template names rejected (400)")
-                print("   - Duplicate placeholder names/text rejected (400)")
-                print("   - Non-existent resources return 404")
-            else:
-                print("❌ VALIDATION: Validation and error handling failed")
-            
-            # Test 5 Analysis
-            if success5:
-                print("✅ DELETE OPERATIONS: All delete operations working correctly")
-                print("   - Test data cleaned up successfully")
-            else:
-                print("❌ DELETE OPERATIONS: Delete operations failed")
-            
-            print()
-            print("📋 DETAILED TEST RESULTS:")
-            print("=" * 40)
-            
+            # Test Analysis
             test_names = [
-                "Initialize Default Templates and Placeholders",
-                "Template CRUD Operations", 
-                "Global Placeholder CRUD Operations",
-                "Validation and Error Handling",
-                "Delete Operations"
+                "Basic Duplicate Prevention",
+                "Rapid Fire Prevention", 
+                "Post Quality Verification",
+                "Database Verification",
+                "Content Quality Check"
             ]
             
             for i, (test_name, success) in enumerate(zip(test_names, test_results)):
                 status = "✅ PASS" if success else "❌ FAIL"
                 print(f"{i+1}. {status} {test_name}")
+                
+                if i == 0 and success:
+                    print("   - Only 4 posts created per agent (1 Facebook + 1 Instagram + 1 Email + 1 SMS)")
+                    print("   - No duplicate posts detected")
+                elif i == 1 and success:
+                    print("   - Second run within 30 seconds properly skipped")
+                    print("   - Appropriate skip message returned")
+                elif i == 2 and success:
+                    print("   - All posts have proper channel labels and fields")
+                    print("   - Email posts have subjects and templates")
+                    print("   - SMS posts have templates and personalization")
+                elif i == 3 and success:
+                    print("   - Database integrity maintained")
+                    print("   - Correct post counts per agent")
+                elif i == 4 and success:
+                    print("   - ChatGPT content properly generated")
+                    print("   - Placeholder replacement working")
+                    print("   - Content quality meets standards")
             
             print()
-            print("🎯 SYSTEM READINESS:")
+            print("🎯 DUPLICATE PREVENTION FIX STATUS:")
             print("=" * 40)
             
             if all(test_results):
-                print("✅ TEMPLATE MANAGEMENT SYSTEM READY FOR FRONTEND INTEGRATION")
-                print("   - All endpoints working correctly")
-                print("   - Data properly stored and retrieved")
-                print("   - Validation and error handling functional")
-                print("   - System is production-ready")
+                print("✅ DUPLICATE PREVENTION FIX WORKING CORRECTLY")
+                print("   - Marketing campaign generation creates exactly 4 posts")
+                print("   - Rapid fire attempts are properly blocked")
+                print("   - All posts have proper structure and content")
+                print("   - Database integrity is maintained")
+                print("   - Content quality is high")
             else:
-                print("❌ TEMPLATE MANAGEMENT SYSTEM NEEDS FIXES")
+                print("❌ DUPLICATE PREVENTION FIX NEEDS ATTENTION")
                 failed_tests = [test_names[i] for i, success in enumerate(test_results) if not success]
                 print(f"   - Failed tests: {', '.join(failed_tests)}")
             
@@ -832,12 +828,14 @@ class MarketingCampaignDuplicatePreventionTester:
             traceback.print_exc()
         
         finally:
+            # Clean up created test agents
+            await self.cleanup_created_agents()
             await self.disconnect()
 
 async def main():
     """Main testing function"""
-    tester = TemplateManagementTester()
-    await tester.run_template_management_tests()
+    tester = MarketingCampaignDuplicatePreventionTester()
+    await tester.run_duplicate_prevention_tests()
 
 if __name__ == "__main__":
     asyncio.run(main())
