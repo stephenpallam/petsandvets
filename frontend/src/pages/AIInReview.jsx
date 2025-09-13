@@ -1501,7 +1501,36 @@ const AIInReview = () => {
                                     <div className="w-3 h-3 rounded-full bg-purple-500"></div>
                                     <span className="text-sm font-medium text-gray-700">Email Preview</span>
                                   </div>
-                                  <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-purple-400">
+                                  
+                                  {/* Email Header (like real email clients) */}
+                                  <div className="bg-gray-50 rounded-t-lg border border-gray-200 px-4 py-3">
+                                    <div className="space-y-2 text-sm">
+                                      <div className="flex">
+                                        <span className="text-gray-500 font-medium w-16">From:</span>
+                                        <span className="text-gray-900">Pets and Vets Animal Hospital &lt;info@petsandvetsanimalhospital.com&gt;</span>
+                                      </div>
+                                      <div className="flex">
+                                        <span className="text-gray-500 font-medium w-16">To:</span>
+                                        <span className="text-gray-900">customer@email.com</span>
+                                      </div>
+                                      <div className="flex items-start">
+                                        <span className="text-gray-500 font-medium w-16">Subject:</span>
+                                        <div className="flex-1">
+                                          <span className="text-gray-900 font-medium">
+                                            {post.email_subject || 'No Subject'}
+                                          </span>
+                                          {post.email_subject && post.email_subject.length > 100 && (
+                                            <span className="text-orange-500 text-xs ml-2">
+                                              ({post.email_subject.length} chars - may be truncated)
+                                            </span>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Email Body */}
+                                  <div className="bg-white rounded-b-lg border-x border-b border-gray-200 p-4">
                                     <ContentWithLinks 
                                       content={post.content} 
                                       className="text-gray-900 leading-relaxed"
