@@ -611,7 +611,7 @@ const AIInReview = () => {
   const closeEditModal = () => {
     setShowEditModal(false);
     setEditingPost(null);
-    setEditForm({ content: '', image_text: '', topic: '' });
+    setEditForm({ content: '', image_text: '', topic: '', email_subject: '' });
   };
 
   const handleEditFormChange = (field, value) => {
