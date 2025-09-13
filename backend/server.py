@@ -6872,29 +6872,51 @@ Located at: [BUSINESS_ADDRESS]"""
                             clean_template = clean_template.replace('[PET_NAMES]', 'your pets')
                             final_email_content = f"{clean_template}\n\n{base_campaign_content}"
                         
-                        # Generate email subject
+                        # Generate email subject (compact, under 75 characters)
                         try:
                             subject_result = await ai_service.format_custom_content(
                                 post_title="Subject Line Only",
-                                post_content=f"Generate ONLY a short, compelling email subject line (no formatting, no titles, no explanations) for this topic: {campaign_title}. Return just the subject line text, nothing else.",
-                                word_count="8",
+                                post_content=f"Generate ONLY a short, compelling email subject line (maximum 60 characters, no formatting, no titles, no explanations) for this topic: {campaign_title}. Keep it concise and under 60 characters. Return just the subject line text, nothing else.",
+                                word_count="5",  # Very short for compact subject
                                 platforms=['email'],
                                 use_web_research=False,
                                 image_text=""
                             )
                             raw_subject = subject_result.get('content', campaign_title) if subject_result else campaign_title
                             
-                            # Clean up the subject line - remove any markdown formatting
+                            # Clean up the subject line - comprehensive cleanup
+                            import re
                             email_subject = raw_subject.strip()
-                            # Remove common formatting patterns
-                            email_subject = email_subject.replace('**Title:**', '').replace('**', '')
-                            email_subject = email_subject.replace('**Content:**', '').replace('Title:', '')
-                            email_subject = email_subject.replace('Subject:', '').replace('Subject Line:', '')
+                            # Remove markdown formatting patterns
+                            email_subject = re.sub(r'\*\*Title:.*?\*\*', '', email_subject, flags=re.IGNORECASE)
+                            email_subject = re.sub(r'\*\*Subject:.*?\*\*', '', email_subject, flags=re.IGNORECASE)
+                            email_subject = re.sub(r'\*\*Content:\*\*', '', email_subject, flags=re.IGNORECASE)
+                            email_subject = re.sub(r'Title:.*?\n', '', email_subject, flags=re.IGNORECASE)
+                            email_subject = re.sub(r'Subject:.*?\n', '', email_subject, flags=re.IGNORECASE)
+                            email_subject = re.sub(r'Content:\s*', '', email_subject, flags=re.IGNORECASE)
+                            # Remove any remaining markdown formatting
+                            email_subject = re.sub(r'\*\*([^*]+)\*\*', r'\1', email_subject)  # Bold text
+                            email_subject = re.sub(r'\*([^*]+)\*', r'\1', email_subject)    # Italic text
                             # Split by newlines and take first line if multiple
                             email_subject = email_subject.split('\n')[0].strip()
+                            # Remove quotes if present
+                            email_subject = email_subject.strip('"\'')
+                            
+                            # Ensure subject is under 75 characters
+                            if len(email_subject) > 75:
+                                email_subject = email_subject[:72] + "..."
+                            
                             # Fallback if still empty
                             if not email_subject or len(email_subject) < 3:
-                                email_subject = campaign_title
+                                # Create compact fallback based on campaign title
+                                if "Pet Health" in campaign_title:
+                                    email_subject = "Pet Health Tips"
+                                elif "Pet Dental" in campaign_title:
+                                    email_subject = "Pet Dental Care"
+                                elif "Holiday" in campaign_title:
+                                    email_subject = "Holiday Pet Care"
+                                else:
+                                    email_subject = "Pet Care Tips"
                                 
                         except Exception as e:
                             logger.error(f"Error generating email subject: {str(e)}")
