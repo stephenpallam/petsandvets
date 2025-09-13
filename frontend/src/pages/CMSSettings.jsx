@@ -597,7 +597,8 @@ const CMSSettings = () => {
 
                 {/* Placeholder Form */}
                 {showPlaceholderForm && (
-                  <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                  <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50" 
+                       style={{ backgroundColor: '#f9fafb', border: '2px solid #29add3' }}>
                     <h4 className="text-md font-medium text-gray-900 mb-4">
                       {editingPlaceholder ? 'Edit Global Placeholder' : 'Create New Global Placeholder'}
                     </h4>
