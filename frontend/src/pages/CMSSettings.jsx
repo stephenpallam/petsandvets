@@ -588,7 +588,7 @@ const CMSSettings = () => {
                       setMessage({ type: '', text: '' });
                       setEditingPlaceholder(null);
                       setPlaceholderForm({ name: '', placeholder: '', value: '', description: '' });
-                      setShowPlaceholderForm(true);
+                      setShowPlaceholderModal(true);
                     }}
                     className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white transition-colors"
                     style={{ backgroundColor: '#29add3' }}
