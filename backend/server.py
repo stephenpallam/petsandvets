@@ -3033,7 +3033,7 @@ async def update_business_info(
             tagline=business_data.tagline or "Compassionate Care for Your Beloved Pets",
             phone=business_data.phone or "(703) 957-3297", 
             email=business_data.email or "vet@petsandvetsanimalhospital.com",
-            address=business_data.address or "43114 Peacock Market Plaza, Suite F110, South Riding, VA 20152",
+            address=business_data.address or "43114 Peacock Market Plaza, Suite F110\nSouth Riding, VA 20152",
             timezone=business_data.timezone or "America/New_York",
             facebook_link=business_data.facebook_link or "",
             instagram_link=business_data.instagram_link or "",
