@@ -7270,6 +7270,13 @@ Example:
                       </label>
                       <p className="text-xs text-gray-500 mb-3">📊 Customer database will be used for sending emails</p>
                       <div>
+                        <TemplateDropdown
+                          templates={emailTemplates}
+                          selectedValue={marketingMode.emailTemplate}
+                          onSelect={(templateContent) => setMarketingMode(prev => ({ ...prev, emailTemplate: templateContent }))}
+                          placeholder="Select an email template..."
+                          templateType="email"
+                        />
                         <label className="block text-sm font-medium text-gray-700 mb-2">Email Template</label>
                         <textarea
                           value={marketingMode.emailTemplate}
