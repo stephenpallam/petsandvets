@@ -75,18 +75,54 @@ const ContentWithLinks = ({ content, className = "" }) => {
 const SMSContentWithLinks = ({ content, className = "" }) => {
   if (!content) return <span className={className}>{content}</span>;
   
-  // Split content by URLs and create React elements
-  const urlPattern = /(https?:\/\/[^\s]+)/g;
-  const parts = content.split(urlPattern);
+  // First handle text + URL patterns that should be replaced together
+  let processedContent = content;
+  
+  // Replace "book online: URL" or "book: URL" patterns with just "Book Now"
+  processedContent = processedContent.replace(
+    /(book\s*(?:online|now)?:\s*)(https:\/\/petsandvetsanimalhospital\.com\/book\b[^\s]*)/gi,
+    'BOOKNOW_PLACEHOLDER'
+  );
+  
+  // Replace "visit: URL" or "website: URL" patterns with just "Visit Our Website"  
+  processedContent = processedContent.replace(
+    /(visit|website):\s*(https:\/\/petsandvetsanimalhospital\.com\b[^\s]*)/gi,
+    'WEBSITE_PLACEHOLDER'
+  );
+  
+  // Split content by URLs and placeholders
+  const parts = processedContent.split(/(BOOKNOW_PLACEHOLDER|WEBSITE_PLACEHOLDER|https?:\/\/[^\s]+)/g);
   
   return (
     <span className={className}>
       {parts.map((part, index) => {
-        if (part.match(urlPattern)) {
-          // This is a URL, make it clickable with appropriate display text
+        if (part === 'BOOKNOW_PLACEHOLDER') {
+          return (
+            <a 
+              key={index}
+              href="https://petsandvetsanimalhospital.com/book" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-white underline hover:text-blue-200 font-medium"
+            >
+              Book Now
+            </a>
+          );
+        } else if (part === 'WEBSITE_PLACEHOLDER') {
+          return (
+            <a 
+              key={index}
+              href="https://petsandvetsanimalhospital.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-white underline hover:text-blue-200 font-medium"
+            >
+              Visit Our Website
+            </a>
+          );
+        } else if (part.match(/^https?:\/\/[^\s]+$/)) {
+          // Handle remaining standalone URLs
           let displayText = part;
-          let linkClassName = "text-white underline hover:text-blue-200 font-medium";
-          
           if (part.includes('petsandvetsanimalhospital.com/book')) {
             displayText = 'Book Now';
           } else if (part.includes('petsandvetsanimalhospital.com')) {
@@ -99,7 +135,7 @@ const SMSContentWithLinks = ({ content, className = "" }) => {
               href={part} 
               target="_blank" 
               rel="noopener noreferrer"
-              className={linkClassName}
+              className="text-white underline hover:text-blue-200 font-medium"
             >
               {displayText}
             </a>
