@@ -562,6 +562,186 @@ const CMSSettings = () => {
               </div>
             )}
 
+            {/* Global Placeholders Tab */}
+            {activeTab === 'placeholders' && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-900">Global Placeholders</h2>
+                    <p className="text-sm text-gray-600">
+                      Manage global placeholder values used across email and SMS templates
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowPlaceholderForm(true)}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white transition-colors"
+                    style={{ backgroundColor: '#29add3' }}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
+                  >
+                    Add Placeholder
+                  </button>
+                </div>
+
+                {/* Placeholder Form */}
+                {showPlaceholderForm && (
+                  <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                    <h4 className="text-md font-medium text-gray-900 mb-4">
+                      {editingPlaceholder ? 'Edit Global Placeholder' : 'Create New Global Placeholder'}
+                    </h4>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Placeholder Name *
+                        </label>
+                        <input
+                          type="text"
+                          value={placeholderForm.name}
+                          onChange={(e) => setPlaceholderForm(prev => ({ ...prev, name: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                          style={{ '--tw-ring-color': '#29add3' }}
+                          placeholder="e.g., Website Link"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Placeholder Text *
+                        </label>
+                        <input
+                          type="text"
+                          value={placeholderForm.placeholder}
+                          onChange={(e) => setPlaceholderForm(prev => ({ ...prev, placeholder: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                          style={{ '--tw-ring-color': '#29add3' }}
+                          placeholder="e.g., WEBSITE_LINK (brackets added automatically)"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Placeholder Value *
+                        </label>
+                        <input
+                          type="text"
+                          value={placeholderForm.value}
+                          onChange={(e) => setPlaceholderForm(prev => ({ ...prev, value: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                          style={{ '--tw-ring-color': '#29add3' }}
+                          placeholder="e.g., https://yourwebsite.com"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Description
+                        </label>
+                        <input
+                          type="text"
+                          value={placeholderForm.description}
+                          onChange={(e) => setPlaceholderForm(prev => ({ ...prev, description: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                          style={{ '--tw-ring-color': '#29add3' }}
+                          placeholder="Brief description of this placeholder"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3 mt-4">
+                      <button
+                        type="button"
+                        onClick={editingPlaceholder ? handleUpdatePlaceholder : handleCreatePlaceholder}
+                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white transition-colors"
+                        style={{ backgroundColor: '#29add3' }}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                        onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
+                      >
+                        {editingPlaceholder ? 'Update Placeholder' : 'Create Placeholder'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleCancelPlaceholderForm}
+                        className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Placeholders List */}
+                <div>
+                  {loadingPlaceholders ? (
+                    <div className="text-center py-4">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-cyan-500 mx-auto"></div>
+                      <p className="text-gray-500 mt-2">Loading placeholders...</p>
+                    </div>
+                  ) : placeholders.length === 0 ? (
+                    <div className="text-center py-8 bg-gray-50 rounded-lg">
+                      <Settings className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                      <h4 className="text-lg font-medium text-gray-900 mb-2">No Global Placeholders</h4>
+                      <p className="text-gray-500">Create your first global placeholder to get started.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {placeholders.map(placeholder => (
+                        <div key={placeholder.id} className="border border-gray-200 rounded-lg p-4 bg-white">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center space-x-3 mb-2">
+                                <h4 className="font-medium text-gray-900">{placeholder.name}</h4>
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                  {placeholder.placeholder}
+                                </span>
+                              </div>
+                              {placeholder.description && (
+                                <p className="text-sm text-gray-600 mb-2">{placeholder.description}</p>
+                              )}
+                              <div className="mt-2">
+                                <span className="text-sm font-medium text-gray-700">Value: </span>
+                                <span className="text-sm text-gray-900">{placeholder.value}</span>
+                              </div>
+                              <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
+                                <span>Created: {new Date(placeholder.created_at).toLocaleDateString()}</span>
+                                {placeholder.updated_at && placeholder.updated_at !== placeholder.created_at && (
+                                  <span>Updated: {new Date(placeholder.updated_at).toLocaleDateString()}</span>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex items-center space-x-2 ml-4">
+                              <button
+                                onClick={() => handleEditPlaceholder(placeholder)}
+                                className="text-blue-600 hover:text-blue-800 text-sm"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => handleDeletePlaceholder(placeholder.id)}
+                                className="text-red-600 hover:text-red-800 text-sm"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Info Panel */}
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <div className="flex items-start space-x-3">
+                    <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5" />
+                    <div>
+                      <h3 className="text-sm font-medium text-yellow-800">Usage Information</h3>
+                      <p className="text-sm text-yellow-700 mt-1">
+                        Global placeholders can be used in email and SMS templates throughout the application. 
+                        Changes to placeholder values will automatically update all templates that use them.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Appearance Tab */}
             {activeTab === 'appearance' && (
               <div className="space-y-6">
