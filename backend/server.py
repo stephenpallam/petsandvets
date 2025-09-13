@@ -6426,6 +6426,10 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                     
                     if enhanced_content_result and enhanced_content_result.get('content'):
                         base_campaign_content = enhanced_content_result['content']
+                        # Clean up any markdown formatting
+                        base_campaign_content = base_campaign_content.replace('**Title:**', '').replace('**Content:**', '')
+                        base_campaign_content = base_campaign_content.replace('**', '').replace('Title:', '').replace('Content:', '')
+                        base_campaign_content = base_campaign_content.strip()
                         logger.info(f"Enhanced custom campaign content: {base_campaign_content[:100]}...")
                     else:
                         # Fallback to original content if enhancement fails
