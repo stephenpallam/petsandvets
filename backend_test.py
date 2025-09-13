@@ -382,6 +382,7 @@ class MarketingCampaignDuplicatePreventionTester:
             agent_data = {
                 "agent_type": "marketing_agent",
                 "agent_name": "Test Duplicate Prevention Agent 3 - Quality Check",
+                "mode": "adhoc",
                 "marketing_content_type": "custom_campaign",
                 "marketing_custom_campaign": "Special offer for [CUSTOMER_NAME] and [PET_NAME]! 20% off all services for [PET_NAMES].",
                 "marketing_channels": ["social_media", "email", "sms"],
