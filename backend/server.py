@@ -6784,10 +6784,7 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                                 word_count="25",  # Very concise for SMS
                                 platforms=['sms'],
                                 use_web_research=False,
-                                image_text="",
-                                track_usage=True,
-                                user_id="admin",
-                                agent_id=agent_id
+                                image_text=""
                             )
                             
                             if sms_content_result and sms_content_result.get('content'):
