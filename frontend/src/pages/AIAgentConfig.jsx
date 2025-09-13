@@ -1632,18 +1632,23 @@ Best regards,
     );
   };
 
-  // Full-Screen Editor Button Component
+  // Email Editor Button Component
   const FullScreenEditorButton = ({ content, title, onSave, className = "" }) => {
     return (
       <button
         type="button"
         onClick={() => openFullScreenEditor(content, title, onSave)}
-        className={`inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${className}`}
+        className={`inline-flex items-center px-3 py-2 border shadow-sm text-sm font-medium rounded-md text-white transition-colors hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 ${className}`}
+        style={{ 
+          backgroundColor: 'rgb(41, 173, 211)', 
+          borderColor: 'rgb(41, 173, 211)',
+          '--tw-ring-color': 'rgb(41, 173, 211)'
+        }}
       >
         <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
         </svg>
-        Full Screen Editor
+        Email Editor
       </button>
     );
   };
