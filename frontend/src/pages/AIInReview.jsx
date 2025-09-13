@@ -1222,7 +1222,16 @@ const AIInReview = () => {
                                 </div>
                               </div>
                               <div className="flex items-center space-x-2">
-                                {post.platforms && post.platforms.map((platform) => (
+                                {/* Marketing Agent Platform Display */}
+                                {post.agent_type === 'marketing_agent' && post.marketing_channel === 'social_media' && post.platform ? (
+                                  <span 
+                                    className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700"
+                                  >
+                                    {getPlatformIcon(post.platform)} {post.platform === 'twitter' ? 'X' : post.platform.charAt(0).toUpperCase() + post.platform.slice(1)}
+                                  </span>
+                                ) : 
+                                /* Regular platforms display */
+                                post.platforms && post.platforms.map((platform) => (
                                   <span 
                                     key={platform} 
                                     className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700"
@@ -1230,6 +1239,22 @@ const AIInReview = () => {
                                     {getPlatformIcon(platform)} {platform === 'twitter' ? 'X' : platform.charAt(0).toUpperCase() + platform.slice(1)}
                                   </span>
                                 ))}
+                                
+                                {/* Marketing Agent Channel-specific info */}
+                                {post.agent_type === 'marketing_agent' && (
+                                  <>
+                                    {post.marketing_channel === 'email' && post.email_personalized && (
+                                      <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-purple-100 text-purple-700">
+                                        📧 Personalized
+                                      </span>
+                                    )}
+                                    {post.marketing_channel === 'sms' && post.sms_personalized && (
+                                      <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-orange-100 text-orange-700">
+                                        📱 Personalized
+                                      </span>
+                                    )}
+                                  </>
+                                )}
                               </div>
                             </div>
 
