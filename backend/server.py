@@ -6796,7 +6796,7 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                             sms_template_with_content = f"{sms_template} {base_campaign_content}"[:160]  # Truncate to SMS limit
                     
                     if agent_data.get('marketing_sms_personalized', True) and sample_customer_data:
-                            
+                        try:
                             if sms_content_result and sms_content_result.get('content'):
                                 sms_template_with_content = sms_content_result['content']
                             else:
