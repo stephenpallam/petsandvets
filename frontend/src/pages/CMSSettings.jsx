@@ -344,7 +344,7 @@ const CMSSettings = () => {
     setMessage({ type: '', text: '' });
     setPlaceholderForm({ name: '', placeholder: '', value: '', description: '' });
     setEditingPlaceholder(null);
-    setShowPlaceholderForm(false);
+    setShowPlaceholderModal(false);
   };
 
   return (
