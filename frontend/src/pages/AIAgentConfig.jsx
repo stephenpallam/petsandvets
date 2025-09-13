@@ -146,6 +146,7 @@ const AIAgentConfig = () => {
   const [fullScreenEditorContent, setFullScreenEditorContent] = useState('');
   const [fullScreenEditorTitle, setFullScreenEditorTitle] = useState('');
   const [fullScreenEditorCallback, setFullScreenEditorCallback] = useState(null);
+  const [fullScreenEditorPersonalized, setFullScreenEditorPersonalized] = useState(true);
   
   // Pay period settings
   const [defaultPayPeriods, setDefaultPayPeriods] = useState([]);
