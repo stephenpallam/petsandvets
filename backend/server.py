@@ -6358,9 +6358,16 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                 
                 if topic_content_result and topic_content_result.get('content'):
                     base_campaign_content = topic_content_result['content']
-                    # Clean up any markdown formatting
-                    base_campaign_content = base_campaign_content.replace('**Title:**', '').replace('**Content:**', '')
-                    base_campaign_content = base_campaign_content.replace('**', '').replace('Title:', '').replace('Content:', '')
+                    # Clean up any markdown formatting - comprehensive cleanup
+                    import re
+                    # Remove markdown title patterns
+                    base_campaign_content = re.sub(r'\*\*Title:.*?\*\*', '', base_campaign_content, flags=re.IGNORECASE)
+                    base_campaign_content = re.sub(r'\*\*Content:\*\*', '', base_campaign_content, flags=re.IGNORECASE)
+                    base_campaign_content = re.sub(r'Title:.*?\n', '', base_campaign_content, flags=re.IGNORECASE)
+                    base_campaign_content = re.sub(r'Content:\s*', '', base_campaign_content, flags=re.IGNORECASE)
+                    # Remove any remaining markdown formatting
+                    base_campaign_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', base_campaign_content)  # Bold text
+                    base_campaign_content = re.sub(r'\*([^*]+)\*', r'\1', base_campaign_content)    # Italic text
                     base_campaign_content = base_campaign_content.strip()
                     logger.info(f"Generated topic-based content: {base_campaign_content[:100]}...")
                 else:
