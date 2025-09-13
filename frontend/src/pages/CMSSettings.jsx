@@ -37,6 +37,12 @@ const CMSSettings = () => {
       icon: Globe,
       color: '#29add3'
     },
+    {
+      id: 'placeholders',
+      label: 'Global Placeholders',
+      icon: Settings,
+      color: '#f59e0b'
+    },
     { 
       id: 'appearance', 
       label: 'Appearance', 
