@@ -321,6 +321,10 @@ const CMSSettings = () => {
   };
 
   const handleEditPlaceholder = (placeholder) => {
+    console.log('Edit button clicked for placeholder:', placeholder);
+    // Clear any existing messages first
+    setMessage({ type: '', text: '' });
+    
     setEditingPlaceholder(placeholder);
     setPlaceholderForm({
       name: placeholder.name,
@@ -329,6 +333,8 @@ const CMSSettings = () => {
       description: placeholder.description || ''
     });
     setShowPlaceholderForm(true);
+    
+    console.log('State updated - form should show');
   };
 
   const handleCancelPlaceholderForm = () => {
