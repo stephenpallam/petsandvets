@@ -27,34 +27,39 @@ import { formatDate, formatScheduledDate } from '../utils/dateUtils';
 const formatContentWithLinks = (content) => {
   if (!content) return content;
   
-  // Define URL patterns and their display names
-  const linkPatterns = [
-    {
-      pattern: /https:\/\/petsandvetsanimalhospital\.com\/book\b/g,
-      displayText: 'Book Now',
-      className: 'text-blue-600 hover:text-blue-800 font-medium underline'
-    },
-    {
-      pattern: /https:\/\/petsandvetsanimalhospital\.com\b/g,
-      displayText: 'Visit Our Website',
-      className: 'text-blue-600 hover:text-blue-800 font-medium underline'
-    },
-    {
-      pattern: /https?:\/\/[^\s]+/g,
-      displayText: null, // Will use the URL itself for other links
-      className: 'text-blue-600 hover:text-blue-800 underline'
-    }
-  ];
-  
   let formattedContent = content;
   
-  // Process each link pattern
-  linkPatterns.forEach(({ pattern, displayText, className }) => {
-    formattedContent = formattedContent.replace(pattern, (match) => {
-      const linkText = displayText || match;
-      return `<a href="${match}" target="_blank" rel="noopener noreferrer" class="${className}">${linkText}</a>`;
-    });
-  });
+  // First handle text + URL patterns that should be replaced together
+  // Replace "book online: URL" or "book: URL" patterns with just "Book Now"
+  formattedContent = formattedContent.replace(
+    /(book\s*(?:online|now)?:\s*)(https:\/\/petsandvetsanimalhospital\.com\/book\b[^\s]*)/gi,
+    '<a href="https://petsandvetsanimalhospital.com/book" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 font-medium underline">Book Now</a>'
+  );
+  
+  // Replace "visit: URL" or "website: URL" patterns with just "Visit Our Website"
+  formattedContent = formattedContent.replace(
+    /(visit|website):\s*(https:\/\/petsandvetsanimalhospital\.com\b[^\s]*)/gi,
+    '<a href="https://petsandvetsanimalhospital.com" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 font-medium underline">Visit Our Website</a>'
+  );
+  
+  // Handle standalone URLs that weren't caught by the above patterns
+  // Book links
+  formattedContent = formattedContent.replace(
+    /\bhttps:\/\/petsandvetsanimalhospital\.com\/book\b[^\s]*/g,
+    '<a href="https://petsandvetsanimalhospital.com/book" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 font-medium underline">Book Now</a>'
+  );
+  
+  // Website links (only if not already replaced)
+  formattedContent = formattedContent.replace(
+    /\bhttps:\/\/petsandvetsanimalhospital\.com\b(?!\/book)[^\s]*/g,
+    '<a href="https://petsandvetsanimalhospital.com" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 font-medium underline">Visit Our Website</a>'
+  );
+  
+  // Handle other URLs (make them clickable but keep original text)
+  formattedContent = formattedContent.replace(
+    /\bhttps?:\/\/(?!petsandvetsanimalhospital\.com)[^\s]+/g,
+    (match) => `<a href="${match}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 underline">${match}</a>`
+  );
   
   return formattedContent;
 };
