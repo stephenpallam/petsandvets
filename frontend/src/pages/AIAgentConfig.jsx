@@ -1626,20 +1626,24 @@ Best regards,
     onSelect, 
     placeholder = "Select a template...", 
     templateType = "email",
-    isPersonalized = true // New prop to control filtering
+    isPersonalized = true, // New prop to control filtering
+    showCampaignTemplates = false // New prop to show ChatGPT campaign templates
   }) => {
     const handleTemplateSelect = (template) => {
       onSelect(template.content);
     };
 
-    // Filter templates based on personalization setting
-    const filteredTemplates = filterTemplatesByPersonalization(templates, isPersonalized);
+    // Filter templates based on personalization setting and campaign type
+    const filteredTemplates = filterTemplatesByPersonalization(templates, isPersonalized, showCampaignTemplates);
 
     return (
       <div className="mb-3">
         <label className="block text-sm font-medium text-gray-700 mb-2">
           📄 Quick Template Selection
-          {!isPersonalized && (
+          {showCampaignTemplates && (
+            <span className="text-xs text-blue-600 ml-2">(ChatGPT Campaign Templates)</span>
+          )}
+          {!isPersonalized && !showCampaignTemplates && (
             <span className="text-xs text-gray-500 ml-2">(Non-personalized templates only)</span>
           )}
         </label>
@@ -1667,8 +1671,11 @@ Best regards,
         </div>
         {filteredTemplates.length === 0 && (
           <p className="text-xs text-gray-500 mt-1">
-            No {isPersonalized ? '' : 'non-personalized '}{templateType} templates available. 
-            {!isPersonalized && ' Create templates without [CUSTOMER_NAME] or [PET_NAME] placeholders in'} {templateType === 'email' ? 'Email' : 'SMS'} Configuration.
+            {showCampaignTemplates ? 
+              `No ChatGPT campaign ${templateType} templates available.` :
+              `No ${isPersonalized ? '' : 'non-personalized '}${templateType} templates available. 
+               ${!isPersonalized && ' Create templates without [CUSTOMER_NAME] or [PET_NAME] placeholders in'} ${templateType === 'email' ? 'Email' : 'SMS'} Configuration.`
+            }
           </p>
         )}
       </div>
