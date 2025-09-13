@@ -615,6 +615,7 @@ const CMSSettings = () => {
                     onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
                     onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
                   >
+                    <Plus className="h-4 w-4 mr-2" />
                     Add Placeholder
                   </button>
                 </div>
