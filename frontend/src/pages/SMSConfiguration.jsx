@@ -31,6 +31,7 @@ const SMSConfiguration = () => {
   const tabs = [
     { id: 'general', label: 'General Settings', icon: Settings },
     { id: 'provider', label: 'SMS Provider', icon: MessageSquare },
+    { id: 'templates', label: 'SMS Templates', icon: MessageSquare },
     { id: 'test', label: 'Test & Verify', icon: TestTube }
   ];
 
