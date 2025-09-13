@@ -248,7 +248,7 @@ const CMSSettings = () => {
       if (response.ok) {
         setMessage({ type: 'success', text: 'Global placeholder created successfully!' });
         setPlaceholderForm({ name: '', placeholder: '', value: '', description: '' });
-        setShowPlaceholderForm(false);
+        setShowPlaceholderModal(false);
         fetchPlaceholders();
       } else {
         const errorData = await response.json();
