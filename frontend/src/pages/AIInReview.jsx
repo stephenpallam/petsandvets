@@ -1172,18 +1172,31 @@ const AIInReview = () => {
                                   <span className="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800">
                                     {post.agent_name || 'AI Agent'}
                                   </span>
-                                  {post.agent_type && (
+                                  {/* Show specific channel for marketing agents or default agent type */}
+                                  {post.agent_type === 'marketing_agent' && post.marketing_channel ? (
+                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium ${
+                                      post.marketing_channel === 'social_media' ? 'bg-teal-100 text-teal-700' :
+                                      post.marketing_channel === 'email' ? 'bg-purple-100 text-purple-700' :
+                                      post.marketing_channel === 'sms' ? 'bg-orange-100 text-orange-700' :
+                                      'bg-pink-100 text-pink-700'
+                                    }`}>
+                                      {post.marketing_channel === 'social_media' ? (post.platform ? post.platform.charAt(0).toUpperCase() + post.platform.slice(1) : 'Social Media') :
+                                       post.marketing_channel === 'email' ? 'Email' :
+                                       post.marketing_channel === 'sms' ? 'SMS' :
+                                       post.marketing_channel}
+                                    </span>
+                                  ) : post.agent_type && (
                                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium ${
                                       post.agent_type === 'social_media' ? 'bg-teal-100 text-teal-700' :
                                       post.agent_type === 'email' ? 'bg-purple-100 text-purple-700' :
-                                  post.agent_type === 'email_agent' ? 'bg-purple-100 text-purple-700' :
+                                      post.agent_type === 'email_agent' ? 'bg-purple-100 text-purple-700' :
                                       post.agent_type === 'sms_agent' ? 'bg-orange-100 text-orange-700' :
                                       post.agent_type === 'marketing_agent' ? 'bg-pink-100 text-pink-700' :
                                       'bg-gray-100 text-gray-700'
                                     }`}>
                                       {post.agent_type === 'social_media' ? 'Social Media' :
                                        post.agent_type === 'email' ? 'Email' :
-                                   post.agent_type === 'email_agent' ? 'Email' :
+                                       post.agent_type === 'email_agent' ? 'Email' :
                                        post.agent_type === 'sms_agent' ? 'SMS' :
                                        post.agent_type === 'marketing_agent' ? 'Marketing' :
                                        post.agent_type}
