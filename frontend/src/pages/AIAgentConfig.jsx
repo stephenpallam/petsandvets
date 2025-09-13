@@ -986,6 +986,11 @@ Best regards,
         fetchAvailableHolidays(); // Marketing agents use holidays for holiday-based campaigns
         fetchAvailableCustomers(); // Marketing agents use customer database for personalization
       }
+      
+      // Fetch templates for all agent types that use email/SMS
+      if (['email', 'sms_agent', 'marketing_agent'].includes(agentType)) {
+        fetchTemplates();
+      }
     }
   }, [user, authLoading, canAccessManager, searchParams]);
 
