@@ -1632,6 +1632,54 @@ Best regards,
     );
   };
 
+  // Full-screen email editor functions
+  const openFullScreenEditor = (content, title, onSave) => {
+    setFullScreenEditorContent(content);
+    setFullScreenEditorTitle(title);
+    setFullScreenEditorCallback(() => onSave); // Wrap in arrow function to store the callback
+    setShowFullScreenEditor(true);
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeFullScreenEditor = () => {
+    setShowFullScreenEditor(false);
+    setFullScreenEditorContent('');
+    setFullScreenEditorTitle('');
+    setFullScreenEditorCallback(null);
+    // Restore body scroll
+    document.body.style.overflow = 'unset';
+  };
+
+  const saveFullScreenEditor = () => {
+    if (fullScreenEditorCallback) {
+      fullScreenEditorCallback(fullScreenEditorContent);
+    }
+    closeFullScreenEditor();
+  };
+
+  // Handle keyboard events for full-screen editor
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape' && showFullScreenEditor) {
+        closeFullScreenEditor();
+      }
+      // Ctrl+S or Cmd+S to save
+      if ((event.ctrlKey || event.metaKey) && event.key === 's' && showFullScreenEditor) {
+        event.preventDefault();
+        saveFullScreenEditor();
+      }
+    };
+
+    if (showFullScreenEditor) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [showFullScreenEditor, fullScreenEditorContent, fullScreenEditorCallback]);
+
   // Helper functions to check if forms are valid (for button state)
   const isTimesheetAdhocModeValid = () => {
     return timesheetAdhocMode.agentName.trim() && 
