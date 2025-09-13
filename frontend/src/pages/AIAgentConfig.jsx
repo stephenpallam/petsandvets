@@ -4496,6 +4496,7 @@ Best regards,
                             onSelect={(templateContent) => handleEmailScheduledModeChange('emailContentTemplate', templateContent)}
                             placeholder="Select an email template..."
                             templateType="email"
+                            isPersonalized={true}
                           />
                           <div className="flex items-center justify-between mb-2">
                             <label className="block text-sm font-medium text-gray-700">
@@ -4507,6 +4508,7 @@ Best regards,
                               title="Holiday Email Agent - Email Template"
                               onSave={(content) => handleEmailScheduledModeChange('emailContentTemplate', content)}
                               className="text-xs"
+                              isPersonalized={true}
                             />
                           </div>
                           <textarea
