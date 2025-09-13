@@ -170,6 +170,14 @@ class MarketingAgentTester:
                     
                     created_agent = await response.json()
                     agent_id = created_agent.get("id")
+                    if not agent_id:
+                        self.log_test_result(
+                            "Create Marketing Agent",
+                            False,
+                            f"Agent created but no ID returned: {created_agent}",
+                            {"Response": created_agent}
+                        )
+                        return False, []
                     self.created_agent_ids.append(agent_id)
                     print(f"✅ Created marketing agent with ID: {agent_id}")
                 
