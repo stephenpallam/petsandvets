@@ -105,9 +105,9 @@ class MarketingCampaignDuplicatePreventionTester:
     async def cleanup_test_data(self):
         """Clean up test data before starting tests"""
         try:
-            # Remove any existing test templates and placeholders
-            await self.db.templates.delete_many({"name": {"$regex": "^Test"}})
-            await self.db.global_placeholders.delete_many({"name": {"$regex": "^Test"}})
+            # Remove any existing test agents and posts
+            await self.db.ai_agents.delete_many({"agent_name": {"$regex": "^Test Duplicate Prevention"}})
+            await self.db.ai_posts.delete_many({"agent_name": {"$regex": "^Test Duplicate Prevention"}})
             print("🧹 Cleaned up existing test data")
         except Exception as e:
             print(f"Warning: Could not clean up test data: {e}")
