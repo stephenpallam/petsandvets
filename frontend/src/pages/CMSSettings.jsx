@@ -125,6 +125,13 @@ const CMSSettings = () => {
     fetchSettings();
   }, [token, user, authLoading]);
 
+  // Load placeholders when placeholders tab is active
+  useEffect(() => {
+    if (activeTab === 'placeholders' && user && user.role === 'admin') {
+      fetchPlaceholders();
+    }
+  }, [activeTab, user, token]);
+
   // Check if user is admin
   if (!authLoading && (!user || user.role !== 'admin')) {
     return (
