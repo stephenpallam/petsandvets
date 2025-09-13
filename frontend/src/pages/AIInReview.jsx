@@ -430,7 +430,8 @@ const AIInReview = () => {
   const [editForm, setEditForm] = useState({
     content: '',
     image_text: '',
-    topic: ''
+    topic: '',
+    email_subject: ''
   });
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
