@@ -7475,6 +7475,7 @@ Example:
                           onSelect={(templateContent) => setMarketingMode(prev => ({ ...prev, smsTemplate: templateContent }))}
                           placeholder="Select an SMS template..."
                           templateType="sms"
+                          isPersonalized={marketingMode.smsPersonalized}
                         />
                         <label className="block text-sm font-medium text-gray-700 mb-2">SMS Template</label>
                         <textarea
