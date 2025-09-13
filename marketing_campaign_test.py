@@ -48,7 +48,16 @@ class MarketingCampaignTester:
         self.client = None
         self.db = None
         self.test_results = []
-        self.backend_url = os.environ.get('FRONTEND_URL', 'https://marketing-agent.preview.emergentagent.com')
+        # Use frontend .env for backend URL
+        frontend_env_path = Path(__file__).parent / "frontend" / ".env"
+        if frontend_env_path.exists():
+            with open(frontend_env_path, 'r') as f:
+                for line in f:
+                    if line.startswith('REACT_APP_BACKEND_URL='):
+                        self.backend_url = line.split('=', 1)[1].strip()
+                        break
+        else:
+            self.backend_url = 'https://marketing-agent.preview.emergentagent.com'
         self.auth_token = None
         self.created_agent_ids = []
         self.created_post_ids = []
