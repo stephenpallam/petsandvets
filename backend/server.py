@@ -11808,6 +11808,20 @@ async def initialize_default_templates(
                 "type": "email",
                 "content": "Seasonal Pet Care Tips from [BUSINESS_NAME]\n\nAs the seasons change, so do your pet's needs!\n\nImportant reminders for this season:\n• Schedule your seasonal checkup\n• Update parasite prevention protocols\n• Review dietary needs for seasonal changes\n• Check for seasonal allergies or skin issues\n\nOur experienced veterinary team is ready to help ensure your pets stay healthy all year round.\n\nContact [BUSINESS_NAME] today:\n📞 [PHONE_NUMBER]\n🌐 [WEBSITE_LINK]\n📅 [BOOK_NOW_LINK]\n\nLocated at: [BUSINESS_ADDRESS]\n\nCaring for your pets through every season!",
                 "description": "Seasonal care reminders for all pet owners"
+            },
+            
+            # Special Campaign Templates for Topic/Holiday with ChatGPT Integration
+            {
+                "name": "Campaign Email - Personalized (ChatGPT)",
+                "type": "email",
+                "content": "Dear [CUSTOMER_NAME],\n\n[CHATGPT_CONTENT]\n\nWe hope [PET_NAME] is doing well! If you have any questions or would like to schedule an appointment, please don't hesitate to reach out.\n\nBest regards,\n[BUSINESS_NAME]\n📞 [PHONE_NUMBER]\n🌐 [WEBSITE_LINK]\n📅 [BOOK_NOW_LINK]\n\nVisit us at: [BUSINESS_ADDRESS]",
+                "description": "Campaign email template with ChatGPT generated content - personalized with customer and pet names"
+            },
+            {
+                "name": "Campaign Email - General (ChatGPT)",
+                "type": "email", 
+                "content": "Dear Valued Customer,\n\n[CHATGPT_CONTENT]\n\nWe appreciate your trust in our care for your beloved pets. For any questions or to schedule an appointment, please contact us.\n\nWarm regards,\n[BUSINESS_NAME]\n📞 [PHONE_NUMBER]\n🌐 [WEBSITE_LINK]\n📅 [BOOK_NOW_LINK]\n\nLocated at: [BUSINESS_ADDRESS]",
+                "description": "Campaign email template with ChatGPT generated content - general without personalization"
             }
         ]
         
