@@ -23,6 +23,54 @@ import {
 } from 'lucide-react';
 import { formatDate, formatScheduledDate } from '../utils/dateUtils';
 
+// Helper function to convert URLs to clickable links
+const formatContentWithLinks = (content) => {
+  if (!content) return content;
+  
+  // Define URL patterns and their display names
+  const linkPatterns = [
+    {
+      pattern: /https:\/\/petsandvetsanimalhospital\.com\/book\b/g,
+      displayText: 'Book Now',
+      className: 'text-blue-600 hover:text-blue-800 font-medium underline'
+    },
+    {
+      pattern: /https:\/\/petsandvetsanimalhospital\.com\b/g,
+      displayText: 'Visit Our Website',
+      className: 'text-blue-600 hover:text-blue-800 font-medium underline'
+    },
+    {
+      pattern: /https?:\/\/[^\s]+/g,
+      displayText: null, // Will use the URL itself for other links
+      className: 'text-blue-600 hover:text-blue-800 underline'
+    }
+  ];
+  
+  let formattedContent = content;
+  
+  // Process each link pattern
+  linkPatterns.forEach(({ pattern, displayText, className }) => {
+    formattedContent = formattedContent.replace(pattern, (match) => {
+      const linkText = displayText || match;
+      return `<a href="${match}" target="_blank" rel="noopener noreferrer" class="${className}">${linkText}</a>`;
+    });
+  });
+  
+  return formattedContent;
+};
+
+// Component to render content with clickable links
+const ContentWithLinks = ({ content, className = "" }) => {
+  const formattedContent = formatContentWithLinks(content);
+  
+  return (
+    <div 
+      className={`whitespace-pre-wrap ${className}`}
+      dangerouslySetInnerHTML={{ __html: formattedContent }}
+    />
+  );
+};
+
 // SMS Content Preview Component
 const SMSContentPreview = ({ post }) => {
   const [customerPreview, setCustomerPreview] = useState(null);
