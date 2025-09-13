@@ -25,6 +25,17 @@ const SMSConfiguration = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showApiKey, setShowApiKey] = useState(false);
 
+  // Template management state
+  const [templates, setTemplates] = useState([]);
+  const [loadingTemplates, setLoadingTemplates] = useState(false);
+  const [editingTemplate, setEditingTemplate] = useState(null);
+  const [showTemplateForm, setShowTemplateForm] = useState(false);
+  const [templateForm, setTemplateForm] = useState({
+    name: '',
+    content: '',
+    description: ''
+  });
+
   const { user, token, isAdmin, canAccessManager, loading: authLoading } = useAuth();
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL || window.location.origin;
 
