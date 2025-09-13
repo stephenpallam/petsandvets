@@ -6870,6 +6870,10 @@ Located at: [BUSINESS_ADDRESS]"""
                             
                             if sms_content_result and sms_content_result.get('content'):
                                 condensed_content = sms_content_result['content']
+                                # Clean up any markdown formatting
+                                condensed_content = condensed_content.replace('**Title:**', '').replace('**Content:**', '')
+                                condensed_content = condensed_content.replace('**', '').replace('Title:', '').replace('Content:', '')
+                                condensed_content = condensed_content.strip()
                             else:
                                 # Fallback: Truncate content if generation fails
                                 condensed_content = base_campaign_content[:80] + "..." if len(base_campaign_content) > 80 else base_campaign_content
