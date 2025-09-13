@@ -234,8 +234,11 @@ const SMSContentPreview = ({ post }) => {
         {/* Raw Template for Reference */}
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
           <div className="text-sm text-gray-600 mb-2 font-medium">📝 SMS Template</div>
-          <div className="whitespace-pre-wrap text-gray-700 text-sm bg-white p-3 rounded border">
-            {post.content}
+          <div className="bg-white p-3 rounded border">
+            <SMSContentWithLinks 
+              content={post.content} 
+              className="text-gray-700 text-sm"
+            />
           </div>
         </div>
       </div>
