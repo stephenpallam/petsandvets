@@ -169,7 +169,7 @@ class MarketingAgentTester:
                         return False
                     
                     created_agent = await response.json()
-                    agent_id = created_agent.get("id")
+                    agent_id = created_agent.get("agent_id") or created_agent.get("id")
                     if not agent_id:
                         self.log_test_result(
                             "Create Marketing Agent",
