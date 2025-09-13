@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
 """
-Template Management System Comprehensive Testing
+Marketing Campaign Duplicate Prevention Testing
 
-This test comprehensively tests the new Template Management System endpoints as requested:
+This test comprehensively tests the DUPLICATE PREVENTION fix for Marketing Campaign generation:
 
 Test Focus:
-1. Initialize Default Templates and Placeholders - Test POST /api/templates/initialize-defaults
-2. Template CRUD Operations - Test all template endpoints with filtering
-3. Global Placeholder CRUD Operations - Test all global placeholder endpoints  
-4. Validation and Error Handling - Test duplicate names, non-existent resources, etc.
+1. Test Duplicate Prevention - Only 4 posts created (1 Facebook + 1 Instagram + 1 Email + 1 SMS)
+2. Test Rapid Fire Prevention - Second run within 30 seconds should be skipped
+3. Verify Post Quality - Check proper channel labels and fields
+4. Database Verification - Count posts by agent_id and verify channel breakdown
+5. Content Quality Check - Verify ChatGPT content and proper formatting
 
 Expected Results:
-- Default templates and placeholders should be created successfully
-- All CRUD operations should work correctly with proper validation
-- Error handling should work for edge cases
-- System should be ready for frontend integration
+- Only 4 posts created per agent (no duplicates)
+- Rapid fire attempts are blocked with appropriate message
+- All posts have proper channel labels and platform fields
+- Content quality is maintained with proper personalization
 """
 
 import asyncio
