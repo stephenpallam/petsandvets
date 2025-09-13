@@ -59,15 +59,45 @@ const formatContentWithLinks = (content) => {
   return formattedContent;
 };
 
-// Component to render content with clickable links
-const ContentWithLinks = ({ content, className = "" }) => {
-  const formattedContent = formatContentWithLinks(content);
+// Component to render SMS content with clickable links (React elements instead of HTML)
+const SMSContentWithLinks = ({ content, className = "" }) => {
+  if (!content) return <span className={className}>{content}</span>;
+  
+  // Split content by URLs and create React elements
+  const urlPattern = /(https?:\/\/[^\s]+)/g;
+  const parts = content.split(urlPattern);
   
   return (
-    <div 
-      className={`whitespace-pre-wrap ${className}`}
-      dangerouslySetInnerHTML={{ __html: formattedContent }}
-    />
+    <span className={className}>
+      {parts.map((part, index) => {
+        if (part.match(urlPattern)) {
+          // This is a URL, make it clickable with appropriate display text
+          let displayText = part;
+          let linkClassName = "text-white underline hover:text-blue-200 font-medium";
+          
+          if (part.includes('petsandvetsanimalhospital.com/book')) {
+            displayText = 'Book Now';
+          } else if (part.includes('petsandvetsanimalhospital.com')) {
+            displayText = 'Visit Our Website';
+          }
+          
+          return (
+            <a 
+              key={index}
+              href={part} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className={linkClassName}
+            >
+              {displayText}
+            </a>
+          );
+        } else {
+          // Regular text
+          return part;
+        }
+      })}
+    </span>
   );
 };
 
