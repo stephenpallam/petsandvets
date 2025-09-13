@@ -148,6 +148,132 @@ const EmailConfiguration = () => {
     }
   };
 
+  // Template management functions
+  const fetchTemplates = async () => {
+    setLoadingTemplates(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/templates?template_type=email`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setTemplates(data);
+      } else {
+        throw new Error('Failed to fetch templates');
+      }
+    } catch (err) {
+      setError('Failed to load email templates');
+      console.error('Error fetching templates:', err);
+    } finally {
+      setLoadingTemplates(false);
+    }
+  };
+
+  const handleCreateTemplate = async () => {
+    if (!templateForm.name.trim() || !templateForm.content.trim()) {
+      setError('Template name and content are required');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/templates`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...templateForm,
+          type: 'email',
+          created_by: user?.email || 'unknown'
+        })
+      });
+
+      if (response.ok) {
+        setSuccess('Email template created successfully!');
+        setTemplateForm({ name: '', content: '', description: '' });
+        setShowTemplateForm(false);
+        fetchTemplates();
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to create template');
+      }
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const handleUpdateTemplate = async () => {
+    if (!templateForm.name.trim() || !templateForm.content.trim()) {
+      setError('Template name and content are required');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/templates/${editingTemplate.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(templateForm)
+      });
+
+      if (response.ok) {
+        setSuccess('Email template updated successfully!');
+        setTemplateForm({ name: '', content: '', description: '' });
+        setEditingTemplate(null);
+        setShowTemplateForm(false);
+        fetchTemplates();
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to update template');
+      }
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const handleDeleteTemplate = async (templateId) => {
+    if (!confirm('Are you sure you want to delete this template?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/templates/${templateId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (response.ok) {
+        setSuccess('Email template deleted successfully!');
+        fetchTemplates();
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to delete template');
+      }
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const handleEditTemplate = (template) => {
+    setEditingTemplate(template);
+    setTemplateForm({
+      name: template.name,
+      content: template.content,
+      description: template.description || ''
+    });
+    setShowTemplateForm(true);
+  };
+
+  const handleCancelTemplateForm = () => {
+    setTemplateForm({ name: '', content: '', description: '' });
+    setEditingTemplate(null);
+    setShowTemplateForm(false);
+  };
+
   if (authLoading || loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
