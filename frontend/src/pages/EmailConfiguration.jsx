@@ -622,6 +622,168 @@ const EmailConfiguration = () => {
                   </div>
                 </div>
 
+                {/* Email Templates Tab */}
+                <div className={activeTab === 'templates' ? 'block' : 'hidden'}>
+                  <div className="space-y-6">
+                    <div>
+                      <div className="flex items-center justify-between mb-6">
+                        <div>
+                          <h3 className="text-lg font-medium text-gray-900">Email Templates</h3>
+                          <p className="text-sm text-gray-600">Create and manage email templates with placeholders</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setShowTemplateForm(true)}
+                          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white transition-colors"
+                          style={{ backgroundColor: '#29add3' }}
+                          onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                          onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
+                        >
+                          Add Template
+                        </button>
+                      </div>
+
+                      {/* Template Form */}
+                      {showTemplateForm && (
+                        <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                          <h4 className="text-md font-medium text-gray-900 mb-4">
+                            {editingTemplate ? 'Edit Template' : 'Create New Template'}
+                          </h4>
+                          <div className="space-y-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Template Name *
+                              </label>
+                              <input
+                                type="text"
+                                value={templateForm.name}
+                                onChange={(e) => setTemplateForm(prev => ({ ...prev, name: e.target.value }))}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                                style={{ '--tw-ring-color': '#29add3' }}
+                                placeholder="e.g., Appointment Reminder"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Description
+                              </label>
+                              <input
+                                type="text"
+                                value={templateForm.description}
+                                onChange={(e) => setTemplateForm(prev => ({ ...prev, description: e.target.value }))}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                                style={{ '--tw-ring-color': '#29add3' }}
+                                placeholder="Brief description of the template"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Email Content *
+                              </label>
+                              <textarea
+                                value={templateForm.content}
+                                onChange={(e) => setTemplateForm(prev => ({ ...prev, content: e.target.value }))}
+                                rows={6}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                                style={{ '--tw-ring-color': '#29add3' }}
+                                placeholder="Enter email content. Use placeholders like [CUSTOMER_NAME], [PET_NAME], [WEBSITE_LINK], etc."
+                              />
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-3 mt-4">
+                            <button
+                              type="button"
+                              onClick={editingTemplate ? handleUpdateTemplate : handleCreateTemplate}
+                              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white transition-colors"
+                              style={{ backgroundColor: '#29add3' }}
+                              onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                              onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
+                            >
+                              {editingTemplate ? 'Update Template' : 'Create Template'}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={handleCancelTemplateForm}
+                              className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Templates List */}
+                      <div>
+                        {loadingTemplates ? (
+                          <div className="text-center py-4">
+                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-cyan-500 mx-auto"></div>
+                            <p className="text-gray-500 mt-2">Loading templates...</p>
+                          </div>
+                        ) : templates.length === 0 ? (
+                          <div className="text-center py-8 bg-gray-50 rounded-lg">
+                            <Mail className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                            <h4 className="text-lg font-medium text-gray-900 mb-2">No Email Templates</h4>
+                            <p className="text-gray-500">Create your first email template to get started.</p>
+                          </div>
+                        ) : (
+                          <div className="space-y-4">
+                            {templates.map(template => (
+                              <div key={template.id} className="border border-gray-200 rounded-lg p-4 bg-white">
+                                <div className="flex items-start justify-between">
+                                  <div className="flex-1">
+                                    <h4 className="font-medium text-gray-900">{template.name}</h4>
+                                    {template.description && (
+                                      <p className="text-sm text-gray-600 mt-1">{template.description}</p>
+                                    )}
+                                    <div className="mt-2">
+                                      <p className="text-sm text-gray-700 line-clamp-3">{template.content}</p>
+                                    </div>
+                                    <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
+                                      <span>Created: {new Date(template.created_at).toLocaleDateString()}</span>
+                                      {template.updated_at && template.updated_at !== template.created_at && (
+                                        <span>Updated: {new Date(template.updated_at).toLocaleDateString()}</span>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center space-x-2 ml-4">
+                                    <button
+                                      onClick={() => handleEditTemplate(template)}
+                                      className="text-blue-600 hover:text-blue-800 text-sm"
+                                    >
+                                      Edit
+                                    </button>
+                                    <button
+                                      onClick={() => handleDeleteTemplate(template.id)}
+                                      className="text-red-600 hover:text-red-800 text-sm"
+                                    >
+                                      Delete
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Available Placeholders Info */}
+                      <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <h4 className="text-sm font-medium text-blue-900 mb-2">Available Placeholders:</h4>
+                        <div className="text-sm text-blue-800 space-y-1">
+                          <p><code>[CUSTOMER_NAME]</code> - Customer's name</p>
+                          <p><code>[PET_NAME]</code> - Pet's name</p>
+                          <p><code>[PET_NAMES]</code> - All pet names</p>
+                          <p><code>[WEBSITE_LINK]</code> - Website URL</p>
+                          <p><code>[BOOK_NOW_LINK]</code> - Booking URL</p>
+                          <p><code>[PHONE_NUMBER]</code> - Business phone</p>
+                          <p><code>[BUSINESS_NAME]</code> - Business name</p>
+                          <p><code>[BUSINESS_ADDRESS]</code> - Business address</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Test & Verify Tab */}
                 <div className={activeTab === 'test' ? 'block' : 'hidden'}>
                   <div className="space-y-6">
