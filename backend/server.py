@@ -6868,56 +6868,24 @@ Located at: [BUSINESS_ADDRESS]"""
                             'ready_for_mass_email': False
                         }
                     else:
-                        # NON-PERSONALIZED EMAIL: Use template + base content, ignore placeholders
+                        # NON-PERSONALIZED EMAIL: Use template + base content, replace placeholders with generic values
                         try:
-                            # Generate email content using ChatGPT, removing any customer placeholders
-                            email_content_prompt = f"""
-                            Base marketing content: {base_campaign_content}
-                            
-                            Email template: {email_template}
-                            
-                            Create a professional email combining the marketing content with the template format.
-                            Remove any customer placeholders like [CUSTOMER_NAME], [PET_NAME], [PET_NAMES] and create generic content.
-                            """
-                            
-                            email_content_result = await ai_service.format_custom_content(
-                                post_title=f"Generic Email: {campaign_title}",
-                                post_content=email_content_prompt,
-                                word_count="200",
-                                platforms=['email'],
-                                use_web_research=False,
-                                image_text=""
-                            )
-                            
-                            if email_content_result and email_content_result.get('content'):
-                                final_email_content = email_content_result['content']
-                                # Clean up any markdown formatting - comprehensive cleanup
-                                import re
-                                # Remove markdown title patterns
-                                final_email_content = re.sub(r'\*\*Title:.*?\*\*', '', final_email_content, flags=re.IGNORECASE)
-                                final_email_content = re.sub(r'\*\*Content:\*\*', '', final_email_content, flags=re.IGNORECASE)
-                                final_email_content = re.sub(r'Title:.*?\n', '', final_email_content, flags=re.IGNORECASE)
-                                final_email_content = re.sub(r'Content:\s*', '', final_email_content, flags=re.IGNORECASE)
-                                # Remove any remaining markdown formatting
-                                final_email_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', final_email_content)  # Bold text
-                                final_email_content = re.sub(r'\*([^*]+)\*', r'\1', final_email_content)    # Italic text
-                                final_email_content = final_email_content.strip()
-                            else:
-                                # Fallback: Remove placeholders from template and combine with base content
-                                clean_template = email_template.replace('[CUSTOMER_NAME]', 'valued customer')
-                                clean_template = clean_template.replace('[PET_NAME]', 'your pet')
-                                clean_template = clean_template.replace('[PET_NAMES]', 'your pets')
-                                final_email_content = f"{clean_template}\n\n{base_campaign_content}"
+                            # Replace [CHATGPT_CONTENT] with base content and use generic placeholders
+                            final_email_content = email_template_with_content.replace('[CUSTOMER_NAME]', 'Valued Customer')
+                            final_email_content = final_email_content.replace('[PET_NAME]', 'your pet')
+                            final_email_content = final_email_content.replace('[PET_NAMES]', 'your pets')
                             
                             # Apply global placeholder replacement
                             final_email_content = await replace_global_placeholders(final_email_content, db)
                             
                         except Exception as e:
                             logger.error(f"Error generating generic email content: {str(e)}")
-                            # Fallback: Remove placeholders and use base content
-                            clean_template = email_template.replace('[CUSTOMER_NAME]', 'valued customer')
+                            # Fallback: Remove placeholders and use template with base content
+                            clean_template = email_template.replace('[CUSTOMER_NAME]', 'Valued Customer')
                             clean_template = clean_template.replace('[PET_NAME]', 'your pet') 
                             clean_template = clean_template.replace('[PET_NAMES]', 'your pets')
+                            clean_template = clean_template.replace('[CHATGPT_CONTENT]', base_campaign_content)
+                            final_email_content = await replace_global_placeholders(clean_template, db)
                             final_email_content = f"{clean_template}\n\n{base_campaign_content}"
                         
                         # Generate email subject (compact, under 75 characters)
