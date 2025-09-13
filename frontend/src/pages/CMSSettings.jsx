@@ -703,6 +703,126 @@ const CMSSettings = () => {
         </div>
           </div>
         </div>
+
+        {/* Global Placeholder Modal */}
+        {showPlaceholderModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] flex flex-col">
+              {/* Sticky Header */}
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 rounded-t-xl flex-shrink-0">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    {editingPlaceholder ? (
+                      <Edit3 className="h-5 w-5" style={{ color: '#29add3' }} />
+                    ) : (
+                      <Plus className="h-5 w-5" style={{ color: '#29add3' }} />
+                    )}
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      {editingPlaceholder ? 'Edit Global Placeholder' : 'Create New Global Placeholder'}
+                    </h3>
+                  </div>
+                  <button
+                    onClick={handleCancelPlaceholderForm}
+                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto px-6 py-4">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Placeholder Name *
+                    </label>
+                    <input
+                      type="text"
+                      value={placeholderForm.name}
+                      onChange={(e) => setPlaceholderForm(prev => ({ ...prev, name: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                      style={{ '--tw-ring-color': '#29add3' }}
+                      placeholder="e.g., Website Link"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Placeholder Text *
+                    </label>
+                    <input
+                      type="text"
+                      value={placeholderForm.placeholder}
+                      onChange={(e) => setPlaceholderForm(prev => ({ ...prev, placeholder: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                      style={{ '--tw-ring-color': '#29add3' }}
+                      placeholder="e.g., WEBSITE_LINK (brackets added automatically)"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Placeholder Value *
+                    </label>
+                    <input
+                      type="text"
+                      value={placeholderForm.value}
+                      onChange={(e) => setPlaceholderForm(prev => ({ ...prev, value: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                      style={{ '--tw-ring-color': '#29add3' }}
+                      placeholder="e.g., https://yourwebsite.com"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Description
+                    </label>
+                    <textarea
+                      value={placeholderForm.description}
+                      onChange={(e) => setPlaceholderForm(prev => ({ ...prev, description: e.target.value }))}
+                      rows={3}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                      style={{ '--tw-ring-color': '#29add3' }}
+                      placeholder="Brief description of this placeholder"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Sticky Footer */}
+              <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 rounded-b-xl flex-shrink-0">
+                <div className="flex items-center justify-end space-x-3">
+                  <button
+                    type="button"
+                    onClick={handleCancelPlaceholderForm}
+                    className="px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={editingPlaceholder ? handleUpdatePlaceholder : handleCreatePlaceholder}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white transition-colors"
+                    style={{ backgroundColor: '#29add3' }}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = '#2196c7'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = '#29add3'}
+                  >
+                    {editingPlaceholder ? (
+                      <>
+                        <Edit3 className="h-4 w-4 mr-2" />
+                        Update Placeholder
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Create Placeholder
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
