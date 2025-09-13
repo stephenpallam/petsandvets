@@ -6992,6 +6992,10 @@ Located at: [BUSINESS_ADDRESS]"""
                             
                             if sms_content_result and sms_content_result.get('content'):
                                 final_sms_content = sms_content_result['content']
+                                # Clean up any markdown formatting
+                                final_sms_content = final_sms_content.replace('**Title:**', '').replace('**Content:**', '')
+                                final_sms_content = final_sms_content.replace('**', '').replace('Title:', '').replace('Content:', '')
+                                final_sms_content = final_sms_content.strip()
                             else:
                                 # Fallback: Remove placeholders from template and combine with base content
                                 clean_template = sms_template.replace('[CUSTOMER_NAME]', 'valued customer')
