@@ -1708,23 +1708,55 @@ const AIReadyToPublish = () => {
                                   </div>
                                 </div>
                               </div>
-                            ) : post.agent_type === 'email' ? (
-                              /* Email Post Content - Match review page styling exactly */
-                              <div>
-                                {/* Email Subject Line */}
-                                {post.email_subject && (
-                                  <div className="mb-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-400">
-                                    <div className="text-sm font-medium text-blue-800 mb-1">Email Subject:</div>
-                                    <div className="text-blue-900 font-semibold">{post.email_subject}</div>
-                                  </div>
-                                )}
+                            ) : (post.agent_type === 'email' || post.agent_type === 'email_agent') ? (
+                              /* Email Post Content - Professional email display */
+                              <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                                <div className="flex items-center space-x-2 mb-3">
+                                  <div className="w-3 h-3 rounded-full bg-purple-500"></div>
+                                  <span className="text-sm font-medium text-gray-700">Email Preview</span>
+                                </div>
                                 
-                                <h4 className="text-sm font-medium text-gray-900 mb-2">Content:</h4>
-                                <p className="text-gray-900 whitespace-pre-wrap leading-relaxed">
-                                  {post.content}
-                                </p>
-                                <div className="mt-2 text-xs text-gray-500">
-                                  {post.content.split(' ').length} words
+                                {/* Email Header (like real email clients) */}
+                                <div className="bg-gray-50 rounded-t-lg border border-gray-200 px-4 py-3">
+                                  <div className="space-y-2 text-sm">
+                                    <div className="flex">
+                                      <span className="text-gray-500 font-medium w-16">From:</span>
+                                      <span className="text-gray-900">Pets and Vets Animal Hospital &lt;vet@petsandvetsanimalhospital.com&gt;</span>
+                                    </div>
+                                    <div className="flex">
+                                      <span className="text-gray-500 font-medium w-16">To:</span>
+                                      <span className="text-gray-900">
+                                        {post.sms_personalized === false || post.email_personalized === false ? 
+                                          'All Customers' : 
+                                          (post.sample_customer_name ? 
+                                            `${post.sample_customer_name} <${post.sample_customer_name.toLowerCase().replace(/\s+/g, '.')}@email.com>` : 
+                                            'All Customers'
+                                          )
+                                        }
+                                      </span>
+                                    </div>
+                                    <div className="flex items-start">
+                                      <span className="text-gray-500 font-medium w-16">Subject:</span>
+                                      <div className="flex-1">
+                                        <span className="text-gray-900 font-medium">
+                                          {post.email_subject || 'No Subject'}
+                                        </span>
+                                        {post.email_subject && post.email_subject.length > 100 && (
+                                          <span className="text-orange-500 text-xs ml-2">
+                                            ({post.email_subject.length} chars - may be truncated)
+                                          </span>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                {/* Email Body */}
+                                <div className="bg-white rounded-b-lg border-x border-b border-gray-200 p-4">
+                                  <ContentWithLinks 
+                                    content={post.content} 
+                                    className="text-gray-900 leading-relaxed"
+                                  />
                                 </div>
                               </div>
                             ) : post.agent_type === 'marketing_agent' && post.marketing_channel === 'email' ? (
