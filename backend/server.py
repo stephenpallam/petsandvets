@@ -6905,9 +6905,16 @@ Located at: [BUSINESS_ADDRESS]"""
                             
                             if sms_content_result and sms_content_result.get('content'):
                                 condensed_content = sms_content_result['content']
-                                # Clean up any markdown formatting
-                                condensed_content = condensed_content.replace('**Title:**', '').replace('**Content:**', '')
-                                condensed_content = condensed_content.replace('**', '').replace('Title:', '').replace('Content:', '')
+                                # Clean up any markdown formatting - comprehensive cleanup
+                                import re
+                                # Remove markdown title patterns
+                                condensed_content = re.sub(r'\*\*Title:.*?\*\*', '', condensed_content, flags=re.IGNORECASE)
+                                condensed_content = re.sub(r'\*\*Content:\*\*', '', condensed_content, flags=re.IGNORECASE)
+                                condensed_content = re.sub(r'Title:.*?\n', '', condensed_content, flags=re.IGNORECASE)
+                                condensed_content = re.sub(r'Content:\s*', '', condensed_content, flags=re.IGNORECASE)
+                                # Remove any remaining markdown formatting
+                                condensed_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', condensed_content)  # Bold text
+                                condensed_content = re.sub(r'\*([^*]+)\*', r'\1', condensed_content)    # Italic text
                                 condensed_content = condensed_content.strip()
                             else:
                                 # Fallback: Truncate content if generation fails
