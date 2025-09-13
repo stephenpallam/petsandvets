@@ -2975,7 +2975,7 @@ async def get_business_info():
             tagline="Compassionate Care for Your Beloved Pets", 
             phone="(703) 957-3297",
             email="vet@petsandvetsanimalhospital.com",
-            address="43114 Peacock Market Plaza, Suite F110, South Riding, VA 20152",
+            address="43114 Peacock Market Plaza, Suite F110\nSouth Riding, VA 20152",
             referral_hospital_name="VCA SouthPaws",
             referral_hospital_phone="(703) 752-9100",
             facebook_link="",
