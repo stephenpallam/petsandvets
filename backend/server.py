@@ -6948,7 +6948,7 @@ Located at: [BUSINESS_ADDRESS]"""
                     # SMS: Use base content + template + personalization (if enabled)
                     sms_template = agent_data.get('sms_template', base_campaign_content)
                     
-                    # Check if template has ChatGPT placeholder
+                    # Check if template has ChatGPT placeholder or use default ChatGPT template
                     if '[CHATGPT_CONTENT]' in sms_template:
                         # Use ChatGPT campaign template - replace placeholder with generated content
                         # For SMS, we need to shorten the content to fit SMS limits
@@ -6987,6 +6987,41 @@ Located at: [BUSINESS_ADDRESS]"""
                             # Fallback: Use truncated content
                             condensed_content = base_campaign_content[:80] + "..." if len(base_campaign_content) > 80 else base_campaign_content
                             sms_template_with_content = sms_template.replace('[CHATGPT_CONTENT]', condensed_content)
+                    elif not sms_template or sms_template == base_campaign_content:
+                        # No template specified or template is just the base content - use default ChatGPT campaign template
+                        if agent_data.get('marketing_sms_personalized', True):
+                            # Use personalized ChatGPT campaign template
+                            default_sms_template = """Hi [CUSTOMER_NAME]! [CHATGPT_CONTENT] Questions about [PET_NAME]? Call [PHONE_NUMBER] or visit [BOOK_NOW_LINK]"""
+                        else:
+                            # Use general ChatGPT campaign template
+                            default_sms_template = """[CHATGPT_CONTENT] Contact [BUSINESS_NAME]: [PHONE_NUMBER] or book online: [BOOK_NOW_LINK]"""
+                        
+                        # Generate concise SMS version of the content for template
+                        try:
+                            sms_content_result = await ai_service.format_custom_content(
+                                post_title=f"SMS Content: {campaign_title}",
+                                post_content=f"Create a concise SMS version (under 100 characters) of this content: {base_campaign_content}",
+                                word_count="25",  # Very concise for SMS
+                                platforms=['sms'],
+                                use_web_research=False,
+                                image_text=""
+                            )
+                            
+                            if sms_content_result and sms_content_result.get('content'):
+                                condensed_content = sms_content_result['content']
+                                # Clean up any markdown formatting
+                                import re
+                                condensed_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', condensed_content)
+                                condensed_content = re.sub(r'\*([^*]+)\*', r'\1', condensed_content)
+                                condensed_content = condensed_content.strip()
+                            else:
+                                condensed_content = base_campaign_content[:80] + "..." if len(base_campaign_content) > 80 else base_campaign_content
+                        except Exception as e:
+                            logger.error(f"Error generating SMS content: {str(e)}")
+                            condensed_content = base_campaign_content[:80] + "..." if len(base_campaign_content) > 80 else base_campaign_content
+                        
+                        sms_template_with_content = default_sms_template.replace('[CHATGPT_CONTENT]', condensed_content)
+                        logger.info("Using default ChatGPT campaign template for SMS")
                     else:
                         # Use traditional template logic
                         if agent_data.get('marketing_sms_personalized', True) and sample_customer_data:
