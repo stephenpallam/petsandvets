@@ -6679,10 +6679,7 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                                 word_count="10",
                                 platforms=['email'],
                                 use_web_research=False,
-                                image_text="",
-                                track_usage=True,
-                                user_id="admin",
-                                agent_id=agent_id
+                                image_text=""
                             )
                             email_subject = subject_result.get('content', campaign_title) if subject_result else campaign_title
                         except Exception as e:
@@ -6752,10 +6749,7 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                                 word_count="10",
                                 platforms=['email'],
                                 use_web_research=False,
-                                image_text="",
-                                track_usage=True,
-                                user_id="admin",
-                                agent_id=agent_id
+                                image_text=""
                             )
                             email_subject = subject_result.get('content', campaign_title) if subject_result else campaign_title
                         except Exception as e:
