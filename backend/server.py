@@ -6369,6 +6369,30 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                     base_campaign_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', base_campaign_content)  # Bold text
                     base_campaign_content = re.sub(r'\*([^*]+)\*', r'\1', base_campaign_content)    # Italic text
                     base_campaign_content = base_campaign_content.strip()
+                    
+                    # Ensure proper paragraph formatting if missing
+                    # Add line breaks after sentences ending with periods, exclamation marks, or question marks
+                    # if there are no existing line breaks
+                    if '\n' not in base_campaign_content and len(base_campaign_content) > 200:
+                        # Split into sentences and create paragraphs
+                        sentences = re.split(r'([.!?])\s+', base_campaign_content)
+                        formatted_content = ""
+                        sentence_count = 0
+                        
+                        for i in range(0, len(sentences)-1, 2):
+                            if i+1 < len(sentences):
+                                sentence = sentences[i] + sentences[i+1]
+                                formatted_content += sentence
+                                sentence_count += 1
+                                
+                                # Add paragraph break every 2-3 sentences
+                                if sentence_count % 3 == 0 and i+2 < len(sentences)-1:
+                                    formatted_content += "\n\n"
+                                else:
+                                    formatted_content += " "
+                        
+                        base_campaign_content = formatted_content.strip()
+                    
                     logger.info(f"Generated topic-based content: {base_campaign_content[:100]}...")
                 else:
                     # Fallback content if generation fails
