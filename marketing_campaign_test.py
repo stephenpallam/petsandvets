@@ -162,8 +162,13 @@ class MarketingCampaignTester:
                         return False
                     
                     created_agent = await response.json()
-                    agent_id = created_agent.get("id")
-                    self.created_agent_ids.append(agent_id)
+                    agent_id = created_agent.get("agent_id") or created_agent.get("id")
+                    if agent_id:
+                        self.created_agent_ids.append(agent_id)
+                        print(f"✅ Created agent with ID: {agent_id}")
+                    else:
+                        print(f"⚠️ Agent created but no ID found in response: {created_agent}")
+                        return False
                 
                 # Run the marketing agent to generate posts
                 url = f"{self.backend_url}/api/ai-agents/{agent_id}/run"
@@ -345,8 +350,13 @@ class MarketingCampaignTester:
                         return False
                     
                     created_agent = await response.json()
-                    agent_id = created_agent.get("id")
-                    self.created_agent_ids.append(agent_id)
+                    agent_id = created_agent.get("agent_id") or created_agent.get("id")
+                    if agent_id:
+                        self.created_agent_ids.append(agent_id)
+                        print(f"✅ Created agent with ID: {agent_id}")
+                    else:
+                        print(f"⚠️ Agent created but no ID found in response: {created_agent}")
+                        return False
                 
                 # Run the marketing agent to generate posts
                 url = f"{self.backend_url}/api/ai-agents/{agent_id}/run"
@@ -497,8 +507,13 @@ class MarketingCampaignTester:
                         return False
                     
                     created_agent = await response.json()
-                    agent_id = created_agent.get("id")
-                    self.created_agent_ids.append(agent_id)
+                    agent_id = created_agent.get("agent_id") or created_agent.get("id")
+                    if agent_id:
+                        self.created_agent_ids.append(agent_id)
+                        print(f"✅ Created agent with ID: {agent_id}")
+                    else:
+                        print(f"⚠️ Agent created but no ID found in response: {created_agent}")
+                        return False
                 
                 # Run the marketing agent to generate posts
                 url = f"{self.backend_url}/api/ai-agents/{agent_id}/run"
@@ -655,8 +670,13 @@ class MarketingCampaignTester:
                         return False
                     
                     created_agent = await response.json()
-                    agent_id = created_agent.get("id")
-                    self.created_agent_ids.append(agent_id)
+                    agent_id = created_agent.get("agent_id") or created_agent.get("id")
+                    if agent_id:
+                        self.created_agent_ids.append(agent_id)
+                        print(f"✅ Created agent with ID: {agent_id}")
+                    else:
+                        print(f"⚠️ Agent created but no ID found in response: {created_agent}")
+                        return False
                 
                 # Run the marketing agent to generate posts
                 url = f"{self.backend_url}/api/ai-agents/{agent_id}/run"
@@ -789,8 +809,13 @@ class MarketingCampaignTester:
                         return False
                     
                     created_agent = await response.json()
-                    agent_id = created_agent.get("id")
-                    self.created_agent_ids.append(agent_id)
+                    agent_id = created_agent.get("agent_id") or created_agent.get("id")
+                    if agent_id:
+                        self.created_agent_ids.append(agent_id)
+                        print(f"✅ Created agent with ID: {agent_id}")
+                    else:
+                        print(f"⚠️ Agent created but no ID found in response: {created_agent}")
+                        return False
                 
                 # Run the marketing agent to generate posts
                 url = f"{self.backend_url}/api/ai-agents/{agent_id}/run"
