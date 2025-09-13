@@ -22,15 +22,17 @@
 - ✅ **Validation and Error Handling**: All validation and error handling working correctly with proper HTTP status codes
 - ✅ **Delete Operations**: All delete operations working correctly with proper cleanup
 
-### ✅ COMPREHENSIVE TEMPLATE MANAGEMENT SYSTEM TESTING COMPLETED:
+### ✅ COMPREHENSIVE TEMPLATE MANAGEMENT SYSTEM RE-TESTING COMPLETED:
 
 **1. ✅ Initialize Default Templates and Placeholders**
 - Default initialization endpoint working successfully
-- ✅ **CONFIRMED**: POST /api/templates/initialize-defaults returns 200
-- ✅ **CONFIRMED**: Default email templates created: "Appointment Reminder", "Welcome New Customer", "Marketing Promotion"
-- ✅ **CONFIRMED**: Default SMS templates created: "Appointment Reminder", "Welcome New Customer", "Marketing Promotion"
-- ✅ **CONFIRMED**: Default global placeholders created: "Website Link", "Book Now Link", "Phone Number", "Business Name", "Business Address"
-- ✅ **CONFIRMED**: All templates contain proper placeholder integration ([CUSTOMER_NAME], [PET_NAME], [WEBSITE_LINK], etc.)
+- ✅ **CONFIRMED**: POST /api/templates/initialize-defaults returns 200 with message "Default templates and placeholders initialized successfully"
+- ✅ **CONFIRMED**: Total 21 templates created (10 email, 11 SMS) including both personalized and non-personalized versions
+- ✅ **CONFIRMED**: Default email templates: "Appointment Reminder", "Welcome New Customer", "Marketing Promotion" + personalized versions + general templates
+- ✅ **CONFIRMED**: Default SMS templates: "Appointment Reminder", "Welcome New Customer", "Marketing Promotion" + personalized versions + general templates
+- ✅ **CONFIRMED**: 5 global placeholders created: "Website Link", "Book Now Link", "Phone Number", "Business Name", "Business Address"
+- ✅ **CONFIRMED**: Personalized templates (12) contain [CUSTOMER_NAME], [PET_NAME] placeholders + global placeholders
+- ✅ **CONFIRMED**: Non-personalized templates (9) contain only global placeholders like [WEBSITE_LINK], [PHONE_NUMBER], [BUSINESS_NAME]
 - ✅ **CONFIRMED**: Idempotent operation - running multiple times doesn't create duplicates
 
 **2. ✅ Template CRUD Operations**
