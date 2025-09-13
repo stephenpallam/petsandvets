@@ -12,7 +12,9 @@ import {
   Shield,
   Palette,
   Mail,
-  Bell
+  Bell,
+  Edit3,
+  Plus
 } from 'lucide-react';
 
 const CMSSettings = () => {
