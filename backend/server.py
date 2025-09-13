@@ -6723,24 +6723,16 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                     # SMS: Use base content + template + personalization (if enabled)
                     sms_template = agent_data.get('sms_template', base_campaign_content)
                     
-                    if agent_data.get('marketing_sms_personalized', True) and sample_customer_data:
-                        # PERSONALIZED SMS: Use template with placeholders + base content + customer data
+                    # Check if template has ChatGPT placeholder
+                    if '[CHATGPT_CONTENT]' in sms_template:
+                        # Use ChatGPT campaign template - replace placeholder with generated content
+                        # For SMS, we need to shorten the content to fit SMS limits
                         try:
-                            # Generate SMS content using ChatGPT with template and base content
-                            sms_content_prompt = f"""
-                            Base marketing content: {base_campaign_content}
-                            
-                            SMS template: {sms_template}
-                            
-                            Create a concise SMS message (under 160 characters) combining the marketing content with the template format.
-                            Use placeholders [CUSTOMER_NAME], [PET_NAME], and [PET_NAMES] for personalization.
-                            Keep it brief and engaging for SMS format.
-                            """
-                            
+                            # Generate concise SMS version of the content
                             sms_content_result = await ai_service.format_custom_content(
-                                post_title=f"SMS: {campaign_title}",
-                                post_content=sms_content_prompt,
-                                word_count="50",  # Keep SMS concise
+                                post_title=f"SMS Content: {campaign_title}",
+                                post_content=f"Create a concise SMS version (under 100 characters) of this content: {base_campaign_content}",
+                                word_count="25",  # Very concise for SMS
                                 platforms=['sms'],
                                 use_web_research=False,
                                 image_text="",
@@ -6748,6 +6740,62 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                                 user_id="admin",
                                 agent_id=agent_id
                             )
+                            
+                            if sms_content_result and sms_content_result.get('content'):
+                                condensed_content = sms_content_result['content']
+                            else:
+                                # Fallback: Truncate content if generation fails
+                                condensed_content = base_campaign_content[:80] + "..." if len(base_campaign_content) > 80 else base_campaign_content
+                            
+                            sms_template_with_content = sms_template.replace('[CHATGPT_CONTENT]', condensed_content)
+                            logger.info("Using ChatGPT campaign template for SMS")
+                        except Exception as e:
+                            logger.error(f"Error generating condensed SMS content: {str(e)}")
+                            # Fallback: Use truncated content
+                            condensed_content = base_campaign_content[:80] + "..." if len(base_campaign_content) > 80 else base_campaign_content
+                            sms_template_with_content = sms_template.replace('[CHATGPT_CONTENT]', condensed_content)
+                    else:
+                        # Use traditional template logic
+                        if agent_data.get('marketing_sms_personalized', True) and sample_customer_data:
+                            # PERSONALIZED SMS: Use template with placeholders + base content + customer data
+                            try:
+                                # Generate SMS content using ChatGPT with template and base content
+                                sms_content_prompt = f"""
+                                Base marketing content: {base_campaign_content}
+                                
+                                SMS template: {sms_template}
+                                
+                                Create a concise SMS message (under 160 characters) combining the marketing content with the template format.
+                                Use placeholders [CUSTOMER_NAME], [PET_NAME], and [PET_NAMES] for personalization.
+                                Keep it brief and engaging for SMS format.
+                                """
+                                
+                                sms_content_result = await ai_service.format_custom_content(
+                                    post_title=f"SMS: {campaign_title}",
+                                    post_content=sms_content_prompt,
+                                    word_count="50",  # Keep SMS concise
+                                    platforms=['sms'],
+                                    use_web_research=False,
+                                    image_text="",
+                                    track_usage=True,
+                                    user_id="admin",
+                                    agent_id=agent_id
+                                )
+                                
+                                if sms_content_result and sms_content_result.get('content'):
+                                    sms_template_with_content = sms_content_result['content']
+                                else:
+                                    # Fallback: Combine template and base content
+                                    sms_template_with_content = f"{sms_template} {base_campaign_content}"[:160]  # Truncate to SMS limit
+                            except Exception as e:
+                                logger.error(f"Error generating personalized SMS content: {str(e)}")
+                                # Fallback to simple combination
+                                sms_template_with_content = f"{sms_template} {base_campaign_content}"[:160]
+                        else:
+                            # NON-PERSONALIZED SMS: Use template + base content without customer data
+                            sms_template_with_content = f"{sms_template} {base_campaign_content}"[:160]  # Truncate to SMS limit
+                    
+                    if agent_data.get('marketing_sms_personalized', True) and sample_customer_data:
                             
                             if sms_content_result and sms_content_result.get('content'):
                                 sms_template_with_content = sms_content_result['content']
