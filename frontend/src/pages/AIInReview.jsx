@@ -59,6 +59,18 @@ const formatContentWithLinks = (content) => {
   return formattedContent;
 };
 
+// Component to render content with clickable links (for emails)
+const ContentWithLinks = ({ content, className = "" }) => {
+  const formattedContent = formatContentWithLinks(content);
+  
+  return (
+    <div 
+      className={`whitespace-pre-wrap ${className}`}
+      dangerouslySetInnerHTML={{ __html: formattedContent }}
+    />
+  );
+};
+
 // Component to render SMS content with clickable links (React elements instead of HTML)
 const SMSContentWithLinks = ({ content, className = "" }) => {
   if (!content) return <span className={className}>{content}</span>;
