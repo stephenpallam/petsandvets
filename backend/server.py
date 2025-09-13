@@ -7070,44 +7070,59 @@ Located at: [BUSINESS_ADDRESS]"""
                             'ready_for_mass_sms': False
                         }
                     else:
-                        # NON-PERSONALIZED SMS: Use template + base content, ignore placeholders
+                        # NON-PERSONALIZED SMS: Use template + base content, replace placeholders with generic values
                         try:
-                            # Generate SMS content using ChatGPT, removing any customer placeholders
-                            sms_content_prompt = f"""
-                            Base marketing content: {base_campaign_content}
-                            
-                            SMS template: {sms_template}
-                            
-                            Create a concise SMS message (under 160 characters) combining the marketing content with the template format.
-                            Remove any customer placeholders like [CUSTOMER_NAME], [PET_NAME], [PET_NAMES] and create generic content.
-                            Keep it brief and engaging for SMS format.
-                            """
-                            
+                            # For SMS, we need to condense the content to fit SMS character limits
+                            # Create concise SMS version of the base content
                             sms_content_result = await ai_service.format_custom_content(
-                                post_title=f"Generic SMS: {campaign_title}",
-                                post_content=sms_content_prompt,
-                                word_count="50",  # Keep SMS concise
+                                post_title=f"SMS Content: {campaign_title}",
+                                post_content=f"Create a concise SMS version (under 100 characters) of this content: {base_campaign_content}",
+                                word_count="25",  # Very concise for SMS
                                 platforms=['sms'],
                                 use_web_research=False,
                                 image_text=""
                             )
                             
                             if sms_content_result and sms_content_result.get('content'):
-                                final_sms_content = sms_content_result['content']
+                                condensed_content = sms_content_result['content']
                                 # Clean up any markdown formatting
-                                final_sms_content = final_sms_content.replace('**Title:**', '').replace('**Content:**', '')
-                                final_sms_content = final_sms_content.replace('**', '').replace('Title:', '').replace('Content:', '')
-                                final_sms_content = final_sms_content.strip()
+                                import re
+                                condensed_content = re.sub(r'\*\*Title:.*?\*\*', '', condensed_content, flags=re.IGNORECASE)
+                                condensed_content = re.sub(r'\*\*Content:\*\*', '', condensed_content, flags=re.IGNORECASE)
+                                condensed_content = re.sub(r'Title:.*?\n', '', condensed_content, flags=re.IGNORECASE)
+                                condensed_content = re.sub(r'Content:\s*', '', condensed_content, flags=re.IGNORECASE)
+                                condensed_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', condensed_content)  # Bold text
+                                condensed_content = re.sub(r'\*([^*]+)\*', r'\1', condensed_content)    # Italic text
+                                condensed_content = condensed_content.strip()
                             else:
-                                # Fallback: Remove placeholders from template and combine with base content
-                                clean_template = sms_template.replace('[CUSTOMER_NAME]', 'valued customer')
-                                clean_template = clean_template.replace('[PET_NAME]', 'your pet')
-                                clean_template = clean_template.replace('[PET_NAMES]', 'your pets')
-                                combined_content = f"{clean_template} {base_campaign_content}"
-                                final_sms_content = combined_content[:140] + "..." if len(combined_content) > 140 else combined_content
+                                # Fallback: Truncate content if generation fails
+                                condensed_content = base_campaign_content[:80] + "..." if len(base_campaign_content) > 80 else base_campaign_content
+                            
+                            # Replace [CHATGPT_CONTENT] with condensed content and use generic placeholders
+                            final_sms_content = sms_template_with_content.replace('[CUSTOMER_NAME]', 'Customer')
+                            final_sms_content = final_sms_content.replace('[PET_NAME]', 'your pet')
+                            final_sms_content = final_sms_content.replace('[PET_NAMES]', 'your pets')
                             
                             # Apply global placeholder replacement
                             final_sms_content = await replace_global_placeholders(final_sms_content, db)
+                            
+                            # Ensure SMS stays within character limits
+                            if len(final_sms_content) > 160:
+                                final_sms_content = final_sms_content[:157] + "..."
+                            
+                        except Exception as e:
+                            logger.error(f"Error generating generic SMS content: {str(e)}")
+                            # Fallback: Remove placeholders and use template with condensed content
+                            condensed_content = base_campaign_content[:80] + "..." if len(base_campaign_content) > 80 else base_campaign_content
+                            clean_template = sms_template.replace('[CUSTOMER_NAME]', 'Customer')
+                            clean_template = clean_template.replace('[PET_NAME]', 'your pet')
+                            clean_template = clean_template.replace('[PET_NAMES]', 'your pets')
+                            clean_template = clean_template.replace('[CHATGPT_CONTENT]', condensed_content)
+                            final_sms_content = await replace_global_placeholders(clean_template, db)
+                            
+                            # Ensure SMS stays within character limits
+                            if len(final_sms_content) > 160:
+                                final_sms_content = final_sms_content[:157] + "..."
                             
                         except Exception as e:
                             logger.error(f"Error generating generic SMS content: {str(e)}")
