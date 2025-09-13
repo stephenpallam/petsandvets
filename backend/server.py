@@ -6931,6 +6931,10 @@ Located at: [BUSINESS_ADDRESS]"""
                         try:
                             if sms_content_result and sms_content_result.get('content'):
                                 sms_template_with_content = sms_content_result['content']
+                                # Clean up any markdown formatting
+                                sms_template_with_content = sms_template_with_content.replace('**Title:**', '').replace('**Content:**', '')
+                                sms_template_with_content = sms_template_with_content.replace('**', '').replace('Title:', '').replace('Content:', '')
+                                sms_template_with_content = sms_template_with_content.strip()
                             else:
                                 # Fallback: Use template + base content (truncated for SMS)
                                 combined_content = f"{sms_template} {base_campaign_content}"
