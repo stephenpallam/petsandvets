@@ -334,9 +334,9 @@ const CMSSettings = () => {
       value: placeholder.value,
       description: placeholder.description || ''
     });
-    setShowPlaceholderForm(true);
+    setShowPlaceholderModal(true);
     
-    console.log('State updated - form should show');
+    console.log('State updated - modal should show');
   };
 
   const handleCancelPlaceholderForm = () => {
