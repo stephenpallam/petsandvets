@@ -34,7 +34,7 @@ const CMSSettings = () => {
   const [placeholders, setPlaceholders] = useState([]);
   const [loadingPlaceholders, setLoadingPlaceholders] = useState(false);
   const [editingPlaceholder, setEditingPlaceholder] = useState(null);
-  const [showPlaceholderForm, setShowPlaceholderForm] = useState(false);
+  const [showPlaceholderModal, setShowPlaceholderModal] = useState(false);
   const [placeholderForm, setPlaceholderForm] = useState({
     name: '',
     placeholder: '',
