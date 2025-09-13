@@ -6888,12 +6888,12 @@ Located at: [BUSINESS_ADDRESS]"""
                             final_email_content = await replace_global_placeholders(clean_template, db)
                             final_email_content = f"{clean_template}\n\n{base_campaign_content}"
                         
-                        # Generate email subject (compact, under 75 characters)
+                        # Generate email subject (compact, under 100 characters)
                         try:
                             subject_result = await ai_service.format_custom_content(
                                 post_title="Subject Line Only",
-                                post_content=f"Generate ONLY a short, compelling email subject line (maximum 60 characters, no formatting, no titles, no explanations) for this topic: {campaign_title}. Keep it concise and under 60 characters. Return just the subject line text, nothing else.",
-                                word_count="5",  # Very short for compact subject
+                                post_content=f"Generate ONLY a short, compelling email subject line (maximum 90 characters, no formatting, no titles, no explanations) for this topic: {campaign_title}. Keep it concise and under 90 characters. Return just the subject line text, nothing else.",
+                                word_count="8",  # Short for compact subject
                                 platforms=['email'],
                                 use_web_research=False,
                                 image_text=""
