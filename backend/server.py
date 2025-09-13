@@ -6953,11 +6953,28 @@ Located at: [BUSINESS_ADDRESS]"""
                         # Use ChatGPT campaign template - replace placeholder with generated content
                         # For SMS, we need to shorten the content to fit SMS limits
                         try:
-                            # Generate concise SMS version of the content
+                            # Calculate available space for ChatGPT content in SMS template
+                            # First, get the template without [CHATGPT_CONTENT] to calculate fixed text length
+                            template_without_content = sms_template.replace('[CHATGPT_CONTENT]', '')
+                            
+                            # Estimate space used by placeholders (approximate)
+                            business_name_length = 25  # "Pets and Vets Animal Hospital"
+                            phone_length = 15          # "(703) 957-3297"
+                            book_link_length = 20      # Shortened link
+                            
+                            # Calculate available space for ChatGPT content
+                            fixed_template_length = len(template_without_content) + business_name_length + phone_length + book_link_length
+                            available_space = 155 - fixed_template_length  # Leave 5 chars buffer
+                            
+                            # Ensure minimum 30 characters for content
+                            if available_space < 30:
+                                available_space = 30
+                            
+                            # Generate concise SMS version with strict constraints
                             sms_content_result = await ai_service.format_custom_content(
                                 post_title=f"SMS Content: {campaign_title}",
-                                post_content=f"Create a concise SMS version (under 100 characters) of this content: {base_campaign_content}",
-                                word_count="25",  # Very concise for SMS
+                                post_content=f"Create a very concise SMS message (maximum {available_space} characters) about {campaign_title.replace('Marketing Campaign - ', '')}. Write only the core message without any placeholders, business names, or contact info. Keep it under {available_space} characters. No titles, no formatting, just the essential message.",
+                                word_count="15",  # Very concise for SMS
                                 platforms=['sms'],
                                 use_web_research=False,
                                 image_text=""
@@ -6965,23 +6982,47 @@ Located at: [BUSINESS_ADDRESS]"""
                             
                             if sms_content_result and sms_content_result.get('content'):
                                 condensed_content = sms_content_result['content']
-                                # Clean up any markdown formatting - comprehensive cleanup
+                                # Clean up any markdown formatting and remove any placeholders ChatGPT might have added
                                 import re
-                                # Remove markdown title patterns
+                                # Remove markdown formatting
                                 condensed_content = re.sub(r'\*\*Title:.*?\*\*', '', condensed_content, flags=re.IGNORECASE)
                                 condensed_content = re.sub(r'\*\*Content:\*\*', '', condensed_content, flags=re.IGNORECASE)
                                 condensed_content = re.sub(r'Title:.*?\n', '', condensed_content, flags=re.IGNORECASE)
                                 condensed_content = re.sub(r'Content:\s*', '', condensed_content, flags=re.IGNORECASE)
-                                # Remove any remaining markdown formatting
                                 condensed_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', condensed_content)  # Bold text
                                 condensed_content = re.sub(r'\*([^*]+)\*', r'\1', condensed_content)    # Italic text
+                                
+                                # Remove any fake placeholders that ChatGPT might have created
+                                condensed_content = re.sub(r'\[.*?\]', '', condensed_content)
+                                
+                                # Clean up extra spaces and ensure it fits
+                                condensed_content = ' '.join(condensed_content.split())  # Remove extra whitespace
                                 condensed_content = condensed_content.strip()
+                                
+                                # Truncate if still too long
+                                if len(condensed_content) > available_space:
+                                    condensed_content = condensed_content[:available_space-3] + "..."
+                                    
                             else:
-                                # Fallback: Truncate content if generation fails
-                                condensed_content = base_campaign_content[:80] + "..." if len(base_campaign_content) > 80 else base_campaign_content
+                                # Fallback: Create very simple content based on topic
+                                topic_name = campaign_title.replace('Marketing Campaign - ', '')
+                                if 'nutrition' in topic_name.lower():
+                                    condensed_content = "Proper nutrition keeps your pet healthy!"
+                                elif 'dental' in topic_name.lower():
+                                    condensed_content = "Keep your pet's teeth clean and healthy!"
+                                elif 'grooming' in topic_name.lower():
+                                    condensed_content = "Regular grooming keeps your pet looking great!"
+                                elif 'vaccination' in topic_name.lower():
+                                    condensed_content = "Keep your pet protected with vaccinations!"
+                                else:
+                                    condensed_content = "Quality care for your beloved pet!"
+                                
+                                # Ensure fallback content fits in available space
+                                if len(condensed_content) > available_space:
+                                    condensed_content = condensed_content[:available_space-3] + "..."
                             
                             sms_template_with_content = sms_template.replace('[CHATGPT_CONTENT]', condensed_content)
-                            logger.info("Using ChatGPT campaign template for SMS")
+                            logger.info(f"Using ChatGPT campaign template for SMS with {len(condensed_content)} char content")
                         except Exception as e:
                             logger.error(f"Error generating condensed SMS content: {str(e)}")
                             # Fallback: Use truncated content
