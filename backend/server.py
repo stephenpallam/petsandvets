@@ -6273,6 +6273,40 @@ async def generate_sms_for_agent(agent_id: str, agent_data: dict):
         logger.error(f"Error in generate_sms_for_agent: {str(e)}")
         raise
 
+async def replace_global_placeholders(content: str, db) -> str:
+    """Replace global placeholders with actual business values"""
+    try:
+        # Get global placeholders from database
+        global_placeholders = await db.global_placeholders.find().to_list(length=None)
+        
+        # Create a mapping of placeholder to value
+        placeholder_map = {}
+        for placeholder in global_placeholders:
+            placeholder_map[placeholder.get('placeholder', '')] = placeholder.get('value', '')
+        
+        # Default placeholders if not found in database
+        default_placeholders = {
+            '[BUSINESS_NAME]': 'AI Pets and Vets',
+            '[PHONE_NUMBER]': '(555) 123-4567',
+            '[WEBSITE_LINK]': 'https://yourvet.com',
+            '[BOOK_NOW_LINK]': 'https://yourvet.com/book',
+            '[BUSINESS_ADDRESS]': '123 Pet Care Avenue, Pet City, PC 12345'
+        }
+        
+        # Merge database placeholders with defaults
+        all_placeholders = {**default_placeholders, **placeholder_map}
+        
+        # Replace placeholders in content
+        for placeholder, value in all_placeholders.items():
+            content = content.replace(placeholder, value)
+        
+        return content
+        
+    except Exception as e:
+        logger.error(f"Error replacing global placeholders: {str(e)}")
+        # Return content as-is if replacement fails
+        return content
+
 async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict):
     """Generate multi-channel marketing campaign for an AI Marketing agent"""
     try:
