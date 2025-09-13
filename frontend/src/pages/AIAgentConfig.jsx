@@ -6733,6 +6733,7 @@ Example:
                             }}
                             placeholder="Select an SMS template..."
                             templateType="sms"
+                            isPersonalized={true}
                           />
                           <label className="block text-sm font-medium text-gray-700 mb-2">
                             <MessageSquare className="h-4 w-4 inline mr-2" />
