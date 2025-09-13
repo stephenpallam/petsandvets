@@ -1659,11 +1659,11 @@ Best regards,
   };
 
   // Email Editor Button Component
-  const FullScreenEditorButton = ({ content, title, onSave, className = "" }) => {
+  const FullScreenEditorButton = ({ content, title, onSave, className = "", isPersonalized = true }) => {
     return (
       <button
         type="button"
-        onClick={() => openFullScreenEditor(content, title, onSave)}
+        onClick={() => openFullScreenEditor(content, title, onSave, isPersonalized)}
         className={`inline-flex items-center px-3 py-2 border shadow-sm text-sm font-medium rounded-md text-white transition-colors hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 ${className}`}
         style={{ 
           backgroundColor: 'rgb(41, 173, 211)', 
