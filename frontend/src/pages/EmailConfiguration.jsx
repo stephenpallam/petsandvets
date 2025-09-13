@@ -28,7 +28,7 @@ const EmailConfiguration = () => {
   const [templates, setTemplates] = useState([]);
   const [loadingTemplates, setLoadingTemplates] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState(null);
-  const [showTemplateForm, setShowTemplateForm] = useState(false);
+  const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [templateForm, setTemplateForm] = useState({
     name: '',
     content: '',
