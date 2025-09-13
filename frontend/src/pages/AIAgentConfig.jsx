@@ -7479,6 +7479,7 @@ Example:
                           placeholder="Select an email template..."
                           templateType="email"
                           isPersonalized={marketingMode.emailPersonalized}
+                          showCampaignTemplates={['topic', 'holiday'].includes(marketingMode.contentType)}
                         />
                         <div className="flex items-center justify-between mb-2">
                           <label className="block text-sm font-medium text-gray-700">Email Template</label>
