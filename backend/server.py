@@ -6727,9 +6727,16 @@ Located at: [BUSINESS_ADDRESS]"""
                                 
                                 if email_content_result and email_content_result.get('content'):
                                     email_template_with_content = email_content_result['content']
-                                    # Clean up any markdown formatting
-                                    email_template_with_content = email_template_with_content.replace('**Title:**', '').replace('**Content:**', '')
-                                    email_template_with_content = email_template_with_content.replace('**', '').replace('Title:', '').replace('Content:', '')
+                                    # Clean up any markdown formatting - comprehensive cleanup
+                                    import re
+                                    # Remove markdown title patterns
+                                    email_template_with_content = re.sub(r'\*\*Title:.*?\*\*', '', email_template_with_content, flags=re.IGNORECASE)
+                                    email_template_with_content = re.sub(r'\*\*Content:\*\*', '', email_template_with_content, flags=re.IGNORECASE)
+                                    email_template_with_content = re.sub(r'Title:.*?\n', '', email_template_with_content, flags=re.IGNORECASE)
+                                    email_template_with_content = re.sub(r'Content:\s*', '', email_template_with_content, flags=re.IGNORECASE)
+                                    # Remove any remaining markdown formatting
+                                    email_template_with_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', email_template_with_content)  # Bold text
+                                    email_template_with_content = re.sub(r'\*([^*]+)\*', r'\1', email_template_with_content)    # Italic text
                                     email_template_with_content = email_template_with_content.strip()
                                 else:
                                     # Fallback: Combine template and base content
