@@ -6347,15 +6347,13 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
             
             # Generate 150-200 word professional content using ChatGPT
             try:
-                topic_content_result = await ai_service.generate_social_media_content(
-                    topic=topic,
+                topic_content_result = await ai_service.format_custom_content(
+                    post_title=f"Marketing Content: {topic}",
+                    post_content=f"Create professional, engaging marketing content about {topic} for a veterinary clinic. Write 150-200 words without any titles, headers, or formatting. Focus on benefits, importance, and actionable advice for pet owners. Write in a warm, professional tone suitable for email campaigns.",
                     word_count="180",  # 150-200 words as requested
                     platforms=['general'],  # Generic platform for base content
-                    custom_topic=None,
-                    image_text=agent_data.get('image_text', ''),
-                    track_usage=True,
-                    user_id="admin",
-                    agent_id=agent_id
+                    use_web_research=agent_data.get('use_web_research', False),
+                    image_text=agent_data.get('image_text', '')
                 )
                 
                 if topic_content_result and topic_content_result.get('content'):
