@@ -134,6 +134,26 @@ const CMSSettings = () => {
     }
   }, [activeTab, user, token]);
 
+  // Handle keyboard events for modal
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape' && showPlaceholderModal) {
+        handleCancelPlaceholderForm();
+      }
+    };
+
+    if (showPlaceholderModal) {
+      document.addEventListener('keydown', handleKeyDown);
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+    };
+  }, [showPlaceholderModal]);
+
   // Check if user is admin
   if (!authLoading && (!user || user.role !== 'admin')) {
     return (
