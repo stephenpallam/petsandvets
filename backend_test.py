@@ -132,6 +132,7 @@ class MarketingCampaignDuplicatePreventionTester:
             agent_data = {
                 "agent_type": "marketing_agent",
                 "agent_name": "Test Duplicate Prevention Agent 1",
+                "mode": "adhoc",
                 "marketing_content_type": "topic",
                 "topic": "Pet Health Tips",
                 "marketing_channels": ["social_media", "email", "sms"],
