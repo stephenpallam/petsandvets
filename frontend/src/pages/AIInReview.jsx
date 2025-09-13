@@ -249,6 +249,13 @@ const SMSContentPreview = ({ post }) => {
     const smsLink = post.sms_link || 'https://petsandvetsanimalhospital.com';
     previewContent = previewContent.replace(/\[LINK\]/g, smsLink);
     
+    // Replace global placeholders with actual business information
+    previewContent = previewContent.replace(/\[BUSINESS_NAME\]/g, 'Pets and Vets Animal Hospital');
+    previewContent = previewContent.replace(/\[PHONE_NUMBER\]/g, '(703) 957-3297');
+    previewContent = previewContent.replace(/\[WEBSITE_LINK\]/g, 'https://petsandvetsanimalhospital.com');
+    previewContent = previewContent.replace(/\[BOOK_NOW_LINK\]/g, 'https://petsandvetsanimalhospital.com/book');
+    previewContent = previewContent.replace(/\[BUSINESS_ADDRESS\]/g, '43114 Peacock Market Plaza, Suite F110, South Riding, VA 20152');
+    
     return previewContent;
   };
 
