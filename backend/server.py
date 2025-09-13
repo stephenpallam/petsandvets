@@ -6945,6 +6945,7 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                     update_data = {
                         "content": content_result.get('content', ''),
                         "hashtags": content_result.get('hashtags', []),
+                        "platform": platform,  # Ensure platform is stored
                         "updated_at": now
                     }
                     
