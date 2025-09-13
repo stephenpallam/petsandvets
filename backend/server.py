@@ -4442,6 +4442,7 @@ class PostUpdate(BaseModel):
     content: Optional[str] = None
     image_text: Optional[str] = None  
     topic: Optional[str] = None
+    email_subject: Optional[str] = None
 
 class AISettingsUpdate(BaseModel):
     llm_settings: Optional[Dict[str, Any]] = None
