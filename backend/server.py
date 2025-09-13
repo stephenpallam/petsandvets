@@ -6705,6 +6705,9 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                                 clean_template = clean_template.replace('[PET_NAMES]', 'your pets')
                                 final_email_content = f"{clean_template}\n\n{base_campaign_content}"
                             
+                            # Apply global placeholder replacement
+                            final_email_content = await replace_global_placeholders(final_email_content, db)
+                            
                         except Exception as e:
                             logger.error(f"Error generating generic email content: {str(e)}")
                             # Fallback: Remove placeholders and use base content
