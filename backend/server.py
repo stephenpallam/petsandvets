@@ -12255,7 +12255,7 @@ async def initialize_default_templates(
             {
                 "name": "Seasonal Pet Care Reminder",
                 "type": "email",
-                "content": "Seasonal Pet Care Tips from [BUSINESS_NAME]\n\nAs the seasons change, so do your pet's needs!\n\nImportant reminders for this season:\n• Schedule your seasonal checkup\n• Update parasite prevention protocols\n• Review dietary needs for seasonal changes\n• Check for seasonal allergies or skin issues\n\nOur experienced veterinary team is ready to help ensure your pets stay healthy all year round.\n\nContact [BUSINESS_NAME] today:\n📞 [PHONE_NUMBER]\n🌐 [WEBSITE_LINK]\n📅 [BOOK_NOW_LINK]\n\nLocated at: [BUSINESS_ADDRESS]\n\nCaring for your pets through every season!",
+                "content": "Seasonal Pet Care Tips from [BUSINESS_NAME]\n\nAs the seasons change, so do your pet's needs!\n\nImportant reminders for this season:\n• Schedule your seasonal checkup\n• Update parasite prevention protocols\n• Review dietary needs for seasonal changes\n• Check for seasonal allergies or skin issues\n\nOur experienced veterinary team is ready to help ensure your pets stay healthy all year round.\n\nContact [BUSINESS_NAME] today:\n📞 [PHONE_NUMBER]\n🌐 [WEBSITE_LINK]\n📅 [BOOK_NOW_LINK] | 📍 [BUSINESS_ADDRESS]\n\nCaring for your pets through every season!",
                 "description": "Seasonal care reminders for all pet owners"
             },
             
