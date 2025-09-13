@@ -6639,6 +6639,10 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                         personalized_content = personalized_content.replace('[PET_NAME]', sample_customer_data['pet_names'][0] if sample_customer_data['pet_names'] else 'Pet')
                         personalized_content = personalized_content.replace('[PET_NAMES]', ', '.join(sample_customer_data['pet_names']))
                         
+                        # Apply global placeholder replacement
+                        personalized_content = await replace_global_placeholders(personalized_content, db)
+                        final_email_content = personalized_content
+                        
                         # Generate email subject
                         try:
                             subject_result = await ai_service.format_custom_content(
