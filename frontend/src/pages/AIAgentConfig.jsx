@@ -4923,10 +4923,18 @@ Example:
                                                 
                                                                         {/* Business Information & Email Content Template (from scheduled mode) */}
                                                                         <div className="space-y-4">
-                                                                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                                            <FileText className="h-4 w-4 inline mr-2" />
-                                                                            Business Information & Email Content Template
-                                                                          </label>
+                                                                          <div className="flex items-center justify-between mb-2">
+                                                                            <label className="block text-sm font-medium text-gray-700">
+                                                                              <FileText className="h-4 w-4 inline mr-2" />
+                                                                              Business Information & Email Content Template
+                                                                            </label>
+                                                                            <FullScreenEditorButton
+                                                                              content={emailRecurringMode.emailContentTemplate}
+                                                                              title="Recurring Email Agent - Email Template"
+                                                                              onSave={(content) => handleEmailRecurringModeChange('emailContentTemplate', content)}
+                                                                              className="text-xs"
+                                                                            />
+                                                                          </div>
                                                                           <textarea
                                                                             value={emailRecurringMode.emailContentTemplate}
                                                                             onChange={(e) => handleEmailRecurringModeChange('emailContentTemplate', e.target.value)}
