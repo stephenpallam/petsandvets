@@ -666,7 +666,7 @@ const SMSConfiguration = () => {
                       </div>
 
                       {/* Template Form */}
-                      {showTemplateForm && (
+                      {showTemplateModal && (
                         <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
                           <h4 className="text-md font-medium text-gray-900 mb-4">
                             {editingTemplate ? 'Edit Template' : 'Create New Template'}
