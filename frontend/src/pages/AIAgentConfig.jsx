@@ -141,6 +141,12 @@ const AIAgentConfig = () => {
   const [smsTemplates, setSmsTemplates] = useState([]);
   const [loadingTemplates, setLoadingTemplates] = useState(false);
   
+  // Full-screen email editor state
+  const [showFullScreenEditor, setShowFullScreenEditor] = useState(false);
+  const [fullScreenEditorContent, setFullScreenEditorContent] = useState('');
+  const [fullScreenEditorTitle, setFullScreenEditorTitle] = useState('');
+  const [fullScreenEditorCallback, setFullScreenEditorCallback] = useState(null);
+  
   // Pay period settings
   const [defaultPayPeriods, setDefaultPayPeriods] = useState([]);
   const [pastPayPeriods, setPastPayPeriods] = useState([]);
