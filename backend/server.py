@@ -6918,9 +6918,9 @@ Located at: [BUSINESS_ADDRESS]"""
                             # Remove quotes if present
                             email_subject = email_subject.strip('"\'')
                             
-                            # Ensure subject is under 75 characters
-                            if len(email_subject) > 75:
-                                email_subject = email_subject[:72] + "..."
+                            # Ensure subject is under 100 characters
+                            if len(email_subject) > 100:
+                                email_subject = email_subject[:97] + "..."
                             
                             # Fallback if still empty
                             if not email_subject or len(email_subject) < 3:
