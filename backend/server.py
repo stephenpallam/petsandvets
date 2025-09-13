@@ -6830,6 +6830,9 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                             personalized_content = personalized_content.replace('[PET_NAME]', sample_customer_data['pet_names'][0] if sample_customer_data['pet_names'] else 'Pet')
                             personalized_content = personalized_content.replace('[PET_NAMES]', ', '.join(sample_customer_data['pet_names']))
                             
+                            # Apply global placeholder replacement
+                            personalized_content = await replace_global_placeholders(personalized_content, db)
+                            
                         except Exception as e:
                             logger.error(f"Error generating personalized SMS content: {str(e)}")
                             # Fallback to simple personalization
