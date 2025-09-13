@@ -6402,10 +6402,7 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                         word_count=agent_data.get('word_count', '180'),
                         platforms=['general'],  # Generic platform for consistency
                         use_web_research=agent_data.get('use_web_research', False),
-                        image_text=agent_data.get('image_text', ''),
-                        track_usage=True,
-                        user_id="admin",
-                        agent_id=agent_id
+                        image_text=agent_data.get('image_text', '')
                     )
                     
                     if enhanced_content_result and enhanced_content_result.get('content'):
