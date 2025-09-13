@@ -257,6 +257,7 @@ class MarketingCampaignDuplicatePreventionTester:
             agent_data = {
                 "agent_type": "marketing_agent",
                 "agent_name": "Test Duplicate Prevention Agent 2 - Rapid Fire",
+                "mode": "adhoc",
                 "marketing_content_type": "topic",
                 "topic": "Pet Nutrition",
                 "marketing_channels": ["social_media", "email", "sms"],
