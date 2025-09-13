@@ -200,7 +200,7 @@ const EmailConfiguration = () => {
       if (response.ok) {
         setSuccess('Email template created successfully!');
         setTemplateForm({ name: '', content: '', description: '' });
-        setShowTemplateForm(false);
+        setShowTemplateModal(false);
         fetchTemplates();
       } else {
         const errorData = await response.json();
