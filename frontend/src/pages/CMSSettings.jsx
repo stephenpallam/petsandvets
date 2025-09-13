@@ -188,6 +188,148 @@ const CMSSettings = () => {
     }));
   };
 
+  // Global placeholders functions
+  const fetchPlaceholders = async () => {
+    setLoadingPlaceholders(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/global-placeholders`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setPlaceholders(data);
+      } else {
+        throw new Error('Failed to fetch placeholders');
+      }
+    } catch (err) {
+      setMessage({ type: 'error', text: 'Failed to load global placeholders' });
+      console.error('Error fetching placeholders:', err);
+    } finally {
+      setLoadingPlaceholders(false);
+    }
+  };
+
+  const handleCreatePlaceholder = async () => {
+    if (!placeholderForm.name.trim() || !placeholderForm.placeholder.trim() || !placeholderForm.value.trim()) {
+      setMessage({ type: 'error', text: 'Name, placeholder, and value are required' });
+      return;
+    }
+
+    // Auto-format placeholder if it doesn't have brackets
+    let formattedPlaceholder = placeholderForm.placeholder;
+    if (!formattedPlaceholder.startsWith('[') || !formattedPlaceholder.endsWith(']')) {
+      formattedPlaceholder = `[${formattedPlaceholder.toUpperCase()}]`;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/global-placeholders`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...placeholderForm,
+          placeholder: formattedPlaceholder,
+          created_by: user?.email || 'unknown'
+        })
+      });
+
+      if (response.ok) {
+        setMessage({ type: 'success', text: 'Global placeholder created successfully!' });
+        setPlaceholderForm({ name: '', placeholder: '', value: '', description: '' });
+        setShowPlaceholderForm(false);
+        fetchPlaceholders();
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to create placeholder');
+      }
+    } catch (err) {
+      setMessage({ type: 'error', text: err.message });
+    }
+  };
+
+  const handleUpdatePlaceholder = async () => {
+    if (!placeholderForm.name.trim() || !placeholderForm.placeholder.trim() || !placeholderForm.value.trim()) {
+      setMessage({ type: 'error', text: 'Name, placeholder, and value are required' });
+      return;
+    }
+
+    // Auto-format placeholder if it doesn't have brackets
+    let formattedPlaceholder = placeholderForm.placeholder;
+    if (!formattedPlaceholder.startsWith('[') || !formattedPlaceholder.endsWith(']')) {
+      formattedPlaceholder = `[${formattedPlaceholder.toUpperCase()}]`;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/global-placeholders/${editingPlaceholder.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...placeholderForm,
+          placeholder: formattedPlaceholder
+        })
+      });
+
+      if (response.ok) {
+        setMessage({ type: 'success', text: 'Global placeholder updated successfully!' });
+        setPlaceholderForm({ name: '', placeholder: '', value: '', description: '' });
+        setEditingPlaceholder(null);
+        setShowPlaceholderForm(false);
+        fetchPlaceholders();
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to update placeholder');
+      }
+    } catch (err) {
+      setMessage({ type: 'error', text: err.message });
+    }
+  };
+
+  const handleDeletePlaceholder = async (placeholderId) => {
+    if (!confirm('Are you sure you want to delete this global placeholder?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/global-placeholders/${placeholderId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (response.ok) {
+        setMessage({ type: 'success', text: 'Global placeholder deleted successfully!' });
+        fetchPlaceholders();
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to delete placeholder');
+      }
+    } catch (err) {
+      setMessage({ type: 'error', text: err.message });
+    }
+  };
+
+  const handleEditPlaceholder = (placeholder) => {
+    setEditingPlaceholder(placeholder);
+    setPlaceholderForm({
+      name: placeholder.name,
+      placeholder: placeholder.placeholder,
+      value: placeholder.value,
+      description: placeholder.description || ''
+    });
+    setShowPlaceholderForm(true);
+  };
+
+  const handleCancelPlaceholderForm = () => {
+    setPlaceholderForm({ name: '', placeholder: '', value: '', description: '' });
+    setEditingPlaceholder(null);
+    setShowPlaceholderForm(false);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
