@@ -5495,6 +5495,14 @@ Example:
 
                         {/* Email Content */}
                         <div>
+                          <TemplateDropdown
+                            templates={emailTemplates}
+                            selectedValue={emailWriteMode.emailContent}
+                            onSelect={(templateContent) => handleEmailWriteModeChange('emailContent', templateContent)}
+                            placeholder="Select an email template..."
+                            templateType="email"
+                            isPersonalized={emailWriteMode.emailType === 'bulk'}
+                          />
                           <div className="flex items-center justify-between mb-2">
                             <label className="block text-sm font-medium text-gray-700">
                               <FileText className="h-4 w-4 inline mr-2" />
@@ -5505,6 +5513,7 @@ Example:
                               title="Write Email Agent - Email Content"
                               onSave={(content) => handleEmailWriteModeChange('emailContent', content)}
                               className="text-xs"
+                              isPersonalized={emailWriteMode.emailType === 'bulk'}
                             />
                           </div>
                           <textarea
