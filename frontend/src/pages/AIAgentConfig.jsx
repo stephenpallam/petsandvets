@@ -1578,6 +1578,54 @@ Best regards,
     }));
   };
 
+  // Template Dropdown Component
+  const TemplateDropdown = ({ 
+    templates, 
+    selectedValue, 
+    onSelect, 
+    placeholder = "Select a template...", 
+    templateType = "email" 
+  }) => {
+    const handleTemplateSelect = (template) => {
+      onSelect(template.content);
+    };
+
+    return (
+      <div className="mb-3">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          📄 Quick Template Selection
+        </label>
+        <div className="relative">
+          <select
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm"
+            onChange={(e) => {
+              if (e.target.value) {
+                const template = templates.find(t => t.id === e.target.value);
+                if (template) {
+                  handleTemplateSelect(template);
+                }
+              }
+            }}
+            defaultValue=""
+          >
+            <option value="" disabled>{placeholder}</option>
+            {templates.map(template => (
+              <option key={template.id} value={template.id}>
+                {template.name}
+                {template.description && ` - ${template.description.substring(0, 50)}${template.description.length > 50 ? '...' : ''}`}
+              </option>
+            ))}
+          </select>
+        </div>
+        {templates.length === 0 && (
+          <p className="text-xs text-gray-500 mt-1">
+            No {templateType} templates available. Create templates in {templateType === 'email' ? 'Email' : 'SMS'} Configuration.
+          </p>
+        )}
+      </div>
+    );
+  };
+
   // Helper functions to check if forms are valid (for button state)
   const isTimesheetAdhocModeValid = () => {
     return timesheetAdhocMode.agentName.trim() && 
