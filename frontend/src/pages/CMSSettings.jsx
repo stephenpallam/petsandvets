@@ -28,6 +28,18 @@ const CMSSettings = () => {
   const [message, setMessage] = useState({ type: '', text: '' });
   const [pageLoading, setPageLoading] = useState(true);
 
+  // Global placeholders state
+  const [placeholders, setPlaceholders] = useState([]);
+  const [loadingPlaceholders, setLoadingPlaceholders] = useState(false);
+  const [editingPlaceholder, setEditingPlaceholder] = useState(null);
+  const [showPlaceholderForm, setShowPlaceholderForm] = useState(false);
+  const [placeholderForm, setPlaceholderForm] = useState({
+    name: '',
+    placeholder: '',
+    value: '',
+    description: ''
+  });
+
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL || window.location.origin;
 
   const tabs = [
