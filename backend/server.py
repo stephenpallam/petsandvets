@@ -6672,14 +6672,27 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                         # Generate email subject
                         try:
                             subject_result = await ai_service.format_custom_content(
-                                post_title="Email Subject Generation",
-                                post_content=f"Create a compelling email subject line for: {campaign_title}",
-                                word_count="10",
+                                post_title="Subject Line Only",
+                                post_content=f"Generate ONLY a short, compelling email subject line (no formatting, no titles, no explanations) for this topic: {campaign_title}. Return just the subject line text, nothing else.",
+                                word_count="8",
                                 platforms=['email'],
                                 use_web_research=False,
                                 image_text=""
                             )
-                            email_subject = subject_result.get('content', campaign_title) if subject_result else campaign_title
+                            raw_subject = subject_result.get('content', campaign_title) if subject_result else campaign_title
+                            
+                            # Clean up the subject line - remove any markdown formatting
+                            email_subject = raw_subject.strip()
+                            # Remove common formatting patterns
+                            email_subject = email_subject.replace('**Title:**', '').replace('**', '')
+                            email_subject = email_subject.replace('**Content:**', '').replace('Title:', '')
+                            email_subject = email_subject.replace('Subject:', '').replace('Subject Line:', '')
+                            # Split by newlines and take first line if multiple
+                            email_subject = email_subject.split('\n')[0].strip()
+                            # Fallback if still empty
+                            if not email_subject or len(email_subject) < 3:
+                                email_subject = campaign_title
+                                
                         except Exception as e:
                             logger.error(f"Error generating email subject: {str(e)}")
                             email_subject = campaign_title
@@ -6739,14 +6752,27 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                         # Generate email subject
                         try:
                             subject_result = await ai_service.format_custom_content(
-                                post_title="Email Subject Generation",
-                                post_content=f"Create a compelling email subject line for: {campaign_title}",
-                                word_count="10",
+                                post_title="Subject Line Only",
+                                post_content=f"Generate ONLY a short, compelling email subject line (no formatting, no titles, no explanations) for this topic: {campaign_title}. Return just the subject line text, nothing else.",
+                                word_count="8",
                                 platforms=['email'],
                                 use_web_research=False,
                                 image_text=""
                             )
-                            email_subject = subject_result.get('content', campaign_title) if subject_result else campaign_title
+                            raw_subject = subject_result.get('content', campaign_title) if subject_result else campaign_title
+                            
+                            # Clean up the subject line - remove any markdown formatting
+                            email_subject = raw_subject.strip()
+                            # Remove common formatting patterns
+                            email_subject = email_subject.replace('**Title:**', '').replace('**', '')
+                            email_subject = email_subject.replace('**Content:**', '').replace('Title:', '')
+                            email_subject = email_subject.replace('Subject:', '').replace('Subject Line:', '')
+                            # Split by newlines and take first line if multiple
+                            email_subject = email_subject.split('\n')[0].strip()
+                            # Fallback if still empty
+                            if not email_subject or len(email_subject) < 3:
+                                email_subject = campaign_title
+                                
                         except Exception as e:
                             logger.error(f"Error generating email subject: {str(e)}")
                             email_subject = campaign_title
