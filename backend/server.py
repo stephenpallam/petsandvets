@@ -8493,6 +8493,9 @@ async def edit_post(
         if post_update.topic is not None:
             update_data["topic"] = post_update.topic
             content_changed = True
+        if post_update.email_subject is not None:
+            update_data["email_subject"] = post_update.email_subject
+            content_changed = True
             
         # If content was changed, clear reviewed_at
         if content_changed:
