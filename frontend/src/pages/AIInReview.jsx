@@ -1485,15 +1485,6 @@ const AIInReview = () => {
 
                             {/* Post Content - with channel-specific formatting */}
                             <div className="prose max-w-none">
-                              {/* Email Subject Line - for email posts and marketing agent email posts */}
-                              {((post.agent_type === 'email' || post.agent_type === 'email_agent') && post.email_subject) || 
-                               (post.agent_type === 'marketing_agent' && post.marketing_channel === 'email' && post.email_subject) ? (
-                                <div className="mb-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-400">
-                                  <div className="text-sm font-medium text-blue-800 mb-1">Email Subject:</div>
-                                  <div className="text-blue-900 font-semibold">{post.email_subject}</div>
-                                </div>
-                              ) : null}
-                              
                               {/* Marketing Agent Email Post */}
                               {post.agent_type === 'marketing_agent' && post.marketing_channel === 'email' ? (
                                 <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
