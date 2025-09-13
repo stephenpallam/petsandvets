@@ -11877,6 +11877,20 @@ async def initialize_default_templates(
                 "type": "sms",
                 "content": "🎉 Special offer at [BUSINESS_NAME]! Limited time promotion on pet care services. Book now: [BOOK_NOW_LINK] or call [PHONE_NUMBER]",
                 "description": "General promotion alert without personalization"
+            },
+            
+            # Special Campaign SMS Templates for Topic/Holiday with ChatGPT Integration
+            {
+                "name": "Campaign SMS - Personalized (ChatGPT)",
+                "type": "sms",
+                "content": "Hi [CUSTOMER_NAME]! [CHATGPT_CONTENT] Questions about [PET_NAME]? Call [PHONE_NUMBER] or visit [BOOK_NOW_LINK]",
+                "description": "Campaign SMS template with ChatGPT generated content - personalized with customer and pet names"
+            },
+            {
+                "name": "Campaign SMS - General (ChatGPT)",
+                "type": "sms",
+                "content": "[CHATGPT_CONTENT] Contact [BUSINESS_NAME]: [PHONE_NUMBER] or book online: [BOOK_NOW_LINK]",
+                "description": "Campaign SMS template with ChatGPT generated content - general without personalization"
             }
         ]
         
