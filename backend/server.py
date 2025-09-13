@@ -6376,15 +6376,13 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                 
                 # Generate 150-200 word professional holiday content using ChatGPT
                 try:
-                    holiday_content_result = await ai_service.generate_social_media_content(
-                        topic=f"{holiday_name} pet care special",
+                    holiday_content_result = await ai_service.format_custom_content(
+                        post_title=f"Holiday Marketing: {holiday_name}",
+                        post_content=f"Create professional, engaging marketing content about {holiday_name} and pet care for a veterinary clinic. Write 150-200 words without any titles, headers, or formatting. Focus on holiday-specific pet care tips, seasonal offers, and warm messaging for pet owners. Write in a professional, caring tone suitable for email campaigns.",
                         word_count="180",  # 150-200 words as requested
                         platforms=['general'],  # Generic platform for base content
-                        custom_topic=f"Create engaging {holiday_name} marketing content for pet care services",
-                        image_text=agent_data.get('image_text', ''),
-                        track_usage=True,
-                        user_id="admin",
-                        agent_id=agent_id
+                        use_web_research=agent_data.get('use_web_research', False),
+                        image_text=agent_data.get('image_text', '')
                     )
                     
                     if holiday_content_result and holiday_content_result.get('content'):
