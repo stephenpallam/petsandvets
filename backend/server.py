@@ -12269,7 +12269,7 @@ async def initialize_default_templates(
             {
                 "name": "Campaign Email - General (ChatGPT)",
                 "type": "email", 
-                "content": "Dear Valued Customer,\n\n[CHATGPT_CONTENT]\n\nWe appreciate your trust in our care for your beloved pets. For any questions or to schedule an appointment, please contact us.\n\nWarm regards,\n[BUSINESS_NAME]\n📞 [PHONE_NUMBER]\n🌐 [WEBSITE_LINK]\n📅 [BOOK_NOW_LINK]\n\nLocated at: [BUSINESS_ADDRESS]",
+                "content": "Dear Valued Customer,\n\n[CHATGPT_CONTENT]\n\nWe appreciate your trust in our care for your beloved pets. For any questions or to schedule an appointment, please contact us.\n\nWarm regards,\n[BUSINESS_NAME]\n📞 [PHONE_NUMBER]\n🌐 [WEBSITE_LINK]\n📅 [BOOK_NOW_LINK] | 📍 [BUSINESS_ADDRESS]",
                 "description": "Campaign email template with ChatGPT generated content - general without personalization"
             }
         ]
