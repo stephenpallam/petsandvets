@@ -1833,8 +1833,25 @@ const AIReadyToPublish = () => {
                                 <SMSContentPreview post={post} />
                               </div>
                             ) : post.agent_type === 'sms_agent' ? (
-                              /* SMS Post Content with Customer Preview */
-                              <div>
+                              /* SMS Post Content with improved display */
+                              <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                                <div className="flex items-center space-x-2 mb-3">
+                                  <div className="w-3 h-3 rounded-full bg-orange-500"></div>
+                                  <span className="text-sm font-medium text-gray-700">SMS Preview</span>
+                                </div>
+                                <div className="bg-gray-900 rounded-lg p-4 max-w-xs">
+                                  <div className="bg-blue-500 text-white rounded-2xl rounded-bl-md px-4 py-2 text-sm">
+                                    <SMSContentWithLinks 
+                                      content={post.content} 
+                                      className=""
+                                    />
+                                  </div>
+                                  <div className="text-xs text-gray-400 mt-1 text-right">
+                                    {post.content ? `${post.content.length}/160` : '0/160'}
+                                  </div>
+                                </div>
+                                
+                                {/* Show personalized preview if available */}
                                 <SMSContentPreview post={post} />
                               </div>
                             ) : (
