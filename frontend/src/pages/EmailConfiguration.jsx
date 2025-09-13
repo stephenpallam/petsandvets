@@ -30,6 +30,7 @@ const EmailConfiguration = () => {
   const tabs = [
     { id: 'general', label: 'General Settings', icon: Settings },
     { id: 'provider', label: 'Email Provider', icon: Mail },
+    { id: 'templates', label: 'Email Templates', icon: Mail },
     { id: 'test', label: 'Test & Verify', icon: TestTube }
   ];
 
