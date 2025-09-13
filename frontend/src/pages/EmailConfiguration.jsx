@@ -81,6 +81,13 @@ const EmailConfiguration = () => {
     }
   }, [user, token, authLoading]);
 
+  // Load templates when templates tab is active
+  useEffect(() => {
+    if (activeTab === 'templates' && user && canAccessManager()) {
+      fetchTemplates();
+    }
+  }, [activeTab, user, token]);
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setEmailConfig(prev => ({
