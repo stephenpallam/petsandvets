@@ -1680,10 +1680,11 @@ Best regards,
   };
 
   // Full-screen email editor functions
-  const openFullScreenEditor = (content, title, onSave) => {
+  const openFullScreenEditor = (content, title, onSave, isPersonalized = true) => {
     setFullScreenEditorContent(content);
     setFullScreenEditorTitle(title);
     setFullScreenEditorCallback(() => onSave); // Wrap in arrow function to store the callback
+    setFullScreenEditorPersonalized(isPersonalized);
     setShowFullScreenEditor(true);
     // Prevent body scroll when modal is open
     document.body.style.overflow = 'hidden';
@@ -1694,6 +1695,7 @@ Best regards,
     setFullScreenEditorContent('');
     setFullScreenEditorTitle('');
     setFullScreenEditorCallback(null);
+    setFullScreenEditorPersonalized(true);
     // Restore body scroll
     document.body.style.overflow = 'unset';
   };
