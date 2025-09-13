@@ -377,41 +377,40 @@ const SMSContentPreview = ({ post }) => {
     );
   }
 
+  // Check if this is a personalized SMS
+  const isPersonalized = post.marketing_sms_personalized !== false && 
+                        (post.content && (post.content.includes('[CUSTOMER_NAME]') || 
+                                         post.content.includes('[PET_NAME]') || 
+                                         post.content.includes('[PET_NAMES]')));
+
   return (
     <div className="space-y-4">
       {/* SMS Preview with Real Customer Data */}
       <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-        <div className="text-sm text-orange-600 mb-2 font-medium">📱 SMS Preview (First Customer)</div>
+        <div className="text-sm text-orange-600 mb-2 font-medium">
+          📱 {isPersonalized ? 'SMS Preview (First Customer)' : 'SMS Preview Content'}
+        </div>
         <div className="bg-white p-3 rounded border">
           <SMSCustomerContentWithLinks 
             content={getPreviewContent()} 
             className="text-gray-900 leading-relaxed"
           />
         </div>
-        <div className="mt-2 text-xs text-orange-600">
-          Preview for: {customerPreview.customer_name || 
-                      customerPreview.name || 
-                      customerPreview.owner_first_name || 
-                      customerPreview.first_name || 
-                      'Customer'} 
-          {customerPreview.phone_number || 
-           customerPreview.phone || 
-           customerPreview.owner_phone ? 
-            ` (${customerPreview.phone_number || customerPreview.phone || customerPreview.owner_phone})` : 
-            ' (No phone number)'
-          }
-        </div>
-      </div>
-      
-      {/* Raw Template for Reference */}
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-        <div className="text-sm text-gray-600 mb-2 font-medium">📝 Original Template</div>
-        <div className="bg-white p-3 rounded border">
-          <SMSCustomerContentWithLinks 
-            content={post.content} 
-            className="text-gray-700 text-sm"
-          />
-        </div>
+        {isPersonalized && (
+          <div className="mt-2 text-xs text-orange-600">
+            Preview for: {customerPreview.customer_name || 
+                        customerPreview.name || 
+                        customerPreview.owner_first_name || 
+                        customerPreview.first_name || 
+                        'Customer'} 
+            {customerPreview.phone_number || 
+             customerPreview.phone || 
+             customerPreview.owner_phone ? 
+              ` (${customerPreview.phone_number || customerPreview.phone || customerPreview.owner_phone})` : 
+              ' (No phone number)'
+            }
+          </div>
+        )}
       </div>
     </div>
   );
