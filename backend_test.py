@@ -1,21 +1,20 @@
 #!/usr/bin/env python3
 """
-Marketing Agent Field Fixes Testing
+Template Management System Comprehensive Testing
 
-This test comprehensively tests the Marketing Agent field fixes as requested:
+This test comprehensively tests the new Template Management System endpoints as requested:
 
 Test Focus:
-1. Create Marketing Agent with Custom Campaign Content - Test creating marketing agent with custom campaign content
-2. Verify Field Storage - Test that marketing_custom_campaign, marketing_email_personalized, marketing_sms_personalized are properly saved
-3. Create Second Agent with Different Settings - Test with different personalization settings
-4. Test Edit Operation - Test updating marketing agent's custom content and personalization settings
+1. Initialize Default Templates and Placeholders - Test POST /api/templates/initialize-defaults
+2. Template CRUD Operations - Test all template endpoints with filtering
+3. Global Placeholder CRUD Operations - Test all global placeholder endpoints  
+4. Validation and Error Handling - Test duplicate names, non-existent resources, etc.
 
 Expected Results:
-- Marketing agents should be created successfully with custom campaign content
-- marketing_custom_campaign field should be properly saved and retrieved
-- marketing_email_personalized and marketing_sms_personalized should work correctly
-- Edit operations should update the fields correctly
-- All corrected field names should work in both create and update operations
+- Default templates and placeholders should be created successfully
+- All CRUD operations should work correctly with proper validation
+- Error handling should work for edge cases
+- System should be ready for frontend integration
 """
 
 import asyncio
@@ -38,7 +37,7 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv(backend_dir / '.env')
 
-class MarketingAgentFieldTester:
+class TemplateManagementTester:
     def __init__(self):
         self.mongo_url = os.environ['MONGO_URL']
         self.db_name = os.environ['DB_NAME']
@@ -47,7 +46,8 @@ class MarketingAgentFieldTester:
         self.test_results = []
         self.backend_url = os.environ.get('FRONTEND_URL', 'https://petcare-agents.preview.emergentagent.com')
         self.auth_token = None
-        self.created_agent_ids = []  # Store multiple agent IDs
+        self.created_template_ids = []
+        self.created_placeholder_ids = []
         
     async def connect(self):
         """Connect to MongoDB"""
@@ -102,9 +102,19 @@ class MarketingAgentFieldTester:
             print(f"Authentication error: {str(e)}")
             return False
     
-    async def test_create_marketing_agent_with_custom_content(self):
-        """Test 1: Create Marketing Agent with Custom Campaign Content"""
-        print("🔍 TEST 1: Create Marketing Agent with Custom Campaign Content")
+    async def cleanup_test_data(self):
+        """Clean up test data before starting tests"""
+        try:
+            # Remove any existing test templates and placeholders
+            await self.db.templates.delete_many({"name": {"$regex": "^Test"}})
+            await self.db.global_placeholders.delete_many({"name": {"$regex": "^Test"}})
+            print("🧹 Cleaned up existing test data")
+        except Exception as e:
+            print(f"Warning: Could not clean up test data: {e}")
+    
+    async def test_initialize_default_templates(self):
+        """Test 1: Initialize Default Templates and Placeholders"""
+        print("🔍 TEST 1: Initialize Default Templates and Placeholders")
         print("=" * 60)
         
         try:
@@ -117,416 +127,540 @@ class MarketingAgentFieldTester:
                 "Content-Type": "application/json"
             }
             
-            # Marketing agent data as specified in the request
-            marketing_agent_data = {
-                "agent_type": "marketing_agent",
-                "agent_name": "Test Custom Content Fix",
-                "mode": "adhoc",
-                "marketing_content_type": "custom_campaign",
-                "marketing_custom_campaign": "This is my custom marketing campaign content that should be saved and displayed in the dashboard!",
-                "marketing_channels": ["email", "sms"],
-                "marketing_email_personalized": True,
-                "marketing_sms_personalized": False,
-                "post_date": "2025-01-25",
-                "post_time": "14:00",
-                "marketing_workflow_mode": "in_review"
-            }
-            
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                url = f"{self.backend_url}/api/ai-agents"
-                async with session.post(url, headers=headers, json=marketing_agent_data, timeout=15) as response:
+                url = f"{self.backend_url}/api/templates/initialize-defaults"
+                async with session.post(url, headers=headers, timeout=15) as response:
                     response_text = await response.text()
                     
                     if response.status == 200:
                         try:
                             result = json.loads(response_text)
-                            agent_id = result.get("agent_id")
-                            self.created_agent_ids.append(agent_id)
                             
-                            # Verify agent was created in database
-                            agent_doc = await self.db.ai_agents.find_one({"id": agent_id})
+                            # Verify default templates were created
+                            templates = await self.db.templates.find().to_list(length=None)
+                            placeholders = await self.db.global_placeholders.find().to_list(length=None)
                             
-                            success = agent_doc is not None and agent_doc.get("agent_type") == "marketing_agent"
+                            # Check for expected default templates
+                            expected_email_templates = ["Appointment Reminder", "Welcome New Customer", "Marketing Promotion"]
+                            expected_sms_templates = ["Appointment Reminder", "Welcome New Customer", "Marketing Promotion"]
+                            expected_placeholders = ["Website Link", "Book Now Link", "Phone Number", "Business Name", "Business Address"]
                             
-                            # Check if all fields were saved correctly
-                            field_verification = {}
-                            if agent_doc:
-                                field_verification = {
-                                    "agent_name": agent_doc.get("agent_name") == "Test Custom Content Fix",
-                                    "agent_type": agent_doc.get("agent_type") == "marketing_agent",
-                                    "marketing_content_type": agent_doc.get("marketing_content_type") == "custom_campaign",
-                                    "marketing_custom_campaign": agent_doc.get("marketing_custom_campaign") == "This is my custom marketing campaign content that should be saved and displayed in the dashboard!",
-                                    "marketing_channels": agent_doc.get("marketing_channels") == ["email", "sms"],
-                                    "marketing_email_personalized": agent_doc.get("marketing_email_personalized") == True,
-                                    "marketing_sms_personalized": agent_doc.get("marketing_sms_personalized") == False,
-                                    "post_date": agent_doc.get("post_date") == "2025-01-25",
-                                    "post_time": agent_doc.get("post_time") == "14:00"
-                                }
+                            email_templates = [t for t in templates if t.get("type") == "email"]
+                            sms_templates = [t for t in templates if t.get("type") == "sms"]
+                            
+                            email_names = [t.get("name") for t in email_templates]
+                            sms_names = [t.get("name") for t in sms_templates]
+                            placeholder_names = [p.get("name") for p in placeholders]
+                            
+                            success = (
+                                all(name in email_names for name in expected_email_templates) and
+                                all(name in sms_names for name in expected_sms_templates) and
+                                all(name in placeholder_names for name in expected_placeholders)
+                            )
                             
                             self.log_test_result(
-                                "Create Marketing Agent with Custom Content",
+                                "Initialize Default Templates and Placeholders",
                                 success,
-                                f"Marketing agent created successfully: {success}",
+                                f"Default initialization: {success}",
                                 {
                                     "HTTP Status": response.status,
-                                    "Agent ID": agent_id,
-                                    "Agent Found in DB": agent_doc is not None,
-                                    "Field Verification": field_verification,
-                                    "All Fields Correct": all(field_verification.values()) if field_verification else False,
-                                    "Custom Campaign Content": agent_doc.get("marketing_custom_campaign") if agent_doc else None
+                                    "Response Message": result.get("message"),
+                                    "Total Templates": len(templates),
+                                    "Email Templates": len(email_templates),
+                                    "SMS Templates": len(sms_templates),
+                                    "Global Placeholders": len(placeholders),
+                                    "Expected Email Templates Found": all(name in email_names for name in expected_email_templates),
+                                    "Expected SMS Templates Found": all(name in sms_names for name in expected_sms_templates),
+                                    "Expected Placeholders Found": all(name in placeholder_names for name in expected_placeholders),
+                                    "Email Template Names": email_names,
+                                    "SMS Template Names": sms_names,
+                                    "Placeholder Names": placeholder_names
                                 }
                             )
-                            return success, agent_id
+                            return success
                             
                         except json.JSONDecodeError:
                             self.log_test_result(
-                                "Create Marketing Agent with Custom Content",
+                                "Initialize Default Templates and Placeholders",
                                 False,
                                 "Invalid JSON response",
                                 {"HTTP Status": response.status, "Response Text": response_text}
                             )
-                            return False, None
+                            return False
                     else:
                         self.log_test_result(
-                            "Create Marketing Agent with Custom Content",
+                            "Initialize Default Templates and Placeholders",
                             False,
-                            f"Failed to create marketing agent: HTTP {response.status}",
+                            f"Failed to initialize defaults: HTTP {response.status}",
                             {"HTTP Status": response.status, "Response Text": response_text}
                         )
-                        return False, None
+                        return False
                         
         except Exception as e:
             self.log_test_result(
-                "Create Marketing Agent with Custom Content",
+                "Initialize Default Templates and Placeholders",
                 False,
-                f"Error creating marketing agent: {str(e)}",
+                f"Error initializing defaults: {str(e)}",
                 {"Error Details": str(e)}
             )
-            return False, None
+            return False
     
-    async def test_verify_field_storage(self, agent_id):
-        """Test 2: Verify Field Storage - Retrieve agent and confirm fields are properly saved"""
-        print("🔍 TEST 2: Verify Field Storage")
+    async def test_template_crud_operations(self):
+        """Test 2: Template CRUD Operations"""
+        print("🔍 TEST 2: Template CRUD Operations")
         print("=" * 60)
-        
-        if not agent_id:
-            self.log_test_result(
-                "Verify Field Storage",
-                False,
-                "No agent ID available for testing field storage",
-                {"Agent ID": agent_id}
-            )
-            return False, None
         
         try:
             ssl_context = ssl.create_default_context()
             ssl_context.check_hostname = False
             ssl_context.verify_mode = ssl.CERT_NONE
             
-            headers = {"Authorization": f"Bearer {self.auth_token}"}
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
             
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                url = f"{self.backend_url}/api/ai-agents"
+                # Test 2a: GET all templates
+                url = f"{self.backend_url}/api/templates"
                 async with session.get(url, headers=headers, timeout=10) as response:
-                    response_text = await response.text()
-                    
-                    if response.status == 200:
-                        try:
-                            agents_list = json.loads(response_text)
-                            
-                            # Find our specific agent
-                            agent_data = None
-                            for agent in agents_list:
-                                if agent.get("id") == agent_id:
-                                    agent_data = agent
-                                    break
-                            
-                            if not agent_data:
-                                self.log_test_result(
-                                    "Verify Field Storage",
-                                    False,
-                                    "Agent not found in agents list",
-                                    {"Agent ID": agent_id, "Total Agents": len(agents_list)}
-                                )
-                                return False, None
-                            
-                            # Verify specific fields are properly stored
-                            field_checks = {
-                                "marketing_custom_campaign_exists": "marketing_custom_campaign" in agent_data,
-                                "marketing_custom_campaign_correct": agent_data.get("marketing_custom_campaign") == "This is my custom marketing campaign content that should be saved and displayed in the dashboard!",
-                                "marketing_email_personalized_exists": "marketing_email_personalized" in agent_data,
-                                "marketing_email_personalized_correct": agent_data.get("marketing_email_personalized") == True,
-                                "marketing_sms_personalized_exists": "marketing_sms_personalized" in agent_data,
-                                "marketing_sms_personalized_correct": agent_data.get("marketing_sms_personalized") == False
-                            }
-                            
-                            success = all(field_checks.values())
-                            
-                            self.log_test_result(
-                                "Verify Field Storage",
-                                success,
-                                f"Field storage verification: {success}",
-                                {
-                                    "HTTP Status": response.status,
-                                    "Agent ID Match": agent_data.get("id") == agent_id,
-                                    "Field Checks": field_checks,
-                                    "marketing_custom_campaign": agent_data.get("marketing_custom_campaign"),
-                                    "marketing_email_personalized": agent_data.get("marketing_email_personalized"),
-                                    "marketing_sms_personalized": agent_data.get("marketing_sms_personalized")
-                                }
-                            )
-                            return success, agent_data
-                            
-                        except json.JSONDecodeError:
-                            self.log_test_result(
-                                "Verify Field Storage",
-                                False,
-                                "Invalid JSON response",
-                                {"HTTP Status": response.status, "Response Text": response_text}
-                            )
-                            return False, None
-                    else:
+                    if response.status != 200:
                         self.log_test_result(
-                            "Verify Field Storage",
+                            "Template CRUD - GET All Templates",
                             False,
-                            f"Failed to retrieve marketing agent: HTTP {response.status}",
-                            {"HTTP Status": response.status, "Response Text": response_text}
+                            f"Failed to get templates: HTTP {response.status}",
+                            {"HTTP Status": response.status}
                         )
-                        return False, None
-                        
-        except Exception as e:
-            self.log_test_result(
-                "Verify Field Storage",
-                False,
-                f"Error verifying field storage: {str(e)}",
-                {"Error Details": str(e)}
-            )
-            return False, None
-    
-    async def test_create_second_agent_different_settings(self):
-        """Test 3: Create Second Agent with Different Settings"""
-        print("🔍 TEST 3: Create Second Agent with Different Settings")
-        print("=" * 60)
-        
-        try:
-            ssl_context = ssl.create_default_context()
-            ssl_context.check_hostname = False
-            ssl_context.verify_mode = ssl.CERT_NONE
-            
-            headers = {
-                "Authorization": f"Bearer {self.auth_token}",
-                "Content-Type": "application/json"
-            }
-            
-            # Second marketing agent with different personalization settings
-            marketing_agent_data = {
-                "agent_type": "marketing_agent",
-                "agent_name": "Test Different Personalization Settings",
-                "mode": "adhoc",
-                "marketing_content_type": "custom_campaign",
-                "marketing_custom_campaign": "Another test campaign with different personalization settings",
-                "marketing_channels": ["email", "sms"],
-                "marketing_email_personalized": False,  # Different from first agent
-                "marketing_sms_personalized": True,     # Different from first agent
-                "post_date": "2025-01-26",
-                "post_time": "15:00",
-                "marketing_workflow_mode": "in_review"
-            }
-            
-            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                url = f"{self.backend_url}/api/ai-agents"
-                async with session.post(url, headers=headers, json=marketing_agent_data, timeout=15) as response:
-                    response_text = await response.text()
+                        return False
                     
-                    if response.status == 200:
-                        try:
-                            result = json.loads(response_text)
-                            agent_id = result.get("agent_id")
-                            self.created_agent_ids.append(agent_id)
-                            
-                            # Verify agent was created in database
-                            agent_doc = await self.db.ai_agents.find_one({"id": agent_id})
-                            
-                            success = agent_doc is not None and agent_doc.get("agent_type") == "marketing_agent"
-                            
-                            # Check if all fields were saved correctly with different settings
-                            field_verification = {}
-                            if agent_doc:
-                                field_verification = {
-                                    "agent_name": agent_doc.get("agent_name") == "Test Different Personalization Settings",
-                                    "marketing_custom_campaign": agent_doc.get("marketing_custom_campaign") == "Another test campaign with different personalization settings",
-                                    "marketing_email_personalized": agent_doc.get("marketing_email_personalized") == False,  # Should be False
-                                    "marketing_sms_personalized": agent_doc.get("marketing_sms_personalized") == True      # Should be True
-                                }
-                            
-                            self.log_test_result(
-                                "Create Second Agent with Different Settings",
-                                success,
-                                f"Second marketing agent created successfully: {success}",
-                                {
-                                    "HTTP Status": response.status,
-                                    "Agent ID": agent_id,
-                                    "Agent Found in DB": agent_doc is not None,
-                                    "Field Verification": field_verification,
-                                    "All Fields Correct": all(field_verification.values()) if field_verification else False,
-                                    "Email Personalized": agent_doc.get("marketing_email_personalized") if agent_doc else None,
-                                    "SMS Personalized": agent_doc.get("marketing_sms_personalized") if agent_doc else None
-                                }
-                            )
-                            return success, agent_id
-                            
-                        except json.JSONDecodeError:
-                            self.log_test_result(
-                                "Create Second Agent with Different Settings",
-                                False,
-                                "Invalid JSON response",
-                                {"HTTP Status": response.status, "Response Text": response_text}
-                            )
-                            return False, None
-                    else:
+                    all_templates = await response.json()
+                
+                # Test 2b: GET templates filtered by email type
+                url = f"{self.backend_url}/api/templates?template_type=email"
+                async with session.get(url, headers=headers, timeout=10) as response:
+                    if response.status != 200:
                         self.log_test_result(
-                            "Create Second Agent with Different Settings",
+                            "Template CRUD - GET Email Templates",
                             False,
-                            f"Failed to create second marketing agent: HTTP {response.status}",
-                            {"HTTP Status": response.status, "Response Text": response_text}
+                            f"Failed to get email templates: HTTP {response.status}",
+                            {"HTTP Status": response.status}
                         )
-                        return False, None
-                        
-        except Exception as e:
-            self.log_test_result(
-                "Create Second Agent with Different Settings",
-                False,
-                f"Error creating second marketing agent: {str(e)}",
-                {"Error Details": str(e)}
-            )
-            return False, None
-    
-    async def test_edit_operation(self, agent_id):
-        """Test 4: Test Edit Operation - Update agent's custom content and personalization"""
-        print("🔍 TEST 4: Test Edit Operation")
-        print("=" * 60)
-        
-        if not agent_id:
-            self.log_test_result(
-                "Test Edit Operation",
-                False,
-                "No agent ID available for testing edit operation",
-                {"Agent ID": agent_id}
-            )
-            return False, None
-        
-        try:
-            ssl_context = ssl.create_default_context()
-            ssl_context.check_hostname = False
-            ssl_context.verify_mode = ssl.CERT_NONE
-            
-            headers = {
-                "Authorization": f"Bearer {self.auth_token}",
-                "Content-Type": "application/json"
-            }
-            
-            # Get the current agent data first to preserve required fields
-            agent_doc = await self.db.ai_agents.find_one({"id": agent_id})
-            if not agent_doc:
-                self.log_test_result(
-                    "Test Edit Operation",
-                    False,
-                    "Agent not found in database for edit operation",
-                    {"Agent ID": agent_id}
-                )
-                return False, None
-            
-            # Update data for the first agent - include required fields from existing agent
-            update_data = {
-                "agent_type": agent_doc.get("agent_type"),
-                "agent_name": agent_doc.get("agent_name"),
-                "mode": agent_doc.get("mode"),
-                "marketing_content_type": agent_doc.get("marketing_content_type"),
-                "marketing_custom_campaign": "Updated custom campaign content to test edit functionality",
-                "marketing_channels": agent_doc.get("marketing_channels"),
-                "marketing_email_personalized": False,  # Change from True to False
-                "marketing_sms_personalized": agent_doc.get("marketing_sms_personalized"),
-                "post_date": agent_doc.get("post_date"),
-                "post_time": agent_doc.get("post_time"),
-                "marketing_workflow_mode": agent_doc.get("marketing_workflow_mode")
-            }
-            
-            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                url = f"{self.backend_url}/api/ai-agents/{agent_id}"
+                        return False
+                    
+                    email_templates = await response.json()
+                
+                # Test 2c: GET templates filtered by SMS type
+                url = f"{self.backend_url}/api/templates?template_type=sms"
+                async with session.get(url, headers=headers, timeout=10) as response:
+                    if response.status != 200:
+                        self.log_test_result(
+                            "Template CRUD - GET SMS Templates",
+                            False,
+                            f"Failed to get SMS templates: HTTP {response.status}",
+                            {"HTTP Status": response.status}
+                        )
+                        return False
+                    
+                    sms_templates = await response.json()
+                
+                # Test 2d: POST create custom email template
+                email_template_data = {
+                    "name": "Test Custom Email Template",
+                    "type": "email",
+                    "content": "Dear [CUSTOMER_NAME], this is a test email for [PET_NAME]. Visit [WEBSITE_LINK] for more info.",
+                    "description": "Test email template for comprehensive testing"
+                }
+                
+                url = f"{self.backend_url}/api/templates"
+                async with session.post(url, headers=headers, json=email_template_data, timeout=15) as response:
+                    if response.status != 200:
+                        self.log_test_result(
+                            "Template CRUD - POST Create Email Template",
+                            False,
+                            f"Failed to create email template: HTTP {response.status}",
+                            {"HTTP Status": response.status, "Response": await response.text()}
+                        )
+                        return False
+                    
+                    created_email_template = await response.json()
+                    email_template_id = created_email_template.get("id")
+                    self.created_template_ids.append(email_template_id)
+                
+                # Test 2e: POST create custom SMS template
+                sms_template_data = {
+                    "name": "Test Custom SMS Template",
+                    "type": "sms",
+                    "content": "Hi [CUSTOMER_NAME]! Test SMS for [PET_NAME]. Call [PHONE_NUMBER].",
+                    "description": "Test SMS template for comprehensive testing"
+                }
+                
+                async with session.post(url, headers=headers, json=sms_template_data, timeout=15) as response:
+                    if response.status != 200:
+                        self.log_test_result(
+                            "Template CRUD - POST Create SMS Template",
+                            False,
+                            f"Failed to create SMS template: HTTP {response.status}",
+                            {"HTTP Status": response.status, "Response": await response.text()}
+                        )
+                        return False
+                    
+                    created_sms_template = await response.json()
+                    sms_template_id = created_sms_template.get("id")
+                    self.created_template_ids.append(sms_template_id)
+                
+                # Test 2f: GET specific template
+                url = f"{self.backend_url}/api/templates/{email_template_id}"
+                async with session.get(url, headers=headers, timeout=10) as response:
+                    if response.status != 200:
+                        self.log_test_result(
+                            "Template CRUD - GET Specific Template",
+                            False,
+                            f"Failed to get specific template: HTTP {response.status}",
+                            {"HTTP Status": response.status}
+                        )
+                        return False
+                    
+                    specific_template = await response.json()
+                
+                # Test 2g: PUT update template
+                update_data = {
+                    "name": "Test Updated Email Template",
+                    "content": "Updated content for [CUSTOMER_NAME] and [PET_NAME]. Visit [WEBSITE_LINK].",
+                    "description": "Updated test email template"
+                }
+                
+                url = f"{self.backend_url}/api/templates/{email_template_id}"
                 async with session.put(url, headers=headers, json=update_data, timeout=15) as response:
-                    response_text = await response.text()
-                    
-                    if response.status == 200:
-                        try:
-                            result = json.loads(response_text)
-                            
-                            # Verify agent was updated in database
-                            agent_doc = await self.db.ai_agents.find_one({"id": agent_id})
-                            
-                            success = agent_doc is not None
-                            
-                            # Check if fields were updated correctly
-                            field_verification = {}
-                            if agent_doc:
-                                field_verification = {
-                                    "marketing_custom_campaign_updated": agent_doc.get("marketing_custom_campaign") == "Updated custom campaign content to test edit functionality",
-                                    "marketing_email_personalized_updated": agent_doc.get("marketing_email_personalized") == False,
-                                    "marketing_sms_personalized_unchanged": agent_doc.get("marketing_sms_personalized") == False  # Should remain unchanged
-                                }
-                            
-                            success = success and all(field_verification.values())
-                            
-                            self.log_test_result(
-                                "Test Edit Operation",
-                                success,
-                                f"Marketing agent updated successfully: {success}",
-                                {
-                                    "HTTP Status": response.status,
-                                    "Agent ID": agent_id,
-                                    "Agent Found in DB": agent_doc is not None,
-                                    "Field Verification": field_verification,
-                                    "All Fields Correct": all(field_verification.values()) if field_verification else False,
-                                    "Updated Custom Campaign": agent_doc.get("marketing_custom_campaign") if agent_doc else None,
-                                    "Updated Email Personalized": agent_doc.get("marketing_email_personalized") if agent_doc else None
-                                }
-                            )
-                            return success, agent_doc
-                            
-                        except json.JSONDecodeError:
-                            self.log_test_result(
-                                "Test Edit Operation",
-                                False,
-                                "Invalid JSON response",
-                                {"HTTP Status": response.status, "Response Text": response_text}
-                            )
-                            return False, None
-                    else:
+                    if response.status != 200:
                         self.log_test_result(
-                            "Test Edit Operation",
+                            "Template CRUD - PUT Update Template",
                             False,
-                            f"Failed to update marketing agent: HTTP {response.status}",
-                            {"HTTP Status": response.status, "Response Text": response_text}
+                            f"Failed to update template: HTTP {response.status}",
+                            {"HTTP Status": response.status, "Response": await response.text()}
                         )
-                        return False, None
-                        
+                        return False
+                    
+                    updated_template = await response.json()
+                
+                # Verify all operations worked correctly
+                success = (
+                    len(all_templates) > 0 and
+                    len(email_templates) > 0 and
+                    len(sms_templates) > 0 and
+                    all(t.get("type") == "email" for t in email_templates) and
+                    all(t.get("type") == "sms" for t in sms_templates) and
+                    created_email_template.get("name") == "Test Custom Email Template" and
+                    created_sms_template.get("name") == "Test Custom SMS Template" and
+                    specific_template.get("id") == email_template_id and
+                    updated_template.get("name") == "Test Updated Email Template"
+                )
+                
+                self.log_test_result(
+                    "Template CRUD Operations",
+                    success,
+                    f"Template CRUD operations: {success}",
+                    {
+                        "Total Templates": len(all_templates),
+                        "Email Templates": len(email_templates),
+                        "SMS Templates": len(sms_templates),
+                        "Email Filter Working": all(t.get("type") == "email" for t in email_templates),
+                        "SMS Filter Working": all(t.get("type") == "sms" for t in sms_templates),
+                        "Email Template Created": created_email_template.get("name") == "Test Custom Email Template",
+                        "SMS Template Created": created_sms_template.get("name") == "Test Custom SMS Template",
+                        "Specific Template Retrieved": specific_template.get("id") == email_template_id,
+                        "Template Updated": updated_template.get("name") == "Test Updated Email Template",
+                        "Created Email Template ID": email_template_id,
+                        "Created SMS Template ID": sms_template_id
+                    }
+                )
+                return success
+                
         except Exception as e:
             self.log_test_result(
-                "Test Edit Operation",
+                "Template CRUD Operations",
                 False,
-                f"Error updating marketing agent: {str(e)}",
+                f"Error in template CRUD operations: {str(e)}",
                 {"Error Details": str(e)}
             )
-            return False, None
+            return False
     
-    async def run_marketing_agent_field_tests(self):
-        """Run comprehensive marketing agent field fixes tests"""
-        print("🔍 STARTING MARKETING AGENT FIELD FIXES TESTING")
+    async def test_global_placeholder_crud_operations(self):
+        """Test 3: Global Placeholder CRUD Operations"""
+        print("🔍 TEST 3: Global Placeholder CRUD Operations")
+        print("=" * 60)
+        
+        try:
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
+            
+            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
+                # Test 3a: GET all global placeholders
+                url = f"{self.backend_url}/api/global-placeholders"
+                async with session.get(url, headers=headers, timeout=10) as response:
+                    if response.status != 200:
+                        self.log_test_result(
+                            "Global Placeholder CRUD - GET All Placeholders",
+                            False,
+                            f"Failed to get placeholders: HTTP {response.status}",
+                            {"HTTP Status": response.status}
+                        )
+                        return False
+                    
+                    all_placeholders = await response.json()
+                
+                # Test 3b: POST create custom placeholder
+                placeholder_data = {
+                    "name": "Test Custom Placeholder",
+                    "placeholder": "[TEST_CUSTOM]",
+                    "value": "Custom Test Value",
+                    "description": "Test placeholder for comprehensive testing"
+                }
+                
+                url = f"{self.backend_url}/api/global-placeholders"
+                async with session.post(url, headers=headers, json=placeholder_data, timeout=15) as response:
+                    if response.status != 200:
+                        self.log_test_result(
+                            "Global Placeholder CRUD - POST Create Placeholder",
+                            False,
+                            f"Failed to create placeholder: HTTP {response.status}",
+                            {"HTTP Status": response.status, "Response": await response.text()}
+                        )
+                        return False
+                    
+                    created_placeholder = await response.json()
+                    placeholder_id = created_placeholder.get("id")
+                    self.created_placeholder_ids.append(placeholder_id)
+                
+                # Test 3c: PUT update placeholder
+                update_data = {
+                    "name": "Test Updated Placeholder",
+                    "value": "Updated Test Value",
+                    "description": "Updated test placeholder"
+                }
+                
+                url = f"{self.backend_url}/api/global-placeholders/{placeholder_id}"
+                async with session.put(url, headers=headers, json=update_data, timeout=15) as response:
+                    if response.status != 200:
+                        self.log_test_result(
+                            "Global Placeholder CRUD - PUT Update Placeholder",
+                            False,
+                            f"Failed to update placeholder: HTTP {response.status}",
+                            {"HTTP Status": response.status, "Response": await response.text()}
+                        )
+                        return False
+                    
+                    updated_placeholder = await response.json()
+                
+                # Verify all operations worked correctly
+                success = (
+                    len(all_placeholders) > 0 and
+                    created_placeholder.get("name") == "Test Custom Placeholder" and
+                    created_placeholder.get("placeholder") == "[TEST_CUSTOM]" and
+                    created_placeholder.get("value") == "Custom Test Value" and
+                    updated_placeholder.get("name") == "Test Updated Placeholder" and
+                    updated_placeholder.get("value") == "Updated Test Value"
+                )
+                
+                self.log_test_result(
+                    "Global Placeholder CRUD Operations",
+                    success,
+                    f"Global placeholder CRUD operations: {success}",
+                    {
+                        "Total Placeholders": len(all_placeholders),
+                        "Placeholder Created": created_placeholder.get("name") == "Test Custom Placeholder",
+                        "Placeholder Value Correct": created_placeholder.get("value") == "Custom Test Value",
+                        "Placeholder Updated": updated_placeholder.get("name") == "Test Updated Placeholder",
+                        "Updated Value Correct": updated_placeholder.get("value") == "Updated Test Value",
+                        "Created Placeholder ID": placeholder_id
+                    }
+                )
+                return success
+                
+        except Exception as e:
+            self.log_test_result(
+                "Global Placeholder CRUD Operations",
+                False,
+                f"Error in placeholder CRUD operations: {str(e)}",
+                {"Error Details": str(e)}
+            )
+            return False
+    
+    async def test_validation_and_error_handling(self):
+        """Test 4: Validation and Error Handling"""
+        print("🔍 TEST 4: Validation and Error Handling")
+        print("=" * 60)
+        
+        try:
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
+            
+            validation_results = {}
+            
+            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
+                # Test 4a: Try creating duplicate template name
+                duplicate_template_data = {
+                    "name": "Test Custom Email Template",  # This should already exist from previous test
+                    "type": "email",
+                    "content": "Duplicate template content",
+                    "description": "This should fail due to duplicate name"
+                }
+                
+                url = f"{self.backend_url}/api/templates"
+                async with session.post(url, headers=headers, json=duplicate_template_data, timeout=15) as response:
+                    validation_results["duplicate_template_rejected"] = response.status == 400
+                
+                # Test 4b: Try creating duplicate placeholder name
+                duplicate_placeholder_data = {
+                    "name": "Test Custom Placeholder",  # This should already exist from previous test
+                    "placeholder": "[DUPLICATE_TEST]",
+                    "value": "Duplicate value",
+                    "description": "This should fail due to duplicate name"
+                }
+                
+                url = f"{self.backend_url}/api/global-placeholders"
+                async with session.post(url, headers=headers, json=duplicate_placeholder_data, timeout=15) as response:
+                    validation_results["duplicate_placeholder_name_rejected"] = response.status == 400
+                
+                # Test 4c: Try creating duplicate placeholder text
+                duplicate_placeholder_text_data = {
+                    "name": "Another Test Placeholder",
+                    "placeholder": "[TEST_CUSTOM]",  # This should already exist from previous test
+                    "value": "Another value",
+                    "description": "This should fail due to duplicate placeholder text"
+                }
+                
+                async with session.post(url, headers=headers, json=duplicate_placeholder_text_data, timeout=15) as response:
+                    validation_results["duplicate_placeholder_text_rejected"] = response.status == 400
+                
+                # Test 4d: Try accessing non-existent template
+                fake_template_id = "non-existent-template-id"
+                url = f"{self.backend_url}/api/templates/{fake_template_id}"
+                async with session.get(url, headers=headers, timeout=10) as response:
+                    validation_results["nonexistent_template_404"] = response.status == 404
+                
+                # Test 4e: Try accessing non-existent placeholder
+                fake_placeholder_id = "non-existent-placeholder-id"
+                url = f"{self.backend_url}/api/global-placeholders/{fake_placeholder_id}"
+                async with session.put(url, headers=headers, json={"name": "Test"}, timeout=10) as response:
+                    validation_results["nonexistent_placeholder_404"] = response.status == 404
+                
+                # Test 4f: Try deleting non-existent template
+                url = f"{self.backend_url}/api/templates/{fake_template_id}"
+                async with session.delete(url, headers=headers, timeout=10) as response:
+                    validation_results["delete_nonexistent_template_404"] = response.status == 404
+                
+                # Test 4g: Try deleting non-existent placeholder
+                url = f"{self.backend_url}/api/global-placeholders/{fake_placeholder_id}"
+                async with session.delete(url, headers=headers, timeout=10) as response:
+                    validation_results["delete_nonexistent_placeholder_404"] = response.status == 404
+                
+                # Verify all validation tests passed
+                success = all(validation_results.values())
+                
+                self.log_test_result(
+                    "Validation and Error Handling",
+                    success,
+                    f"Validation and error handling: {success}",
+                    {
+                        "Duplicate Template Rejected": validation_results.get("duplicate_template_rejected"),
+                        "Duplicate Placeholder Name Rejected": validation_results.get("duplicate_placeholder_name_rejected"),
+                        "Duplicate Placeholder Text Rejected": validation_results.get("duplicate_placeholder_text_rejected"),
+                        "Nonexistent Template 404": validation_results.get("nonexistent_template_404"),
+                        "Nonexistent Placeholder 404": validation_results.get("nonexistent_placeholder_404"),
+                        "Delete Nonexistent Template 404": validation_results.get("delete_nonexistent_template_404"),
+                        "Delete Nonexistent Placeholder 404": validation_results.get("delete_nonexistent_placeholder_404"),
+                        "All Validations Passed": success
+                    }
+                )
+                return success
+                
+        except Exception as e:
+            self.log_test_result(
+                "Validation and Error Handling",
+                False,
+                f"Error in validation testing: {str(e)}",
+                {"Error Details": str(e)}
+            )
+            return False
+    
+    async def test_delete_operations(self):
+        """Test 5: Delete Operations (cleanup test data)"""
+        print("🔍 TEST 5: Delete Operations")
+        print("=" * 60)
+        
+        try:
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
+            
+            delete_results = {}
+            
+            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
+                # Delete created templates
+                for template_id in self.created_template_ids:
+                    url = f"{self.backend_url}/api/templates/{template_id}"
+                    async with session.delete(url, headers=headers, timeout=10) as response:
+                        delete_results[f"template_{template_id}"] = response.status == 200
+                
+                # Delete created placeholders
+                for placeholder_id in self.created_placeholder_ids:
+                    url = f"{self.backend_url}/api/global-placeholders/{placeholder_id}"
+                    async with session.delete(url, headers=headers, timeout=10) as response:
+                        delete_results[f"placeholder_{placeholder_id}"] = response.status == 200
+                
+                success = all(delete_results.values()) if delete_results else True
+                
+                self.log_test_result(
+                    "Delete Operations",
+                    success,
+                    f"Delete operations: {success}",
+                    {
+                        "Templates Deleted": len([k for k in delete_results.keys() if k.startswith("template_")]),
+                        "Placeholders Deleted": len([k for k in delete_results.keys() if k.startswith("placeholder_")]),
+                        "All Deletes Successful": success,
+                        "Delete Results": delete_results
+                    }
+                )
+                return success
+                
+        except Exception as e:
+            self.log_test_result(
+                "Delete Operations",
+                False,
+                f"Error in delete operations: {str(e)}",
+                {"Error Details": str(e)}
+            )
+            return False
+    
+    async def run_template_management_tests(self):
+        """Run comprehensive template management system tests"""
+        print("🔍 STARTING TEMPLATE MANAGEMENT SYSTEM TESTING")
         print("=" * 80)
-        print("Testing Marketing Agent field fixes comprehensively")
+        print("Testing new Template Management System endpoints comprehensively")
         print("=" * 80)
         
         try:
             await self.connect()
+            
+            # Clean up any existing test data
+            await self.cleanup_test_data()
             
             # Authenticate first
             auth_success = await self.authenticate()
@@ -537,33 +671,29 @@ class MarketingAgentFieldTester:
             # Run all tests
             test_results = []
             
-            # Test 1: Create Marketing Agent with Custom Campaign Content
-            success1, agent_id1 = await self.test_create_marketing_agent_with_custom_content()
+            # Test 1: Initialize Default Templates and Placeholders
+            success1 = await self.test_initialize_default_templates()
             test_results.append(success1)
             
-            # Test 2: Verify Field Storage (only if creation succeeded)
-            if success1 and agent_id1:
-                success2, agent_data = await self.test_verify_field_storage(agent_id1)
-                test_results.append(success2)
-            else:
-                print("⏭️  Skipping field storage test - agent creation failed")
-                test_results.append(False)
+            # Test 2: Template CRUD Operations
+            success2 = await self.test_template_crud_operations()
+            test_results.append(success2)
             
-            # Test 3: Create Second Agent with Different Settings
-            success3, agent_id2 = await self.test_create_second_agent_different_settings()
+            # Test 3: Global Placeholder CRUD Operations
+            success3 = await self.test_global_placeholder_crud_operations()
             test_results.append(success3)
             
-            # Test 4: Test Edit Operation (only if first creation succeeded)
-            if success1 and agent_id1:
-                success4, updated_agent = await self.test_edit_operation(agent_id1)
-                test_results.append(success4)
-            else:
-                print("⏭️  Skipping edit operation test - first agent creation failed")
-                test_results.append(False)
+            # Test 4: Validation and Error Handling
+            success4 = await self.test_validation_and_error_handling()
+            test_results.append(success4)
+            
+            # Test 5: Delete Operations (cleanup)
+            success5 = await self.test_delete_operations()
+            test_results.append(success5)
             
             # Summary
             print("=" * 80)
-            print("🎯 MARKETING AGENT FIELD FIXES TESTING SUMMARY")
+            print("🎯 TEMPLATE MANAGEMENT SYSTEM TESTING SUMMARY")
             print("=" * 80)
             
             passed_tests = sum(test_results)
@@ -584,44 +714,76 @@ class MarketingAgentFieldTester:
             
             # Test 1 Analysis
             if success1:
-                print("✅ CUSTOM CONTENT CREATION: Marketing agent with custom campaign content created successfully")
-                print(f"   - Agent ID: {agent_id1}")
+                print("✅ DEFAULT INITIALIZATION: Default templates and placeholders created successfully")
+                print("   - Email templates: Appointment Reminder, Welcome New Customer, Marketing Promotion")
+                print("   - SMS templates: Appointment Reminder, Welcome New Customer, Marketing Promotion")
+                print("   - Global placeholders: Website Link, Book Now Link, Phone Number, Business Name, Business Address")
             else:
-                print("❌ CUSTOM CONTENT CREATION: Failed to create marketing agent with custom content")
+                print("❌ DEFAULT INITIALIZATION: Failed to initialize default templates and placeholders")
             
             # Test 2 Analysis
-            if len(test_results) > 1 and test_results[1]:
-                print("✅ FIELD STORAGE: marketing_custom_campaign, marketing_email_personalized, marketing_sms_personalized fields properly saved")
-            elif len(test_results) > 1:
-                print("❌ FIELD STORAGE: Field storage verification failed")
+            if success2:
+                print("✅ TEMPLATE CRUD: All template CRUD operations working correctly")
+                print("   - GET all templates, GET filtered by type (email/SMS)")
+                print("   - POST create custom templates, GET specific template")
+                print("   - PUT update template, proper data persistence")
+            else:
+                print("❌ TEMPLATE CRUD: Template CRUD operations failed")
             
             # Test 3 Analysis
             if success3:
-                print("✅ DIFFERENT SETTINGS: Second agent with different personalization settings created successfully")
-                print(f"   - Agent ID: {agent_id2}")
+                print("✅ PLACEHOLDER CRUD: All global placeholder CRUD operations working correctly")
+                print("   - GET all placeholders, POST create custom placeholder")
+                print("   - PUT update placeholder, proper data persistence")
             else:
-                print("❌ DIFFERENT SETTINGS: Failed to create second agent with different settings")
+                print("❌ PLACEHOLDER CRUD: Global placeholder CRUD operations failed")
             
             # Test 4 Analysis
-            if len(test_results) > 3 and test_results[3]:
-                print("✅ EDIT OPERATION: Marketing agent edit operation working correctly")
-            elif len(test_results) > 3:
-                print("❌ EDIT OPERATION: Edit operation failed")
+            if success4:
+                print("✅ VALIDATION: All validation and error handling working correctly")
+                print("   - Duplicate template names rejected (400)")
+                print("   - Duplicate placeholder names/text rejected (400)")
+                print("   - Non-existent resources return 404")
+            else:
+                print("❌ VALIDATION: Validation and error handling failed")
+            
+            # Test 5 Analysis
+            if success5:
+                print("✅ DELETE OPERATIONS: All delete operations working correctly")
+                print("   - Test data cleaned up successfully")
+            else:
+                print("❌ DELETE OPERATIONS: Delete operations failed")
             
             print()
             print("📋 DETAILED TEST RESULTS:")
             print("=" * 40)
             
             test_names = [
-                "Create Marketing Agent with Custom Content",
-                "Verify Field Storage", 
-                "Create Second Agent with Different Settings",
-                "Test Edit Operation"
+                "Initialize Default Templates and Placeholders",
+                "Template CRUD Operations", 
+                "Global Placeholder CRUD Operations",
+                "Validation and Error Handling",
+                "Delete Operations"
             ]
             
             for i, (test_name, success) in enumerate(zip(test_names, test_results)):
                 status = "✅ PASS" if success else "❌ FAIL"
                 print(f"{i+1}. {status} {test_name}")
+            
+            print()
+            print("🎯 SYSTEM READINESS:")
+            print("=" * 40)
+            
+            if all(test_results):
+                print("✅ TEMPLATE MANAGEMENT SYSTEM READY FOR FRONTEND INTEGRATION")
+                print("   - All endpoints working correctly")
+                print("   - Data properly stored and retrieved")
+                print("   - Validation and error handling functional")
+                print("   - System is production-ready")
+            else:
+                print("❌ TEMPLATE MANAGEMENT SYSTEM NEEDS FIXES")
+                failed_tests = [test_names[i] for i, success in enumerate(test_results) if not success]
+                print(f"   - Failed tests: {', '.join(failed_tests)}")
             
             print()
             print("=" * 80)
@@ -636,8 +798,8 @@ class MarketingAgentFieldTester:
 
 async def main():
     """Main testing function"""
-    tester = MarketingAgentFieldTester()
-    await tester.run_marketing_agent_field_tests()
+    tester = TemplateManagementTester()
+    await tester.run_template_management_tests()
 
 if __name__ == "__main__":
     asyncio.run(main())
