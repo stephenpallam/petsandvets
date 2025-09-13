@@ -272,7 +272,7 @@ const EmailConfiguration = () => {
       content: template.content,
       description: template.description || ''
     });
-    setShowTemplateForm(true);
+    setShowTemplateModal(true);
   };
 
   const handleCancelTemplateForm = () => {
