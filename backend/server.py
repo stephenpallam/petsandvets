@@ -6481,6 +6481,7 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                         "agent_type": "marketing_agent",
                         "marketing_channel": "social_media",
                         "marketing_platform": platform,
+                        "platform": platform,  # Add platform field for proper storage
                         "topic": agent_data.get('topic', 'Marketing Campaign'),
                         "content": "",
                         "image_url": "",
