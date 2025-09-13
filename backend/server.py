@@ -11412,6 +11412,420 @@ async def refresh_holiday_dates(current_user: User = Depends(get_current_user)):
 
 
 # Include the router in the main app
+# ================================
+# TEMPLATE MANAGEMENT ENDPOINTS
+# ================================
+
+@api_router.get("/templates", response_model=List[Template])
+async def get_templates(
+    template_type: Optional[str] = Query(None, description="Filter by template type: 'email' or 'sms'"),
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Get all templates, optionally filtered by type"""
+    try:
+        query = {}
+        if template_type:
+            query["type"] = template_type
+            
+        templates = await db.templates.find(query).sort("name", 1).to_list(length=None)
+        
+        # Convert ObjectId to string and return as Template models
+        for template in templates:
+            if "_id" in template:
+                del template["_id"]
+        
+        return [Template(**template) for template in templates]
+        
+    except Exception as e:
+        logger.error(f"Error fetching templates: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch templates")
+
+
+@api_router.post("/templates", response_model=Template)
+async def create_template(
+    template_data: TemplateCreate,
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Create a new template"""
+    try:
+        # Check if template with same name and type already exists
+        existing = await db.templates.find_one({
+            "name": template_data.name,
+            "type": template_data.type
+        })
+        
+        if existing:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Template with name '{template_data.name}' already exists for {template_data.type}"
+            )
+        
+        # Create new template
+        template = Template(
+            **template_data.dict(),
+            created_by=current_user.email
+        )
+        
+        await db.templates.insert_one(template.dict())
+        return template
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating template: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to create template")
+
+
+@api_router.get("/templates/{template_id}", response_model=Template)
+async def get_template(
+    template_id: str,
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Get a specific template by ID"""
+    try:
+        template = await db.templates.find_one({"id": template_id})
+        if not template:
+            raise HTTPException(status_code=404, detail="Template not found")
+        
+        if "_id" in template:
+            del template["_id"]
+            
+        return Template(**template)
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching template: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch template")
+
+
+@api_router.put("/templates/{template_id}", response_model=Template)
+async def update_template(
+    template_id: str,
+    template_data: TemplateUpdate,
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Update an existing template"""
+    try:
+        # Check if template exists
+        existing = await db.templates.find_one({"id": template_id})
+        if not existing:
+            raise HTTPException(status_code=404, detail="Template not found")
+        
+        # Check for name conflicts if name is being updated
+        if template_data.name and template_data.name != existing.get("name"):
+            name_conflict = await db.templates.find_one({
+                "name": template_data.name,
+                "type": existing.get("type"),
+                "id": {"$ne": template_id}
+            })
+            if name_conflict:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Template with name '{template_data.name}' already exists for {existing.get('type')}"
+                )
+        
+        # Update template
+        update_data = {k: v for k, v in template_data.dict().items() if v is not None}
+        update_data["updated_at"] = business_now()
+        
+        await db.templates.update_one(
+            {"id": template_id},
+            {"$set": update_data}
+        )
+        
+        # Return updated template
+        updated_template = await db.templates.find_one({"id": template_id})
+        if "_id" in updated_template:
+            del updated_template["_id"]
+            
+        return Template(**updated_template)
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating template: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to update template")
+
+
+@api_router.delete("/templates/{template_id}")
+async def delete_template(
+    template_id: str,
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Delete a template"""
+    try:
+        result = await db.templates.delete_one({"id": template_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Template not found")
+        
+        return {"message": "Template deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting template: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to delete template")
+
+
+# ================================
+# GLOBAL PLACEHOLDER MANAGEMENT ENDPOINTS
+# ================================
+
+@api_router.get("/global-placeholders", response_model=List[GlobalPlaceholder])
+async def get_global_placeholders(
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Get all global placeholders"""
+    try:
+        placeholders = await db.global_placeholders.find().sort("name", 1).to_list(length=None)
+        
+        # Convert ObjectId to string and return as GlobalPlaceholder models
+        for placeholder in placeholders:
+            if "_id" in placeholder:
+                del placeholder["_id"]
+        
+        return [GlobalPlaceholder(**placeholder) for placeholder in placeholders]
+        
+    except Exception as e:
+        logger.error(f"Error fetching global placeholders: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch global placeholders")
+
+
+@api_router.post("/global-placeholders", response_model=GlobalPlaceholder)
+async def create_global_placeholder(
+    placeholder_data: GlobalPlaceholderCreate,
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Create a new global placeholder"""
+    try:
+        # Check if placeholder with same name or placeholder text already exists
+        existing_name = await db.global_placeholders.find_one({"name": placeholder_data.name})
+        existing_placeholder = await db.global_placeholders.find_one({"placeholder": placeholder_data.placeholder})
+        
+        if existing_name:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Global placeholder with name '{placeholder_data.name}' already exists"
+            )
+        
+        if existing_placeholder:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Global placeholder '{placeholder_data.placeholder}' already exists"
+            )
+        
+        # Create new global placeholder
+        placeholder = GlobalPlaceholder(
+            **placeholder_data.dict(),
+            created_by=current_user.email
+        )
+        
+        await db.global_placeholders.insert_one(placeholder.dict())
+        return placeholder
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating global placeholder: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to create global placeholder")
+
+
+@api_router.put("/global-placeholders/{placeholder_id}", response_model=GlobalPlaceholder)
+async def update_global_placeholder(
+    placeholder_id: str,
+    placeholder_data: GlobalPlaceholderUpdate,
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Update an existing global placeholder"""
+    try:
+        # Check if placeholder exists
+        existing = await db.global_placeholders.find_one({"id": placeholder_id})
+        if not existing:
+            raise HTTPException(status_code=404, detail="Global placeholder not found")
+        
+        # Check for conflicts if name or placeholder is being updated
+        if placeholder_data.name and placeholder_data.name != existing.get("name"):
+            name_conflict = await db.global_placeholders.find_one({
+                "name": placeholder_data.name,
+                "id": {"$ne": placeholder_id}
+            })
+            if name_conflict:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Global placeholder with name '{placeholder_data.name}' already exists"
+                )
+        
+        if placeholder_data.placeholder and placeholder_data.placeholder != existing.get("placeholder"):
+            placeholder_conflict = await db.global_placeholders.find_one({
+                "placeholder": placeholder_data.placeholder,
+                "id": {"$ne": placeholder_id}
+            })
+            if placeholder_conflict:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Global placeholder '{placeholder_data.placeholder}' already exists"
+                )
+        
+        # Update placeholder
+        update_data = {k: v for k, v in placeholder_data.dict().items() if v is not None}
+        update_data["updated_at"] = business_now()
+        
+        await db.global_placeholders.update_one(
+            {"id": placeholder_id},
+            {"$set": update_data}
+        )
+        
+        # Return updated placeholder
+        updated_placeholder = await db.global_placeholders.find_one({"id": placeholder_id})
+        if "_id" in updated_placeholder:
+            del updated_placeholder["_id"]
+            
+        return GlobalPlaceholder(**updated_placeholder)
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating global placeholder: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to update global placeholder")
+
+
+@api_router.delete("/global-placeholders/{placeholder_id}")
+async def delete_global_placeholder(
+    placeholder_id: str,
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Delete a global placeholder"""
+    try:
+        result = await db.global_placeholders.delete_one({"id": placeholder_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Global placeholder not found")
+        
+        return {"message": "Global placeholder deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting global placeholder: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to delete global placeholder")
+
+
+@api_router.post("/templates/initialize-defaults")
+async def initialize_default_templates(
+    current_user: User = Depends(get_manager_or_admin_user)
+):
+    """Initialize default templates and global placeholders"""
+    try:
+        # Initialize default global placeholders
+        default_placeholders = [
+            {
+                "name": "Website Link",
+                "placeholder": "[WEBSITE_LINK]",
+                "value": "https://petsandvetsanimalhospital.com",
+                "description": "Main website URL"
+            },
+            {
+                "name": "Book Now Link", 
+                "placeholder": "[BOOK_NOW_LINK]",
+                "value": "https://petsandvetsanimalhospital.com/book",
+                "description": "Online booking URL"
+            },
+            {
+                "name": "Phone Number",
+                "placeholder": "[PHONE_NUMBER]",
+                "value": "(555) 123-4567",
+                "description": "Main contact phone number"
+            },
+            {
+                "name": "Business Name",
+                "placeholder": "[BUSINESS_NAME]",
+                "value": "Pets and Vets Animal Hospital",
+                "description": "Business name"
+            },
+            {
+                "name": "Business Address",
+                "placeholder": "[BUSINESS_ADDRESS]",
+                "value": "123 Pet Care Lane, Animal City, AC 12345",
+                "description": "Business address"
+            }
+        ]
+        
+        # Insert default placeholders if they don't exist
+        for placeholder_data in default_placeholders:
+            existing = await db.global_placeholders.find_one({"placeholder": placeholder_data["placeholder"]})
+            if not existing:
+                placeholder = GlobalPlaceholder(
+                    **placeholder_data,
+                    created_by=current_user.email
+                )
+                await db.global_placeholders.insert_one(placeholder.dict())
+        
+        # Initialize default email templates
+        default_email_templates = [
+            {
+                "name": "Appointment Reminder",
+                "type": "email",
+                "content": "Dear [CUSTOMER_NAME],\n\nThis is a reminder that [PET_NAME] has an appointment scheduled with us.\n\nIf you need to reschedule, please contact us at [PHONE_NUMBER] or visit [WEBSITE_LINK].\n\nThank you,\n[BUSINESS_NAME]",
+                "description": "Standard appointment reminder email"
+            },
+            {
+                "name": "Welcome New Customer",
+                "type": "email", 
+                "content": "Welcome to [BUSINESS_NAME], [CUSTOMER_NAME]!\n\nWe're excited to provide the best care for [PET_NAMES]. Our team is dedicated to keeping your furry family members healthy and happy.\n\nYou can book appointments online at [BOOK_NOW_LINK] or call us at [PHONE_NUMBER].\n\nWelcome to our family!",
+                "description": "Welcome email for new customers"
+            },
+            {
+                "name": "Marketing Promotion",
+                "type": "email",
+                "content": "Hello [CUSTOMER_NAME],\n\nWe have a special offer for [PET_NAME]! Take advantage of our current promotions and give [PET_NAMES] the care they deserve.\n\nBook your appointment today: [BOOK_NOW_LINK]\n\nContact us: [PHONE_NUMBER]\nVisit us: [BUSINESS_ADDRESS]\n\nBest regards,\n[BUSINESS_NAME]",
+                "description": "General marketing promotion email"
+            }
+        ]
+        
+        # Initialize default SMS templates
+        default_sms_templates = [
+            {
+                "name": "Appointment Reminder",
+                "type": "sms",
+                "content": "Hi [CUSTOMER_NAME]! [PET_NAME] has an appointment with us soon. Need to reschedule? Call [PHONE_NUMBER]. Thanks!",
+                "description": "Standard appointment reminder SMS"
+            },
+            {
+                "name": "Welcome New Customer",
+                "type": "sms",
+                "content": "Welcome to [BUSINESS_NAME], [CUSTOMER_NAME]! We're excited to care for [PET_NAME]. Book online: [BOOK_NOW_LINK]",
+                "description": "Welcome SMS for new customers"
+            },
+            {
+                "name": "Marketing Promotion",
+                "type": "sms",
+                "content": "Hi [CUSTOMER_NAME]! Special offer for [PET_NAME] at [BUSINESS_NAME]. Book now: [BOOK_NOW_LINK] or call [PHONE_NUMBER]",
+                "description": "General marketing promotion SMS"
+            }
+        ]
+        
+        # Insert default templates if they don't exist
+        for template_data in default_email_templates + default_sms_templates:
+            existing = await db.templates.find_one({
+                "name": template_data["name"],
+                "type": template_data["type"]
+            })
+            if not existing:
+                template = Template(
+                    **template_data,
+                    created_by=current_user.email
+                )
+                await db.templates.insert_one(template.dict())
+        
+        return {"message": "Default templates and placeholders initialized successfully"}
+        
+    except Exception as e:
+        logger.error(f"Error initializing default templates: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to initialize default templates")
+
+
 app.include_router(api_router)
 
 app.add_middleware(
