@@ -7050,10 +7050,27 @@ Located at: [BUSINESS_ADDRESS]"""
                         
                         # Generate concise SMS version of the content for template
                         try:
+                            # Calculate available space for ChatGPT content in default template
+                            template_without_content = default_sms_template.replace('[CHATGPT_CONTENT]', '')
+                            
+                            # Estimate space used by placeholders (approximate)
+                            business_name_length = 25  # "Pets and Vets Animal Hospital"
+                            phone_length = 15          # "(703) 957-3297"
+                            book_link_length = 20      # Shortened link
+                            customer_name_length = 15 if agent_data.get('marketing_sms_personalized', True) else 0
+                            
+                            # Calculate available space for ChatGPT content
+                            fixed_template_length = len(template_without_content) + business_name_length + phone_length + book_link_length + customer_name_length
+                            available_space = 155 - fixed_template_length  # Leave 5 chars buffer
+                            
+                            # Ensure minimum 30 characters for content
+                            if available_space < 30:
+                                available_space = 30
+                            
                             sms_content_result = await ai_service.format_custom_content(
                                 post_title=f"SMS Content: {campaign_title}",
-                                post_content=f"Create a concise SMS version (under 100 characters) of this content: {base_campaign_content}",
-                                word_count="25",  # Very concise for SMS
+                                post_content=f"Create a very concise SMS message (maximum {available_space} characters) about {campaign_title.replace('Marketing Campaign - ', '')}. Write only the core message without any placeholders, business names, or contact info. Keep it under {available_space} characters. No titles, no formatting, just the essential message.",
+                                word_count="15",  # Very concise for SMS
                                 platforms=['sms'],
                                 use_web_research=False,
                                 image_text=""
@@ -7061,16 +7078,39 @@ Located at: [BUSINESS_ADDRESS]"""
                             
                             if sms_content_result and sms_content_result.get('content'):
                                 condensed_content = sms_content_result['content']
-                                # Clean up any markdown formatting
+                                # Clean up any markdown formatting and fake placeholders
                                 import re
                                 condensed_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', condensed_content)
                                 condensed_content = re.sub(r'\*([^*]+)\*', r'\1', condensed_content)
+                                # Remove any fake placeholders
+                                condensed_content = re.sub(r'\[.*?\]', '', condensed_content)
+                                condensed_content = ' '.join(condensed_content.split())  # Remove extra whitespace
                                 condensed_content = condensed_content.strip()
+                                
+                                # Truncate if still too long
+                                if len(condensed_content) > available_space:
+                                    condensed_content = condensed_content[:available_space-3] + "..."
                             else:
-                                condensed_content = base_campaign_content[:80] + "..." if len(base_campaign_content) > 80 else base_campaign_content
+                                # Fallback: Create simple topic-based content
+                                topic_name = campaign_title.replace('Marketing Campaign - ', '')
+                                if 'nutrition' in topic_name.lower():
+                                    condensed_content = "Proper nutrition keeps your pet healthy!"
+                                elif 'dental' in topic_name.lower():
+                                    condensed_content = "Keep your pet's teeth clean!"
+                                elif 'grooming' in topic_name.lower():
+                                    condensed_content = "Regular grooming keeps pets healthy!"
+                                elif 'vaccination' in topic_name.lower():
+                                    condensed_content = "Protect your pet with vaccinations!"
+                                else:
+                                    condensed_content = "Quality care for your pet!"
+                                
+                                # Ensure fallback content fits
+                                if len(condensed_content) > available_space:
+                                    condensed_content = condensed_content[:available_space-3] + "..."
                         except Exception as e:
                             logger.error(f"Error generating SMS content: {str(e)}")
-                            condensed_content = base_campaign_content[:80] + "..." if len(base_campaign_content) > 80 else base_campaign_content
+                            # Simple fallback
+                            condensed_content = "Quality care for your pet!"
                         
                         sms_template_with_content = default_sms_template.replace('[CHATGPT_CONTENT]', condensed_content)
                         logger.info("Using default ChatGPT campaign template for SMS")
