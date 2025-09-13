@@ -6630,13 +6630,48 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                 
                 elif channel == "email":
                     # EMAIL: Use base content + template + personalization (if enabled)
-                    email_template = agent_data.get('email_content_template', base_campaign_content)
+                    email_template = agent_data.get('email_content_template', '')
                     
-                    # Check if template has ChatGPT placeholder
+                    # Check if template has ChatGPT placeholder or use default ChatGPT template
                     if '[CHATGPT_CONTENT]' in email_template:
                         # Use ChatGPT campaign template - replace placeholder with generated content
                         email_template_with_content = email_template.replace('[CHATGPT_CONTENT]', base_campaign_content)
                         logger.info("Using ChatGPT campaign template for email")
+                    elif not email_template or email_template == base_campaign_content:
+                        # No template specified or template is just the base content - use default ChatGPT campaign template
+                        if agent_data.get('marketing_email_personalized', True):
+                            # Use personalized ChatGPT campaign template
+                            default_template = """Dear [CUSTOMER_NAME],
+
+[CHATGPT_CONTENT]
+
+We hope [PET_NAME] is doing well! If you have any questions or would like to schedule an appointment, please don't hesitate to reach out.
+
+Best regards,
+[BUSINESS_NAME]
+📞 [PHONE_NUMBER]
+🌐 [WEBSITE_LINK]
+📅 [BOOK_NOW_LINK]
+
+Visit us at: [BUSINESS_ADDRESS]"""
+                        else:
+                            # Use general ChatGPT campaign template
+                            default_template = """Dear Valued Customer,
+
+[CHATGPT_CONTENT]
+
+We appreciate your trust in our care for your beloved pets. For any questions or to schedule an appointment, please contact us.
+
+Warm regards,
+[BUSINESS_NAME]
+📞 [PHONE_NUMBER]
+🌐 [WEBSITE_LINK]
+📅 [BOOK_NOW_LINK]
+
+Located at: [BUSINESS_ADDRESS]"""
+                        
+                        email_template_with_content = default_template.replace('[CHATGPT_CONTENT]', base_campaign_content)
+                        logger.info("Using default ChatGPT campaign template for email")
                     else:
                         # Use traditional template logic
                         if agent_data.get('marketing_email_personalized', True) and sample_customer_data:
