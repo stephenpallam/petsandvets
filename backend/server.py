@@ -451,6 +451,57 @@ class CMSSettingsUpdate(BaseModel):
     google_sync_enabled: Optional[bool] = None
     google_business_sync_enabled: Optional[bool] = None
     google_calendar_sync_enabled: Optional[bool] = None
+    
+    
+# Template Management Models
+class Template(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    type: str  # 'email' or 'sms'
+    content: str
+    description: Optional[str] = None
+    created_at: datetime = Field(default_factory=business_now)
+    updated_at: datetime = Field(default_factory=business_now)
+    created_by: str
+    
+    
+class TemplateCreate(BaseModel):
+    name: str
+    type: str  # 'email' or 'sms'
+    content: str
+    description: Optional[str] = None
+    
+
+class TemplateUpdate(BaseModel):
+    name: Optional[str] = None
+    content: Optional[str] = None
+    description: Optional[str] = None
+
+
+# Global Placeholder Management Models
+class GlobalPlaceholder(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str  # e.g., "Website Link", "Book Now Link"
+    placeholder: str  # e.g., "[WEBSITE_LINK]", "[BOOK_NOW_LINK]"
+    value: str  # e.g., "https://example.com", "https://book.example.com"
+    description: Optional[str] = None
+    created_at: datetime = Field(default_factory=business_now)
+    updated_at: datetime = Field(default_factory=business_now)
+    created_by: str
+    
+
+class GlobalPlaceholderCreate(BaseModel):
+    name: str
+    placeholder: str
+    value: str
+    description: Optional[str] = None
+    
+
+class GlobalPlaceholderUpdate(BaseModel):
+    name: Optional[str] = None
+    placeholder: Optional[str] = None
+    value: Optional[str] = None
+    description: Optional[str] = None
 
 
 class Holiday(BaseModel):
