@@ -106,12 +106,23 @@ const AIAgentsDashboard = () => {
     }
   };
 
-  const fetchAgents = async () => {
+  const fetchAgents = async (forceRefresh = false) => {
     setLoading(true);
     try {
+      // Add cache-busting parameter when force refreshing
+      const url = forceRefresh 
+        ? `${API_BASE_URL}/api/ai-agents?_t=${Date.now()}`
+        : `${API_BASE_URL}/api/ai-agents`;
+        
       // Fetch all agents from unified ai_agents endpoint (includes all agent types)
-      const response = await fetch(`${API_BASE_URL}/api/ai-agents`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+      const response = await fetch(url, {
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          // Add cache control headers to ensure fresh data
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
       });
 
       if (response.ok) {
