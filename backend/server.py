@@ -5671,35 +5671,39 @@ Warm regards,
             "id": post_id,
             "agent_id": agent_id,
             "agent_name": agent_data.get('agent_name', 'Email Agent'),
-            "topic": f"{holiday_name} Email - {agent_data.get('agent_name', 'Email Agent')}",
-            "content": sample_content,
-            "image_url": "",
-            "image_option": agent_data.get('image_option', 'none'),
-            "platforms": ["email"],  # Email-specific platform
-            "status": agent_data.get('post_destination', 'in_review'),
             "agent_type": "email",
+            "content": final_email_content,
+            "email_subject": email_subject,
+            "topic": f"{holiday_name} Email - {agent_data.get('agent_name', 'Email Agent')}",
             "created_at": now,
-            "updated_at": now,
-            "is_active": True,
-            "word_count": str(len(sample_content.split())),
-            "use_chatgpt_formatting": use_chatgpt,
-            # Store email-specific metadata for mass sending
-            "email_template": email_template,  # Original template with placeholders
-            "sample_customer_name": customer_name,  # Customer used for preview
-            "sample_pet_names": pet_names,  # Pet(s) used for preview
-            "sample_customer_email": customer_email,  # Email used for preview
-            "selected_holidays": agent_data.get('selected_holidays', []),  # Holiday context
-            "holiday_name": holiday_name,  # Current holiday name
-            "holiday_date": holiday_date,  # Current holiday date
-            "ready_for_mass_email": False  # Will be set to True when published
+            "status": "in_review",
+            "platforms": ["email"],
+            "scheduled_for": None,
+            "user_id": agent_data.get('user_id'),
+            "sample_customer_name": customer_name,
+            "sample_customer_email": customer_email,
+            "sample_pet_names": pet_names,
+            "email_personalized": is_personalized,
+            "email_template": email_template,
+            "holiday_name": holiday_name,
+            "holiday_date": holiday_date,
+            "selected_holidays": agent_data.get('selected_holidays', []),
+            "ready_for_mass_email": True
         }
         
-        # Insert post into database
+        # Insert the post
         await db.ai_posts.insert_one(post_data)
+        logger.info(f"Successfully created scheduled holiday email post {post_id} for agent {agent_id} - {holiday_name}")
         
-        logger.info(f"Created email post {post_id} for agent {agent_id} with status: {post_data['status']}")
-        
-        return {"post_id": post_id, "status": "completed"}
+        return {
+            "success": True,
+            "post_id": post_id,
+            "content": final_email_content,
+            "email_subject": email_subject,
+            "holiday_name": holiday_name,
+            "sample_customer": customer_name,
+            "message": f"Successfully generated holiday email for {holiday_name}"
+        }
         
     except Exception as e:
         logger.error(f"Error in generate_scheduled_email_for_agent: {str(e)}")
