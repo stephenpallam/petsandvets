@@ -80,7 +80,7 @@ const AIAgentsDashboard = () => {
     const handleFocus = () => {
       if (user && token && canAccessManager()) {
         console.log('Window focused, refreshing agents data...');
-        fetchAgents();
+        fetchAgents(true); // Force refresh when window gains focus
       }
     };
 
