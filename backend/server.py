@@ -5698,6 +5698,9 @@ Make sure there are no duplicate signatures, subject lines, or redundant message
                 logger.error(f"ChatGPT formatting failed for agent {agent_id}: {str(e)}")
                 logger.info(f"Using original content for agent {agent_id}")
         
+        # Apply global placeholder replacement (business info like [BUSINESS_NAME], [PHONE_NUMBER], etc.)
+        final_content = await replace_global_placeholders(final_content, db)
+        
         # Create the email post
         email_post = {
             "id": post_id,
