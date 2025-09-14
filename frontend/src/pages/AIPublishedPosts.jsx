@@ -1163,8 +1163,8 @@ const AIPublishedPosts = () => {
                                   <span className="text-gray-900">
                                     {post.marketing_email_personalized === false ? 
                                       'All Customers' : 
-                                      (post.sample_customer_name ? 
-                                        `${post.sample_customer_name} <${post.sample_customer_name.toLowerCase().replace(/\s+/g, '.')}@email.com>` : 
+                                      (post.sample_customer_name && post.sample_customer_email ? 
+                                        `${post.sample_customer_name} <${post.sample_customer_email}>` : 
                                         'All Customers'
                                       )
                                     }
