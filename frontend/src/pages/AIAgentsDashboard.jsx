@@ -503,7 +503,7 @@ const AIAgentsDashboard = () => {
 
       if (response.ok) {
         setMessage({ type: 'success', text: 'AI agent deleted successfully!' });
-        fetchAgents();
+        fetchAgents(true); // Force refresh after deletion
       } else {
         const errorData = await response.json();
         setMessage({ type: 'error', text: errorData.detail || 'Failed to delete agent' });
