@@ -5471,7 +5471,67 @@ async def generate_scheduled_email_for_agent(agent_id: str, agent_data: dict, po
         
         logger.info(f"Using holiday context: {holiday_name} ({holiday_date})")
         
-        # Get a random customer from the database for preview
+        # Generate holiday-specific base content using ChatGPT if enabled
+        if use_chatgpt:
+            try:
+                # Generate professional holiday-specific content
+                holiday_content_result = await ai_service.format_custom_content(
+                    post_title=f"Holiday Email: {holiday_name}",
+                    post_content=f"Create professional, warm holiday email content about {holiday_name} for a veterinary clinic. Write 200-250 words with proper paragraph structure (use line breaks between paragraphs). Focus on holiday-specific pet care tips, seasonal safety advice, and warm holiday wishes. Include relevant information about how {holiday_name} might affect pets (fireworks, food safety, travel, etc.). Write in a warm, caring tone suitable for holiday email newsletters. Format with clear paragraph breaks for better readability.",
+                    word_count="220",  # 200-250 words as requested
+                    platforms=['email'],  # Email platform
+                    use_web_research=agent_data.get('use_web_research', False),
+                    image_text=agent_data.get('image_text', '')
+                )
+                
+                if holiday_content_result and holiday_content_result.get('content'):
+                    base_holiday_content = holiday_content_result['content']
+                    # Clean up any markdown formatting - comprehensive cleanup
+                    import re
+                    # Remove markdown title patterns
+                    base_holiday_content = re.sub(r'\*\*Title:.*?\*\*', '', base_holiday_content, flags=re.IGNORECASE)
+                    base_holiday_content = re.sub(r'\*\*Content:\*\*', '', base_holiday_content, flags=re.IGNORECASE)
+                    base_holiday_content = re.sub(r'Title:.*?\n', '', base_holiday_content, flags=re.IGNORECASE)
+                    base_holiday_content = re.sub(r'Content:\s*', '', base_holiday_content, flags=re.IGNORECASE)
+                    # Remove any remaining markdown formatting
+                    base_holiday_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', base_holiday_content)  # Bold text
+                    base_holiday_content = re.sub(r'\*([^*]+)\*', r'\1', base_holiday_content)    # Italic text
+                    base_holiday_content = base_holiday_content.strip()
+                    
+                    # Ensure proper paragraph formatting if missing
+                    if '\n' not in base_holiday_content and len(base_holiday_content) > 200:
+                        # Split into sentences and create paragraphs
+                        sentences = re.split(r'([.!?])\s+', base_holiday_content)
+                        formatted_content = ""
+                        sentence_count = 0
+                        
+                        for i in range(0, len(sentences)-1, 2):
+                            if i+1 < len(sentences):
+                                sentence = sentences[i] + sentences[i+1]
+                                formatted_content += sentence
+                                sentence_count += 1
+                                
+                                # Add paragraph break every 2-3 sentences
+                                if sentence_count % 3 == 0 and i+2 < len(sentences)-1:
+                                    formatted_content += "\n\n"
+                                else:
+                                    formatted_content += " "
+                        
+                        base_holiday_content = formatted_content.strip()
+                    
+                    logger.info(f"Generated holiday-specific content for {holiday_name}")
+                else:
+                    # Fallback content if ChatGPT fails
+                    base_holiday_content = f"As {holiday_name} approaches, we want to ensure your beloved pets stay safe and happy during this special time. Here are some important tips to keep in mind during the holiday season to ensure your furry family members enjoy the festivities safely."
+            except Exception as e:
+                logger.error(f"Error generating holiday-specific content: {str(e)}")
+                # Fallback content
+                base_holiday_content = f"As {holiday_name} approaches, we want to ensure your beloved pets stay safe and happy during this special time. Here are some important tips to keep in mind during the holiday season to ensure your furry family members enjoy the festivities safely."
+        else:
+            # Simple fallback content when ChatGPT is disabled
+            base_holiday_content = f"As {holiday_name} approaches, we want to ensure your beloved pets stay safe and happy during this special time. Here are some important tips to keep in mind during the holiday season to ensure your furry family members enjoy the festivities safely."
+        
+        # Get customer data for personalization
         customers_cursor = db.customers.aggregate([{"$sample": {"size": 1}}])
         customers_list = await customers_cursor.to_list(length=1)
         
@@ -5508,42 +5568,103 @@ async def generate_scheduled_email_for_agent(agent_id: str, agent_data: dict, po
             
             logger.info(f"Using customer {customer_name} with pet(s): {pet_names} for email preview")
         
-        # Create holiday-specific content using the template
-        # Replace all placeholders: customer, pets, and holiday context
-        holiday_specific_content = email_template.replace('[CUSTOMER_NAME]', customer_name)
-        holiday_specific_content = holiday_specific_content.replace('[PET_NAME]', pet_names)  # Legacy support
-        holiday_specific_content = holiday_specific_content.replace('[PET_NAMES]', pet_names)  # New plural support
-        holiday_specific_content = holiday_specific_content.replace('[HOLIDAY_NAME]', holiday_name)
-        holiday_specific_content = holiday_specific_content.replace('[HOLIDAY_DATE]', holiday_date)
+        # Now apply the email template logic
+        email_template_with_content = email_template
         
-        if use_chatgpt:
-            # Call actual ChatGPT API to format the email professionally
-            try:
-                from ai_service import format_email_content
-                
-                holiday_specific_content = await format_email_content(
-                    template=holiday_specific_content,
-                    customer_name=customer_name,
-                    pet_names=pet_names,
-                    holiday_name=holiday_name,
-                    holiday_date=holiday_date
-                )
-                
-                logger.info(f"ChatGPT formatting applied for email agent {agent_id}")
-                
-            except Exception as e:
-                logger.error(f"ChatGPT formatting failed for agent {agent_id}: {str(e)}")
-                # Fallback to basic formatting if ChatGPT fails
-                holiday_specific_content = f"""Dear {customer_name},
+        # Check if template has ChatGPT placeholder or use default template
+        if '[CHATGPT_CONTENT]' in email_template:
+            # Use the provided template - replace placeholder with generated holiday content
+            email_template_with_content = email_template.replace('[CHATGPT_CONTENT]', base_holiday_content)
+            logger.info("Using provided email template with ChatGPT holiday content")
+        elif not email_template or email_template == "":
+            # No template specified - use default holiday template
+            default_template = f"""Dear [CUSTOMER_NAME],
 
-{holiday_specific_content}
+As {holiday_name} approaches, we wanted to reach out with some important information to help you and [PET_NAME] celebrate safely.
 
-Wishing you and {pet_names} a wonderful {holiday_name}!
+[CHATGPT_CONTENT]
+
+Wishing you and [PET_NAME] a wonderful {holiday_name}!
 
 Warm regards,
-The Veterinary Care Team"""
+[BUSINESS_NAME]
+📞 [PHONE_NUMBER]
+🌐 [WEBSITE_LINK]
+📅 [BOOK_NOW_LINK] | 📍 [BUSINESS_ADDRESS]"""
+            
+            email_template_with_content = default_template.replace('[CHATGPT_CONTENT]', base_holiday_content)
+            logger.info("Using default holiday email template with ChatGPT content")
+        else:
+            # Legacy template without [CHATGPT_CONTENT] - enhance with holiday content
+            email_template_with_content = f"Dear [CUSTOMER_NAME],\n\nAs {holiday_name} approaches, we wanted to share some important information:\n\n{base_holiday_content}\n\n{email_template}"
+            logger.info("Using enhanced legacy email template with holiday content")
         
-        sample_content = holiday_specific_content
+        # Check if this should be personalized
+        is_personalized = agent_data.get('email_personalized', True)
+        
+        if is_personalized:
+            # PERSONALIZED EMAIL: Replace customer placeholders with actual data
+            personalized_content = email_template_with_content.replace('[CUSTOMER_NAME]', customer_name)
+            personalized_content = personalized_content.replace('[PET_NAME]', pet_names)
+            personalized_content = personalized_content.replace('[PET_NAMES]', pet_names)
+            personalized_content = personalized_content.replace('[HOLIDAY_NAME]', holiday_name)
+            personalized_content = personalized_content.replace('[HOLIDAY_DATE]', holiday_date)
+            
+            # Apply global placeholder replacement
+            final_email_content = await replace_global_placeholders(personalized_content, db)
+        else:
+            # NON-PERSONALIZED EMAIL: Use template + base content, replace placeholders with generic values
+            final_email_content = email_template_with_content.replace('[CUSTOMER_NAME]', 'Valued Customer')
+            final_email_content = final_email_content.replace('[PET_NAME]', 'your pet')
+            final_email_content = final_email_content.replace('[PET_NAMES]', 'your pets')
+            final_email_content = final_email_content.replace('[HOLIDAY_NAME]', holiday_name)
+            final_email_content = final_email_content.replace('[HOLIDAY_DATE]', holiday_date)
+            
+            # Apply global placeholder replacement
+            final_email_content = await replace_global_placeholders(final_email_content, db)
+        
+        # Generate holiday-specific email subject
+        try:
+            subject_result = await ai_service.format_custom_content(
+                post_title="Holiday Email Subject",
+                post_content=f"Generate ONLY a short, compelling email subject line (maximum 90 characters, no formatting, no titles, no explanations) for a {holiday_name} email from a veterinary clinic. Make it holiday-specific and engaging. Keep it concise and under 90 characters. Return just the subject line text, nothing else.",
+                word_count="8",  # Short for compact subject
+                platforms=['email'],
+                use_web_research=False,
+                image_text=""
+            )
+            raw_subject = subject_result.get('content', f"{holiday_name} Pet Safety Tips") if subject_result else f"{holiday_name} Pet Safety Tips"
+            
+            # Clean up the subject line - comprehensive cleanup
+            import re
+            email_subject = raw_subject.strip()
+            # Remove markdown formatting patterns
+            email_subject = re.sub(r'\*\*Title:.*?\*\*', '', email_subject, flags=re.IGNORECASE)
+            email_subject = re.sub(r'\*\*Subject:.*?\*\*', '', email_subject, flags=re.IGNORECASE)
+            email_subject = re.sub(r'\*\*Content:\*\*', '', email_subject, flags=re.IGNORECASE)
+            email_subject = re.sub(r'Title:.*?\n', '', email_subject, flags=re.IGNORECASE)
+            email_subject = re.sub(r'Subject:.*?\n', '', email_subject, flags=re.IGNORECASE)
+            email_subject = re.sub(r'Content:\s*', '', email_subject, flags=re.IGNORECASE)
+            # Remove any remaining markdown formatting
+            email_subject = re.sub(r'\*\*([^*]+)\*\*', r'\1', email_subject)  # Bold text
+            email_subject = re.sub(r'\*([^*]+)\*', r'\1', email_subject)    # Italic text
+            # Split by newlines and take first line if multiple
+            email_subject = email_subject.split('\n')[0].strip()
+            # Remove quotes if present
+            email_subject = email_subject.strip('"\'')
+            
+            # Ensure subject is under 100 characters
+            if len(email_subject) > 100:
+                email_subject = email_subject[:97] + "..."
+            
+            # Fallback if still empty
+            if not email_subject or len(email_subject) < 3:
+                email_subject = f"{holiday_name} Pet Safety Tips"
+        except Exception as e:
+            logger.error(f"Error generating holiday email subject: {str(e)}")
+            email_subject = f"{holiday_name} Pet Safety Tips"
+        
+        sample_content = final_email_content
         
         # Create post record for email preview
         post_data = {
