@@ -5717,6 +5717,7 @@ Make sure there are no duplicate signatures, subject lines, or redundant message
             "platforms": ["email"],
             "email_template": email_content,  # Store original template for mass sending
             "sample_customer_name": customer_name,
+            "sample_customer_email": customer_email,
             "sample_pet_names": pet_names,
             "email_subject": email_subject,
             "use_chatgpt_formatting": use_chatgpt,
