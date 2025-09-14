@@ -5603,10 +5603,12 @@ async def generate_write_mode_email_for_agent(agent_id: str, agent_data: dict, p
         if not customers_list:
             logger.warning("No customers found for email preview")
             customer_name = "Valued Customer"
+            customer_email = "customer@example.com"
             pet_names = "your pet"
         else:
             customer = customers_list[0]
             customer_name = get_customer_full_name(customer)
+            customer_email = customer.get('email', 'customer@example.com')
             
             # Handle pet names (both new pets array and legacy pet_name field)
             pets = customer.get('pets', [])
