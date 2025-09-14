@@ -532,7 +532,7 @@ const AIAgentsDashboard = () => {
           type: 'success', 
           text: `AI agent ${currentStatus ? 'paused' : 'activated'} successfully!` 
         });
-        fetchAgents();
+        fetchAgents(true); // Force refresh after status toggle
       } else {
         const errorData = await response.json();
         setMessage({ type: 'error', text: errorData.detail || 'Failed to update agent status' });
