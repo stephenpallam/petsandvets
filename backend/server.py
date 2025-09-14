@@ -5293,6 +5293,49 @@ Warm regards,
             "id": post_id,
             "agent_id": agent_id,
             "agent_name": agent_data.get('agent_name', 'Email Agent'),
+            "agent_type": "email",
+            "content": final_email_content,
+            "email_subject": email_subject,
+            "topic": topic,
+            "created_at": now,
+            "status": "in_review",
+            "platforms": ["email"],
+            "scheduled_for": None,
+            "user_id": agent_data.get('user_id'),
+            "sample_customer_name": sample_customer_name,
+            "sample_customer_email": sample_customer_email,
+            "sample_pet_names": sample_pet_names,
+            "email_personalized": is_personalized,
+            "email_template": email_template,
+            "ready_for_mass_email": True
+        }
+        
+        # Insert the post
+        await db.ai_posts.insert_one(post_data)
+        logger.info(f"Successfully created recurring email post {post_id} for agent {agent_id}")
+        
+        return {
+            "success": True,
+            "post_id": post_id,
+            "content": final_email_content,
+            "email_subject": email_subject,
+            "sample_customer": sample_customer_name,
+            "message": f"Successfully generated recurring email for {topic}"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error in generate_recurring_email_for_agent: {str(e)}")
+        return {
+            "success": False,
+            "error": str(e),
+            "message": "Failed to generate recurring email"
+        }
+        
+        # Create post record for email preview
+        post_data = {
+            "id": post_id,
+            "agent_id": agent_id,
+            "agent_name": agent_data.get('agent_name', 'Email Agent'),
             "topic": f"{topic} - {agent_data.get('agent_name', 'Email Agent')}",
             "content": final_email_content,
             "email_subject": email_subject,  # Add email subject line
