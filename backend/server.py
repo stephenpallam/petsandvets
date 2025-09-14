@@ -5107,93 +5107,186 @@ async def generate_recurring_email_for_agent(agent_id: str, agent_data: dict, po
         
         logger.info(f"Generating recurring email for topic: {topic}")
         
-        # Get a random customer from the database for preview
+        # Generate base content using ChatGPT if enabled
+        if use_chatgpt:
+            try:
+                # Generate professional content about the topic
+                topic_content_result = await ai_service.format_custom_content(
+                    post_title=f"Email Newsletter: {topic}",
+                    post_content=f"Create professional, engaging newsletter content about {topic} for a veterinary clinic. Write 200-250 words with proper paragraph structure (use line breaks between paragraphs). Focus on benefits, importance, and actionable advice for pet owners. Write in a warm, professional tone suitable for email newsletters. Format with clear paragraph breaks for better readability.",
+                    word_count="220",  # 200-250 words as requested
+                    platforms=['email'],  # Email platform
+                    use_web_research=agent_data.get('use_web_research', False),
+                    image_text=agent_data.get('image_text', '')
+                )
+                
+                if topic_content_result and topic_content_result.get('content'):
+                    base_content = topic_content_result['content']
+                    # Clean up any markdown formatting - comprehensive cleanup
+                    import re
+                    # Remove markdown title patterns
+                    base_content = re.sub(r'\*\*Title:.*?\*\*', '', base_content, flags=re.IGNORECASE)
+                    base_content = re.sub(r'\*\*Content:\*\*', '', base_content, flags=re.IGNORECASE)
+                    base_content = re.sub(r'Title:.*?\n', '', base_content, flags=re.IGNORECASE)
+                    base_content = re.sub(r'Content:\s*', '', base_content, flags=re.IGNORECASE)
+                    # Remove any remaining markdown formatting
+                    base_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', base_content)  # Bold text
+                    base_content = re.sub(r'\*([^*]+)\*', r'\1', base_content)    # Italic text
+                    base_content = base_content.strip()
+                    
+                    # Ensure proper paragraph formatting if missing
+                    if '\n' not in base_content and len(base_content) > 200:
+                        # Split into sentences and create paragraphs
+                        sentences = re.split(r'([.!?])\s+', base_content)
+                        formatted_content = ""
+                        sentence_count = 0
+                        
+                        for i in range(0, len(sentences)-1, 2):
+                            if i+1 < len(sentences):
+                                sentence = sentences[i] + sentences[i+1]
+                                formatted_content += sentence
+                                sentence_count += 1
+                                
+                                # Add paragraph break every 2-3 sentences
+                                if sentence_count % 3 == 0 and i+2 < len(sentences)-1:
+                                    formatted_content += "\n\n"
+                                else:
+                                    formatted_content += " "
+                        
+                        base_content = formatted_content.strip()
+                    
+                    logger.info(f"Generated ChatGPT content for topic: {topic}")
+                else:
+                    # Fallback content if ChatGPT fails
+                    base_content = f"Stay informed about the latest developments in {topic}. Our veterinary team stays current with the latest research and trends to provide you with valuable insights that can help you make informed decisions about your pet's health and wellbeing."
+            except Exception as e:
+                logger.error(f"Error generating ChatGPT content: {str(e)}")
+                # Fallback content
+                base_content = f"Stay informed about the latest developments in {topic}. Our veterinary team stays current with the latest research and trends to provide you with valuable insights that can help you make informed decisions about your pet's health and wellbeing."
+        else:
+            # Simple fallback content when ChatGPT is disabled
+            base_content = f"Stay informed about the latest developments in {topic}. Our veterinary team stays current with the latest research and trends to provide you with valuable insights that can help you make informed decisions about your pet's health and wellbeing."
+        
+        # Now apply the email template logic
+        email_template_with_content = email_template
+        
+        # Check if template has ChatGPT placeholder or use default template
+        if '[CHATGPT_CONTENT]' in email_template:
+            # Use the provided template - replace placeholder with generated content
+            email_template_with_content = email_template.replace('[CHATGPT_CONTENT]', base_content)
+            logger.info("Using provided email template with ChatGPT content")
+        elif not email_template or email_template == "":
+            # No template specified - use default template
+            default_template = """Dear [CUSTOMER_NAME],
+
+[CHATGPT_CONTENT]
+
+We appreciate your trust in our care for your beloved pets. For any questions or to schedule an appointment, please contact us.
+
+Warm regards,
+[BUSINESS_NAME]
+📞 [PHONE_NUMBER]
+🌐 [WEBSITE_LINK]
+📅 [BOOK_NOW_LINK] | 📍 [BUSINESS_ADDRESS]"""
+            
+            email_template_with_content = default_template.replace('[CHATGPT_CONTENT]', base_content)
+            logger.info("Using default email template with ChatGPT content")
+        else:
+            # Legacy template without [CHATGPT_CONTENT] - use as-is
+            email_template_with_content = email_template
+            logger.info("Using legacy email template as-is")
+        
+        # Get customer data for personalization
         customers_cursor = db.customers.aggregate([{"$sample": {"size": 1}}])
         customers_list = await customers_cursor.to_list(length=1)
         
         if not customers_list:
             logger.warning(f"No customers found in database for agent {agent_id}, using placeholder data")
-            customer_name = "John Smith"
-            pet_names = "Buddy"
-            customer_email = "customer@example.com"
+            sample_customer_name = "John Smith"
+            sample_customer_email = "customer@example.com"
+            sample_pet_names = "Buddy"
         else:
             customer = customers_list[0]
-            customer_name = get_customer_full_name(customer)
-            customer_email = customer.get('email', 'customer@example.com')
+            sample_customer_name = get_customer_full_name(customer)
+            sample_customer_email = customer.get('email', 'customer@example.com')
             
-            # Get pet name(s) for this customer - handle both data structures
-            pet_names = "your pet"  # Default fallback
+            # Get pet name(s) for this customer
+            sample_pet_names = "your pet"  # Default fallback
             
             # Check for pets array structure (new format)
             pets = customer.get('pets', [])
             if pets:
-                # Extract pet names from pets array
                 valid_pet_names = [pet.get('name', '').strip() for pet in pets if pet.get('name', '').strip()]
                 if valid_pet_names:
                     if len(valid_pet_names) == 1:
-                        pet_names = valid_pet_names[0]
+                        sample_pet_names = valid_pet_names[0]
                     elif len(valid_pet_names) == 2:
-                        pet_names = f"{valid_pet_names[0]} and {valid_pet_names[1]}"
+                        sample_pet_names = f"{valid_pet_names[0]} and {valid_pet_names[1]}"
                     else:
-                        # For 3+ pets: "Buddy, Max, and Luna"
-                        pet_names = ", ".join(valid_pet_names[:-1]) + f", and {valid_pet_names[-1]}"
-            
-            # Check for single pet_name field (current format)
+                        sample_pet_names = ", ".join(valid_pet_names[:-1]) + f", and {valid_pet_names[-1]}"
             elif customer.get('pet_name', '').strip():
-                pet_names = customer.get('pet_name').strip()
+                sample_pet_names = customer.get('pet_name').strip()
+        
+        # Check if this should be personalized
+        is_personalized = agent_data.get('email_personalized', True)
+        
+        if is_personalized and customers_list:
+            # PERSONALIZED EMAIL: Replace customer placeholders with actual data
+            personalized_content = email_template_with_content.replace('[CUSTOMER_NAME]', sample_customer_name)
+            personalized_content = personalized_content.replace('[PET_NAME]', sample_pet_names)
+            personalized_content = personalized_content.replace('[PET_NAMES]', sample_pet_names)
             
-            logger.info(f"Using customer {customer_name} with pet(s): {pet_names} for email preview")
+            # Apply global placeholder replacement
+            final_email_content = await replace_global_placeholders(personalized_content, db)
+        else:
+            # NON-PERSONALIZED EMAIL: Use template + base content, replace placeholders with generic values
+            final_email_content = email_template_with_content.replace('[CUSTOMER_NAME]', 'Valued Customer')
+            final_email_content = final_email_content.replace('[PET_NAME]', 'your pet')
+            final_email_content = final_email_content.replace('[PET_NAMES]', 'your pets')
+            
+            # Apply global placeholder replacement
+            final_email_content = await replace_global_placeholders(final_email_content, db)
         
-        # Create topic-specific content that properly incorporates the topic
-        topic_specific_content = f"""Dear {customer_name},
-
-I hope this message finds you and {pet_names} in excellent health!
-
-As part of our commitment to keeping you informed about the latest developments in pet care, we're excited to share important updates about {topic}.
-
-This information can help you make informed decisions about {pet_names}'s health and wellbeing. Our veterinary team stays current with the latest research and trends to provide you with valuable insights.
-
-Here are some key points about {topic} that every pet owner should know:
-
-• Stay informed about the latest veterinary research and recommendations
-• Regular preventive care remains the foundation of good pet health
-• Understanding current trends helps you make better decisions for {pet_names}
-• Our team is always here to discuss any questions you may have
-
-We believe that informed pet owners like you are the best advocates for their pets' health. If you have any questions about {topic} or how it might relate to {pet_names}'s care, please don't hesitate to reach out to our team.
-
-Thank you for trusting us with {pet_names}'s care!
-
-Best regards,
-The Veterinary Care Team"""
-        
-        if use_chatgpt:
-            # Try ChatGPT for minor enhancements, but don't rely on it completely
-            try:
-                from ai_service import format_topic_email_content
-                
-                enhanced_content = await format_topic_email_content(
-                    template=topic_specific_content,
-                    customer_name=customer_name,
-                    pet_names=pet_names,
-                    topic=topic
-                )
-                
-                # Only use ChatGPT result if it's actually different and longer
-                if enhanced_content != topic_specific_content and len(enhanced_content) > len(topic_specific_content):
-                    logger.info(f"ChatGPT enhanced email content for agent {agent_id}")
-                    topic_specific_content = enhanced_content
-                else:
-                    logger.info(f"Using template-based content for agent {agent_id} (ChatGPT did not improve)")
-                
-            except Exception as e:
-                logger.error(f"ChatGPT formatting failed for agent {agent_id}: {str(e)}")
-                logger.info(f"Using well-structured template-based content for agent {agent_id}")
-        
-        # Generate topic-specific email subject line
-        subject_line = generate_topic_email_subject(topic, customer_name, pet_names)
-        
-        sample_content = topic_specific_content
+        # Generate email subject
+        try:
+            subject_result = await ai_service.format_custom_content(
+                post_title="Subject Line Only",
+                post_content=f"Generate ONLY a short, compelling email subject line (maximum 90 characters, no formatting, no titles, no explanations) for this newsletter topic: {topic}. Keep it concise and under 90 characters. Return just the subject line text, nothing else.",
+                word_count="8",  # Short for compact subject
+                platforms=['email'],
+                use_web_research=False,
+                image_text=""
+            )
+            raw_subject = subject_result.get('content', f"{topic} Newsletter") if subject_result else f"{topic} Newsletter"
+            
+            # Clean up the subject line - comprehensive cleanup
+            import re
+            email_subject = raw_subject.strip()
+            # Remove markdown formatting patterns
+            email_subject = re.sub(r'\*\*Title:.*?\*\*', '', email_subject, flags=re.IGNORECASE)
+            email_subject = re.sub(r'\*\*Subject:.*?\*\*', '', email_subject, flags=re.IGNORECASE)
+            email_subject = re.sub(r'\*\*Content:\*\*', '', email_subject, flags=re.IGNORECASE)
+            email_subject = re.sub(r'Title:.*?\n', '', email_subject, flags=re.IGNORECASE)
+            email_subject = re.sub(r'Subject:.*?\n', '', email_subject, flags=re.IGNORECASE)
+            email_subject = re.sub(r'Content:\s*', '', email_subject, flags=re.IGNORECASE)
+            # Remove any remaining markdown formatting
+            email_subject = re.sub(r'\*\*([^*]+)\*\*', r'\1', email_subject)  # Bold text
+            email_subject = re.sub(r'\*([^*]+)\*', r'\1', email_subject)    # Italic text
+            # Split by newlines and take first line if multiple
+            email_subject = email_subject.split('\n')[0].strip()
+            # Remove quotes if present
+            email_subject = email_subject.strip('"\'')
+            
+            # Ensure subject is under 100 characters
+            if len(email_subject) > 100:
+                email_subject = email_subject[:97] + "..."
+            
+            # Fallback if still empty
+            if not email_subject or len(email_subject) < 3:
+                email_subject = f"{topic} Newsletter"
+        except Exception as e:
+            logger.error(f"Error generating email subject: {str(e)}")
+            email_subject = f"{topic} Newsletter"
         
         # Create post record for email preview
         post_data = {
@@ -5201,8 +5294,8 @@ The Veterinary Care Team"""
             "agent_id": agent_id,
             "agent_name": agent_data.get('agent_name', 'Email Agent'),
             "topic": f"{topic} - {agent_data.get('agent_name', 'Email Agent')}",
-            "content": sample_content,
-            "email_subject": subject_line,  # Add email subject line
+            "content": final_email_content,
+            "email_subject": email_subject,  # Add email subject line
             "image_url": "",
             "image_option": agent_data.get('image_option', 'none'),
             "platforms": ["email"],  # Email-specific platform
@@ -5211,13 +5304,13 @@ The Veterinary Care Team"""
             "created_at": now,
             "updated_at": now,
             "is_active": True,
-            "word_count": str(len(sample_content.split())),
+            "word_count": str(len(final_email_content.split())),
             "use_chatgpt_formatting": use_chatgpt,
             # Store email-specific metadata for mass sending
             "email_template": email_template,  # Original template with placeholders
-            "sample_customer_name": customer_name,  # Customer used for preview
-            "sample_pet_names": pet_names,  # Pet(s) used for preview
-            "sample_customer_email": customer_email,  # Email used for preview
+            "sample_customer_name": sample_customer_name,  # Customer used for preview
+            "sample_pet_names": sample_pet_names,  # Pet(s) used for preview
+            "sample_customer_email": sample_customer_email,  # Email used for preview
             "topic": topic,  # Topic context
             "ready_for_mass_email": False  # Will be set to True when published
         }
