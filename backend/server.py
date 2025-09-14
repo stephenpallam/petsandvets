@@ -6674,7 +6674,61 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
         elif content_type == 'holidays':
             selected_holidays = agent_data.get('selected_holidays', [])
             if selected_holidays:
-                holiday_name = selected_holidays[0] if selected_holidays else "Holiday"
+                # Find the actual upcoming holiday, not just the first one in the list
+                try:
+                    # Get holiday information for context
+                    holidays_cursor = db.holidays.find({"id": {"$in": selected_holidays}})
+                    holidays_list = await holidays_cursor.to_list(length=None)
+                    
+                    if not holidays_list:
+                        raise Exception(f"No holiday data found for selected holidays {selected_holidays}")
+                    
+                    # Find the next upcoming holiday from selected holidays
+                    from datetime import datetime
+                    today = datetime.now().date()
+                    
+                    # Parse and sort holidays by date to find the next upcoming one
+                    valid_holidays = []
+                    for holiday in holidays_list:
+                        try:
+                            holiday_date = datetime.strptime(holiday['date'], '%Y-%m-%d').date()
+                            valid_holidays.append({
+                                'holiday_data': holiday,
+                                'parsed_date': holiday_date
+                            })
+                        except Exception as e:
+                            logger.warning(f"Could not parse holiday date {holiday.get('date', 'unknown')}: {e}")
+                            continue
+                    
+                    if not valid_holidays:
+                        raise Exception(f"No valid holiday dates found for marketing agent")
+                    
+                    # Sort holidays by date
+                    valid_holidays.sort(key=lambda x: x['parsed_date'])
+                    
+                    # Find the next upcoming holiday (today or later)
+                    upcoming_holiday = None
+                    for holiday_info in valid_holidays:
+                        if holiday_info['parsed_date'] >= today:
+                            upcoming_holiday = holiday_info['holiday_data']
+                            break
+                    
+                    # If no upcoming holiday found, use the earliest holiday (for past year wrap-around)
+                    if not upcoming_holiday:
+                        upcoming_holiday = valid_holidays[0]['holiday_data']
+                        logger.info(f"No upcoming holidays found, using earliest selected holiday: {upcoming_holiday.get('name')}")
+                    
+                    holiday_name = upcoming_holiday.get('name', 'Holiday')
+                    holiday_date = upcoming_holiday.get('date', '')
+                    
+                    logger.info(f"Marketing Agent using upcoming holiday: {holiday_name} ({holiday_date})")
+                    
+                except Exception as e:
+                    logger.error(f"Error finding upcoming holiday for marketing agent: {str(e)}")
+                    # Fallback to first holiday if lookup fails
+                    holiday_name = selected_holidays[0] if selected_holidays else "Holiday"
+                    holiday_date = ""
+                
                 campaign_title = f"Marketing Campaign - {holiday_name}"
                 
                 # Generate 150-200 word professional holiday content using ChatGPT
