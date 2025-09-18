@@ -211,12 +211,15 @@ const EditEmployeeProfile = () => {
           <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">
-                Edit Employee Profile
+                Edit {employee?.full_name || 'Employee'} Profile
               </h2>
               <div className="flex space-x-2">
                 <button
                   onClick={() => navigate('/employee-management')}
-                  className="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center space-x-2"
+                  className="text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center space-x-2"
+                  style={{ backgroundColor: 'rgb(41, 173, 211)' }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = 'rgb(31, 163, 201)'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'rgb(41, 173, 211)'}
                   title="Back to Employee Management"
                 >
                   <ArrowLeft className="h-4 w-4" />
@@ -227,13 +230,6 @@ const EditEmployeeProfile = () => {
           </div>
 
           <div className="p-6">
-            <div className="mb-6">
-              <h1 className="text-2xl font-bold text-gray-900">
-                Edit {employee.full_name}
-              </h1>
-              <p className="text-gray-600">Update employee information and settings</p>
-            </div>
-
             {/* Message Display */}
             {message.text && (
               <div className={`mb-6 flex items-center p-4 rounded-lg ${

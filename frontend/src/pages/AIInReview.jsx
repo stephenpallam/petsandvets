@@ -22,6 +22,60 @@ import {
   Hash
 } from 'lucide-react';
 import { formatDate, formatScheduledDate } from '../utils/dateUtils';
+import SocialMediaPreviewModal from '../components/SocialMediaPreviewModal';
+import SMSPreviewModal from '../components/SMSPreviewModal';
+
+// Component to render SMS content with clickable short links
+const SMSContentWithShortLinks = ({ content, className = "" }) => {
+  if (!content) return <div className={className}></div>;
+  
+  // Convert URLs to clickable links using React elements instead of raw HTML
+  const renderContentWithLinks = (text) => {
+    if (!text) return text;
+    
+    // Split the text by URLs to create an array of text and URL parts
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = text.split(urlRegex);
+    
+    return parts.map((part, index) => {
+      if (urlRegex.test(part)) {
+        // This is a URL, create a clickable link
+        let linkText = 'Visit Link';
+        let linkHref = part;
+        
+        // Customize link text based on URL type
+        if (part.includes('book')) {
+          linkText = 'Book Now';
+          linkHref = 'https://petsandvetsanimalhospital.com/book';
+        } else if (part.includes('petsandvets') || part.includes('yourvet')) {
+          linkText = 'Visit Website';
+          linkHref = 'https://petsandvetsanimalhospital.com';
+        }
+        
+        return (
+          <a 
+            key={index}
+            href={linkHref}
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:text-blue-800 font-medium underline"
+          >
+            {linkText}
+          </a>
+        );
+      } else {
+        // This is regular text
+        return part;
+      }
+    });
+  };
+  
+  return (
+    <div className={className}>
+      {renderContentWithLinks(content)}
+    </div>
+  );
+};
 
 // Helper function to convert URLs to clickable links
 const formatContentWithLinks = (content) => {
@@ -444,6 +498,8 @@ const AIInReview = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);  
   const [deletingPost, setDeletingPost] = useState(null);
   const [postToDelete, setPostToDelete] = useState(null);
+  const [previewModal, setPreviewModal] = useState({ isOpen: false, post: null, platform: null });
+  const [smsPreviewModal, setSmsPreviewModal] = useState({ isOpen: false, post: null });
   const [selectedEmployee, setSelectedEmployee] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [pagination, setPagination] = useState({
@@ -1456,21 +1512,65 @@ const AIInReview = () => {
                               <div className="flex items-center space-x-2">
                                 {/* Marketing Agent Platform Display */}
                                 {post.agent_type === 'marketing_agent' && post.marketing_channel === 'social_media' && post.platform ? (
-                                  <span 
-                                    className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700"
-                                  >
-                                    {getPlatformIcon(post.platform)} {post.platform === 'twitter' ? 'X' : post.platform.charAt(0).toUpperCase() + post.platform.slice(1)}
-                                  </span>
+                                  <div className="flex items-center space-x-1">
+                                    <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
+                                      {getPlatformIcon(post.platform)} {post.platform === 'twitter' ? 'X' : post.platform.charAt(0).toUpperCase() + post.platform.slice(1)}
+                                    </span>
+                                    <button
+                                      onClick={() => setPreviewModal({ isOpen: true, post, platform: post.platform })}
+                                      className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
+                                      title={`Preview on ${post.platform}`}
+                                    >
+                                      <Eye className="h-3 w-3 mr-1" />
+                                      Preview
+                                    </button>
+                                  </div>
                                 ) : 
+                                /* Marketing Agent Email Display - Badge only, NO preview button */
+                                post.agent_type === 'marketing_agent' && post.marketing_channel === 'email' ? (
+                                  <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
+                                    📧 Email
+                                  </span>
+                                ) :
+                                /* Regular Email Agents Display - Badge only, NO preview button */
+                                (post.agent_type === 'email' || post.agent_type === 'email_agent') ? (
+                                  <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
+                                    📧 Email
+                                  </span>
+                                ) :
                                 /* Regular platforms display */
                                 post.platforms && post.platforms.map((platform) => (
-                                  <span 
-                                    key={platform} 
-                                    className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700"
-                                  >
-                                    {getPlatformIcon(platform)} {platform === 'twitter' ? 'X' : platform.charAt(0).toUpperCase() + platform.slice(1)}
-                                  </span>
+                                  <div key={platform} className="flex items-center space-x-1">
+                                    <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
+                                      {getPlatformIcon(platform)} {platform === 'twitter' ? 'X' : platform.charAt(0).toUpperCase() + platform.slice(1)}
+                                    </span>
+                                    <button
+                                      onClick={() => setPreviewModal({ isOpen: true, post, platform })}
+                                      className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
+                                      title={`Preview on ${platform}`}
+                                    >
+                                      <Eye className="h-3 w-3 mr-1" />
+                                      Preview
+                                    </button>
+                                  </div>
                                 ))}
+                                
+                                {/* SMS Preview Button - Same pattern as social media */}
+                                {(post.agent_type === 'sms_agent' || (post.agent_type === 'marketing_agent' && post.marketing_channel === 'sms')) && (
+                                  <div className="flex items-center space-x-1">
+                                    <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
+                                      📱 SMS
+                                    </span>
+                                    <button
+                                      onClick={() => setSmsPreviewModal({ isOpen: true, post })}
+                                      className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
+                                      title="Preview SMS"
+                                    >
+                                      <Eye className="h-3 w-3 mr-1" />
+                                      Preview
+                                    </button>
+                                  </div>
+                                )}
                                 
                                 {/* Marketing Agent Channel-specific info */}
                                 {post.agent_type === 'marketing_agent' && (
@@ -1549,22 +1649,19 @@ const AIInReview = () => {
                                 <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
                                   <div className="flex items-center space-x-2 mb-3">
                                     <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-                                    <span className="text-sm font-medium text-gray-700">SMS Preview</span>
-                                  </div>
-                                  <div className="bg-gray-900 rounded-lg p-4 max-w-xs">
-                                    <div className="bg-blue-500 text-white rounded-2xl rounded-bl-md px-4 py-2 text-sm">
-                                      <SMSContentWithLinks 
-                                        content={post.content} 
-                                        className=""
-                                      />
-                                    </div>
-                                    <div className="text-xs text-gray-400 mt-1 text-right">
-                                      {post.content ? `${post.content.length}/160` : '0/160'}
-                                    </div>
+                                    <span className="text-sm font-medium text-gray-700">SMS Content</span>
                                   </div>
                                   
-                                  {/* Show personalized preview if available */}
-                                  <SMSContentPreview post={post} />
+                                  {/* Content Summary */}
+                                  <div className="bg-gray-50 rounded-lg p-3">
+                                    <SMSContentWithShortLinks 
+                                      content={post.content} 
+                                      className="text-sm text-gray-700 line-clamp-2"
+                                    />
+                                    <div className="text-xs text-gray-500 mt-1">
+                                      {post.content ? `${post.content.length}/160 characters` : '0/160 characters'}
+                                    </div>
+                                  </div>
                                 </div>
                               ) : 
                               /* Regular Email Agent Posts */
@@ -1624,22 +1721,19 @@ const AIInReview = () => {
                                 <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
                                   <div className="flex items-center space-x-2 mb-3">
                                     <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-                                    <span className="text-sm font-medium text-gray-700">SMS Preview</span>
-                                  </div>
-                                  <div className="bg-gray-900 rounded-lg p-4 max-w-xs">
-                                    <div className="bg-blue-500 text-white rounded-2xl rounded-bl-md px-4 py-2 text-sm">
-                                      <SMSContentWithLinks 
-                                        content={post.content} 
-                                        className=""
-                                      />
-                                    </div>
-                                    <div className="text-xs text-gray-400 mt-1 text-right">
-                                      {post.content ? `${post.content.length}/160` : '0/160'}
-                                    </div>
+                                    <span className="text-sm font-medium text-gray-700">SMS Content</span>
                                   </div>
                                   
-                                  {/* Show personalized preview if available */}
-                                  <SMSContentPreview post={post} />
+                                  {/* Content Summary */}
+                                  <div className="bg-gray-50 rounded-lg p-3">
+                                    <SMSContentWithShortLinks 
+                                      content={post.content} 
+                                      className="text-sm text-gray-700 line-clamp-2"
+                                    />
+                                    <div className="text-xs text-gray-500 mt-1">
+                                      {post.content ? `${post.content.length}/160 characters` : '0/160 characters'}
+                                    </div>
+                                  </div>
                                 </div>
                               ) : 
                               /* Default Content Display */
@@ -2056,6 +2150,21 @@ const AIInReview = () => {
             </div>
           </div>
         )}
+
+        {/* Social Media Preview Modal */}
+        <SocialMediaPreviewModal
+          isOpen={previewModal.isOpen}
+          onClose={() => setPreviewModal({ isOpen: false, post: null, platform: null })}
+          post={previewModal.post}
+          platform={previewModal.platform}
+        />
+
+        {/* SMS Preview Modal */}
+        <SMSPreviewModal
+          isOpen={smsPreviewModal.isOpen}
+          onClose={() => setSmsPreviewModal({ isOpen: false, post: null })}
+          post={smsPreviewModal.post}
+        />
       </div>
     </>
   );

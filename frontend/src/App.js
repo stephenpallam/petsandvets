@@ -89,6 +89,8 @@ import TimesheetHoursAdjustment from "./pages/TimesheetHoursAdjustment";
 import EmployeeManagement from "./pages/EmployeeManagement";
 import EmployeeProfile from "./pages/EmployeeProfile";
 import EditEmployeeProfile from "./pages/EditEmployeeProfile";
+import PaystubSettings from "./pages/PaystubSettings";
+import CodeExportHub from "./pages/CodeExportHub";
 import Customers from "./pages/Customers";
 import CMSSettings from "./pages/CMSSettings";
 import HolidayManagement from "./pages/HolidayManagement";
@@ -158,6 +160,8 @@ function AppContent() {
           <Route path="/employee-management" element={<EmployeeManagement />} />
           <Route path="/employee-profile/:user_id" element={<EmployeeProfile />} />
           <Route path="/edit-employee/:user_id" element={<EditEmployeeProfile />} />
+          <Route path="/paystub-settings" element={<PaystubSettings />} />
+          <Route path="/code-export" element={<CodeExportHub />} />
           <Route path="/customer-management" element={<Customers />} />
           <Route path="/cms-settings" element={<CMSSettings />} />
           <Route path="/holiday-management" element={<HolidayManagement />} />

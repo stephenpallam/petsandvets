@@ -10,7 +10,7 @@ import {
   MessageSquare,
   Image as ImageIcon,
   Filter,
-
+  Eye,
   ChevronLeft,
   ChevronRight,
   Trash2,
@@ -20,6 +20,60 @@ import {
   Hash
 } from 'lucide-react';
 import { formatDate as utilFormatDate } from '../utils/dateUtils';
+import SocialMediaPreviewModal from '../components/SocialMediaPreviewModal';
+import SMSPreviewModal from '../components/SMSPreviewModal';
+
+// Component to render SMS content with clickable short links
+const SMSContentWithShortLinks = ({ content, className = "" }) => {
+  if (!content) return <div className={className}></div>;
+  
+  // Convert URLs to clickable links using React elements instead of raw HTML
+  const renderContentWithLinks = (text) => {
+    if (!text) return text;
+    
+    // Split the text by URLs to create an array of text and URL parts
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = text.split(urlRegex);
+    
+    return parts.map((part, index) => {
+      if (urlRegex.test(part)) {
+        // This is a URL, create a clickable link
+        let linkText = 'Visit Link';
+        let linkHref = part;
+        
+        // Customize link text based on URL type
+        if (part.includes('book')) {
+          linkText = 'Book Now';
+          linkHref = 'https://petsandvetsanimalhospital.com/book';
+        } else if (part.includes('petsandvets') || part.includes('yourvet')) {
+          linkText = 'Visit Website';
+          linkHref = 'https://petsandvetsanimalhospital.com';
+        }
+        
+        return (
+          <a 
+            key={index}
+            href={linkHref}
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:text-blue-800 font-medium underline"
+          >
+            {linkText}
+          </a>
+        );
+      } else {
+        // This is regular text
+        return part;
+      }
+    });
+  };
+  
+  return (
+    <div className={className}>
+      {renderContentWithLinks(content)}
+    </div>
+  );
+};
 
 // Helper function to convert URLs to clickable links
 const formatContentWithLinks = (content) => {
@@ -433,6 +487,8 @@ const AIPublishedPosts = () => {
   });
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
+  const [previewModal, setPreviewModal] = useState({ isOpen: false, post: null, platform: null });
+  const [smsPreviewModal, setSmsPreviewModal] = useState({ isOpen: false, post: null });
   const [deletingPost, setDeletingPost] = useState(null);
   const [selectedEmployee, setSelectedEmployee] = useState('all');
 
@@ -807,14 +863,46 @@ const AIPublishedPosts = () => {
                               </div>
                             </div>
                             <div className="flex items-center space-x-2">
-                              {post.platforms && post.platforms.map((platform) => (
-                                <span 
-                                  key={platform} 
-                                  className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700"
-                                >
-                                  {getPlatformIcon(platform)} {platform.charAt(0).toUpperCase() + platform.slice(1)}
-                                </span>
+                              {/* Social Media Platform Previews - Only for social media posts */}
+                              {post.platforms && post.platforms.length > 0 && post.agent_type !== 'email' && post.agent_type !== 'email_agent' && post.marketing_channel !== 'email' && post.platforms.map((platform) => (
+                                <div key={platform} className="flex items-center space-x-1">
+                                  <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
+                                    {getPlatformIcon(platform)} {platform.charAt(0).toUpperCase() + platform.slice(1)}
+                                  </span>
+                                  <button
+                                    onClick={() => setPreviewModal({ isOpen: true, post, platform })}
+                                    className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
+                                    title={`Preview on ${platform}`}
+                                  >
+                                    <Eye className="h-3 w-3 mr-1" />
+                                    Preview
+                                  </button>
+                                </div>
                               ))}
+                              
+                              {/* Email Badge - Only badge, NO preview button */}
+                              {((post.agent_type === 'marketing_agent' && post.marketing_channel === 'email') || post.agent_type === 'email' || post.agent_type === 'email_agent') && (
+                                <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
+                                  📧 Email
+                                </span>
+                              )}
+                              
+                              {/* SMS Preview Button - Same pattern as social media */}
+                              {(post.agent_type === 'sms_agent' || (post.agent_type === 'marketing_agent' && post.marketing_channel === 'sms')) && (
+                                <div className="flex items-center space-x-1">
+                                  <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
+                                    📱 SMS
+                                  </span>
+                                  <button
+                                    onClick={() => setSmsPreviewModal({ isOpen: true, post })}
+                                    className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
+                                    title="Preview SMS"
+                                  >
+                                    <Eye className="h-3 w-3 mr-1" />
+                                    Preview
+                                  </button>
+                                </div>
+                              )}
                             </div>
                           </div>
                         )}
@@ -1084,65 +1172,49 @@ const AIPublishedPosts = () => {
                             </div>
                           </div>
                         ) : post.agent_type === 'email' ? (
-                          // Email Post Rendering - Match review page styling exactly
-                          post.image_url ? (
-                            // Email with image - use grid layout
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                              {/* Text Content */}
-                              <div className="md:col-span-2">
-                                {/* Email Subject Line */}
-                                {post.email_subject && (
-                                  <div className="mb-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-400">
-                                    <div className="text-sm font-medium text-blue-800 mb-1">Email Subject:</div>
-                                    <div className="text-blue-900 font-semibold">{post.email_subject}</div>
-                                  </div>
-                                )}
-                                
-                                <h4 className="font-medium mb-2">Content:</h4>
-                                <div className="bg-gray-50 rounded-lg p-4">
-                                  <p className="text-gray-900 whitespace-pre-wrap">{post.content}</p>
-                                  <div className="mt-2 text-xs text-gray-500">
-                                    {post.content.split(' ').length} words
-                                  </div>
+                          /* Email Agent Post - Enhanced Email Preview (MATCHING IN REVIEW PAGE) */
+                          <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                            <div className="flex items-center space-x-2 mb-3">
+                              <div className="w-3 h-3 rounded-full bg-purple-500"></div>
+                              <span className="text-sm font-medium text-gray-700">Email Preview</span>
+                            </div>
+                            
+                            {/* Email Header (like real email clients) */}
+                            <div className="bg-gray-50 rounded-t-lg border border-gray-200 px-4 py-3">
+                              <div className="space-y-2 text-sm">
+                                <div className="flex">
+                                  <span className="text-gray-500 font-medium w-16">From:</span>
+                                  <span className="text-gray-900">Pets and Vets Animal Hospital &lt;vet@petsandvetsanimalhospital.com&gt;</span>
                                 </div>
-                              </div>
-
-                              {/* Image area */}
-                              <div>
-                                <div className="relative mb-4">
-                                  <img 
-                                    src={post.image_url} 
-                                    alt="Email content"
-                                    className="w-full h-32 object-cover rounded-lg border"
-                                  />
-                                  {post.image_text && (
-                                    <div className="absolute bottom-2 left-2 bg-black bg-opacity-75 text-white px-2 py-1 rounded text-xs">
-                                      {post.image_text}
-                                    </div>
-                                  )}
+                                <div className="flex">
+                                  <span className="text-gray-500 font-medium w-16">To:</span>
+                                  <span className="text-gray-900">
+                                    {post.sms_personalized === false || post.email_personalized === false ? 
+                                      'All Customers' : 
+                                      (post.sample_customer_name && post.sample_customer_email ? 
+                                        `${post.sample_customer_name} <${post.sample_customer_email}>` : 
+                                        'All Customers'
+                                      )
+                                    }
+                                  </span>
+                                </div>
+                                <div className="flex">
+                                  <span className="text-gray-500 font-medium w-16">Subject:</span>
+                                  <span className="text-gray-900 font-semibold">
+                                    {post.email_subject || 'Pet Care Update'}
+                                  </span>
                                 </div>
                               </div>
                             </div>
-                          ) : (
-                            // Email without image - use full width like review page
-                            <div>
-                              {/* Email Subject Line */}
-                              {post.email_subject && (
-                                <div className="mb-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-400">
-                                  <div className="text-sm font-medium text-blue-800 mb-1">Email Subject:</div>
-                                  <div className="text-blue-900 font-semibold">{post.email_subject}</div>
-                                </div>
-                              )}
-                              
-                              <h4 className="font-medium mb-2">Content:</h4>
-                              <div className="bg-gray-50 rounded-lg p-4">
-                                <p className="text-gray-900 whitespace-pre-wrap">{post.content}</p>
-                                <div className="mt-2 text-xs text-gray-500">
-                                  {post.content.split(' ').length} words
-                                </div>
-                              </div>
+                            
+                            {/* Email Body */}
+                            <div className="bg-white rounded-b-lg border-x border-b border-gray-200 p-4">
+                              <ContentWithLinks 
+                                content={post.content} 
+                                className="text-gray-900 leading-relaxed"
+                              />
                             </div>
-                          )
+                          </div>
                         ) : post.agent_type === 'marketing_agent' && post.marketing_channel === 'email' ? (
                           /* Marketing Agent Email Post */
                           <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
@@ -1199,22 +1271,19 @@ const AIPublishedPosts = () => {
                           <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
                             <div className="flex items-center space-x-2 mb-3">
                               <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-                              <span className="text-sm font-medium text-gray-700">SMS Preview</span>
-                            </div>
-                            <div className="bg-gray-900 rounded-lg p-4 max-w-xs">
-                              <div className="bg-blue-500 text-white rounded-2xl rounded-bl-md px-4 py-2 text-sm">
-                                <SMSContentWithLinks 
-                                  content={post.content} 
-                                  className=""
-                                />
-                              </div>
-                              <div className="text-xs text-gray-400 mt-1 text-right">
-                                {post.content ? `${post.content.length}/160` : '0/160'}
-                              </div>
+                              <span className="text-sm font-medium text-gray-700">SMS Content</span>
                             </div>
                             
-                            {/* Show personalized preview if available */}
-                            <SMSContentPreview post={post} />
+                            {/* Content Summary */}
+                            <div className="bg-gray-50 rounded-lg p-3">
+                              <SMSContentWithShortLinks 
+                                content={post.content} 
+                                className="text-sm text-gray-700 line-clamp-2"
+                              />
+                              <div className="text-xs text-gray-500 mt-1">
+                                {post.content ? `${post.content.length}/160 characters` : '0/160 characters'}
+                              </div>
+                            </div>
                           </div>
                         ) : (post.agent_type === 'email' || post.agent_type === 'email_agent') ? (
                           /* Email Agent Post Rendering - Professional email display */
@@ -1268,59 +1337,58 @@ const AIPublishedPosts = () => {
                             </div>
                           </div>
                         ) : post.agent_type === 'sms_agent' ? (
-                          // SMS Post Rendering with improved display
+                          /* Regular SMS Agent Posts */
                           <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
                             <div className="flex items-center space-x-2 mb-3">
                               <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-                              <span className="text-sm font-medium text-gray-700">SMS Preview</span>
-                            </div>
-                            <div className="bg-gray-900 rounded-lg p-4 max-w-xs">
-                              <div className="bg-blue-500 text-white rounded-2xl rounded-bl-md px-4 py-2 text-sm">
-                                <SMSContentWithLinks 
-                                  content={post.content} 
-                                  className=""
-                                />
-                              </div>
-                              <div className="text-xs text-gray-400 mt-1 text-right">
-                                {post.content ? `${post.content.length}/160` : '0/160'}
-                              </div>
+                              <span className="text-sm font-medium text-gray-700">SMS Content</span>
                             </div>
                             
-                            {/* Show personalized preview if available */}
-                            <SMSContentPreview post={post} />
+                            {/* Content Summary */}
+                            <div className="bg-gray-50 rounded-lg p-3">
+                              <SMSContentWithShortLinks 
+                                content={post.content} 
+                                className="text-sm text-gray-700 line-clamp-2"
+                              />
+                              <div className="text-xs text-gray-500 mt-1">
+                                {post.content ? `${post.content.length}/160 characters` : '0/160 characters'}
+                              </div>
+                            </div>
                           </div>
                         ) : (
                           // Regular Social Media Post Rendering  
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {/* Text Content */}
-                            <div className="md:col-span-2">
-                              <h4 className="font-medium mb-2">Content:</h4>
-                              <div className="bg-gray-50 rounded-lg p-4">
-                                <p className="text-gray-900 whitespace-pre-wrap line-clamp-4">{post.content}</p>
-                                <div className="mt-2 text-xs text-gray-500">
-                                  {post.content.split(' ').length} words
-                                </div>
-                              </div>
-                              {post.hashtags && (
-                                <div className="mt-3">
-                                  <h5 className="text-sm font-medium mb-1">Hashtags:</h5>
-                                  <div className="flex flex-wrap gap-1">
-                                    {post.hashtags.slice(0, 5).map((tag, index) => (
-                                      <span key={index} className="inline-block bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded">
-                                        #{tag}
-                                      </span>
-                                    ))}
-                                    {post.hashtags.length > 5 && (
-                                      <span className="text-xs text-gray-500">+{post.hashtags.length - 5} more</span>
-                                    )}
+                          post.image_url ? (
+                            // Layout with image - use grid
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                              {/* Text Content */}
+                              <div className="md:col-span-2">
+                                <h4 className="font-medium mb-2">Content:</h4>
+                                <div className="bg-gray-50 rounded-lg p-4">
+                                  <p className="text-gray-900 whitespace-pre-wrap line-clamp-4">{post.content}</p>
+                                  <div className="mt-2 text-xs text-gray-500">
+                                    {post.content.split(' ').length} words
                                   </div>
                                 </div>
-                              )}
-                            </div>
+                                
+                                {post.hashtags && (
+                                  <div className="mt-3">
+                                    <h5 className="text-sm font-medium mb-1">Hashtags:</h5>
+                                    <div className="flex flex-wrap gap-1">
+                                      {post.hashtags.slice(0, 5).map((tag, index) => (
+                                        <span key={index} className="inline-block bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded">
+                                          #{tag}
+                                        </span>
+                                      ))}
+                                      {post.hashtags.length > 5 && (
+                                        <span className="text-xs text-gray-500">+{post.hashtags.length - 5} more</span>
+                                      )}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
 
-                            {/* Image & Stats */}
-                            <div>
-                              {post.image_url ? (
+                              {/* Image */}
+                              <div>
                                 <div className="relative mb-4">
                                   <img 
                                     src={post.image_url} 
@@ -1333,13 +1401,36 @@ const AIPublishedPosts = () => {
                                     </div>
                                   )}
                                 </div>
-                              ) : (
-                                <div className="w-full h-32 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center mb-4">
-                                  <ImageIcon className="h-6 w-6 text-gray-400" />
+                              </div>
+                            </div>
+                          ) : (
+                            // Layout without image - full width
+                            <div>
+                              <h4 className="font-medium mb-2">Content:</h4>
+                              <div className="bg-gray-50 rounded-lg p-4">
+                                <p className="text-gray-900 whitespace-pre-wrap">{post.content}</p>
+                                <div className="mt-2 text-xs text-gray-500">
+                                  {post.content.split(' ').length} words
+                                </div>
+                              </div>
+                              
+                              {post.hashtags && (
+                                <div className="mt-3">
+                                  <h5 className="text-sm font-medium mb-1">Hashtags:</h5>
+                                  <div className="flex flex-wrap gap-1">
+                                    {post.hashtags.slice(0, 10).map((tag, index) => (
+                                      <span key={index} className="inline-block bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded">
+                                        #{tag}
+                                      </span>
+                                    ))}
+                                    {post.hashtags.length > 10 && (
+                                      <span className="text-xs text-gray-500">+{post.hashtags.length - 10} more</span>
+                                    )}
+                                  </div>
                                 </div>
                               )}
                             </div>
-                          </div>
+                          )
                         )}
 
                         {/* Action Buttons - Always show border */}
@@ -1545,6 +1636,21 @@ const AIPublishedPosts = () => {
           </div>
         </div>
       )}
+
+      {/* Social Media Preview Modal */}
+      <SocialMediaPreviewModal
+        isOpen={previewModal.isOpen}
+        onClose={() => setPreviewModal({ isOpen: false, post: null, platform: null })}
+        post={previewModal.post}
+        platform={previewModal.platform}
+      />
+
+      {/* SMS Preview Modal */}
+      <SMSPreviewModal
+        isOpen={smsPreviewModal.isOpen}
+        onClose={() => setSmsPreviewModal({ isOpen: false, post: null })}
+        post={smsPreviewModal.post}
+      />
     </div>
   );
 };

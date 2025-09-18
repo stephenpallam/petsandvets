@@ -898,6 +898,285 @@ Make sure there are no duplicate signatures, redundant messages, or subject line
                 "character_count": len(fallback_content),
                 "error": str(e)
             }
+    
+    async def generate_holiday_specific_content(
+        self,
+        holiday_name: str,
+        holiday_date: str,
+        content_type: str = "email",
+        word_count: int = 200
+    ) -> str:
+        """Generate genuinely holiday-specific content for veterinary marketing"""
+        
+        try:
+            if not self.emergent_key:
+                logger.error("No Emergent LLM key available for holiday content generation")
+                return f"As {holiday_name} approaches, we want to ensure your beloved pets stay safe and happy during this special time."
+            
+            # Create holiday-specific prompt based on content type
+            if content_type == "email":
+                prompt = f"""You are an expert veterinary content writer specializing in holiday communications.
+
+Create professional, warm, and genuinely holiday-specific content about {holiday_name} ({holiday_date}) for a veterinary clinic's email marketing.
+
+Holiday Context: {holiday_name} on {holiday_date}
+
+Requirements:
+- Write exactly {word_count} words
+- Focus specifically on {holiday_name} and how it relates to pet care
+- Include holiday-specific pet safety tips relevant to {holiday_name}
+- Address potential hazards or concerns specific to this holiday
+- Use a warm, caring, professional tone suitable for veterinary communications
+- Include practical, actionable advice for pet owners during {holiday_name}
+- Make it genuinely relevant to the specific holiday, not generic seasonal content
+- Format with proper paragraph structure (use line breaks between paragraphs)
+- Do NOT include any greetings, signatures, or placeholders - just the main content
+
+Examples of holiday-specific content:
+- For Christmas: Focus on toxic plants, food hazards, decoration dangers
+- For Fourth of July: Address fireworks anxiety, heat safety, crowd stress
+- For Halloween: Discuss candy toxicity, costume safety, doorbell stress
+- For Thanksgiving: Cover food safety, travel stress, rich food dangers
+
+Generate only the main content body - no titles, headers, greetings, or signatures."""
+
+            elif content_type == "marketing":
+                prompt = f"""You are an expert veterinary marketing content writer specializing in holiday campaigns.
+
+Create professional, engaging, and genuinely holiday-specific marketing content about {holiday_name} ({holiday_date}) for a veterinary clinic's multi-channel campaign.
+
+Holiday Context: {holiday_name} on {holiday_date}
+
+Requirements:
+- Write exactly {word_count} words
+- Focus specifically on {holiday_name} and its relevance to pet owners
+- Include holiday-specific pet care advice relevant to {holiday_name}
+- Address the unique challenges pets face during this specific holiday
+- Use an engaging, professional tone suitable for marketing
+- Include a subtle call-to-action for veterinary services
+- Make it genuinely holiday-specific, not generic seasonal content
+- Format with proper paragraph structure (use line breaks between paragraphs)
+- Focus on benefits and value for pet owners during {holiday_name}
+
+Examples of holiday-specific marketing:
+- For Christmas: Emphasize holiday safety planning, emergency preparedness
+- For New Year's: Focus on noise anxiety, resolution for pet health
+- For Easter: Address chocolate dangers, spring allergies, outdoor safety
+- For Valentine's Day: Discuss chocolate toxicity, romantic plant dangers
+
+Generate only the main marketing content - no titles, headers, or signatures."""
+
+            else:
+                # Generic content type
+                prompt = f"""You are an expert veterinary content writer specializing in holiday communications.
+
+Create professional, warm, and genuinely holiday-specific content about {holiday_name} ({holiday_date}) for a veterinary clinic.
+
+Holiday Context: {holiday_name} on {holiday_date}
+
+Requirements:
+- Write exactly {word_count} words
+- Focus specifically on {holiday_name} and its relation to pet care
+- Include practical, holiday-specific advice for pet owners
+- Address the unique aspects of this holiday that affect pets
+- Use a professional, caring tone
+- Make it genuinely relevant to the specific holiday
+- Format with proper paragraph structure
+
+Generate only the main content body."""
+
+            # Generate holiday-specific content
+            chat = LlmChat(
+                api_key=self.emergent_key,
+                session_id=f"holiday_content_{uuid.uuid4()}",
+                system_message=f"You are an expert veterinary content writer who creates genuinely holiday-specific content. You understand the unique challenges and considerations that different holidays present for pet owners and their animals."
+            ).with_model("openai", "gpt-4o-mini")
+            
+            user_message = UserMessage(text=prompt)
+            response = await chat.send_message(user_message)
+            
+            holiday_content = response.strip()
+            
+            # Clean up any unwanted formatting or artifacts
+            import re
+            # Remove any remaining markdown formatting
+            holiday_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', holiday_content)  # Bold text
+            holiday_content = re.sub(r'\*([^*]+)\*', r'\1', holiday_content)    # Italic text
+            # Remove any titles or headers that might have been included
+            holiday_content = re.sub(r'^Title:.*?\n', '', holiday_content, flags=re.IGNORECASE | re.MULTILINE)
+            holiday_content = re.sub(r'^Content:.*?\n', '', holiday_content, flags=re.IGNORECASE | re.MULTILINE)
+            holiday_content = holiday_content.strip()
+            
+            # Ensure proper paragraph formatting if missing
+            if '\n' not in holiday_content and len(holiday_content) > 150:
+                # Split into sentences and create paragraphs
+                sentences = re.split(r'([.!?])\s+', holiday_content)
+                formatted_content = ""
+                sentence_count = 0
+                
+                for i in range(0, len(sentences)-1, 2):
+                    if i+1 < len(sentences):
+                        sentence = sentences[i] + sentences[i+1]
+                        formatted_content += sentence
+                        sentence_count += 1
+                        
+                        # Add paragraph break every 2-3 sentences
+                        if sentence_count % 3 == 0 and i+2 < len(sentences)-1:
+                            formatted_content += "\n\n"
+                        else:
+                            formatted_content += " "
+                
+                holiday_content = formatted_content.strip()
+            
+            if holiday_content and len(holiday_content) > 10:
+                logger.info(f"Successfully generated holiday-specific {content_type} content for {holiday_name}")
+                return holiday_content
+            else:
+                logger.warning(f"Generated content too short for {holiday_name}, using fallback")
+                return f"As {holiday_name} approaches, we want to ensure your beloved pets stay safe and happy during this special time. Here are some important tips to keep in mind during the holiday season to ensure your furry family members enjoy the festivities safely."
+                
+        except Exception as e:
+            logger.error(f"Error generating holiday-specific content for {holiday_name}: {str(e)}")
+            return f"As {holiday_name} approaches, we want to ensure your beloved pets stay safe and happy during this special time. Here are some important tips to keep in mind during the holiday season to ensure your furry family members enjoy the festivities safely."
+
+    async def generate_topic_specific_content(
+        self,
+        topic: str,
+        content_type: str = "email",
+        word_count: int = 200
+    ) -> str:
+        """Generate genuinely topic-specific content for veterinary communications"""
+        
+        try:
+            if not self.emergent_key:
+                logger.error("No Emergent LLM key available for topic content generation")
+                return f"Learn about {topic} and how it can benefit your pet's health and wellbeing."
+            
+            # Create topic-specific prompt based on content type
+            if content_type == "email":
+                prompt = f"""You are an expert veterinary content writer specializing in educational communications.
+
+Create professional, informative, and genuinely topic-specific content about "{topic}" for a veterinary clinic's email newsletter.
+
+Topic Focus: {topic}
+
+Requirements:
+- Write exactly {word_count} words
+- Focus specifically on {topic} and its importance for pet health
+- Include practical, actionable advice for pet owners about {topic}
+- Address key aspects, benefits, and considerations related to {topic}
+- Use a warm, caring, professional tone suitable for veterinary communications
+- Include educational information that pet owners would find valuable
+- Make it genuinely relevant to the specific topic, not generic pet care advice
+- Format with proper paragraph structure (use line breaks between paragraphs)
+- Do NOT include any greetings, signatures, or placeholders - just the main content
+
+Examples of topic-specific content:
+- For "Pet Dental Care": Focus on dental hygiene, cleaning techniques, warning signs
+- For "Pet Nutrition": Discuss proper feeding, nutritional needs, food safety
+- For "Vaccination": Cover vaccine schedules, importance, side effects
+- For "Senior Pet Care": Address age-related health issues, comfort measures
+
+Generate only the main content body - no titles, headers, greetings, or signatures."""
+
+            elif content_type == "marketing":
+                prompt = f"""You are an expert veterinary marketing content writer specializing in educational campaigns.
+
+Create professional, engaging, and genuinely topic-specific marketing content about "{topic}" for a veterinary clinic's multi-channel campaign.
+
+Topic Focus: {topic}
+
+Requirements:
+- Write exactly {word_count} words
+- Focus specifically on {topic} and its value for pet owners
+- Include topic-specific benefits and practical advice about {topic}
+- Address why {topic} is important for pet health and owner peace of mind
+- Use an engaging, professional tone suitable for marketing
+- Include a subtle call-to-action for related veterinary services
+- Make it genuinely topic-specific, not generic pet care content
+- Format with proper paragraph structure (use line breaks between paragraphs)
+- Focus on benefits and value proposition related to {topic}
+
+Examples of topic-specific marketing:
+- For "Pet Dental Care": Emphasize dental health benefits, prevention value
+- For "Emergency Preparedness": Focus on peace of mind, readiness benefits
+- For "Wellness Exams": Highlight early detection, preventive care value
+- For "Pet Insurance": Discuss financial protection, care accessibility
+
+Generate only the main marketing content - no titles, headers, or signatures."""
+
+            else:
+                # Generic content type
+                prompt = f"""You are an expert veterinary content writer specializing in educational communications.
+
+Create professional, informative, and genuinely topic-specific content about "{topic}" for a veterinary clinic.
+
+Topic Focus: {topic}
+
+Requirements:
+- Write exactly {word_count} words
+- Focus specifically on {topic} and its relevance to pet care
+- Include practical, topic-specific advice for pet owners
+- Address the key aspects and importance of {topic}
+- Use a professional, caring tone
+- Make it genuinely relevant to the specific topic
+- Format with proper paragraph structure
+
+Generate only the main content body."""
+
+            # Generate topic-specific content
+            chat = LlmChat(
+                api_key=self.emergent_key,
+                session_id=f"topic_content_{uuid.uuid4()}",
+                system_message=f"You are an expert veterinary content writer who creates genuinely topic-specific content. You understand the importance of providing valuable, educational information about specific veterinary topics that help pet owners make informed decisions about their pets' health."
+            ).with_model("openai", "gpt-4o-mini")
+            
+            user_message = UserMessage(text=prompt)
+            response = await chat.send_message(user_message)
+            
+            topic_content = response.strip()
+            
+            # Clean up any unwanted formatting or artifacts
+            import re
+            # Remove any remaining markdown formatting
+            topic_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', topic_content)  # Bold text
+            topic_content = re.sub(r'\*([^*]+)\*', r'\1', topic_content)    # Italic text
+            # Remove any titles or headers that might have been included
+            topic_content = re.sub(r'^Title:.*?\n', '', topic_content, flags=re.IGNORECASE | re.MULTILINE)
+            topic_content = re.sub(r'^Content:.*?\n', '', topic_content, flags=re.IGNORECASE | re.MULTILINE)
+            topic_content = topic_content.strip()
+            
+            # Ensure proper paragraph formatting if missing
+            if '\n' not in topic_content and len(topic_content) > 150:
+                # Split into sentences and create paragraphs
+                sentences = re.split(r'([.!?])\s+', topic_content)
+                formatted_content = ""
+                sentence_count = 0
+                
+                for i in range(0, len(sentences)-1, 2):
+                    if i+1 < len(sentences):
+                        sentence = sentences[i] + sentences[i+1]
+                        formatted_content += sentence
+                        sentence_count += 1
+                        
+                        # Add paragraph break every 2-3 sentences
+                        if sentence_count % 3 == 0 and i+2 < len(sentences)-1:
+                            formatted_content += "\n\n"
+                        else:
+                            formatted_content += " "
+                
+                topic_content = formatted_content.strip()
+            
+            if topic_content and len(topic_content) > 10:
+                logger.info(f"Successfully generated topic-specific {content_type} content for {topic}")
+                return topic_content
+            else:
+                logger.warning(f"Generated content too short for {topic}, using fallback")
+                return f"Learn about {topic} and how it can benefit your pet's health and wellbeing. Our expert team provides comprehensive guidance and care to help you understand the importance of {topic} for your furry family member's overall health and happiness."
+                
+        except Exception as e:
+            logger.error(f"Error generating topic-specific content for {topic}: {str(e)}")
+            return f"Learn about {topic} and how it can benefit your pet's health and wellbeing. Our expert team provides comprehensive guidance and care to help you understand the importance of {topic} for your furry family member's overall health and happiness."
 
 # Global instance
 ai_service = AIContentGenerator()
@@ -999,3 +1278,11 @@ async def format_email_content(template: str, customer_name: str, pet_names: str
 async def format_topic_email_content(template: str, customer_name: str, pet_names: str, topic: str) -> str:
     """Global function to format topic-based email content"""
     return await ai_service.format_topic_email_content(template, customer_name, pet_names, topic)
+
+async def generate_holiday_specific_content(holiday_name: str, holiday_date: str, content_type: str = "email", word_count: int = 200) -> str:
+    """Generate genuinely holiday-specific content for veterinary marketing"""
+    return await ai_service.generate_holiday_specific_content(holiday_name, holiday_date, content_type, word_count)
+
+async def generate_topic_specific_content(topic: str, content_type: str = "email", word_count: int = 200) -> str:
+    """Generate genuinely topic-specific content for veterinary communications"""
+    return await ai_service.generate_topic_specific_content(topic, content_type, word_count)

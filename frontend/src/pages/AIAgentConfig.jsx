@@ -311,8 +311,9 @@ The Veterinary Care Team`,
   // SMS Agent - Write SMS Mode State  
   const [smsWriteMode, setSmsWriteMode] = useState({
     agentName: '',
-    smsSubject: '', // Optional SMS title/subject
+    smsSubject: '', // This will be renamed to ChatGPT Content
     smsContent: `Hi [CUSTOMER_NAME]! Hope [PET_NAME] is well. Don't forget your pet's checkup. Call (555) 123-4567 to schedule. Thanks!`,
+    smsTemplate: '', // Selected SMS template that will contain [CHATGPT_CONTENT] placeholder
     smsLink: 'https://petsandvetsanimalhospital.com', // Default website link
     useSMSChatGPTFormatting: true,
     smsType: 'bulk', // 'single' or 'bulk'
@@ -681,7 +682,6 @@ Your Veterinary Team`,
                 daysAfterPeriodEnd: agentData.days_after_period_end || 1,
                 scheduleTime: agentData.schedule_time || '09:00',
                 includeBillingRates: agentData.include_billing_rates !== undefined ? agentData.include_billing_rates : true,
-                autoEmail: agentData.auto_email || false,
                 emailRecipients: agentData.email_recipients || [],
                 initialStatus: agentData.initial_status || agentData.post_destination || 'in_review',
                 daysOfWeek: agentData.days_of_week || { monday: true, tuesday: true, wednesday: true, thursday: true, friday: true, saturday: true, sunday: true }
@@ -694,7 +694,6 @@ Your Veterinary Team`,
                 customStartDate: agentData.custom_start_date || '',
                 customEndDate: agentData.custom_end_date || '',
                 includeBillingRates: agentData.include_billing_rates !== undefined ? agentData.include_billing_rates : true,
-                autoEmail: agentData.auto_email || false,
                 emailRecipients: agentData.email_recipients || [],
                 initialStatus: agentData.initial_status || agentData.post_destination || 'in_review'
               });
@@ -810,7 +809,8 @@ Best regards,
               setSmsWriteMode({
                 agentName: agentData.name || agentData.agent_name || '',
                 smsContent: agentData.sms_content || agentData.post_content || '',
-                smsSubject: agentData.sms_subject || agentData.post_title || '',
+                smsSubject: agentData.sms_subject || agentData.post_title || '', // This is now ChatGPT Content
+                smsTemplate: agentData.sms_template || '', // Load selected SMS template
                 smsLink: agentData.sms_link || 'https://petsandvetsanimalhospital.com',
                 useSMSChatGPTFormatting: agentData.use_sms_chatgpt_formatting !== undefined ? agentData.use_sms_chatgpt_formatting : true,
                 postDestination: agentData.post_destination || 'in_review',
@@ -1880,7 +1880,6 @@ Best regards,
             include_billing_rates: timesheetRecurringMode.includeBillingRates,
             initial_status: timesheetRecurringMode.initialStatus,
             email_recipients: timesheetRecurringMode.emailRecipients,
-            auto_email: timesheetRecurringMode.autoEmail,
             frequency: timesheetRecurringMode.runEveryPayPeriod, // Keep backward compatibility
             schedule_time: timesheetRecurringMode.scheduleTime,
             days_of_week: timesheetRecurringMode.daysOfWeek,
@@ -1916,7 +1915,6 @@ Best regards,
             include_billing_rates: timesheetAdhocMode.includeBillingRates,
             initial_status: timesheetAdhocMode.initialStatus,
             email_recipients: timesheetAdhocMode.emailRecipients,
-            auto_email: timesheetAdhocMode.autoEmail,
             // Required fields for AI agents (defaults for timesheet agents)
             topic: 'Timesheet Report',
             image_option: 'ai_generate',
@@ -2010,12 +2008,30 @@ Best regards,
             sms_character_limit: smsScheduledMode.smsCharacterLimit
           };
         } else if (activeTab === 'sms-write') {
+          // SMS Write Agent validation
+          if (!smsWriteMode.agentName) {
+            setMessage({ type: 'error', text: 'Agent name is required for SMS Write agents.' });
+            setLoading(false);
+            return;
+          }
+          if (!smsWriteMode.smsTemplate) {
+            setMessage({ type: 'error', text: 'SMS template is required for SMS Write agents.' });
+            setLoading(false);
+            return;
+          }
+          if (!smsWriteMode.smsSubject) {
+            setMessage({ type: 'error', text: 'SMS ChatGPT Content is required for SMS Write agents.' });
+            setLoading(false);
+            return;
+          }
+          
           agentData = {
             agent_type: 'sms_agent',
             mode: 'write',
             agent_name: smsWriteMode.agentName,
-            sms_subject: smsWriteMode.smsSubject,
-            sms_content: smsWriteMode.smsContent,
+            sms_subject: smsWriteMode.smsSubject, // This is now ChatGPT Content that will replace [CHATGPT_CONTENT]
+            sms_content: smsWriteMode.smsSubject, // Send the same content as sms_content for backend processing
+            sms_template: smsWriteMode.smsTemplate, // Selected SMS template
             sms_link: smsWriteMode.smsLink,
             use_sms_chatgpt_formatting: smsWriteMode.useSMSChatGPTFormatting,
             post_date: smsWriteMode.postDate,
@@ -2813,30 +2829,11 @@ Best regards,
                           </div>
                         </div>
 
-                        {/* Email Configuration */}
+                        {/* Email Recipients */}
                         <div className="space-y-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            <Mail className="h-4 w-4 inline mr-2" />
-                            Email Configuration
-                          </label>
-                          
-                          <label className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={timesheetRecurringMode.autoEmail}
-                              onChange={(e) => handleTimesheetRecurringModeChange('autoEmail', e.target.checked)}
-                              className="h-4 w-4 border-gray-300 rounded"
-                              style={{
-                                accentColor: '#29add3',
-                                filter: 'brightness(1) contrast(1)',
-                                colorScheme: 'light'
-                              }}
-                            />
-                            <span className="ml-2 text-sm text-gray-700">Automatically email reports when published</span>
-                          </label>
-
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
+                              <Mail className="h-4 w-4 inline mr-2" />
                               Email Recipients
                             </label>
                             <div className="flex space-x-2 mb-2">
@@ -3546,30 +3543,11 @@ Best regards,
                           </div>
                         </div>
 
-                        {/* Email Configuration */}
+                        {/* Email Recipients */}
                         <div className="space-y-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            <Mail className="h-4 w-4 inline mr-2" />
-                            Email Configuration
-                          </label>
-                          
-                          <label className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={timesheetAdhocMode.autoEmail}
-                              onChange={(e) => handleTimesheetAdhocModeChange('autoEmail', e.target.checked)}
-                              className="h-4 w-4 border-gray-300 rounded"
-                              style={{
-                                accentColor: '#29add3',
-                                filter: 'brightness(1) contrast(1)',
-                                colorScheme: 'light'
-                              }}
-                            />
-                            <span className="ml-2 text-sm text-gray-700">Automatically email reports when published</span>
-                          </label>
-
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
+                              <Mail className="h-4 w-4 inline mr-2" />
                               Email Recipients
                             </label>
                             <div className="flex space-x-2 mb-2">
@@ -6260,51 +6238,65 @@ Example:
                           <div></div>
                         </div>
 
-                        {/* SMS Subject (Optional) */}
+                        {/* SMS ChatGPT Content (moved above template section) */}
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
                             <MessageSquare className="h-4 w-4 inline mr-2" />
-                            SMS Title/Subject (Optional)
+                            SMS ChatGPT Content * 
                           </label>
                           <input
                             type="text"
                             value={smsWriteMode.smsSubject}
                             onChange={(e) => setSmsWriteMode(prev => ({ ...prev, smsSubject: e.target.value }))}
-                            placeholder="Holiday Special Offer"
+                            placeholder="Holiday special offer - 20% off checkups this month!"
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           />
+                          <p className="text-xs text-gray-500 mt-1">
+                            💡 This text will replace the [CHATGPT_CONTENT] placeholder in your SMS template below
+                          </p>
                         </div>
 
-                        {/* SMS Content */}
+                        {/* SMS Template Dropdown */}
                         <div className="space-y-4">
                           <label className="block text-sm font-medium text-gray-700 mb-2">
                             <MessageSquare className="h-4 w-4 inline mr-2" />
-                            SMS Content * 
-                            <span className="text-xs text-gray-500 ml-2">
-                              ({smsWriteMode.smsContent.length}/160 characters)
-                            </span>
+                            SMS Template *
                           </label>
-                          <textarea
-                            value={smsWriteMode.smsContent}
-                            onChange={(e) => {
-                              if (e.target.value.length <= 160) {
-                                setSmsWriteMode(prev => ({ ...prev, smsContent: e.target.value }));
-                              }
-                            }}
-                            placeholder="Hi [CUSTOMER_NAME]! Hope [PET_NAME] is well. Don't forget your pet's checkup. Call (555) 123-4567 to schedule. Thanks!"
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-                            rows="3"
+                          <TemplateDropdown
+                            templates={smsTemplates}
+                            selectedValue={smsWriteMode.smsTemplate}
+                            onSelect={(templateContent) => setSmsWriteMode(prev => ({ ...prev, smsTemplate: templateContent }))}
+                            placeholder="Select an SMS template..."
+                            templateType="sms"
+                            isPersonalized={true} // SMS write mode typically includes personalization
                           />
-                          <div className="bg-gray-50 p-3 rounded-lg">
-                            <p className="text-xs text-gray-600 mb-2">
-                              <strong>Available placeholders:</strong>
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                              <code className="bg-white px-2 py-1 rounded text-xs">[CUSTOMER_NAME]</code>
-                              <code className="bg-white px-2 py-1 rounded text-xs">[PET_NAME]</code>
-                              <code className="bg-white px-2 py-1 rounded text-xs">[LINK]</code>
+                          <p className="text-xs text-gray-500">
+                            📝 Select a template that contains [CHATGPT_CONTENT] placeholder
+                          </p>
+                          
+                          {/* Editable Template Preview */}
+                          {smsWriteMode.smsTemplate && (
+                            <div className="mt-2 space-y-2">
+                              <label className="block text-sm font-medium text-gray-700">
+                                Edit SMS Template:
+                              </label>
+                              <textarea
+                                value={smsWriteMode.smsTemplate}
+                                onChange={(e) => {
+                                  if (e.target.value.length <= 160) {
+                                    setSmsWriteMode(prev => ({ ...prev, smsTemplate: e.target.value }));
+                                  }
+                                }}
+                                placeholder="Hi [CUSTOMER_NAME]! [CHATGPT_CONTENT] Call us at [PHONE_NUMBER]!"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                                rows="3"
+                              />
+                              <div className="flex justify-between text-xs text-gray-500">
+                                <span>💡 Make sure to include [CHATGPT_CONTENT] placeholder</span>
+                                <span>{smsWriteMode.smsTemplate.length}/160 characters</span>
+                              </div>
                             </div>
-                          </div>
+                          )}
                         </div>
 
                         {/* SMS Link */}

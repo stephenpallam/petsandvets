@@ -1,0 +1,50 @@
+[
+  {
+    "id": "67f7042f-5c9f-4af0-aa8b-773cb7eff71d",
+    "social_security_rate": 6.2,
+    "medicare_rate": 1.45,
+    "federal_income_tax_rate": 12.0,
+    "state": "VA",
+    "state_income_tax_rate": 5.75,
+    "employer_name": "Pets and Vets Animal Hospital & Urgent Care",
+    "employer_address_line1": "43114 Peacock Market Plaza, Suite F110",
+    "employer_address_line2": "",
+    "employer_city": "South Riding",
+    "employer_state": "VA",
+    "employer_zip_code": "20152",
+    "employer_ein": "12-3456789",
+    "deduction_categories": [
+      {
+        "name": "Health Insurance",
+        "is_active": true
+      },
+      {
+        "name": "Dental Insurance",
+        "is_active": true
+      },
+      {
+        "name": "Vision Insurance",
+        "is_active": true
+      },
+      {
+        "name": "401(k)",
+        "is_active": true
+      },
+      {
+        "name": "Life Insurance",
+        "is_active": true
+      },
+      {
+        "name": "Parking",
+        "is_active": false
+      },
+      {
+        "name": "Other",
+        "is_active": true
+      }
+    ],
+    "created_at": "2025-09-18 02:32:28.308000",
+    "updated_at": "2025-09-18 02:32:28.308000",
+    "updated_by": "system"
+  }
+]

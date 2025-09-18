@@ -315,7 +315,7 @@ const EmployeeProfile = () => {
           <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">
-                Employee Profile
+                {employee?.full_name || 'Employee'} Profile
               </h2>
               {canAccessManager() && (
                 <div className="flex space-x-2">

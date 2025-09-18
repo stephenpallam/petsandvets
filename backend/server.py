@@ -987,6 +987,71 @@ class GoogleSyncResponse(BaseModel):
 
 
 # Timesheet System Models
+class PaystubConfig(BaseModel):
+    id: str
+    # Tax Rates
+    social_security_rate: float = 6.2
+    medicare_rate: float = 1.45
+    federal_income_tax_rate: float = 12.0
+    state: str = ""
+    state_income_tax_rate: float = 0.0
+    
+    # Employer Information
+    employer_name: str = ""
+    employer_address_line1: str = ""
+    employer_address_line2: str = ""
+    employer_city: str = ""
+    employer_state: str = ""
+    employer_zip_code: str = ""
+    employer_ein: str = ""
+    
+    # Deduction Categories
+    deduction_categories: List[Dict[str, Any]] = []
+    
+    created_at: datetime
+    updated_at: datetime
+    updated_by: str
+
+class PaystubConfigCreate(BaseModel):
+    # Tax Rates
+    social_security_rate: float = 6.2
+    medicare_rate: float = 1.45
+    federal_income_tax_rate: float = 12.0
+    state: str = ""
+    state_income_tax_rate: float = 0.0
+    
+    # Employer Information
+    employer_name: str
+    employer_address_line1: Optional[str] = ""
+    employer_address_line2: Optional[str] = ""
+    employer_city: Optional[str] = ""
+    employer_state: Optional[str] = ""
+    employer_zip_code: Optional[str] = ""
+    employer_ein: str
+    
+    # Deduction Categories
+    deduction_categories: Optional[List[Dict[str, Any]]] = []
+
+class PaystubConfigUpdate(BaseModel):
+    # Tax Rates
+    social_security_rate: Optional[float] = None
+    medicare_rate: Optional[float] = None
+    federal_income_tax_rate: Optional[float] = None
+    state: Optional[str] = None
+    state_income_tax_rate: Optional[float] = None
+    
+    # Employer Information
+    employer_name: Optional[str] = None
+    employer_address_line1: Optional[str] = None
+    employer_address_line2: Optional[str] = None
+    employer_city: Optional[str] = None
+    employer_state: Optional[str] = None
+    employer_zip_code: Optional[str] = None
+    employer_ein: Optional[str] = None
+    
+    # Deduction Categories
+    deduction_categories: Optional[List[Dict[str, Any]]] = None
+
 class TimesheetConfig(BaseModel):
     id: str
     location_tracking_enabled: bool = False
@@ -1428,6 +1493,7 @@ async def initialize_production_data():
         import asyncio
         asyncio.create_task(scheduled_posts_scheduler())
         asyncio.create_task(holiday_scheduler())  # New holiday-based scheduler
+        asyncio.create_task(auto_clockout_scheduler())  # Auto clock-out scheduler
         
     except Exception as e:
         logger.error(f"❌ Production data initialization failed: {e}")
@@ -4859,9 +4925,14 @@ async def generate_timesheet_report_for_agent(agent_id: str, agent_data: dict):
             if not employee_config:
                 continue
             
-            # Get time entries for the period
+            # Get time entries for the period (interpret dates in business timezone)
+            business_tz = await get_business_timezone()
             start_datetime = datetime.strptime(start_date, '%Y-%m-%d')
             end_datetime = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(days=1)
+            
+            # Convert from business timezone to UTC for database query
+            start_datetime = business_tz.localize(start_datetime).astimezone(pytz.UTC).replace(tzinfo=None)
+            end_datetime = business_tz.localize(end_datetime).astimezone(pytz.UTC).replace(tzinfo=None)
             
             time_entries_cursor = db.time_entries.find({
                 "user_id": employee_id,
@@ -5110,62 +5181,139 @@ async def generate_recurring_email_for_agent(agent_id: str, agent_data: dict, po
         # Generate base content using ChatGPT if enabled
         if use_chatgpt:
             try:
-                # Generate professional content about the topic
-                topic_content_result = await ai_service.format_custom_content(
-                    post_title=f"Email Newsletter: {topic}",
-                    post_content=f"Create professional, engaging newsletter content about {topic} for a veterinary clinic. Write 200-250 words with proper paragraph structure (use line breaks between paragraphs). Focus on benefits, importance, and actionable advice for pet owners. Write in a warm, professional tone suitable for email newsletters. Format with clear paragraph breaks for better readability.",
-                    word_count="220",  # 200-250 words as requested
-                    platforms=['email'],  # Email platform
-                    use_web_research=agent_data.get('use_web_research', False),
-                    image_text=agent_data.get('image_text', '')
-                )
+                # Check if this agent has holidays instead of topic (FOR DEBUGGING)
+                selected_holidays = agent_data.get('selected_holidays', [])
+                logger.info(f"🎃 RECURRING EMAIL DEBUG: Topic={topic}, Selected holidays={selected_holidays}")
                 
-                if topic_content_result and topic_content_result.get('content'):
-                    base_content = topic_content_result['content']
-                    # Clean up any markdown formatting - comprehensive cleanup
-                    import re
-                    # Remove markdown title patterns
-                    base_content = re.sub(r'\*\*Title:.*?\*\*', '', base_content, flags=re.IGNORECASE)
-                    base_content = re.sub(r'\*\*Content:\*\*', '', base_content, flags=re.IGNORECASE)
-                    base_content = re.sub(r'Title:.*?\n', '', base_content, flags=re.IGNORECASE)
-                    base_content = re.sub(r'Content:\s*', '', base_content, flags=re.IGNORECASE)
-                    # Remove any remaining markdown formatting
-                    base_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', base_content)  # Bold text
-                    base_content = re.sub(r'\*([^*]+)\*', r'\1', base_content)    # Italic text
-                    base_content = base_content.strip()
+                if selected_holidays:
+                    # This is actually a holiday-based agent, not topic-based!
+                    logger.info(f"🎃 RECURRING EMAIL: Agent has holidays, treating as holiday agent")
                     
-                    # Ensure proper paragraph formatting if missing
-                    if '\n' not in base_content and len(base_content) > 200:
-                        # Split into sentences and create paragraphs
-                        sentences = re.split(r'([.!?])\s+', base_content)
-                        formatted_content = ""
-                        sentence_count = 0
+                    # Use holiday logic instead of topic logic (SAME AS MARKETING AGENT)
+                    holidays_cursor = db.holidays.find({"id": {"$in": selected_holidays}})
+                    holidays_list = await holidays_cursor.to_list(length=None)
+                    
+                    if holidays_list:
+                        from datetime import datetime
+                        today = datetime.now().date()
                         
-                        for i in range(0, len(sentences)-1, 2):
-                            if i+1 < len(sentences):
-                                sentence = sentences[i] + sentences[i+1]
-                                formatted_content += sentence
-                                sentence_count += 1
+                        # Find the next upcoming holiday
+                        valid_holidays = []
+                        for holiday in holidays_list:
+                            try:
+                                holiday_date = datetime.strptime(holiday['date'], '%Y-%m-%d').date()
+                                valid_holidays.append({
+                                    'holiday_data': holiday,
+                                    'parsed_date': holiday_date
+                                })
+                            except Exception as e:
+                                logger.warning(f"Could not parse holiday date {holiday.get('date', 'unknown')}: {e}")
+                                continue
+                        
+                        if valid_holidays:
+                            valid_holidays.sort(key=lambda x: x['parsed_date'])
+                            
+                            # Find the next upcoming holiday
+                            upcoming_holiday = None
+                            for holiday_info in valid_holidays:
+                                if holiday_info['parsed_date'] >= today:
+                                    upcoming_holiday = holiday_info['holiday_data']
+                                    break
+                            
+                            if not upcoming_holiday:
+                                upcoming_holiday = valid_holidays[0]['holiday_data']
+                            
+                            holiday_name = upcoming_holiday.get('name', 'Holiday')
+                            holiday_date = upcoming_holiday.get('date', '')
+                            
+                            logger.info(f"🎃 RECURRING EMAIL: Using holiday {holiday_name} ({holiday_date})")
+                            
+                            # Generate holiday-specific content (SAME AS MARKETING AGENT)
+                            from emergentintegrations.llm.chat import LlmChat, UserMessage
+                            import os
+                            
+                            emergent_key = os.getenv('EMERGENT_LLM_KEY')
+                            
+                            if emergent_key:
+                                content_prompt = f"""You are an expert veterinary content writer specializing in holiday communications.
+
+Create professional, warm, and genuinely holiday-specific content about {holiday_name} for a veterinary clinic's email newsletter.
+
+Holiday: {holiday_name} ({holiday_date})
+
+Requirements:
+- Write exactly 180 words
+- Focus SPECIFICALLY on {holiday_name} and how it affects pets
+- Include holiday-specific pet safety tips relevant to {holiday_name}
+- Address potential hazards or concerns specific to this holiday
+- Use a warm, caring, professional tone
+- Include practical, actionable advice for pet owners during {holiday_name}
+- Make it genuinely relevant to {holiday_name}, not generic seasonal content
+- Format with proper paragraph structure (use line breaks between paragraphs)
+- Do NOT include any greetings, signatures, titles, or placeholders - just the main content
+
+For {holiday_name} specifically focus on:
+- Turkey bones and rich holiday foods that are dangerous for pets
+- Stress from guests and increased household activity
+- Travel considerations if families are visiting relatives
+- Kitchen hazards during holiday meal preparation
+
+Generate ONLY the main email content body about {holiday_name} - no titles, headers, greetings, or signatures."""
+
+                                chat = LlmChat(
+                                    api_key=emergent_key,
+                                    session_id=f"recurring_holiday_email_{uuid.uuid4()}",
+                                    system_message=f"You are an expert veterinary content writer who creates genuinely holiday-specific content for {holiday_name}."
+                                ).with_model("openai", "gpt-4o-mini")
                                 
-                                # Add paragraph break every 2-3 sentences
-                                if sentence_count % 3 == 0 and i+2 < len(sentences)-1:
-                                    formatted_content += "\n\n"
-                                else:
-                                    formatted_content += " "
-                        
-                        base_content = formatted_content.strip()
-                    
-                    logger.info(f"Generated ChatGPT content for topic: {topic}")
+                                user_message = UserMessage(text=content_prompt)
+                                response = await chat.send_message(user_message)
+                                
+                                base_content = response.strip()
+                                
+                                # Clean up
+                                import re
+                                base_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', base_content)
+                                base_content = re.sub(r'\*([^*]+)\*', r'\1', base_content)
+                                base_content = base_content.strip()
+                                
+                                logger.info(f"🎃 RECURRING EMAIL: Generated holiday content: {base_content[:100]}...")
+                            else:
+                                base_content = f"As {holiday_name} approaches, it's important to keep your pets safe during this special holiday. {holiday_name} brings unique challenges for pet owners."
+                        else:
+                            logger.warning("No valid holidays found, using topic-based generation")
+                            base_content = f"Learn about {topic} and how it can benefit your pet's health and wellbeing."
+                    else:
+                        logger.warning("No holiday data found, using topic-based generation")  
+                        base_content = f"Learn about {topic} and how it can benefit your pet's health and wellbeing."
                 else:
-                    # Fallback content if ChatGPT fails
-                    base_content = f"Stay informed about the latest developments in {topic}. Our veterinary team stays current with the latest research and trends to provide you with valuable insights that can help you make informed decisions about your pet's health and wellbeing."
+                    # Regular topic-based generation
+                    logger.info(f"🎃 RECURRING EMAIL: Using topic-based generation for {topic}")
+                    
+                    # Import the new topic content generation function
+                    from ai_service import ai_service
+                    
+                    # Generate professional topic-specific content using the new dedicated function
+                    base_content = await ai_service.generate_topic_specific_content(
+                        topic=topic,
+                        content_type="email",
+                        word_count=220
+                    )
+                    
+                    if base_content and len(base_content) > 50:
+                        logger.info(f"Successfully generated topic-specific email content for {topic}")
+                    else:
+                        # Fallback content if generation returns insufficient content
+                        base_content = f"Learn about {topic} and how it can benefit your pet's health and wellbeing. Our expert team provides comprehensive guidance and care to help you understand the importance of {topic} for your furry family member's overall health and happiness."
+                        logger.warning(f"Generated content insufficient for {topic}, using fallback")
+                    
             except Exception as e:
-                logger.error(f"Error generating ChatGPT content: {str(e)}")
+                logger.error(f"Error generating topic-specific content: {str(e)}")
                 # Fallback content
-                base_content = f"Stay informed about the latest developments in {topic}. Our veterinary team stays current with the latest research and trends to provide you with valuable insights that can help you make informed decisions about your pet's health and wellbeing."
+                base_content = f"Learn about {topic} and how it can benefit your pet's health and wellbeing. Our expert team provides comprehensive guidance and care to help you understand the importance of {topic} for your furry family member's overall health and happiness."
         else:
             # Simple fallback content when ChatGPT is disabled
-            base_content = f"Stay informed about the latest developments in {topic}. Our veterinary team stays current with the latest research and trends to provide you with valuable insights that can help you make informed decisions about your pet's health and wellbeing."
+            base_content = f"Learn about {topic} and how it can benefit your pet's health and wellbeing. Our expert team provides comprehensive guidance and care to help you understand the importance of {topic} for your furry family member's overall health and happiness."
         
         # Now apply the email template logic
         email_template_with_content = email_template
@@ -5247,45 +5395,59 @@ Warm regards,
             # Apply global placeholder replacement
             final_email_content = await replace_global_placeholders(final_email_content, db)
         
-        # Generate email subject
+        logger.info(f"🎃 DEBUGGING: Final email content (first 200 chars): {final_email_content[:200]}")
+        
+        # Generate topic-specific email subject
         try:
-            subject_result = await ai_service.format_custom_content(
-                post_title="Subject Line Only",
-                post_content=f"Generate ONLY a short, compelling email subject line (maximum 90 characters, no formatting, no titles, no explanations) for this newsletter topic: {topic}. Keep it concise and under 90 characters. Return just the subject line text, nothing else.",
-                word_count="8",  # Short for compact subject
-                platforms=['email'],
-                use_web_research=False,
-                image_text=""
-            )
-            raw_subject = subject_result.get('content', f"{topic} Newsletter") if subject_result else f"{topic} Newsletter"
+            # Generate topic-specific email subject using direct ChatGPT call
+            from emergentintegrations.llm.chat import LlmChat, UserMessage
+            import os
             
-            # Clean up the subject line - comprehensive cleanup
-            import re
-            email_subject = raw_subject.strip()
-            # Remove markdown formatting patterns
-            email_subject = re.sub(r'\*\*Title:.*?\*\*', '', email_subject, flags=re.IGNORECASE)
-            email_subject = re.sub(r'\*\*Subject:.*?\*\*', '', email_subject, flags=re.IGNORECASE)
-            email_subject = re.sub(r'\*\*Content:\*\*', '', email_subject, flags=re.IGNORECASE)
-            email_subject = re.sub(r'Title:.*?\n', '', email_subject, flags=re.IGNORECASE)
-            email_subject = re.sub(r'Subject:.*?\n', '', email_subject, flags=re.IGNORECASE)
-            email_subject = re.sub(r'Content:\s*', '', email_subject, flags=re.IGNORECASE)
-            # Remove any remaining markdown formatting
-            email_subject = re.sub(r'\*\*([^*]+)\*\*', r'\1', email_subject)  # Bold text
-            email_subject = re.sub(r'\*([^*]+)\*', r'\1', email_subject)    # Italic text
-            # Split by newlines and take first line if multiple
-            email_subject = email_subject.split('\n')[0].strip()
-            # Remove quotes if present
-            email_subject = email_subject.strip('"\'')
+            emergent_key = os.getenv('EMERGENT_LLM_KEY')
             
-            # Ensure subject is under 100 characters
-            if len(email_subject) > 100:
-                email_subject = email_subject[:97] + "..."
-            
-            # Fallback if still empty
-            if not email_subject or len(email_subject) < 3:
+            if emergent_key:
+                subject_prompt = f"""Generate ONLY a short, compelling email subject line for a {topic} newsletter from a veterinary clinic.
+
+Requirements:
+- Maximum 60 characters 
+- Topic-specific and engaging
+- Focus on {topic} benefits or information
+- Professional veterinary tone
+- No formatting, quotes, or extra text
+- Return just the subject line
+
+Generate only the subject line, nothing else."""
+
+                chat = LlmChat(
+                    api_key=emergent_key,
+                    session_id=f"topic_subject_{uuid.uuid4()}",
+                    system_message="You are an expert email subject line writer for veterinary clinics. Generate compelling, topic-specific subject lines."
+                ).with_model("openai", "gpt-4o-mini")
+                
+                user_message = UserMessage(text=subject_prompt)
+                response = await chat.send_message(user_message)
+                
+                email_subject = response.strip()
+                
+                # Clean up the subject line
+                import re
+                email_subject = re.sub(r'\*\*([^*]+)\*\*', r'\1', email_subject)  # Remove bold
+                email_subject = re.sub(r'\*([^*]+)\*', r'\1', email_subject)     # Remove italic
+                email_subject = email_subject.split('\n')[0].strip()             # First line only
+                email_subject = email_subject.strip('"\'')                       # Remove quotes
+                
+                # Ensure subject is under 60 characters
+                if len(email_subject) > 60:
+                    email_subject = email_subject[:57] + "..."
+                
+                # Fallback if still empty
+                if not email_subject or len(email_subject) < 3:
+                    email_subject = f"{topic} Newsletter"
+            else:
                 email_subject = f"{topic} Newsletter"
+                
         except Exception as e:
-            logger.error(f"Error generating email subject: {str(e)}")
+            logger.error(f"Error generating topic email subject: {str(e)}")
             email_subject = f"{topic} Newsletter"
         
         # Create post record for email preview
@@ -5383,23 +5545,50 @@ async def generate_email_for_agent(agent_id: str, agent_data: dict):
         # Get agent mode
         agent_mode = agent_data.get('mode', 'scheduled')
         
-        # Handle different agent modes
+        logger.info(f"🎃 DEBUGGING: Email agent mode detected: {agent_mode}")
+        logger.info(f"🎃 DEBUGGING: Agent data keys: {list(agent_data.keys())}")
+        
+        # Handle different agent modes - but check for holidays first to fix routing
+        selected_holidays = agent_data.get('selected_holidays', [])
+        topics = agent_data.get('topics', [])
+        
+        logger.info(f"🎃 ROUTING DEBUG: mode={agent_mode}, holidays={selected_holidays}, topics={topics}")
+        
         if agent_mode == 'write':
             # This is a write mode email agent - use email_content instead of email_content_template
+            logger.info(f"🎃 ROUTING: Going to WRITE mode email agent")
             email_content = agent_data.get('email_content', '')
             if not email_content:
                 logger.error(f"No email content found for write mode agent {agent_id}")
                 return
             return await generate_write_mode_email_for_agent(agent_id, agent_data, post_id, now, email_content)
+        elif selected_holidays and len(selected_holidays) > 0:
+            # This agent has holidays selected - it should be treated as SCHEDULED (holiday-based) regardless of mode field
+            logger.info(f"🎃 ROUTING: Agent has holidays {selected_holidays}, going to SCHEDULED (holiday-based) email agent")
+            email_template = agent_data.get('email_content_template', '')
+            if not email_template:
+                logger.error(f"No email template found for scheduled agent {agent_id}")
+                return
+            return await generate_scheduled_email_for_agent(agent_id, agent_data, post_id, now, email_template)
+        elif topics and len(topics) > 0:
+            # This agent has topics selected - it should be treated as RECURRING (topic-based)
+            logger.info(f"🎃 ROUTING: Agent has topics {topics}, going to RECURRING (topic-based) email agent")
+            email_template = agent_data.get('email_content_template', '')
+            if not email_template:
+                logger.error(f"No email template found for recurring agent {agent_id}")
+                return
+            return await generate_recurring_email_for_agent(agent_id, agent_data, post_id, now, email_template)
         elif agent_mode == 'recurring':
-            # This is a topic-based recurring email agent
+            # This is a topic-based recurring email agent (fallback for backward compatibility)
+            logger.info(f"🎃 ROUTING: Mode is recurring, going to RECURRING (topic-based) email agent")
             email_template = agent_data.get('email_content_template', '')
             if not email_template:
                 logger.error(f"No email template found for recurring agent {agent_id}")
                 return
             return await generate_recurring_email_for_agent(agent_id, agent_data, post_id, now, email_template)
         else:
-            # This is a scheduled (holiday-based) email agent
+            # Default to scheduled (holiday-based) email agent
+            logger.info(f"🎃 ROUTING: Default to SCHEDULED (holiday-based) email agent")
             email_template = agent_data.get('email_content_template', '')
             if not email_template:
                 logger.error(f"No email template found for scheduled agent {agent_id}")
@@ -5474,59 +5663,81 @@ async def generate_scheduled_email_for_agent(agent_id: str, agent_data: dict, po
         # Generate holiday-specific base content using ChatGPT if enabled
         if use_chatgpt:
             try:
-                # Generate professional holiday-specific content
-                holiday_content_result = await ai_service.format_custom_content(
-                    post_title=f"Holiday Email: {holiday_name}",
-                    post_content=f"Create professional, warm holiday email content about {holiday_name} for a veterinary clinic. Write 200-250 words with proper paragraph structure (use line breaks between paragraphs). Focus on holiday-specific pet care tips, seasonal safety advice, and warm holiday wishes. Include relevant information about how {holiday_name} might affect pets (fireworks, food safety, travel, etc.). Write in a warm, caring tone suitable for holiday email newsletters. Format with clear paragraph breaks for better readability.",
-                    word_count="220",  # 200-250 words as requested
-                    platforms=['email'],  # Email platform
-                    use_web_research=agent_data.get('use_web_research', False),
-                    image_text=agent_data.get('image_text', '')
-                )
+                # COPYING EXACT WORKING LOGIC FROM MARKETING AGENT BUT WITH EMAIL-SPECIFIC PROMPTS
+                from emergentintegrations.llm.chat import LlmChat, UserMessage
+                import os
                 
-                if holiday_content_result and holiday_content_result.get('content'):
-                    base_holiday_content = holiday_content_result['content']
-                    # Clean up any markdown formatting - comprehensive cleanup
+                emergent_key = os.getenv('EMERGENT_LLM_KEY')
+                
+                if emergent_key:
+                    logger.info(f"🎃 DEBUGGING HOLIDAY EMAIL: Generating content for {holiday_name} ({holiday_date})")
+                    
+                    # Create holiday-specific email content prompt (SAME APPROACH AS MARKETING AGENT SUBJECT GENERATION)
+                    email_content_prompt = f"""You are an expert veterinary content writer specializing in holiday communications.
+
+Create professional, warm, and genuinely holiday-specific content about {holiday_name} for a veterinary clinic's email newsletter.
+
+Holiday: {holiday_name} ({holiday_date})
+
+Requirements:
+- Write exactly 180 words (SAME AS MARKETING AGENT)
+- Focus SPECIFICALLY on {holiday_name} and how it affects pets
+- Include holiday-specific pet safety tips relevant to {holiday_name}
+- Address potential hazards or concerns specific to this holiday
+- Use a warm, caring, professional tone suitable for veterinary email communications
+- Include practical, actionable advice for pet owners during {holiday_name}
+- Make it genuinely relevant to {holiday_name}, not generic seasonal content
+- Format with proper paragraph structure (use line breaks between paragraphs)
+- Do NOT include any greetings, signatures, titles, or placeholders - just the main content
+
+For {holiday_name} specifically focus on:
+- Turkey bones and rich holiday foods that are dangerous for pets
+- Stress from guests and increased household activity
+- Travel considerations if families are visiting relatives
+- Kitchen hazards during holiday meal preparation
+- Changes in routine that might affect pets
+
+Generate ONLY the main email content body about {holiday_name} - no titles, headers, greetings, or signatures."""
+
+                    chat = LlmChat(
+                        api_key=emergent_key,
+                        session_id=f"holiday_email_content_{uuid.uuid4()}",
+                        system_message=f"You are an expert veterinary content writer who creates genuinely holiday-specific content for {holiday_name}. You understand the unique challenges that {holiday_name} presents for pet owners and their animals."
+                    ).with_model("openai", "gpt-4o-mini")
+                    
+                    user_message = UserMessage(text=email_content_prompt)
+                    response = await chat.send_message(user_message)
+                    
+                    base_holiday_content = response.strip()
+                    
+                    # Clean up (SAME AS MARKETING AGENT SUBJECT GENERATION)
                     import re
-                    # Remove markdown title patterns
-                    base_holiday_content = re.sub(r'\*\*Title:.*?\*\*', '', base_holiday_content, flags=re.IGNORECASE)
-                    base_holiday_content = re.sub(r'\*\*Content:\*\*', '', base_holiday_content, flags=re.IGNORECASE)
-                    base_holiday_content = re.sub(r'Title:.*?\n', '', base_holiday_content, flags=re.IGNORECASE)
-                    base_holiday_content = re.sub(r'Content:\s*', '', base_holiday_content, flags=re.IGNORECASE)
-                    # Remove any remaining markdown formatting
-                    base_holiday_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', base_holiday_content)  # Bold text
-                    base_holiday_content = re.sub(r'\*([^*]+)\*', r'\1', base_holiday_content)    # Italic text
+                    base_holiday_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', base_holiday_content)  # Remove bold
+                    base_holiday_content = re.sub(r'\*([^*]+)\*', r'\1', base_holiday_content)     # Remove italic
+                    base_holiday_content = re.sub(r'^Title:.*?\n', '', base_holiday_content, flags=re.IGNORECASE | re.MULTILINE)
+                    base_holiday_content = re.sub(r'^Content:.*?\n', '', base_holiday_content, flags=re.IGNORECASE | re.MULTILINE)
                     base_holiday_content = base_holiday_content.strip()
                     
-                    # Ensure proper paragraph formatting if missing
-                    if '\n' not in base_holiday_content and len(base_holiday_content) > 200:
-                        # Split into sentences and create paragraphs
-                        sentences = re.split(r'([.!?])\s+', base_holiday_content)
-                        formatted_content = ""
-                        sentence_count = 0
-                        
-                        for i in range(0, len(sentences)-1, 2):
-                            if i+1 < len(sentences):
-                                sentence = sentences[i] + sentences[i+1]
-                                formatted_content += sentence
-                                sentence_count += 1
-                                
-                                # Add paragraph break every 2-3 sentences
-                                if sentence_count % 3 == 0 and i+2 < len(sentences)-1:
-                                    formatted_content += "\n\n"
-                                else:
-                                    formatted_content += " "
-                        
-                        base_holiday_content = formatted_content.strip()
+                    logger.info(f"🎃 DEBUGGING: Generated holiday email content length: {len(base_holiday_content)}")
+                    logger.info(f"🎃 DEBUGGING: Content preview: {base_holiday_content[:100]}...")
                     
-                    logger.info(f"Generated holiday-specific content for {holiday_name}")
+                    # Validate content contains holiday name (ENHANCED VALIDATION)
+                    if base_holiday_content and len(base_holiday_content) > 50 and holiday_name.lower() in base_holiday_content.lower():
+                        logger.info(f"✅ Successfully generated {holiday_name}-specific email content")
+                    else:
+                        logger.warning(f"❌ Generated content not {holiday_name}-specific, using fallback")
+                        base_holiday_content = f"As {holiday_name} approaches, it's important to keep your pets safe during this special holiday. {holiday_name} brings unique challenges like rich foods, turkey bones, increased guests, and schedule changes that can affect your pets. Here are essential safety tips to help your furry family members enjoy {holiday_name} safely with you."
+                        
                 else:
-                    # Fallback content if ChatGPT fails
-                    base_holiday_content = f"As {holiday_name} approaches, we want to ensure your beloved pets stay safe and happy during this special time. Here are some important tips to keep in mind during the holiday season to ensure your furry family members enjoy the festivities safely."
+                    logger.warning("No Emergent LLM key available")
+                    base_holiday_content = f"As {holiday_name} approaches, it's important to keep your pets safe during this special holiday. {holiday_name} brings unique challenges like rich foods, turkey bones, increased guests, and schedule changes that can affect your pets. Here are essential safety tips to help your furry family members enjoy {holiday_name} safely with you."
+                    
             except Exception as e:
-                logger.error(f"Error generating holiday-specific content: {str(e)}")
-                # Fallback content
-                base_holiday_content = f"As {holiday_name} approaches, we want to ensure your beloved pets stay safe and happy during this special time. Here are some important tips to keep in mind during the holiday season to ensure your furry family members enjoy the festivities safely."
+                logger.error(f"🎃 ERROR generating holiday email content: {str(e)}")
+                import traceback
+                logger.error(f"🎃 TRACEBACK: {traceback.format_exc()}")
+                # Holiday-specific fallback
+                base_holiday_content = f"As {holiday_name} approaches, it's important to keep your pets safe during this special holiday. {holiday_name} brings unique challenges like rich foods, turkey bones, increased guests, and schedule changes that can affect your pets. Here are essential safety tips to help your furry family members enjoy {holiday_name} safely with you."
         else:
             # Simple fallback content when ChatGPT is disabled
             base_holiday_content = f"As {holiday_name} approaches, we want to ensure your beloved pets stay safe and happy during this special time. Here are some important tips to keep in mind during the holiday season to ensure your furry family members enjoy the festivities safely."
@@ -5571,11 +5782,14 @@ async def generate_scheduled_email_for_agent(agent_id: str, agent_data: dict, po
         # Now apply the email template logic
         email_template_with_content = email_template
         
+        logger.info(f"🎃 DEBUGGING: Email template before processing: {email_template[:100] if email_template else 'Empty'}")
+        logger.info(f"🎃 DEBUGGING: Base holiday content: {base_holiday_content[:100] if base_holiday_content else 'None'}")
+        
         # Check if template has ChatGPT placeholder or use default template
         if '[CHATGPT_CONTENT]' in email_template:
             # Use the provided template - replace placeholder with generated holiday content
             email_template_with_content = email_template.replace('[CHATGPT_CONTENT]', base_holiday_content)
-            logger.info("Using provided email template with ChatGPT holiday content")
+            logger.info("🎃 DEBUGGING: Using provided email template with ChatGPT holiday content")
         elif not email_template or email_template == "":
             # No template specified - use default holiday template
             default_template = f"""Dear [CUSTOMER_NAME],
@@ -5593,11 +5807,13 @@ Warm regards,
 📅 [BOOK_NOW_LINK] | 📍 [BUSINESS_ADDRESS]"""
             
             email_template_with_content = default_template.replace('[CHATGPT_CONTENT]', base_holiday_content)
-            logger.info("Using default holiday email template with ChatGPT content")
+            logger.info("🎃 DEBUGGING: Using default holiday email template with ChatGPT content")
         else:
             # Legacy template without [CHATGPT_CONTENT] - enhance with holiday content
             email_template_with_content = f"Dear [CUSTOMER_NAME],\n\nAs {holiday_name} approaches, we wanted to share some important information:\n\n{base_holiday_content}\n\n{email_template}"
-            logger.info("Using enhanced legacy email template with holiday content")
+            logger.info("🎃 DEBUGGING: Using enhanced legacy email template with holiday content")
+        
+        logger.info(f"🎃 DEBUGGING: Email template after content insertion: {email_template_with_content[:200]}")
         
         # Check if this should be personalized
         is_personalized = agent_data.get('email_personalized', True)
@@ -5623,43 +5839,57 @@ Warm regards,
             # Apply global placeholder replacement
             final_email_content = await replace_global_placeholders(final_email_content, db)
         
+        logger.info(f"🎃 DEBUGGING: Final holiday email content (first 200 chars): {final_email_content[:200]}")
+        
         # Generate holiday-specific email subject
         try:
-            subject_result = await ai_service.format_custom_content(
-                post_title="Holiday Email Subject",
-                post_content=f"Generate ONLY a short, compelling email subject line (maximum 90 characters, no formatting, no titles, no explanations) for a {holiday_name} email from a veterinary clinic. Make it holiday-specific and engaging. Keep it concise and under 90 characters. Return just the subject line text, nothing else.",
-                word_count="8",  # Short for compact subject
-                platforms=['email'],
-                use_web_research=False,
-                image_text=""
-            )
-            raw_subject = subject_result.get('content', f"{holiday_name} Pet Safety Tips") if subject_result else f"{holiday_name} Pet Safety Tips"
+            # Generate holiday-specific email subject using direct ChatGPT call
+            from emergentintegrations.llm.chat import LlmChat, UserMessage
+            import os
             
-            # Clean up the subject line - comprehensive cleanup
-            import re
-            email_subject = raw_subject.strip()
-            # Remove markdown formatting patterns
-            email_subject = re.sub(r'\*\*Title:.*?\*\*', '', email_subject, flags=re.IGNORECASE)
-            email_subject = re.sub(r'\*\*Subject:.*?\*\*', '', email_subject, flags=re.IGNORECASE)
-            email_subject = re.sub(r'\*\*Content:\*\*', '', email_subject, flags=re.IGNORECASE)
-            email_subject = re.sub(r'Title:.*?\n', '', email_subject, flags=re.IGNORECASE)
-            email_subject = re.sub(r'Subject:.*?\n', '', email_subject, flags=re.IGNORECASE)
-            email_subject = re.sub(r'Content:\s*', '', email_subject, flags=re.IGNORECASE)
-            # Remove any remaining markdown formatting
-            email_subject = re.sub(r'\*\*([^*]+)\*\*', r'\1', email_subject)  # Bold text
-            email_subject = re.sub(r'\*([^*]+)\*', r'\1', email_subject)    # Italic text
-            # Split by newlines and take first line if multiple
-            email_subject = email_subject.split('\n')[0].strip()
-            # Remove quotes if present
-            email_subject = email_subject.strip('"\'')
+            emergent_key = os.getenv('EMERGENT_LLM_KEY')
             
-            # Ensure subject is under 100 characters
-            if len(email_subject) > 100:
-                email_subject = email_subject[:97] + "..."
-            
-            # Fallback if still empty
-            if not email_subject or len(email_subject) < 3:
+            if emergent_key:
+                subject_prompt = f"""Generate ONLY a short, compelling email subject line for a {holiday_name} email from a veterinary clinic.
+
+Requirements:
+- Maximum 60 characters 
+- Holiday-specific and engaging
+- Focus on {holiday_name} pet safety or care
+- Professional veterinary tone
+- No formatting, quotes, or extra text
+- Return just the subject line
+
+Generate only the subject line, nothing else."""
+
+                chat = LlmChat(
+                    api_key=emergent_key,
+                    session_id=f"holiday_subject_{uuid.uuid4()}",
+                    system_message="You are an expert email subject line writer for veterinary clinics. Generate compelling, holiday-specific subject lines."
+                ).with_model("openai", "gpt-4o-mini")
+                
+                user_message = UserMessage(text=subject_prompt)
+                response = await chat.send_message(user_message)
+                
+                email_subject = response.strip()
+                
+                # Clean up the subject line
+                import re
+                email_subject = re.sub(r'\*\*([^*]+)\*\*', r'\1', email_subject)  # Remove bold
+                email_subject = re.sub(r'\*([^*]+)\*', r'\1', email_subject)     # Remove italic
+                email_subject = email_subject.split('\n')[0].strip()             # First line only
+                email_subject = email_subject.strip('"\'')                       # Remove quotes
+                
+                # Ensure subject is under 60 characters
+                if len(email_subject) > 60:
+                    email_subject = email_subject[:57] + "..."
+                
+                # Fallback if still empty
+                if not email_subject or len(email_subject) < 3:
+                    email_subject = f"{holiday_name} Pet Safety Tips"
+            else:
                 email_subject = f"{holiday_name} Pet Safety Tips"
+                
         except Exception as e:
             logger.error(f"Error generating holiday email subject: {str(e)}")
             email_subject = f"{holiday_name} Pet Safety Tips"
@@ -6396,14 +6626,115 @@ async def generate_sms_for_agent(agent_id: str, agent_data: dict):
         try:
             # Generate SMS content based on mode
             if agent_mode == 'write':
-                # Use provided SMS content
+                # Use provided SMS content WITH template processing
                 sms_content = agent_data.get('sms_content', '')
-                if not sms_content:
-                    raise Exception("No SMS content provided for write mode")
-                content_result = {"content": sms_content}
+                sms_subject = agent_data.get('sms_subject', '')  # This is the ChatGPT content from frontend
+                sms_template = agent_data.get('sms_template', '')
+                use_chatgpt = agent_data.get('use_sms_chatgpt_formatting', True)
+                
+                # Use sms_subject as the actual content (since frontend sends ChatGPT content as sms_subject)
+                chatgpt_content = sms_subject or sms_content
+                
+                if not chatgpt_content:
+                    raise Exception("No SMS ChatGPT content provided for write mode")
+                
+                logger.info(f"🎃 SMS WRITE MODE DEBUG: Raw agent_data keys: {list(agent_data.keys())}")
+                logger.info(f"🎃 SMS WRITE MODE DEBUG: ChatGPT content: '{chatgpt_content}'")
+                logger.info(f"🎃 SMS WRITE MODE DEBUG: Template: '{sms_template}'")
+                logger.info(f"🎃 SMS WRITE MODE DEBUG: Template length: {len(sms_template) if sms_template else 0}")
+                logger.info(f"🎃 SMS WRITE MODE DEBUG: Has [CHATGPT_CONTENT]: {'[CHATGPT_CONTENT]' in sms_template if sms_template else False}")
+                logger.info(f"🎃 SMS WRITE MODE DEBUG: Use ChatGPT formatting: {use_chatgpt}")
+                
+                # If no template is provided, we should not proceed
+                if not sms_template:
+                    logger.error(f"🎃 SMS WRITE MODE DEBUG: No SMS template provided!")
+                    raise Exception("SMS template is required for write mode agents")
+                
+                # Check if template has the required placeholder
+                if '[CHATGPT_CONTENT]' not in sms_template:
+                    logger.error(f"🎃 SMS WRITE MODE DEBUG: Template missing [CHATGPT_CONTENT] placeholder!")
+                    raise Exception("SMS template must contain [CHATGPT_CONTENT] placeholder")
+                
+                # If ChatGPT formatting is enabled, enhance the content
+                final_chatgpt_content = chatgpt_content
+                if use_chatgpt and chatgpt_content:
+                    try:
+                        # Calculate available space for enhanced content
+                        template_without_content = sms_template.replace('[CHATGPT_CONTENT]', '')
+                        placeholder_length = 60  # Estimate for customer names, business info, etc.
+                        available_space = 160 - len(template_without_content) - placeholder_length
+                        if available_space < 30:
+                            available_space = 30
+                        
+                        logger.info(f"🎃 SMS WRITE MODE DEBUG: Available space for content: {available_space}")
+                        
+                        # Generate enhanced SMS content using direct ChatGPT call
+                        from emergentintegrations.llm.chat import LlmChat, UserMessage
+                        import os
+                        
+                        emergent_key = os.getenv('EMERGENT_LLM_KEY')
+                        
+                        if emergent_key:
+                            sms_prompt = f"""Enhance this SMS content for a veterinary clinic:
+
+Original content: {chatgpt_content}
+
+Requirements:
+- Maximum {available_space} characters
+- Keep the core message and meaning
+- Make it professional and engaging for SMS
+- Suitable for veterinary clinic communication
+- No placeholders, business names, or contact info - just enhance the message
+- Keep it concise and actionable
+
+Generate only the enhanced SMS content, nothing else."""
+
+                            chat = LlmChat(
+                                api_key=emergent_key,
+                                session_id=f"sms_write_enhance_{uuid.uuid4()}",
+                                system_message="You are an expert veterinary SMS writer who enhances messages while keeping them concise."
+                            ).with_model("openai", "gpt-4o-mini")
+                            
+                            user_message = UserMessage(text=sms_prompt)
+                            response = await chat.send_message(user_message)
+                            
+                            enhanced_content = response.strip()
+                            
+                            # Clean up
+                            import re
+                            enhanced_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', enhanced_content)
+                            enhanced_content = re.sub(r'\*([^*]+)\*', r'\1', enhanced_content)
+                            enhanced_content = enhanced_content.strip()
+                            
+                            # Ensure content fits
+                            if len(enhanced_content) > available_space:
+                                enhanced_content = enhanced_content[:available_space-3] + "..."
+                            
+                            if enhanced_content and len(enhanced_content) > 10:
+                                final_chatgpt_content = enhanced_content
+                                logger.info(f"🎃 SMS WRITE MODE DEBUG: Enhanced content: '{final_chatgpt_content}'")
+                            else:
+                                logger.warning(f"🎃 SMS WRITE MODE DEBUG: Enhancement failed, using original content")
+                        else:
+                            logger.warning(f"🎃 SMS WRITE MODE DEBUG: No Emergent key, skipping enhancement")
+                    except Exception as e:
+                        logger.error(f"🎃 SMS WRITE MODE DEBUG: Error enhancing content: {str(e)}")
+                        # Continue with original content
+                
+                # Apply SMS template - replace [CHATGPT_CONTENT] with the final content
+                final_sms_content = sms_template.replace('[CHATGPT_CONTENT]', final_chatgpt_content)
+                logger.info(f"🎃 SMS WRITE MODE DEBUG: Applied template replacement")
+                logger.info(f"🎃 SMS WRITE MODE DEBUG: Final SMS before personalization: '{final_sms_content}'")
+                logger.info(f"🎃 SMS WRITE MODE DEBUG: Final SMS length: {len(final_sms_content)}")
+                
+                content_result = {"content": final_sms_content}
+                
             elif agent_mode == 'recurring' and agent_data.get('selected_holidays'):
-                # This is a scheduled (holiday-based) SMS agent - use holiday context
+                # This is a scheduled (holiday-based) SMS agent - use holiday context WITH template
                 selected_holidays = agent_data.get('selected_holidays', [])
+                sms_template = agent_data.get('sms_template', '')
+                
+                logger.info(f"🎃 SMS HOLIDAY DEBUG: Template length: {len(sms_template) if sms_template else 0}")
                 
                 if not selected_holidays:
                     raise Exception("No holidays selected for scheduled SMS agent")
@@ -6455,54 +6786,211 @@ async def generate_sms_for_agent(agent_id: str, agent_data: dict):
                 
                 logger.info(f"Using holiday context for SMS: {holiday_name} ({holiday_date})")
                 
-                # Use holiday context for SMS generation
-                content_result = await ai_service.generate_sms_content(
-                    topic=f"Holiday SMS for {holiday_name}",
-                    custom_topic=f"Create a warm, festive SMS message for {holiday_name} on {holiday_date}. Keep it brief and include a call to action.",
-                    track_usage=True,
-                    user_id="admin",
-                    agent_id=agent_id
-                )
-            else:
-                # Generate SMS content using AI service for topic-based recurring SMS agents
-                topic = agent_data.get('topic', 'General SMS')
-                content_result = await ai_service.generate_sms_content(
-                    topic=topic,
-                    custom_topic=agent_data.get('custom_topic'),
-                    track_usage=True,
-                    user_id="admin",  # TODO: Get actual user ID
-                    agent_id=agent_id
-                )
+                # Generate holiday-specific SMS content using direct ChatGPT call (same approach as email)
+                from emergentintegrations.llm.chat import LlmChat, UserMessage
+                import os
                 
-                # Log text generation cost if available
-                if content_result.get('usage_info') and content_result.get('track_usage'):
-                    usage_info = content_result['usage_info']
-                    track_info = content_result['track_usage']
+                emergent_key = os.getenv('EMERGENT_LLM_KEY')
+                
+                if emergent_key:
+                    # Calculate available space for content if using template
+                    available_space = 150  # Default SMS limit
+                    if sms_template and '[CHATGPT_CONTENT]' in sms_template:
+                        template_without_content = sms_template.replace('[CHATGPT_CONTENT]', '')
+                        # Estimate placeholder lengths
+                        placeholder_length = 60  # Approximate space for business name, phone, etc.
+                        available_space = 160 - len(template_without_content) - placeholder_length
+                        if available_space < 50:
+                            available_space = 50
                     
-                    cost = calculate_text_cost(
-                        track_info['provider'], 
-                        track_info['model'], 
-                        usage_info.get('prompt_tokens', 0),
-                        usage_info.get('completion_tokens', 0)
-                    )
+                    sms_prompt = f"""Create a brief, warm SMS message for {holiday_name} from a veterinary clinic.
+
+Holiday: {holiday_name} ({holiday_date})
+
+Requirements:
+- Maximum {available_space} characters
+- Focus specifically on {holiday_name} pet safety
+- Warm, caring tone suitable for SMS
+- Include holiday-specific advice (e.g., for Thanksgiving: turkey bones, rich foods)
+- No placeholders, business names, or contact info - just the core message
+- Keep it concise and actionable
+
+Generate only the SMS message content, nothing else."""
+
+                    chat = LlmChat(
+                        api_key=emergent_key,
+                        session_id=f"holiday_sms_{uuid.uuid4()}",
+                        system_message=f"You are an expert veterinary SMS writer who creates holiday-specific messages for {holiday_name}."
+                    ).with_model("openai", "gpt-4o-mini")
                     
-                    await log_ai_usage(
-                        cost_type=CostType.TEXT_GENERATION,
-                        provider=track_info['provider'],
-                        model=track_info['model'],
-                        cost_usd=cost,
-                        user_id=track_info['user_id'],
-                        agent_id=track_info['agent_id'],
-                        tokens_used=usage_info.get('total_tokens', 0),
-                        prompt_tokens=usage_info.get('prompt_tokens', 0),
-                        completion_tokens=usage_info.get('completion_tokens', 0),
-                        request_details={'topic': topic}
-                    )
+                    user_message = UserMessage(text=sms_prompt)
+                    response = await chat.send_message(user_message)
+                    
+                    holiday_sms_content = response.strip()
+                    
+                    # Clean up
+                    import re
+                    holiday_sms_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', holiday_sms_content)
+                    holiday_sms_content = re.sub(r'\*([^*]+)\*', r'\1', holiday_sms_content)
+                    holiday_sms_content = holiday_sms_content.strip()
+                    
+                    # Apply template if available
+                    if sms_template and '[CHATGPT_CONTENT]' in sms_template:
+                        final_sms_content = sms_template.replace('[CHATGPT_CONTENT]', holiday_sms_content)
+                        logger.info(f"🎃 SMS HOLIDAY DEBUG: Applied template with holiday content")
+                    else:
+                        final_sms_content = holiday_sms_content
+                        logger.info(f"🎃 SMS HOLIDAY DEBUG: No template, using holiday content as-is")
+                    
+                    content_result = {"content": final_sms_content}
+                else:
+                    # Fallback without ChatGPT
+                    holiday_sms_content = f"As {holiday_name} approaches, keep your pets safe! Important safety tips for your furry friends during the holiday."
+                    
+                    if sms_template and '[CHATGPT_CONTENT]' in sms_template:
+                        final_sms_content = sms_template.replace('[CHATGPT_CONTENT]', holiday_sms_content)
+                    else:
+                        final_sms_content = holiday_sms_content
+                    
+                    content_result = {"content": final_sms_content}
+            else:
+                # Generate SMS content using template for topic-based recurring SMS agents
+                topic = agent_data.get('topic', 'General SMS')
+                sms_template = agent_data.get('sms_template', '')
+                
+                logger.info(f"🎃 SMS RECURRING DEBUG: Topic: {topic}")
+                logger.info(f"🎃 SMS RECURRING DEBUG: Template length: {len(sms_template) if sms_template else 0}")
+                
+                # Generate topic-specific SMS content using direct ChatGPT call
+                from emergentintegrations.llm.chat import LlmChat, UserMessage
+                import os
+                
+                emergent_key = os.getenv('EMERGENT_LLM_KEY')
+                
+                if emergent_key:
+                    # Calculate available space for content if using template
+                    available_space = 150  # Default SMS limit
+                    if sms_template and '[CHATGPT_CONTENT]' in sms_template:
+                        template_without_content = sms_template.replace('[CHATGPT_CONTENT]', '')
+                        # Estimate placeholder lengths
+                        placeholder_length = 60  # Approximate space for business name, phone, etc.
+                        available_space = 160 - len(template_without_content) - placeholder_length
+                        if available_space < 50:
+                            available_space = 50
+                    
+                    sms_prompt = f"""Create a brief, professional SMS message about {topic} from a veterinary clinic.
+
+Topic: {topic}
+
+Requirements:
+- Maximum {available_space} characters
+- Focus specifically on {topic} and pet health
+- Professional, caring tone suitable for SMS
+- Include practical advice about {topic}
+- No placeholders, business names, or contact info - just the core message
+- Keep it concise and actionable
+
+Generate only the SMS message content, nothing else."""
+
+                    chat = LlmChat(
+                        api_key=emergent_key,
+                        session_id=f"topic_sms_{uuid.uuid4()}",
+                        system_message=f"You are an expert veterinary SMS writer who creates topic-specific messages about {topic}."
+                    ).with_model("openai", "gpt-4o-mini")
+                    
+                    user_message = UserMessage(text=sms_prompt)
+                    response = await chat.send_message(user_message)
+                    
+                    topic_sms_content = response.strip()
+                    
+                    # Clean up
+                    import re
+                    topic_sms_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', topic_sms_content)
+                    topic_sms_content = re.sub(r'\*([^*]+)\*', r'\1', topic_sms_content)
+                    topic_sms_content = topic_sms_content.strip()
+                    
+                    # Apply template if available
+                    if sms_template and '[CHATGPT_CONTENT]' in sms_template:
+                        final_sms_content = sms_template.replace('[CHATGPT_CONTENT]', topic_sms_content)
+                        logger.info(f"🎃 SMS RECURRING DEBUG: Applied template with topic content")
+                    else:
+                        final_sms_content = topic_sms_content
+                        logger.info(f"🎃 SMS RECURRING DEBUG: No template, using topic content as-is")
+                    
+                    content_result = {"content": final_sms_content}
+                else:
+                    # Fallback without ChatGPT
+                    topic_sms_content = f"Learn about {topic} and how it benefits your pet's health. Expert care for your furry friend!"
+                    
+                    if sms_template and '[CHATGPT_CONTENT]' in sms_template:
+                        final_sms_content = sms_template.replace('[CHATGPT_CONTENT]', topic_sms_content)
+                    else:
+                        final_sms_content = topic_sms_content
+                    
+                    content_result = {"content": final_sms_content}
+            
+            # Process final SMS content with personalization and global placeholders
+            final_sms_content = content_result.get('content', '')
+            
+            logger.info(f"🎃 SMS PERSONALIZATION DEBUG: Content before personalization: '{final_sms_content}'")
+            
+            # Apply personalization using the SAME LOGIC AS EMAIL AGENTS
+            # Get customer data for personalization (using email agent's working approach)
+            customers_cursor = db.customers.aggregate([{"$sample": {"size": 1}}])
+            customers_list = await customers_cursor.to_list(length=1)
+            
+            logger.info(f"🎃 SMS PERSONALIZATION DEBUG: Found {len(customers_list)} customers using email agent approach")
+            
+            if not customers_list:
+                logger.warning(f"No customers found in database for SMS agent {agent_id}, using placeholder data")
+                sample_customer_name = "John Smith"
+                sample_pet_names = "Buddy"
+            else:
+                customer = customers_list[0]
+                sample_customer_name = get_customer_full_name(customer)  # Use email agent's function
+                
+                logger.info(f"🎃 SMS PERSONALIZATION DEBUG: Customer name: '{sample_customer_name}'")
+                logger.info(f"🎃 SMS PERSONALIZATION DEBUG: Customer record keys: {list(customer.keys())}")
+                
+                # Get pet name(s) for this customer (SAME AS EMAIL AGENTS)
+                sample_pet_names = "your pet"  # Default fallback
+                
+                # Check for pets array structure (new format) - SAME AS EMAIL AGENTS
+                pets = customer.get('pets', [])
+                if pets:
+                    logger.info(f"🎃 SMS PERSONALIZATION DEBUG: Found pets array with {len(pets)} pets")
+                    valid_pet_names = [pet.get('name', '').strip() for pet in pets if pet.get('name', '').strip()]
+                    if valid_pet_names:
+                        if len(valid_pet_names) == 1:
+                            sample_pet_names = valid_pet_names[0]
+                        elif len(valid_pet_names) == 2:
+                            sample_pet_names = f"{valid_pet_names[0]} and {valid_pet_names[1]}"
+                        else:
+                            sample_pet_names = ", ".join(valid_pet_names[:-1]) + f", and {valid_pet_names[-1]}"
+                        logger.info(f"🎃 SMS PERSONALIZATION DEBUG: ✅ Found pets in array: {sample_pet_names}")
+                elif customer.get('pet_name', '').strip():
+                    sample_pet_names = customer.get('pet_name').strip()
+                    logger.info(f"🎃 SMS PERSONALIZATION DEBUG: ✅ Found pet_name field: {sample_pet_names}")
+                else:
+                    logger.warning(f"🎃 SMS PERSONALIZATION DEBUG: ❌ No pets found in pets array or pet_name field")
+            
+            # Apply customer personalization (SAME AS EMAIL AGENTS)
+            final_sms_content = final_sms_content.replace('[CUSTOMER_NAME]', sample_customer_name)
+            final_sms_content = final_sms_content.replace('[PET_NAME]', sample_pet_names)
+            final_sms_content = final_sms_content.replace('[PET_NAMES]', sample_pet_names)
+            
+            logger.info(f"🎃 SMS PERSONALIZATION DEBUG: ✅ Applied replacements - Customer: '{sample_customer_name}', Pets: '{sample_pet_names}'")
+            
+            # Apply global placeholder replacement
+            final_sms_content = await replace_global_placeholders(final_sms_content, db)
+            
+            logger.info(f"🎃 SMS FINAL DEBUG: Final content after all processing: '{final_sms_content}'")
+            
             
             # Update post with generated content
             update_data = {
-                "content": content_result.get('content', ''),
-                "sms_template": content_result.get('content', ''),  # Store template for mass sending
+                "content": final_sms_content,
+                "sms_template": agent_data.get('sms_template', ''),  # Store original template for mass sending
                 "sms_link": agent_data.get('sms_link', 'https://petsandvetsanimalhospital.com'),  # Store link for placeholder replacement
                 "status": "in_review",  # Default to review workflow like email agents
                 "updated_at": await business_now_async()
@@ -6615,60 +7103,25 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
             
             # Generate 150-200 word professional content using ChatGPT
             try:
-                topic_content_result = await ai_service.format_custom_content(
-                    post_title=f"Marketing Content: {topic}",
-                    post_content=f"Create professional, engaging marketing content about {topic} for a veterinary clinic. Write 150-200 words with proper paragraph structure (use line breaks between paragraphs). Focus on benefits, importance, and actionable advice for pet owners. Write in a warm, professional tone suitable for email campaigns. Format with clear paragraph breaks for better readability.",
-                    word_count="180",  # 150-200 words as requested
-                    platforms=['general'],  # Generic platform for base content
-                    use_web_research=agent_data.get('use_web_research', False),
-                    image_text=agent_data.get('image_text', '')
+                # Import the new topic content generation function
+                from ai_service import ai_service
+                
+                # Generate professional topic-specific marketing content using the new dedicated function
+                base_campaign_content = await ai_service.generate_topic_specific_content(
+                    topic=topic,
+                    content_type="marketing",
+                    word_count=180
                 )
                 
-                if topic_content_result and topic_content_result.get('content'):
-                    base_campaign_content = topic_content_result['content']
-                    # Clean up any markdown formatting - comprehensive cleanup
-                    import re
-                    # Remove markdown title patterns
-                    base_campaign_content = re.sub(r'\*\*Title:.*?\*\*', '', base_campaign_content, flags=re.IGNORECASE)
-                    base_campaign_content = re.sub(r'\*\*Content:\*\*', '', base_campaign_content, flags=re.IGNORECASE)
-                    base_campaign_content = re.sub(r'Title:.*?\n', '', base_campaign_content, flags=re.IGNORECASE)
-                    base_campaign_content = re.sub(r'Content:\s*', '', base_campaign_content, flags=re.IGNORECASE)
-                    # Remove any remaining markdown formatting
-                    base_campaign_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', base_campaign_content)  # Bold text
-                    base_campaign_content = re.sub(r'\*([^*]+)\*', r'\1', base_campaign_content)    # Italic text
-                    base_campaign_content = base_campaign_content.strip()
-                    
-                    # Ensure proper paragraph formatting if missing
-                    # Add line breaks after sentences ending with periods, exclamation marks, or question marks
-                    # if there are no existing line breaks
-                    if '\n' not in base_campaign_content and len(base_campaign_content) > 200:
-                        # Split into sentences and create paragraphs
-                        sentences = re.split(r'([.!?])\s+', base_campaign_content)
-                        formatted_content = ""
-                        sentence_count = 0
-                        
-                        for i in range(0, len(sentences)-1, 2):
-                            if i+1 < len(sentences):
-                                sentence = sentences[i] + sentences[i+1]
-                                formatted_content += sentence
-                                sentence_count += 1
-                                
-                                # Add paragraph break every 2-3 sentences
-                                if sentence_count % 3 == 0 and i+2 < len(sentences)-1:
-                                    formatted_content += "\n\n"
-                                else:
-                                    formatted_content += " "
-                        
-                        base_campaign_content = formatted_content.strip()
-                    
-                    logger.info(f"Generated topic-based content: {base_campaign_content[:100]}...")
+                if base_campaign_content and len(base_campaign_content) > 50:
+                    logger.info(f"Successfully generated topic-specific marketing content for {topic}")
                 else:
-                    # Fallback content if generation fails
+                    # Fallback content if generation returns insufficient content
                     base_campaign_content = f"Learn about {topic} and how it can benefit your pet's health and wellbeing. Our expert team provides comprehensive care and guidance for all your pet's needs. Contact us today to schedule a consultation and discover the best solutions for your furry family member."
-                    logger.warning("Topic content generation failed, using fallback content")
+                    logger.warning(f"Generated marketing content insufficient for {topic}, using fallback")
                     
             except Exception as e:
-                logger.error(f"Error generating topic content: {str(e)}")
+                logger.error(f"Error generating topic marketing content: {str(e)}")
                 base_campaign_content = f"Learn about {topic} and how it can benefit your pet's health and wellbeing. Our expert team provides comprehensive care and guidance for all your pet's needs. Contact us today to schedule a consultation and discover the best solutions for your furry family member."
             
         elif content_type == 'holidays':
@@ -6733,61 +7186,27 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                 
                 # Generate 150-200 word professional holiday content using ChatGPT
                 try:
-                    holiday_content_result = await ai_service.format_custom_content(
-                        post_title=f"Holiday Marketing: {holiday_name}",
-                        post_content=f"Create professional, engaging marketing content about {holiday_name} and pet care for a veterinary clinic. Write 150-200 words with proper paragraph structure (use line breaks between paragraphs). Focus on holiday-specific pet care tips, seasonal offers, and warm messaging for pet owners. Write in a professional, caring tone suitable for email campaigns. Format with clear paragraph breaks for better readability.",
-                        word_count="180",  # 150-200 words as requested
-                        platforms=['general'],  # Generic platform for base content
-                        use_web_research=agent_data.get('use_web_research', False),
-                        image_text=agent_data.get('image_text', '')
+                    # Import the new holiday content generation function
+                    from ai_service import ai_service
+                    
+                    # Generate professional holiday-specific marketing content using the new dedicated function
+                    base_campaign_content = await ai_service.generate_holiday_specific_content(
+                        holiday_name=holiday_name,
+                        holiday_date=holiday_date,
+                        content_type="marketing",
+                        word_count=180
                     )
                     
-                    if holiday_content_result and holiday_content_result.get('content'):
-                        base_campaign_content = holiday_content_result['content']
-                        # Clean up any markdown formatting - comprehensive cleanup
-                        import re
-                        # Remove markdown title patterns
-                        base_campaign_content = re.sub(r'\*\*Title:.*?\*\*', '', base_campaign_content, flags=re.IGNORECASE)
-                        base_campaign_content = re.sub(r'\*\*Content:\*\*', '', base_campaign_content, flags=re.IGNORECASE)
-                        base_campaign_content = re.sub(r'Title:.*?\n', '', base_campaign_content, flags=re.IGNORECASE)
-                        base_campaign_content = re.sub(r'Content:\s*', '', base_campaign_content, flags=re.IGNORECASE)
-                        # Remove any remaining markdown formatting
-                        base_campaign_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', base_campaign_content)  # Bold text
-                        base_campaign_content = re.sub(r'\*([^*]+)\*', r'\1', base_campaign_content)    # Italic text
-                        base_campaign_content = base_campaign_content.strip()
-                        
-                        # Ensure proper paragraph formatting if missing
-                        # Add line breaks after sentences ending with periods, exclamation marks, or question marks
-                        # if there are no existing line breaks
-                        if '\n' not in base_campaign_content and len(base_campaign_content) > 200:
-                            # Split into sentences and create paragraphs
-                            sentences = re.split(r'([.!?])\s+', base_campaign_content)
-                            formatted_content = ""
-                            sentence_count = 0
-                            
-                            for i in range(0, len(sentences)-1, 2):
-                                if i+1 < len(sentences):
-                                    sentence = sentences[i] + sentences[i+1]
-                                    formatted_content += sentence
-                                    sentence_count += 1
-                                    
-                                    # Add paragraph break every 2-3 sentences
-                                    if sentence_count % 3 == 0 and i+2 < len(sentences)-1:
-                                        formatted_content += "\n\n"
-                                    else:
-                                        formatted_content += " "
-                            
-                            base_campaign_content = formatted_content.strip()
-                        
-                        logger.info(f"Generated holiday-based content: {base_campaign_content[:100]}...")
+                    if base_campaign_content and len(base_campaign_content) > 50:
+                        logger.info(f"Successfully generated holiday-specific marketing content for {holiday_name}")
                     else:
-                        # Fallback content if generation fails
-                        base_campaign_content = f"Celebrate {holiday_name} with special care for your beloved pets! This {holiday_name} season, show your furry family members how much you care with our comprehensive pet care services. From health checkups to grooming and specialized treatments, we're here to keep your pets happy and healthy during this special time of year."
-                        logger.warning("Holiday content generation failed, using fallback content")
+                        # Fallback content if generation returns insufficient content
+                        base_campaign_content = f"As {holiday_name} approaches, we want to help you ensure your beloved pets stay safe and happy during this special time. Our expert team is here to provide guidance and care for your furry family members during the holiday season."
+                        logger.warning(f"Generated marketing content insufficient for {holiday_name}, using fallback")
                         
                 except Exception as e:
-                    logger.error(f"Error generating holiday content: {str(e)}")
-                    base_campaign_content = f"Celebrate {holiday_name} with special care for your beloved pets! This {holiday_name} season, show your furry family members how much you care with our comprehensive pet care services. From health checkups to grooming and specialized treatments, we're here to keep your pets happy and healthy during this special time of year."
+                    logger.error(f"Error generating holiday marketing content: {str(e)}")
+                    base_campaign_content = f"As {holiday_name} approaches, we want to help you ensure your beloved pets stay safe and happy during this special time. Our expert team is here to provide guidance and care for your furry family members during the holiday season."
             else:
                 campaign_title = "Marketing Campaign - Holiday"
                 base_campaign_content = "Celebrate the holiday season with special care for your beloved pets! Show your furry family members how much you care with our comprehensive pet care services."
@@ -6837,26 +7256,54 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
         # STEP 2: Get sample customer data for personalization (shared across all channels)
         sample_customer_data = {}
         if any(agent_data.get(f'marketing_{channel}_personalized', True) for channel in ['email', 'sms'] if channel in [ch.replace('social_media', 'social') for ch in channels]):
-            customers_cursor = db.customers.find().limit(1)
+            # Use the SAME WORKING LOGIC AS EMAIL AGENTS
+            customers_cursor = db.customers.aggregate([{"$sample": {"size": 1}}])
             customers_list = await customers_cursor.to_list(length=1)
+            
+            logger.info(f"🎃 MARKETING PERSONALIZATION DEBUG: Found {len(customers_list)} customers")
             
             if customers_list:
                 sample_customer = customers_list[0]
-                customer_name = get_full_customer_name(sample_customer)
+                customer_name = get_customer_full_name(sample_customer)
                 customer_email = sample_customer.get('email', 'customer@example.com')
                 customer_phone = sample_customer.get('phone', '555-0123')
                 
-                # Get pet names for this customer
-                pets_cursor = db.pets.find({"customer_id": sample_customer['id']})
-                pets_list = await pets_cursor.to_list(length=None)
-                pet_names = [pet.get('name', 'Pet') for pet in pets_list] if pets_list else ['Pet']
+                logger.info(f"🎃 MARKETING PERSONALIZATION DEBUG: Customer name: '{customer_name}'")
+                
+                # Get pet name(s) using the SAME WORKING LOGIC AS EMAIL AGENTS
+                pet_names_string = "your pet"  # Default fallback
+                
+                # Check for pets array structure (new format) - SAME AS EMAIL AGENTS
+                pets = sample_customer.get('pets', [])
+                if pets:
+                    logger.info(f"🎃 MARKETING PERSONALIZATION DEBUG: Found pets array with {len(pets)} pets")
+                    valid_pet_names = [pet.get('name', '').strip() for pet in pets if pet.get('name', '').strip()]
+                    if valid_pet_names:
+                        if len(valid_pet_names) == 1:
+                            pet_names_string = valid_pet_names[0]
+                        elif len(valid_pet_names) == 2:
+                            pet_names_string = f"{valid_pet_names[0]} and {valid_pet_names[1]}"
+                        else:
+                            pet_names_string = ", ".join(valid_pet_names[:-1]) + f", and {valid_pet_names[-1]}"
+                        logger.info(f"🎃 MARKETING PERSONALIZATION DEBUG: ✅ Found pets in array: {pet_names_string}")
+                elif sample_customer.get('pet_name', '').strip():
+                    pet_names_string = sample_customer.get('pet_name').strip()
+                    logger.info(f"🎃 MARKETING PERSONALIZATION DEBUG: ✅ Found pet_name field: {pet_names_string}")
+                else:
+                    logger.warning(f"🎃 MARKETING PERSONALIZATION DEBUG: ❌ No pets found, using fallback")
+                
+                # Convert to list format for backward compatibility (if needed elsewhere)
+                pet_names = [pet_names_string] if pet_names_string != "your pet" else ["Pet"]
                 
                 sample_customer_data = {
                     'customer_name': customer_name,
                     'customer_email': customer_email,
                     'customer_phone': customer_phone,
-                    'pet_names': pet_names
+                    'pet_names': pet_names,
+                    'pet_names_string': pet_names_string  # Add formatted string for easy replacement
                 }
+                
+                logger.info(f"🎃 MARKETING PERSONALIZATION DEBUG: Final personalization data - Customer: '{customer_name}', Pets: '{pet_names_string}'")
             else:
                 # Default sample data if no customers
                 sample_customer_data = {
@@ -6873,8 +7320,14 @@ async def generate_marketing_campaign_for_agent(agent_id: str, agent_data: dict)
                 return content
             
             personalized = content.replace('[CUSTOMER_NAME]', customer_data['customer_name'])
-            personalized = personalized.replace('[PET_NAME]', customer_data['pet_names'][0] if customer_data['pet_names'] else 'Pet')
-            personalized = personalized.replace('[PET_NAMES]', ', '.join(customer_data['pet_names']))
+            # Use the new formatted pet names string for proper personalization
+            if 'pet_names_string' in customer_data:
+                personalized = personalized.replace('[PET_NAME]', customer_data['pet_names_string'])
+                personalized = personalized.replace('[PET_NAMES]', customer_data['pet_names_string'])
+            else:
+                # Fallback to old format if needed
+                personalized = personalized.replace('[PET_NAME]', customer_data['pet_names'][0] if customer_data['pet_names'] else 'Pet')
+                personalized = personalized.replace('[PET_NAMES]', ', '.join(customer_data['pet_names']))
             return personalized
         
         # STEP 4: Generate content for each selected channel using the same base content
@@ -7052,7 +7505,7 @@ Best regards,
 🌐 [WEBSITE_LINK]
 📅 [BOOK_NOW_LINK]
 
-Visit us at: [BUSINESS_ADDRESS]"""
+Visit us at: 📍 [BUSINESS_ADDRESS]"""
                         else:
                             # Use general ChatGPT campaign template
                             default_template = """Dear Valued Customer,
@@ -7127,11 +7580,11 @@ Warm regards,
                         personalized_content = await replace_global_placeholders(personalized_content, db)
                         final_email_content = personalized_content
                         
-                        # Generate email subject (compact, under 100 characters)
+                        # Generate email subject (compact, under 60 characters)
                         try:
                             subject_result = await ai_service.format_custom_content(
                                 post_title="Subject Line Only",
-                                post_content=f"Generate ONLY a short, compelling email subject line (maximum 90 characters, no formatting, no titles, no explanations) for this topic: {campaign_title}. Keep it concise and under 90 characters. Return just the subject line text, nothing else.",
+                                post_content=f"Generate ONLY a short, compelling email subject line (maximum 60 characters, no formatting, no titles, no explanations) for this topic: {campaign_title}. Keep it concise and under 60 characters. Return just the subject line text, nothing else.",
                                 word_count="8",  # Short for compact subject
                                 platforms=['email'],
                                 use_web_research=False,
@@ -7157,9 +7610,9 @@ Warm regards,
                             # Remove quotes if present
                             email_subject = email_subject.strip('"\'')
                             
-                            # Ensure subject is under 100 characters
-                            if len(email_subject) > 100:
-                                email_subject = email_subject[:97] + "..."
+                            # Ensure subject is under 60 characters
+                            if len(email_subject) > 60:
+                                email_subject = email_subject[:57] + "..."
                             
                             # Fallback if still empty
                             if not email_subject or len(email_subject) < 3:
@@ -7208,11 +7661,11 @@ Warm regards,
                             final_email_content = await replace_global_placeholders(clean_template, db)
                             final_email_content = f"{clean_template}\n\n{base_campaign_content}"
                         
-                        # Generate email subject (compact, under 100 characters)
+                        # Generate email subject (compact, under 60 characters)
                         try:
                             subject_result = await ai_service.format_custom_content(
                                 post_title="Subject Line Only",
-                                post_content=f"Generate ONLY a short, compelling email subject line (maximum 90 characters, no formatting, no titles, no explanations) for this topic: {campaign_title}. Keep it concise and under 90 characters. Return just the subject line text, nothing else.",
+                                post_content=f"Generate ONLY a short, compelling email subject line (maximum 60 characters, no formatting, no titles, no explanations) for this topic: {campaign_title}. Keep it concise and under 60 characters. Return just the subject line text, nothing else.",
                                 word_count="8",  # Short for compact subject
                                 platforms=['email'],
                                 use_web_research=False,
@@ -7238,9 +7691,9 @@ Warm regards,
                             # Remove quotes if present
                             email_subject = email_subject.strip('"\'')
                             
-                            # Ensure subject is under 100 characters
-                            if len(email_subject) > 100:
-                                email_subject = email_subject[:97] + "..."
+                            # Ensure subject is under 60 characters
+                            if len(email_subject) > 60:
+                                email_subject = email_subject[:57] + "..."
                             
                             # Fallback if still empty
                             if not email_subject or len(email_subject) < 3:
@@ -7266,7 +7719,10 @@ Warm regards,
                 
                 elif channel == "sms":
                     # SMS: Use base content + template + personalization (if enabled)
-                    sms_template = agent_data.get('sms_template', base_campaign_content)
+                    sms_template = agent_data.get('marketing_sms_template', base_campaign_content)
+                    
+                    logger.info(f"🎃 SMS DEBUG: Retrieved SMS template: {sms_template[:100] if sms_template else 'None'}...")
+                    logger.info(f"🎃 SMS DEBUG: Template length: {len(sms_template) if sms_template else 0}")
                     
                     # Check if template has ChatGPT placeholder or use default ChatGPT template
                     if '[CHATGPT_CONTENT]' in sms_template:
@@ -7290,74 +7746,57 @@ Warm regards,
                             if available_space < 30:
                                 available_space = 30
                             
-                            # Generate concise SMS version with strict constraints
-                            sms_content_result = await ai_service.format_custom_content(
-                                post_title=f"SMS Content: {campaign_title}",
-                                post_content=f"Create a very concise SMS message (maximum {available_space} characters) about {campaign_title.replace('Marketing Campaign - ', '')}. Write only the core message without any placeholders, business names, or contact info. Keep it under {available_space} characters. No titles, no formatting, just the essential message.",
-                                word_count="15",  # Very concise for SMS
-                                platforms=['sms'],
-                                use_web_research=False,
-                                image_text=""
-                            )
+                            # Generate concise SMS version using direct ChatGPT (same approach as other SMS agents)
+                            from emergentintegrations.llm.chat import LlmChat, UserMessage  
+                            import os
                             
-                            if sms_content_result and sms_content_result.get('content'):
-                                condensed_content = sms_content_result['content']
-                                # Clean up any markdown formatting and remove any placeholders ChatGPT might have added
+                            emergent_key = os.getenv('EMERGENT_LLM_KEY')
+                            
+                            if emergent_key:
+                                sms_prompt = f"""Create a brief SMS message for marketing campaign: {campaign_title.replace('Marketing Campaign - ', '')}.
+
+Campaign Context: {base_campaign_content[:100]}...
+
+Requirements:
+- Maximum {available_space} characters
+- Focus on the marketing campaign theme
+- Professional, engaging tone for SMS
+- No placeholders, business names, or contact info - just the core message
+- Keep it concise and actionable
+
+Generate only the SMS message content, nothing else."""
+
+                                chat = LlmChat(
+                                    api_key=emergent_key,
+                                    session_id=f"marketing_sms_{uuid.uuid4()}",
+                                    system_message="You are an expert veterinary SMS marketing writer who creates concise, engaging messages."
+                                ).with_model("openai", "gpt-4o-mini")
+                                
+                                user_message = UserMessage(text=sms_prompt)
+                                response = await chat.send_message(user_message)
+                                
+                                condensed_content = response.strip()
+                                
+                                # Clean up
                                 import re
-                                # Remove markdown formatting
-                                condensed_content = re.sub(r'\*\*Title:.*?\*\*', '', condensed_content, flags=re.IGNORECASE)
-                                condensed_content = re.sub(r'\*\*Content:\*\*', '', condensed_content, flags=re.IGNORECASE)
-                                condensed_content = re.sub(r'Title:.*?\n', '', condensed_content, flags=re.IGNORECASE)
-                                condensed_content = re.sub(r'Content:\s*', '', condensed_content, flags=re.IGNORECASE)
-                                condensed_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', condensed_content)  # Bold text
-                                condensed_content = re.sub(r'\*([^*]+)\*', r'\1', condensed_content)    # Italic text
-                                
-                                # Remove any fake placeholders that ChatGPT might have created
-                                condensed_content = re.sub(r'\[.*?\]', '', condensed_content)
-                                
-                                # Clean up extra spaces and ensure it fits
-                                condensed_content = ' '.join(condensed_content.split())  # Remove extra whitespace
+                                condensed_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', condensed_content)
+                                condensed_content = re.sub(r'\*([^*]+)\*', r'\1', condensed_content)
                                 condensed_content = condensed_content.strip()
                                 
-                                # Truncate if still too long
-                                if len(condensed_content) > available_space:
-                                    condensed_content = condensed_content[:available_space-3] + "..."
-                                    
-                            else:
-                                # Fallback: Create very simple content based on topic
-                                topic_name = campaign_title.replace('Marketing Campaign - ', '')
-                                if 'nutrition' in topic_name.lower():
-                                    condensed_content = "Proper nutrition keeps your pet healthy!"
-                                elif 'dental' in topic_name.lower():
-                                    condensed_content = "Keep your pet's teeth clean and healthy!"
-                                elif 'grooming' in topic_name.lower():
-                                    condensed_content = "Regular grooming keeps your pet looking great!"
-                                elif 'vaccination' in topic_name.lower():
-                                    condensed_content = "Keep your pet protected with vaccinations!"
-                                else:
-                                    condensed_content = "Quality care for your beloved pet!"
+                                logger.info(f"🎃 MARKETING SMS DEBUG: Generated content: {condensed_content}")
                                 
-                                # Ensure fallback content fits in available space
-                                if len(condensed_content) > available_space:
-                                    condensed_content = condensed_content[:available_space-3] + "..."
+                            # Ensure content fits within available space  
+                            if len(condensed_content) > available_space:
+                                condensed_content = condensed_content[:available_space-3] + "..."
                             
                             sms_template_with_content = sms_template.replace('[CHATGPT_CONTENT]', condensed_content)
-                            logger.info(f"Using ChatGPT campaign template for SMS with {len(condensed_content)} char content")
+                            logger.info(f"🎃 MARKETING SMS DEBUG: Using template with {len(condensed_content)} char content")
                         except Exception as e:
-                            logger.error(f"Error generating condensed SMS content: {str(e)}")
-                            # Fallback: Create simple topic-based content
-                            topic_name = campaign_title.replace('Marketing Campaign - ', '')
-                            if 'nutrition' in topic_name.lower():
-                                condensed_content = "Proper nutrition keeps your pet healthy!"
-                            elif 'dental' in topic_name.lower():
-                                condensed_content = "Keep your pet's teeth clean!"
-                            elif 'grooming' in topic_name.lower():
-                                condensed_content = "Regular grooming keeps pets healthy!"
-                            elif 'vaccination' in topic_name.lower():
-                                condensed_content = "Protect your pet with vaccinations!"
-                            else:
-                                condensed_content = "Quality care for your pet!"
-                            
+                            logger.error(f"🎃 MARKETING SMS DEBUG: Error generating SMS content: {str(e)}")
+                            # Fallback: Create simple content
+                            condensed_content = "Quality care for your beloved pet! Expert veterinary services."
+                            if len(condensed_content) > available_space:
+                                condensed_content = condensed_content[:available_space-3] + "..."
                             sms_template_with_content = sms_template.replace('[CHATGPT_CONTENT]', condensed_content)
                     elif not sms_template or sms_template == base_campaign_content:
                         # No template specified or template is just the base content - use default ChatGPT campaign template
@@ -7387,23 +7826,46 @@ Warm regards,
                             if available_space < 30:
                                 available_space = 30
                             
-                            sms_content_result = await ai_service.format_custom_content(
-                                post_title=f"SMS Content: {campaign_title}",
-                                post_content=f"Create a very concise SMS message (maximum {available_space} characters) about {campaign_title.replace('Marketing Campaign - ', '')}. Write only the core message without any placeholders, business names, or contact info. Keep it under {available_space} characters. No titles, no formatting, just the essential message.",
-                                word_count="15",  # Very concise for SMS
-                                platforms=['sms'],
-                                use_web_research=False,
-                                image_text=""
-                            )
+                            # Generate concise SMS version using direct ChatGPT (same approach as other SMS agents)
+                            from emergentintegrations.llm.chat import LlmChat, UserMessage  
+                            import os
                             
-                            if sms_content_result and sms_content_result.get('content'):
-                                condensed_content = sms_content_result['content']
-                                # Clean up any markdown formatting and fake placeholders
+                            emergent_key = os.getenv('EMERGENT_LLM_KEY')
+                            
+                            if emergent_key:
+                                sms_prompt = f"""Create a brief SMS message for marketing campaign: {campaign_title.replace('Marketing Campaign - ', '')}.
+
+Campaign Context: {base_campaign_content[:100]}...
+
+Requirements:
+- Maximum {available_space} characters
+- Focus on the marketing campaign theme
+- Professional, engaging tone for SMS
+- No placeholders, business names, or contact info - just the core message
+- Keep it concise and actionable
+
+Generate only the SMS message content, nothing else."""
+
+                                chat = LlmChat(
+                                    api_key=emergent_key,
+                                    session_id=f"marketing_sms_{uuid.uuid4()}",
+                                    system_message="You are an expert veterinary SMS marketing writer who creates concise, engaging messages."
+                                ).with_model("openai", "gpt-4o-mini")
+                                
+                                user_message = UserMessage(text=sms_prompt)
+                                response = await chat.send_message(user_message)
+                                
+                                condensed_content = response.strip()
+                                
+                                # Clean up
                                 import re
                                 condensed_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', condensed_content)
                                 condensed_content = re.sub(r'\*([^*]+)\*', r'\1', condensed_content)
-                                # Remove any fake placeholders
-                                condensed_content = re.sub(r'\[.*?\]', '', condensed_content)
+                                condensed_content = condensed_content.strip()
+                                
+                                logger.info(f"🎃 MARKETING SMS DEBUG: Generated content: {condensed_content}")
+                                
+                                # Clean up extra spaces and ensure it fits
                                 condensed_content = ' '.join(condensed_content.split())  # Remove extra whitespace
                                 condensed_content = condensed_content.strip()
                                 
@@ -7411,18 +7873,9 @@ Warm regards,
                                 if len(condensed_content) > available_space:
                                     condensed_content = condensed_content[:available_space-3] + "..."
                             else:
-                                # Fallback: Create simple topic-based content
+                                # Fallback without ChatGPT
                                 topic_name = campaign_title.replace('Marketing Campaign - ', '')
-                                if 'nutrition' in topic_name.lower():
-                                    condensed_content = "Proper nutrition keeps your pet healthy!"
-                                elif 'dental' in topic_name.lower():
-                                    condensed_content = "Keep your pet's teeth clean!"
-                                elif 'grooming' in topic_name.lower():
-                                    condensed_content = "Regular grooming keeps pets healthy!"
-                                elif 'vaccination' in topic_name.lower():
-                                    condensed_content = "Protect your pet with vaccinations!"
-                                else:
-                                    condensed_content = "Quality care for your pet!"
+                                condensed_content = f"Quality care for your beloved pet! Expert veterinary services."
                                 
                                 # Ensure fallback content fits
                                 if len(condensed_content) > available_space:
@@ -7439,32 +7892,45 @@ Warm regards,
                         if agent_data.get('marketing_sms_personalized', True) and sample_customer_data:
                             # PERSONALIZED SMS: Use template with placeholders + base content + customer data
                             try:
-                                # Generate SMS content using ChatGPT with template and base content
-                                sms_content_prompt = f"""
-                                Base marketing content: {base_campaign_content}
+                                # Generate SMS content using direct ChatGPT (same approach as other SMS agents)
+                                from emergentintegrations.llm.chat import LlmChat, UserMessage  
+                                import os
                                 
-                                SMS template: {sms_template}
+                                emergent_key = os.getenv('EMERGENT_LLM_KEY')
                                 
-                                Create a concise SMS message (under 160 characters) combining the marketing content with the template format.
-                                Use placeholders [CUSTOMER_NAME], [PET_NAME], and [PET_NAMES] for personalization.
-                                Keep it brief and engaging for SMS format.
-                                """
-                                
-                                sms_content_result = await ai_service.format_custom_content(
-                                    post_title=f"SMS: {campaign_title}",
-                                    post_content=sms_content_prompt,
-                                    word_count="50",  # Keep SMS concise
-                                    platforms=['sms'],
-                                    use_web_research=False,
-                                    image_text=""
-                                )
-                                
-                                if sms_content_result and sms_content_result.get('content'):
-                                    sms_template_with_content = sms_content_result['content']
-                                    # Clean up any markdown formatting
-                                    sms_template_with_content = sms_template_with_content.replace('**Title:**', '').replace('**Content:**', '')
-                                    sms_template_with_content = sms_template_with_content.replace('**', '').replace('Title:', '').replace('Content:', '')
+                                if emergent_key:
+                                    sms_prompt = f"""Create a brief SMS message for marketing campaign: {campaign_title.replace('Marketing Campaign - ', '')}.
+
+Campaign Context: {base_campaign_content[:100]}...
+SMS Template: {sms_template}
+
+Requirements:
+- Under 160 characters total
+- Combine marketing content with template format
+- Use placeholders [CUSTOMER_NAME], [PET_NAME], and [PET_NAMES] for personalization
+- Professional, engaging tone for SMS
+- Keep it brief and actionable
+
+Generate only the SMS message content, nothing else."""
+
+                                    chat = LlmChat(
+                                        api_key=emergent_key,
+                                        session_id=f"marketing_sms_{uuid.uuid4()}",
+                                        system_message="You are an expert veterinary SMS marketing writer who creates concise, engaging messages."
+                                    ).with_model("openai", "gpt-4o-mini")
+                                    
+                                    user_message = UserMessage(text=sms_prompt)
+                                    response = await chat.send_message(user_message)
+                                    
+                                    sms_template_with_content = response.strip()
+                                    
+                                    # Clean up
+                                    import re
+                                    sms_template_with_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', sms_template_with_content)
+                                    sms_template_with_content = re.sub(r'\*([^*]+)\*', r'\1', sms_template_with_content)
                                     sms_template_with_content = sms_template_with_content.strip()
+                                    
+                                    logger.info(f"🎃 MARKETING SMS DEBUG: Generated personalized content: {sms_template_with_content}")
                                 else:
                                     # Fallback: Combine template and base content
                                     sms_template_with_content = f"{sms_template} {base_campaign_content}"[:160]  # Truncate to SMS limit
@@ -7478,17 +7944,6 @@ Warm regards,
                     
                     if agent_data.get('marketing_sms_personalized', True) and sample_customer_data:
                         try:
-                            if sms_content_result and sms_content_result.get('content'):
-                                sms_template_with_content = sms_content_result['content']
-                                # Clean up any markdown formatting
-                                sms_template_with_content = sms_template_with_content.replace('**Title:**', '').replace('**Content:**', '')
-                                sms_template_with_content = sms_template_with_content.replace('**', '').replace('Title:', '').replace('Content:', '')
-                                sms_template_with_content = sms_template_with_content.strip()
-                            else:
-                                # Fallback: Use template + base content (truncated for SMS)
-                                combined_content = f"{sms_template} {base_campaign_content}"
-                                sms_template_with_content = combined_content[:140] + "..." if len(combined_content) > 140 else combined_content
-                            
                             # Apply personalization to the generated SMS content
                             personalized_content = sms_template_with_content.replace('[CUSTOMER_NAME]', sample_customer_data['customer_name'])
                             personalized_content = personalized_content.replace('[PET_NAME]', sample_customer_data['pet_names'][0] if sample_customer_data['pet_names'] else 'Pet')
@@ -7519,28 +7974,44 @@ Warm regards,
                     else:
                         # NON-PERSONALIZED SMS: Use template + base content, replace placeholders with generic values
                         try:
-                            # For SMS, we need to condense the content to fit SMS character limits
-                            # Create concise SMS version of the base content
-                            sms_content_result = await ai_service.format_custom_content(
-                                post_title=f"SMS Content: {campaign_title}",
-                                post_content=f"Create a concise SMS version (under 100 characters) of this content: {base_campaign_content}",
-                                word_count="25",  # Very concise for SMS
-                                platforms=['sms'],
-                                use_web_research=False,
-                                image_text=""
-                            )
+                            # Generate concise SMS version using direct ChatGPT (same approach as other SMS agents)
+                            from emergentintegrations.llm.chat import LlmChat, UserMessage  
+                            import os
                             
-                            if sms_content_result and sms_content_result.get('content'):
-                                condensed_content = sms_content_result['content']
-                                # Clean up any markdown formatting
+                            emergent_key = os.getenv('EMERGENT_LLM_KEY')
+                            
+                            if emergent_key:
+                                sms_prompt = f"""Create a brief SMS message for marketing campaign: {campaign_title.replace('Marketing Campaign - ', '')}.
+
+Campaign Context: {base_campaign_content[:100]}...
+
+Requirements:
+- Under 100 characters
+- Focus on the marketing campaign theme
+- Professional, engaging tone for SMS
+- No placeholders, business names, or contact info - just the core message
+- Keep it concise and actionable
+
+Generate only the SMS message content, nothing else."""
+
+                                chat = LlmChat(
+                                    api_key=emergent_key,
+                                    session_id=f"marketing_sms_{uuid.uuid4()}",
+                                    system_message="You are an expert veterinary SMS marketing writer who creates concise, engaging messages."
+                                ).with_model("openai", "gpt-4o-mini")
+                                
+                                user_message = UserMessage(text=sms_prompt)
+                                response = await chat.send_message(user_message)
+                                
+                                condensed_content = response.strip()
+                                
+                                # Clean up
                                 import re
-                                condensed_content = re.sub(r'\*\*Title:.*?\*\*', '', condensed_content, flags=re.IGNORECASE)
-                                condensed_content = re.sub(r'\*\*Content:\*\*', '', condensed_content, flags=re.IGNORECASE)
-                                condensed_content = re.sub(r'Title:.*?\n', '', condensed_content, flags=re.IGNORECASE)
-                                condensed_content = re.sub(r'Content:\s*', '', condensed_content, flags=re.IGNORECASE)
-                                condensed_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', condensed_content)  # Bold text
-                                condensed_content = re.sub(r'\*([^*]+)\*', r'\1', condensed_content)    # Italic text
+                                condensed_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', condensed_content)
+                                condensed_content = re.sub(r'\*([^*]+)\*', r'\1', condensed_content)
                                 condensed_content = condensed_content.strip()
+                                
+                                logger.info(f"🎃 MARKETING SMS DEBUG: Generated generic content: {condensed_content}")
                             else:
                                 # Fallback: Truncate content if generation fails
                                 condensed_content = base_campaign_content[:80] + "..." if len(base_campaign_content) > 80 else base_campaign_content
@@ -9762,9 +10233,14 @@ async def generate_timesheet_report(agent_id: str, agent_data: dict, created_by:
             if not employee_config:
                 continue
             
-            # Get time entries for the period
+            # Get time entries for the period (interpret dates in business timezone)
+            business_tz = await get_business_timezone()
             start_datetime = datetime.strptime(start_date, '%Y-%m-%d')
             end_datetime = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(days=1)
+            
+            # Convert from business timezone to UTC for database query
+            start_datetime = business_tz.localize(start_datetime).astimezone(pytz.UTC).replace(tzinfo=None)
+            end_datetime = business_tz.localize(end_datetime).astimezone(pytz.UTC).replace(tzinfo=None)
             
             time_entries_cursor = db.time_entries.find({
                 "user_id": employee_id,
@@ -9908,10 +10384,29 @@ async def generate_timesheet_report(agent_id: str, agent_data: dict, created_by:
 async def calculate_report_period(period: str, custom_start: Optional[str] = None, custom_end: Optional[str] = None, agent_id: Optional[str] = None) -> tuple[str, str]:
     """Calculate start and end dates for report period"""
     try:
-        # If custom start and end dates are provided, use them directly
+        # If custom start and end dates are provided, interpret them in business timezone
         if custom_start and custom_end:
             logger.info(f"Using custom period from frontend: {custom_start} to {custom_end}")
-            return custom_start, custom_end
+            
+            # Apply the same timezone logic as recurring agents
+            # Custom dates from frontend should be interpreted in business timezone, not UTC
+            business_tz = await get_business_timezone()
+            
+            # Parse the custom dates and localize them to business timezone
+            custom_start_date = datetime.strptime(custom_start, '%Y-%m-%d').date()
+            custom_end_date = datetime.strptime(custom_end, '%Y-%m-%d').date()
+            
+            # Convert to business timezone aware datetime objects for consistency
+            custom_start_dt = business_tz.localize(datetime.combine(custom_start_date, datetime.min.time()))
+            custom_end_dt = business_tz.localize(datetime.combine(custom_end_date, datetime.min.time()))
+            
+            # Convert back to dates in business timezone (same approach as recurring agents)
+            business_start_date = custom_start_dt.date()
+            business_end_date = custom_end_dt.date()
+            
+            logger.info(f"Custom dates interpreted in business timezone: {business_start_date} to {business_end_date}")
+            
+            return business_start_date.strftime('%Y-%m-%d'), business_end_date.strftime('%Y-%m-%d')
         else:
             logger.info(f"No custom period provided, calculating period for: {period}")
             
@@ -9922,7 +10417,7 @@ async def calculate_report_period(period: str, custom_start: Optional[str] = Non
             # Calculate current weekly period based on foundation date
             try:
                 # Get the actual foundation date from timesheet config
-                timesheet_config = await db.timesheet_configs.find_one({})
+                timesheet_config = await db.timesheet_config.find_one({})
                 if timesheet_config and timesheet_config.get("original_pay_period_start_date"):
                     foundation_date_str = timesheet_config["original_pay_period_start_date"]
                     foundation_date = datetime.strptime(foundation_date_str, '%Y-%m-%d').date()
@@ -9958,7 +10453,7 @@ async def calculate_report_period(period: str, custom_start: Optional[str] = Non
             # Calculate current bi-weekly period based on foundation date
             try:
                 # Get the actual foundation date from timesheet config
-                timesheet_config = await db.timesheet_configs.find_one({})
+                timesheet_config = await db.timesheet_config.find_one({})
                 if timesheet_config and timesheet_config.get("original_pay_period_start_date"):
                     foundation_date_str = timesheet_config["original_pay_period_start_date"]
                     foundation_date = datetime.strptime(foundation_date_str, '%Y-%m-%d').date()
@@ -11092,8 +11587,24 @@ async def permanently_delete_employee(
 
 
 # Auto Clock-Out Background Task
+async def auto_clockout_scheduler():
+    """Background scheduler that runs auto clock-out task every 15 minutes"""
+    import asyncio
+    
+    logger.info("⏰ Started auto clock-out background scheduler")
+    
+    while True:
+        try:
+            await auto_clockout_task()
+            # Check every 15 minutes for auto clock-out conditions
+            await asyncio.sleep(900)  # 15 minutes
+        except Exception as e:
+            logger.error(f"Error in auto clock-out scheduler: {e}")
+            # Wait a bit before retrying on error  
+            await asyncio.sleep(300)  # 5 minutes
+
 async def auto_clockout_task():
-    """Background task to automatically clock out employees after business hours + grace period"""
+    """Background task to automatically clock out employees after their shift ends or business hours + grace period"""
     try:
         # Get timesheet configuration
         config = await db.timesheet_config.find_one()
@@ -11101,66 +11612,203 @@ async def auto_clockout_task():
         if config:
             grace_minutes = config.get("auto_clockout_grace_minutes", 30)
         
-        # Get business hours
-        business_hours = await db.hospital_hours.find_one()
-        if not business_hours:
-            return
-        
         # Get current business time
         business_tz = await get_business_timezone()
         current_time = datetime.now(business_tz)
         current_day = current_time.strftime("%A").lower()
-        
-        # Get closing time for today
-        day_hours = business_hours.get(current_day)
-        if not day_hours or not day_hours.get("is_open"):
-            return
-        
-        close_time_str = day_hours.get("close_time", "17:00")
-        close_hour, close_minute = map(int, close_time_str.split(":"))
-        close_time = current_time.replace(hour=close_hour, minute=close_minute, second=0, microsecond=0)
-        
-        # Add grace period
-        auto_clockout_time = close_time + timedelta(minutes=grace_minutes)
-        
-        # Only proceed if current time is past auto clock-out time
-        if current_time < auto_clockout_time:
-            return
+        current_date = current_time.strftime("%Y-%m-%d")
         
         # Find employees who are still clocked in
         active_entries = await db.time_entries.find({"status": "active"}).to_list(length=None)
         
         for entry in active_entries:
             # Check if clock-in was today
-            clock_in_time = datetime.fromisoformat(entry["clock_in_time"].replace("Z", "+00:00"))
+            clock_in_raw = entry["clock_in_time"]
+            if isinstance(clock_in_raw, str):
+                clock_in_time = datetime.fromisoformat(clock_in_raw.replace("Z", "+00:00"))
+            else:
+                # Already a datetime object
+                clock_in_time = clock_in_raw
+                if clock_in_time.tzinfo is None:
+                    # Assume it's in UTC if no timezone info
+                    clock_in_time = clock_in_time.replace(tzinfo=pytz.UTC)
+            
             clock_in_business = clock_in_time.astimezone(business_tz)
             
-            if clock_in_business.date() == current_time.date():
-                # Auto clock out this employee
-                breaks = entry.get("breaks", [])
-                for break_entry in breaks:
-                    if not break_entry.get("break_end"):
-                        break_entry["break_end"] = auto_clockout_time
+            if clock_in_business.date() != current_time.date():
+                continue  # Skip entries not from today
+            
+            user_id = entry["user_id"]
+            auto_clockout_time = None
+            reason = ""
+            
+            # First priority: Check if employee has a scheduled shift for today
+            shift = await db.shifts.find_one({
+                "user_id": user_id,
+                "schedule_date": current_date,
+                "status": {"$in": ["scheduled", "confirmed"]}
+            })
+            
+            if shift:
+                # Use shift end time + grace period
+                end_time_str = shift["end_time"]  # Format: "HH:MM"
+                end_hour, end_minute = map(int, end_time_str.split(":"))
+                shift_end_time = current_time.replace(hour=end_hour, minute=end_minute, second=0, microsecond=0)
+                auto_clockout_time = shift_end_time + timedelta(minutes=grace_minutes)
+                reason = f"shift end time ({end_time_str}) + {grace_minutes} min grace period"
                 
-                entry["clock_out_time"] = auto_clockout_time
-                entry["breaks"] = breaks
-                entry["status"] = "completed"
-                entry["is_auto_clockout"] = True
-                entry["updated_at"] = current_time
+            else:
+                # Second priority: Use business closing time + grace period
+                # Get business hours from Configure Business Hours
+                business_hours = await db.hospital_hours.find_one()
+                if not business_hours:
+                    continue
                 
-                # Calculate hours
-                hours_calc = await calculate_hours(entry)
-                entry.update(hours_calc)
+                day_hours = business_hours.get(current_day)
+                if not day_hours or not day_hours.get("is_open"):
+                    continue
                 
-                await db.time_entries.update_one(
-                    {"id": entry["id"]},
-                    {"$set": entry}
-                )
+                # Use the configured closing time (which represents the latest service - urgent care)
+                # The Configure Business Hours should be set to the latest closing time (e.g., 22:00 for urgent care)
+                close_time_str = day_hours.get("close_time", "17:00")
+                close_hour, close_minute = map(int, close_time_str.split(":"))
+                business_close_time = current_time.replace(hour=close_hour, minute=close_minute, second=0, microsecond=0)
+                auto_clockout_time = business_close_time + timedelta(minutes=grace_minutes)
+                reason = f"business closing time ({close_time_str}) + {grace_minutes} min grace period"
+            
+            # Only proceed if current time is past auto clock-out time
+            if not auto_clockout_time or current_time < auto_clockout_time:
+                continue
                 
-                logger.info(f"Auto clocked out user {entry['user_id']} at {auto_clockout_time}")
+            # Auto clock out this employee
+            breaks = entry.get("breaks", [])
+            for break_entry in breaks:
+                if not break_entry.get("break_end"):
+                    break_entry["break_end"] = auto_clockout_time.isoformat()
+            
+            entry["clock_out_time"] = auto_clockout_time.isoformat()
+            entry["breaks"] = breaks
+            entry["status"] = "completed"
+            entry["is_auto_clockout"] = True
+            entry["updated_at"] = current_time.isoformat()
+            entry["notes"] = entry.get("notes", "") + f" [Auto clocked out: {reason}]"
+            
+            # Calculate hours
+            hours_calc = await calculate_hours(entry)
+            entry.update(hours_calc)
+            
+            await db.time_entries.update_one(
+                {"id": entry["id"]},
+                {"$set": entry}
+            )
+            
+            logger.info(f"Auto clocked out user {user_id} at {auto_clockout_time} (reason: {reason})")
     
     except Exception as e:
         logger.error(f"Error in auto clock-out task: {str(e)}")
+
+
+async def auto_clockout_scheduler():
+    """Background task that runs the auto clock-out processor every 15 minutes"""
+    import asyncio
+    
+    logger.info("⏰ Started auto clock-out background scheduler")
+    
+    while True:
+        try:
+            await auto_clockout_task()
+            # Wait for 15 minutes before next check
+            await asyncio.sleep(900)  # 15 minutes = 900 seconds
+        except Exception as e:
+            logger.error(f"Error in auto clock-out scheduler: {e}")
+            # Wait a bit before retrying on error  
+            await asyncio.sleep(300)  # 5 minutes
+
+
+# Paystub Configuration API Endpoints
+@api_router.get("/paystub-config", response_model=PaystubConfig)
+async def get_paystub_config(user: User = Depends(get_manager_or_admin_user)):
+    """Get paystub configuration"""
+    try:
+        config = await db.paystub_config.find_one()
+        if not config:
+            raise HTTPException(status_code=404, detail="Paystub configuration not found")
+        
+        return PaystubConfig(**config)
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting paystub config: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get paystub configuration")
+
+@api_router.post("/paystub-config", response_model=PaystubConfig)
+async def create_or_update_paystub_config(config: PaystubConfigCreate, user: User = Depends(get_manager_or_admin_user)):
+    """Create or update paystub configuration"""
+    try:
+        current_time = datetime.utcnow()
+        
+        # Check if config already exists
+        existing_config = await db.paystub_config.find_one()
+        
+        if existing_config:
+            # Update existing config
+            update_data = {k: v for k, v in config.dict().items() if v is not None}
+            update_data["updated_at"] = current_time
+            update_data["updated_by"] = user.id
+            
+            await db.paystub_config.update_one(
+                {"id": existing_config["id"]},
+                {"$set": update_data}
+            )
+            
+            updated_config = await db.paystub_config.find_one({"id": existing_config["id"]})
+            return PaystubConfig(**updated_config)
+        else:
+            # Create new config
+            config_id = str(uuid.uuid4())
+            config_data = {
+                "id": config_id,
+                **config.dict(),
+                "created_at": current_time,
+                "updated_at": current_time,
+                "updated_by": user.id
+            }
+            
+            await db.paystub_config.insert_one(config_data)
+            return PaystubConfig(**config_data)
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating/updating paystub config: {e}")
+        raise HTTPException(status_code=500, detail="Failed to save paystub configuration")
+
+@api_router.put("/paystub-config/{config_id}", response_model=PaystubConfig)
+async def update_paystub_config(config_id: str, config: PaystubConfigUpdate, user: User = Depends(get_manager_or_admin_user)):
+    """Update paystub configuration"""
+    try:
+        existing_config = await db.paystub_config.find_one({"id": config_id})
+        if not existing_config:
+            raise HTTPException(status_code=404, detail="Paystub configuration not found")
+        
+        update_data = {k: v for k, v in config.dict().items() if v is not None}
+        update_data["updated_at"] = datetime.utcnow()
+        update_data["updated_by"] = user.id
+        
+        await db.paystub_config.update_one(
+            {"id": config_id},
+            {"$set": update_data}
+        )
+        
+        updated_config = await db.paystub_config.find_one({"id": config_id})
+        return PaystubConfig(**updated_config)
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating paystub config: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update paystub configuration")
 
 
 # Employee Scheduling API Endpoints
@@ -12550,7 +13198,7 @@ async def initialize_default_templates(
             {
                 "name": "Personalized Marketing Offer",
                 "type": "email",
-                "content": "Hello [CUSTOMER_NAME],\n\nWe have a special offer for [PET_NAME]! Take advantage of our current promotions and give [PET_NAMES] the care they deserve.\n\nBook your appointment today: [BOOK_NOW_LINK]\n\nContact us: [PHONE_NUMBER]\nVisit us: [BUSINESS_ADDRESS]\n\nBest regards,\n[BUSINESS_NAME]",
+                "content": "Hello [CUSTOMER_NAME],\n\nWe have a special offer for [PET_NAME]! Take advantage of our current promotions and give [PET_NAMES] the care they deserve.\n\nBook your appointment today: [BOOK_NOW_LINK]\n\nContact us: [PHONE_NUMBER]\nVisit us: 📍 [BUSINESS_ADDRESS]\n\nBest regards,\n[BUSINESS_NAME]",
                 "description": "Personalized marketing promotion with customer and pet names"
             },
             
@@ -12570,7 +13218,7 @@ async def initialize_default_templates(
             {
                 "name": "Monthly Health Tips",
                 "type": "email",
-                "content": "Monthly Pet Health Tips from [BUSINESS_NAME]\n\nDear Pet Owners,\n\nHere are this month's essential pet health tips to keep your furry friends happy and healthy:\n\n🐾 Regular Exercise: Ensure your pets get adequate daily exercise\n🐾 Balanced Nutrition: Feed age-appropriate, high-quality food\n🐾 Preventive Care: Stay up-to-date with vaccinations and checkups\n🐾 Dental Health: Regular brushing prevents dental disease\n🐾 Parasite Prevention: Keep up with flea, tick, and worm prevention\n\nNeed professional advice or care? We're here to help!\n\n📞 Call us: [PHONE_NUMBER]\n🌐 Visit: [WEBSITE_LINK]\n📅 Book online: [BOOK_NOW_LINK]\n\nYour trusted partner in pet health,\n[BUSINESS_NAME]\n[BUSINESS_ADDRESS]",
+                "content": "Monthly Pet Health Tips from [BUSINESS_NAME]\n\nDear Pet Owners,\n\nHere are this month's essential pet health tips to keep your furry friends happy and healthy:\n\n🐾 Regular Exercise: Ensure your pets get adequate daily exercise\n🐾 Balanced Nutrition: Feed age-appropriate, high-quality food\n🐾 Preventive Care: Stay up-to-date with vaccinations and checkups\n🐾 Dental Health: Regular brushing prevents dental disease\n🐾 Parasite Prevention: Keep up with flea, tick, and worm prevention\n\nNeed professional advice or care? We're here to help!\n\n📞 Call us: [PHONE_NUMBER]\n🌐 Visit: [WEBSITE_LINK]\n📅 Book online: [BOOK_NOW_LINK]\n\nYour trusted partner in pet health,\n[BUSINESS_NAME]\n📍 [BUSINESS_ADDRESS]",
                 "description": "Monthly health tips newsletter for all pet owners"
             },
             {
@@ -12584,7 +13232,7 @@ async def initialize_default_templates(
             {
                 "name": "Campaign Email - Personalized (ChatGPT)",
                 "type": "email",
-                "content": "Dear [CUSTOMER_NAME],\n\n[CHATGPT_CONTENT]\n\nWe hope [PET_NAME] is doing well! If you have any questions or would like to schedule an appointment, please don't hesitate to reach out.\n\nBest regards,\n[BUSINESS_NAME]\n📞 [PHONE_NUMBER]\n🌐 [WEBSITE_LINK]\n📅 [BOOK_NOW_LINK]\n\nVisit us at: [BUSINESS_ADDRESS]",
+                "content": "Dear [CUSTOMER_NAME],\n\n[CHATGPT_CONTENT]\n\nWe hope [PET_NAME] is doing well! If you have any questions or would like to schedule an appointment, please don't hesitate to reach out.\n\nBest regards,\n[BUSINESS_NAME]\n📞 [PHONE_NUMBER]\n🌐 [WEBSITE_LINK]\n📅 [BOOK_NOW_LINK]\n\nVisit us at: 📍 [BUSINESS_ADDRESS]",
                 "description": "Campaign email template with ChatGPT generated content - personalized with customer and pet names"
             },
             {

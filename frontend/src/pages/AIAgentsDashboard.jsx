@@ -37,8 +37,13 @@ const AIAgentsDashboard = () => {
   const [pageLoading, setPageLoading] = useState(true);
   const [selectedAgent, setSelectedAgent] = useState(null);
   const [processingAgent, setProcessingAgent] = useState(null);
-  const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'active', 'paused'
-  const [agentTypeFilter, setAgentTypeFilter] = useState('all'); // 'all', 'time_sheet', 'email', 'sms_agent', 'social_media'
+  // Initialize filters from localStorage or defaults
+  const [statusFilter, setStatusFilter] = useState(() => {
+    return localStorage.getItem('aiAgentsDashboard_statusFilter') || 'all';
+  });
+  const [agentTypeFilter, setAgentTypeFilter] = useState(() => {
+    return localStorage.getItem('aiAgentsDashboard_agentTypeFilter') || 'all';
+  });
   const [showAgentTypeModal, setShowAgentTypeModal] = useState(false);
   const [agentTypes, setAgentTypes] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -75,18 +80,14 @@ const AIAgentsDashboard = () => {
     }
   }, [user, authLoading, canAccessManager, token]);
 
-  // Add window focus listener to refresh data when returning to dashboard
+  // Save filters to localStorage when they change
   useEffect(() => {
-    const handleFocus = () => {
-      if (user && token && canAccessManager()) {
-        console.log('Window focused, refreshing agents data...');
-        fetchAgents(true); // Force refresh when window gains focus
-      }
-    };
+    localStorage.setItem('aiAgentsDashboard_statusFilter', statusFilter);
+  }, [statusFilter]);
 
-    window.addEventListener('focus', handleFocus);
-    return () => window.removeEventListener('focus', handleFocus);
-  }, [user, token]);
+  useEffect(() => {
+    localStorage.setItem('aiAgentsDashboard_agentTypeFilter', agentTypeFilter);
+  }, [agentTypeFilter]);
 
   // Fetch holidays
   const fetchHolidays = async () => {
@@ -1617,11 +1618,15 @@ const AIAgentsDashboard = () => {
                           {agent.agent_type === 'time_sheet' ? (
                             // Timesheet Agent Display
                             <div className="space-y-4">
-                              {/* Row 1: Runs Every and Workflow Mode */}
+                              {/* Row 1: Run Mode and Workflow Mode */}
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="flex flex-col">
-                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Runs Every</span>
-                                  <p className="text-sm text-gray-900 mt-1">{getRunsEveryLabel(agent)}</p>
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                    {agent.mode === 'adhoc' ? 'Run Mode' : 'Runs Every'}
+                                  </span>
+                                  <p className="text-sm text-gray-900 mt-1">
+                                    {agent.mode === 'adhoc' ? 'Adhoc' : getRunsEveryLabel(agent)}
+                                  </p>
                                 </div>
                                 <div className="flex flex-col">
                                   <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Workflow Mode</span>
@@ -1630,7 +1635,212 @@ const AIAgentsDashboard = () => {
                                   </p>
                                 </div>
                               </div>
-                              {/* Rest of timesheet logic continues... */}
+                              
+                              {/* Row 2: Employees and Email Recipients */}
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Employees</span>
+                                  <div className="mt-1">
+                                    {agent.selected_employees && agent.selected_employees.length > 0 ? (
+                                      <div className="text-sm text-gray-900">
+                                        {employees.length > 0 ? (
+                                          agent.selected_employees.map(empId => {
+                                            const employee = employees.find(emp => emp.id === empId);
+                                            return employee ? (employee.full_name || employee.name) : `Employee ${empId}`;
+                                          }).join(', ')
+                                        ) : (
+                                          agent.selected_employees.join(', ')
+                                        )}
+                                      </div>
+                                    ) : (
+                                      <span className="text-sm text-gray-600">All employees</span>
+                                    )}
+                                  </div>
+                                </div>
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Recipients</span>
+                                  <div className="mt-1">
+                                    {agent.email_recipients && agent.email_recipients.length > 0 ? (
+                                      <div className="text-sm text-gray-900">
+                                        {agent.email_recipients.join(', ')}
+                                      </div>
+                                    ) : (
+                                      <span className="text-sm text-gray-600">None configured</span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              {/* Row 3: Billing Rates */}
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Billing Rates</span>
+                                  <p className="text-sm text-gray-900 mt-1">
+                                    {agent.include_billing_rates !== false ? 'Included' : 'Excluded'}
+                                  </p>
+                                </div>
+                                {agent.mode === 'recurring' && (
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Days After Period End</span>
+                                    <p className="text-sm text-gray-900 mt-1">
+                                      {agent.days_after_period_end ? `${agent.days_after_period_end} day${agent.days_after_period_end !== 1 ? 's' : ''}` : '1 day'}
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+                              
+                              {/* Row 5: Configured Pay Period and Last Manual Run for Adhoc Agents */}
+                              {agent.mode === 'adhoc' && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  {/* Configured Pay Period - Left Column */}
+                                  <div className="flex flex-col p-4 bg-blue-50 rounded-lg border border-blue-200">
+                                    <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-2">
+                                      📅 Configured Pay Period
+                                    </span>
+                                    <div className="space-y-1">
+                                      {agent.custom_start_date && agent.custom_end_date ? (
+                                        // Show configured custom date range
+                                        <div>
+                                          <p className="text-sm font-medium text-blue-900">
+                                            {(() => {
+                                              // Parse date string directly to avoid timezone issues
+                                              const [year, month, day] = agent.custom_start_date.split('-');
+                                              const startDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                                              return startDate.toLocaleDateString('en-US', {
+                                                weekday: 'short',
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric'
+                                              });
+                                            })()} - {(() => {
+                                              // Parse date string directly to avoid timezone issues
+                                              const [year, month, day] = agent.custom_end_date.split('-');
+                                              const endDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                                              return endDate.toLocaleDateString('en-US', {
+                                                weekday: 'short',
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric'
+                                              });
+                                            })()}
+                                          </p>
+                                          <p className="text-xs text-blue-600 mt-1">
+                                            When manually run timesheet will be generated for above pay period
+                                          </p>
+                                        </div>
+                                      ) : agent.report_period ? (
+                                        // Show report period if no custom dates
+                                        <div>
+                                          <p className="text-sm font-medium text-blue-900">
+                                            {agent.report_period === 'current_week' ? 'Current Week' :
+                                             agent.report_period === 'last_week' ? 'Last Week' :
+                                             agent.report_period === 'current_month' ? 'Current Month' :
+                                             agent.report_period === 'last_month' ? 'Last Month' :
+                                             agent.report_period.charAt(0).toUpperCase() + agent.report_period.slice(1)}
+                                          </p>
+                                          <p className="text-xs text-blue-600 mt-1">
+                                            When manually run timesheet will be generated for above pay period
+                                          </p>
+                                        </div>
+                                      ) : (
+                                        // No configured period
+                                        <div>
+                                          <p className="text-sm text-gray-600">No pay period configured</p>
+                                          <p className="text-xs text-blue-600 mt-1">
+                                            When manually run timesheet will be generated for above pay period
+                                          </p>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Last Manual Run - Right Column */}
+                                  <div className="flex flex-col p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                    <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">
+                                      📝 Last Manual Run
+                                    </span>
+                                    <p className="text-sm text-gray-900">
+                                      {(() => {
+                                        // For adhoc agents, prioritize actual manual run time over scheduled dates
+                                        if (agent.last_manual_run) {
+                                          return new Date(agent.last_manual_run).toLocaleDateString('en-US', {
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: 'numeric',
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                          });
+                                        }
+                                        
+                                        if (agent.last_run_at) {
+                                          return new Date(agent.last_run_at).toLocaleDateString('en-US', {
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: 'numeric',
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                          });
+                                        }
+                                        
+                                        return 'Never run manually';
+                                      })()}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {/* Row 6: Next Run Schedule and Last Manual Run for Recurring Agents */}
+                              {agent.mode === 'recurring' && agent.is_active && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  {/* Next Execution - Left Column */}
+                                  <div className="flex flex-col p-4 bg-gradient-to-r from-orange-50 to-yellow-50 rounded-lg border border-orange-200">
+                                    <span className="text-xs font-semibold text-orange-600 uppercase tracking-wide mb-2">
+                                      📅 Next Execution
+                                    </span>
+                                    {(() => {
+                                      const periodInfo = calculatePayPeriodAndRunDate(agent);
+                                      if (!periodInfo) {
+                                        return <p className="text-sm font-medium text-orange-900">Calculating...</p>;
+                                      }
+                                      
+                                      return (
+                                        <div className="space-y-1">
+                                          <div>
+                                            <p className="text-xs text-orange-600">Pay Period:</p>
+                                            <p className="text-sm font-medium text-orange-800">{periodInfo.payPeriodRange}</p>
+                                          </div>
+                                          <div>
+                                            <p className="text-xs text-orange-600">Next Run:</p>
+                                            <p className="text-sm font-semibold text-orange-900">{periodInfo.nextRunDate}</p>
+                                          </div>
+                                          <p className="text-xs text-orange-600 mt-1">
+                                            Based on period end + {agent.days_after_period_end || 1} day(s)
+                                          </p>
+                                        </div>
+                                      );
+                                    })()}
+                                  </div>
+                                  
+                                  {/* Last Manual Run - Right Column */}
+                                  <div className="flex flex-col p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                    <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">
+                                      📝 Last Manual Run
+                                    </span>
+                                    <p className="text-sm text-gray-900">
+                                      {agent.last_run_at ? 
+                                        new Date(agent.last_run_at).toLocaleDateString('en-US', {
+                                          year: 'numeric',
+                                          month: 'short',
+                                          day: 'numeric',
+                                          hour: '2-digit',
+                                          minute: '2-digit'
+                                        }) : 
+                                        'Never run manually'
+                                      }
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           ) : agent.agent_type === 'marketing_agent' ? (
                             // Marketing Agent Display
@@ -3146,6 +3356,17 @@ const AIAgentsDashboard = () => {
             {/* Scrollable Content */}
             <div className="flex-1 overflow-y-auto px-6 py-6">
               
+              {/* Debug Information */}
+              <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-xs text-yellow-800">
+                  <strong>Debug Info:</strong> Agent Type: {selectedAgent.agent_type}, Mode: {selectedAgent.mode}
+                </p>
+                <p className="text-xs text-yellow-800 mt-1">
+                  <strong>Fields:</strong> selected_employees: {selectedAgent.selected_employees ? selectedAgent.selected_employees.length : 'none'}, 
+                  run_every_pay_period: {selectedAgent.run_every_pay_period || 'none'}
+                </p>
+              </div>
+              
               {/* Agent Configuration Display */}
               <div className="space-y-6">
                 
@@ -3338,16 +3559,6 @@ const AIAgentsDashboard = () => {
                               {selectedAgent.initial_status ? selectedAgent.initial_status.replace('_', ' ') : 'In Review'}
                             </p>
                           </div>
-                          <div>
-                            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Auto Email</label>
-                            <p className="text-sm text-gray-900 mt-1">
-                              <span className={`inline-flex items-center px-3 py-1 rounded text-xs font-medium ${
-                                selectedAgent.auto_email ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
-                              }`}>
-                                {selectedAgent.auto_email ? 'Enabled' : 'Disabled'}
-                              </span>
-                            </p>
-                          </div>
                         </div>
                       </div>
                     </section>
@@ -3374,6 +3585,21 @@ const AIAgentsDashboard = () => {
                       </section>
                     )}
                   </>
+                ) : selectedAgent.agent_type && selectedAgent.agent_type.includes('time') ? (
+                  // Fallback for timesheet agents with different naming
+                  <section>
+                    <h4 className="text-lg font-medium text-gray-900 mb-4">
+                      Timesheet Agent (Fallback View)
+                    </h4>
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                      <p className="text-sm text-red-800">
+                        Timesheet agent detected but agent_type is: "{selectedAgent.agent_type}"
+                      </p>
+                      <pre className="text-xs mt-2 text-red-700">
+                        {JSON.stringify(selectedAgent, null, 2)}
+                      </pre>
+                    </div>
+                  </section>
                 ) : (
                   // Social Media Agent View (existing content)
                   <>

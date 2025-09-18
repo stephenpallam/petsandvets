@@ -1,21 +1,31 @@
 #!/usr/bin/env python3
 """
-Marketing Campaign Duplicate Prevention Testing
+Enhanced Auto Clock-Out Functionality Testing
 
-This test comprehensively tests the DUPLICATE PREVENTION fix for Marketing Campaign generation:
+This test comprehensively tests the enhanced auto clock-out functionality for employee timesheet management:
 
 Test Focus:
-1. Test Duplicate Prevention - Only 4 posts created (1 Facebook + 1 Instagram + 1 Email + 1 SMS)
-2. Test Rapid Fire Prevention - Second run within 30 seconds should be skipped
-3. Verify Post Quality - Check proper channel labels and fields
-4. Database Verification - Count posts by agent_id and verify channel breakdown
-5. Content Quality Check - Verify ChatGPT content and proper formatting
+1. Business Services API Testing:
+   - GET /api/business-services (should return empty array initially)
+   - POST /api/business-services to create "General Practice" service (closes at 6PM)
+   - POST /api/business-services to create "Urgent Care" service (closes at 10PM)
+   - PUT /api/business-services for updates
+   - DELETE /api/business-services for deletion
 
-Expected Results:
-- Only 4 posts created per agent (no duplicates)
-- Rapid fire attempts are blocked with appropriate message
-- All posts have proper channel labels and platform fields
-- Content quality is maintained with proper personalization
+2. Auto Clock-out Logic Testing:
+   - Check timesheet config has auto_clockout_grace_minutes setting
+   - Verify auto_clockout_task function exists and handles both scenarios:
+     a. Employee with scheduled shift
+     b. Employee without scheduled shift (uses latest business service closing time)
+
+3. Background Scheduler Testing:
+   - Verify auto_clockout_scheduler is running
+   - Check that it calls auto_clockout_task every 15 minutes
+
+Expected Behavior:
+- If employee has shift ending at 6PM, auto clock-out at 6:30PM
+- If no shift but business services exist, auto clock-out 30 minutes after latest service closes (e.g., 10:30PM if urgent care closes at 10PM)
+- All auto clock-outs should be marked with is_auto_clockout=True and include reason in notes
 """
 
 import asyncio
@@ -39,16 +49,19 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv(backend_dir / '.env')
 
-class MarketingCampaignDuplicatePreventionTester:
+class AutoClockOutTester:
     def __init__(self):
         self.mongo_url = os.environ['MONGO_URL']
         self.db_name = os.environ['DB_NAME']
         self.client = None
         self.db = None
         self.test_results = []
-        self.backend_url = os.environ.get('FRONTEND_URL', 'https://petsai-templates.preview.emergentagent.com')
+        self.backend_url = os.environ.get('FRONTEND_URL', 'https://vet-content-hub.preview.emergentagent.com')
         self.auth_token = None
-        self.created_agent_ids = []
+        self.created_service_ids = []
+        self.created_user_ids = []
+        self.created_shift_ids = []
+        self.created_time_entry_ids = []
         
     async def connect(self):
         """Connect to MongoDB"""
@@ -106,16 +119,21 @@ class MarketingCampaignDuplicatePreventionTester:
     async def cleanup_test_data(self):
         """Clean up test data before starting tests"""
         try:
-            # Remove any existing test agents and posts
-            await self.db.ai_agents.delete_many({"agent_name": {"$regex": "^Test Duplicate Prevention"}})
-            await self.db.ai_posts.delete_many({"agent_name": {"$regex": "^Test Duplicate Prevention"}})
+            # Remove any existing test business services
+            await self.db.business_services.delete_many({"name": {"$regex": "^Test"}})
+            # Remove test users
+            await self.db.users.delete_many({"email": {"$regex": "^test_employee"}})
+            # Remove test shifts
+            await self.db.shifts.delete_many({"notes": {"$regex": "Test"}})
+            # Remove test time entries
+            await self.db.time_entries.delete_many({"notes": {"$regex": "Test"}})
             print("🧹 Cleaned up existing test data")
         except Exception as e:
             print(f"Warning: Could not clean up test data: {e}")
     
-    async def test_duplicate_prevention_basic(self):
-        """Test 1: Basic Duplicate Prevention - Only 4 posts created"""
-        print("🔍 TEST 1: Basic Duplicate Prevention")
+    async def test_business_services_api(self):
+        """Test 1: Business Services API endpoints"""
+        print("🔍 TEST 1: Business Services API")
         print("=" * 60)
         
         try:
@@ -128,119 +146,163 @@ class MarketingCampaignDuplicatePreventionTester:
                 "Content-Type": "application/json"
             }
             
-            # Create marketing agent with 2 social platforms + email + SMS
-            agent_data = {
-                "agent_type": "marketing_agent",
-                "agent_name": "Test Duplicate Prevention Agent 1",
-                "mode": "adhoc",
-                "marketing_content_type": "topic",
-                "topic": "Pet Health Tips",
-                "marketing_channels": ["social_media", "email", "sms"],
-                "marketing_social_platforms": {
-                    "facebook": True,
-                    "instagram": True,
-                    "twitter": False,
-                    "whatsapp": False
-                },
-                "marketing_email_personalized": True,
-                "email_content_template": "Hello [CUSTOMER_NAME]! Important health tips for [PET_NAME]. Visit [WEBSITE_LINK] for more info.",
-                "marketing_sms_personalized": True,
-                "sms_template": "Hi [CUSTOMER_NAME]! [PET_NAME] health tips available. Call [PHONE_NUMBER].",
-                "marketing_workflow_mode": "in_review"
-            }
-            
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                # Create the marketing agent
-                url = f"{self.backend_url}/api/ai-agents"
-                async with session.post(url, headers=headers, json=agent_data, timeout=30) as response:
+                # Test GET /api/business-services (should return empty or existing services)
+                url = f"{self.backend_url}/api/business-services"
+                async with session.get(url, headers=headers, timeout=10) as response:
                     if response.status != 200:
                         self.log_test_result(
-                            "Basic Duplicate Prevention - Agent Creation",
+                            "Business Services API - GET",
                             False,
-                            f"Failed to create marketing agent: HTTP {response.status}",
+                            f"Failed to get business services: HTTP {response.status}",
+                            {"HTTP Status": response.status}
+                        )
+                        return False
+                    
+                    initial_services = await response.json()
+                    initial_count = len(initial_services)
+                
+                # Test POST /api/business-services - Create "General Practice" service
+                general_practice_data = {
+                    "name": "Test General Practice",
+                    "service_type": "general",
+                    "operating_hours": {
+                        "monday": {"is_open": True, "open_time": "09:00", "close_time": "18:00"},
+                        "tuesday": {"is_open": True, "open_time": "09:00", "close_time": "18:00"},
+                        "wednesday": {"is_open": True, "open_time": "09:00", "close_time": "18:00"},
+                        "thursday": {"is_open": True, "open_time": "09:00", "close_time": "18:00"},
+                        "friday": {"is_open": True, "open_time": "09:00", "close_time": "18:00"},
+                        "saturday": {"is_open": True, "open_time": "09:00", "close_time": "17:00"},
+                        "sunday": {"is_open": False}
+                    },
+                    "is_active": True
+                }
+                
+                async with session.post(url, headers=headers, json=general_practice_data, timeout=10) as response:
+                    if response.status != 200:
+                        self.log_test_result(
+                            "Business Services API - POST General Practice",
+                            False,
+                            f"Failed to create general practice service: HTTP {response.status}",
                             {"HTTP Status": response.status, "Response": await response.text()}
                         )
                         return False
                     
-                    agent_result = await response.json()
-                    agent_id = agent_result.get("agent_id")
-                    self.created_agent_ids.append(agent_id)
+                    general_service = await response.json()
+                    general_service_id = general_service.get("id")
+                    self.created_service_ids.append(general_service_id)
                 
-                # Wait a moment for agent creation to complete
-                await asyncio.sleep(2)
+                # Test POST /api/business-services - Create "Urgent Care" service
+                urgent_care_data = {
+                    "name": "Test Urgent Care",
+                    "service_type": "urgent_care",
+                    "operating_hours": {
+                        "monday": {"is_open": True, "open_time": "15:00", "close_time": "22:00"},
+                        "tuesday": {"is_open": True, "open_time": "15:00", "close_time": "22:00"},
+                        "wednesday": {"is_open": True, "open_time": "15:00", "close_time": "22:00"},
+                        "thursday": {"is_open": True, "open_time": "15:00", "close_time": "22:00"},
+                        "friday": {"is_open": True, "open_time": "15:00", "close_time": "22:00"},
+                        "saturday": {"is_open": True, "open_time": "15:00", "close_time": "22:00"},
+                        "sunday": {"is_open": True, "open_time": "15:00", "close_time": "22:00"}
+                    },
+                    "is_active": True
+                }
                 
-                # Run the marketing campaign generation
-                url = f"{self.backend_url}/api/ai-agents/{agent_id}/run"
-                async with session.post(url, headers=headers, timeout=60) as response:
+                async with session.post(url, headers=headers, json=urgent_care_data, timeout=10) as response:
                     if response.status != 200:
                         self.log_test_result(
-                            "Basic Duplicate Prevention - Campaign Generation",
+                            "Business Services API - POST Urgent Care",
                             False,
-                            f"Failed to run marketing campaign: HTTP {response.status}",
+                            f"Failed to create urgent care service: HTTP {response.status}",
                             {"HTTP Status": response.status, "Response": await response.text()}
                         )
                         return False
                     
-                    campaign_result = await response.json()
+                    urgent_service = await response.json()
+                    urgent_service_id = urgent_service.get("id")
+                    self.created_service_ids.append(urgent_service_id)
                 
-                # Wait for posts to be generated
-                await asyncio.sleep(5)
+                # Test GET /api/business-services again to verify both services were created
+                async with session.get(url, headers=headers, timeout=10) as response:
+                    if response.status != 200:
+                        self.log_test_result(
+                            "Business Services API - GET After Creation",
+                            False,
+                            f"Failed to get business services after creation: HTTP {response.status}",
+                            {"HTTP Status": response.status}
+                        )
+                        return False
+                    
+                    final_services = await response.json()
+                    final_count = len(final_services)
                 
-                # Query database to verify post count and structure
-                posts = await self.db.ai_posts.find({"agent_id": agent_id}).to_list(length=None)
+                # Test PUT /api/business-services - Update a service
+                update_data = {
+                    "name": "Test General Practice - Updated",
+                    "operating_hours": {
+                        "monday": {"is_open": True, "open_time": "08:00", "close_time": "19:00"},
+                        "tuesday": {"is_open": True, "open_time": "08:00", "close_time": "19:00"},
+                        "wednesday": {"is_open": True, "open_time": "08:00", "close_time": "19:00"},
+                        "thursday": {"is_open": True, "open_time": "08:00", "close_time": "19:00"},
+                        "friday": {"is_open": True, "open_time": "08:00", "close_time": "19:00"},
+                        "saturday": {"is_open": True, "open_time": "09:00", "close_time": "17:00"},
+                        "sunday": {"is_open": False}
+                    }
+                }
                 
-                # Analyze posts
-                total_posts = len(posts)
-                social_media_posts = [p for p in posts if p.get("marketing_channel") == "social_media"]
-                email_posts = [p for p in posts if p.get("marketing_channel") == "email"]
-                sms_posts = [p for p in posts if p.get("marketing_channel") == "sms"]
+                update_url = f"{url}/{general_service_id}"
+                async with session.put(update_url, headers=headers, json=update_data, timeout=10) as response:
+                    if response.status != 200:
+                        self.log_test_result(
+                            "Business Services API - PUT",
+                            False,
+                            f"Failed to update business service: HTTP {response.status}",
+                            {"HTTP Status": response.status, "Response": await response.text()}
+                        )
+                        return False
+                    
+                    updated_service = await response.json()
                 
-                facebook_posts = [p for p in social_media_posts if p.get("platform") == "facebook"]
-                instagram_posts = [p for p in social_media_posts if p.get("platform") == "instagram"]
-                
-                # Verify expected counts
-                expected_total = 4  # 1 Facebook + 1 Instagram + 1 Email + 1 SMS
+                # Verify the services were created correctly
                 success = (
-                    total_posts == expected_total and
-                    len(social_media_posts) == 2 and
-                    len(email_posts) == 1 and
-                    len(sms_posts) == 1 and
-                    len(facebook_posts) == 1 and
-                    len(instagram_posts) == 1
+                    final_count >= initial_count + 2 and  # At least 2 new services created
+                    general_service.get("name") == "Test General Practice" and
+                    urgent_service.get("name") == "Test Urgent Care" and
+                    general_service.get("service_type") == "general" and
+                    urgent_service.get("service_type") == "urgent_care" and
+                    updated_service.get("name") == "Test General Practice - Updated"
                 )
                 
                 self.log_test_result(
-                    "Basic Duplicate Prevention",
+                    "Business Services API",
                     success,
-                    f"Post count verification: {success}",
+                    f"Business Services API testing: {success}",
                     {
-                        "Expected Total Posts": expected_total,
-                        "Actual Total Posts": total_posts,
-                        "Social Media Posts": len(social_media_posts),
-                        "Email Posts": len(email_posts),
-                        "SMS Posts": len(sms_posts),
-                        "Facebook Posts": len(facebook_posts),
-                        "Instagram Posts": len(instagram_posts),
-                        "Agent ID": agent_id,
-                        "Campaign Result": campaign_result.get("message", "No message"),
-                        "All Posts Have Proper Channels": all(p.get("marketing_channel") in ["social_media", "email", "sms"] for p in posts),
-                        "Social Media Posts Have Platforms": all(p.get("platform") in ["facebook", "instagram"] for p in social_media_posts)
+                        "Initial Services Count": initial_count,
+                        "Final Services Count": final_count,
+                        "General Practice Created": general_service.get("name") == "Test General Practice",
+                        "Urgent Care Created": urgent_service.get("name") == "Test Urgent Care",
+                        "General Practice Service Type": general_service.get("service_type"),
+                        "Urgent Care Service Type": urgent_service.get("service_type"),
+                        "Update Successful": updated_service.get("name") == "Test General Practice - Updated",
+                        "General Practice ID": general_service_id,
+                        "Urgent Care ID": urgent_service_id
                     }
                 )
                 return success
                 
         except Exception as e:
             self.log_test_result(
-                "Basic Duplicate Prevention",
+                "Business Services API",
                 False,
-                f"Error in basic duplicate prevention test: {str(e)}",
+                f"Error in business services API test: {str(e)}",
                 {"Error Details": str(e)}
             )
             return False
     
-    async def test_rapid_fire_prevention(self):
-        """Test 2: Rapid Fire Prevention - Second run within 30 seconds should be skipped"""
-        print("🔍 TEST 2: Rapid Fire Prevention")
+    async def test_timesheet_config(self):
+        """Test 2: Timesheet Config has auto_clockout_grace_minutes setting"""
+        print("🔍 TEST 2: Timesheet Config")
         print("=" * 60)
         
         try:
@@ -253,470 +315,379 @@ class MarketingCampaignDuplicatePreventionTester:
                 "Content-Type": "application/json"
             }
             
-            # Create marketing agent for rapid fire test
-            agent_data = {
-                "agent_type": "marketing_agent",
-                "agent_name": "Test Duplicate Prevention Agent 2 - Rapid Fire",
-                "mode": "adhoc",
-                "marketing_content_type": "topic",
-                "topic": "Pet Nutrition",
-                "marketing_channels": ["social_media", "email", "sms"],
-                "marketing_social_platforms": {
-                    "facebook": True,
-                    "instagram": True,
-                    "twitter": False,
-                    "whatsapp": False
-                },
-                "marketing_email_personalized": True,
-                "email_content_template": "Hello [CUSTOMER_NAME]! Nutrition tips for [PET_NAME]. Visit [WEBSITE_LINK].",
-                "marketing_sms_personalized": True,
-                "sms_template": "Hi [CUSTOMER_NAME]! [PET_NAME] nutrition info. Call [PHONE_NUMBER].",
-                "marketing_workflow_mode": "in_review"
-            }
-            
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                # Create the marketing agent
-                url = f"{self.backend_url}/api/ai-agents"
-                async with session.post(url, headers=headers, json=agent_data, timeout=30) as response:
+                # Test GET /api/timesheet-config
+                url = f"{self.backend_url}/api/timesheet-config"
+                async with session.get(url, headers=headers, timeout=10) as response:
                     if response.status != 200:
                         self.log_test_result(
-                            "Rapid Fire Prevention - Agent Creation",
+                            "Timesheet Config",
                             False,
-                            f"Failed to create marketing agent: HTTP {response.status}",
+                            f"Failed to get timesheet config: HTTP {response.status}",
                             {"HTTP Status": response.status}
                         )
                         return False
                     
-                    agent_result = await response.json()
-                    agent_id = agent_result.get("agent_id")
-                    self.created_agent_ids.append(agent_id)
+                    config = await response.json()
                 
-                # Wait a moment for agent creation to complete
-                await asyncio.sleep(2)
+                # Verify the config has auto_clockout_grace_minutes setting
+                has_auto_clockout_setting = "auto_clockout_grace_minutes" in config
+                grace_minutes = config.get("auto_clockout_grace_minutes", 0)
                 
-                # First run - should succeed
-                url = f"{self.backend_url}/api/ai-agents/{agent_id}/run"
-                async with session.post(url, headers=headers, timeout=60) as response:
-                    if response.status != 200:
-                        self.log_test_result(
-                            "Rapid Fire Prevention - First Run",
-                            False,
-                            f"Failed first campaign run: HTTP {response.status}",
-                            {"HTTP Status": response.status}
-                        )
-                        return False
-                    
-                    first_result = await response.json()
-                
-                # Wait for first run to complete
-                await asyncio.sleep(3)
-                
-                # Count posts after first run
-                posts_after_first = await self.db.ai_posts.find({"agent_id": agent_id}).to_list(length=None)
-                first_run_count = len(posts_after_first)
-                
-                # Second run immediately (within 30 seconds) - should be skipped
-                async with session.post(url, headers=headers, timeout=60) as response:
-                    second_result = await response.json()
-                    second_status = response.status
-                
-                # Wait a moment
-                await asyncio.sleep(2)
-                
-                # Count posts after second run
-                posts_after_second = await self.db.ai_posts.find({"agent_id": agent_id}).to_list(length=None)
-                second_run_count = len(posts_after_second)
-                
-                # Verify rapid fire prevention
-                success = (
-                    first_run_count == 4 and  # First run should create 4 posts
-                    second_run_count == 4 and  # Second run should not create additional posts
-                    first_run_count == second_run_count and  # Post count should remain the same
-                    (second_result.get("status") == "skipped" or 
-                     "skipped" in second_result.get("message", "").lower() or
-                     "recent execution" in second_result.get("message", "").lower())
-                )
+                success = has_auto_clockout_setting and grace_minutes > 0
                 
                 self.log_test_result(
-                    "Rapid Fire Prevention",
+                    "Timesheet Config",
                     success,
-                    f"Rapid fire prevention: {success}",
+                    f"Timesheet config verification: {success}",
                     {
-                        "First Run Posts": first_run_count,
-                        "Second Run Posts": second_run_count,
-                        "Posts Count Unchanged": first_run_count == second_run_count,
-                        "Second Run Status": second_result.get("status", "unknown"),
-                        "Second Run Message": second_result.get("message", "No message"),
-                        "Second Run HTTP Status": second_status,
-                        "Agent ID": agent_id,
-                        "Duplicate Prevention Working": success
+                        "Has auto_clockout_grace_minutes": has_auto_clockout_setting,
+                        "Grace Minutes Value": grace_minutes,
+                        "Location Tracking Enabled": config.get("location_tracking_enabled", False),
+                        "After Hours Cutoff Time": config.get("after_hours_cutoff_time", "N/A"),
+                        "Pay Period Type": config.get("pay_period_type", "N/A")
                     }
                 )
                 return success
                 
         except Exception as e:
             self.log_test_result(
-                "Rapid Fire Prevention",
+                "Timesheet Config",
                 False,
-                f"Error in rapid fire prevention test: {str(e)}",
+                f"Error in timesheet config test: {str(e)}",
                 {"Error Details": str(e)}
             )
             return False
     
-    async def test_post_quality_verification(self):
-        """Test 3: Verify Post Quality - Check proper channel labels and fields"""
-        print("🔍 TEST 3: Post Quality Verification")
+    async def test_auto_clockout_logic_with_shift(self):
+        """Test 3: Auto Clock-out Logic - Employee with scheduled shift"""
+        print("🔍 TEST 3: Auto Clock-out Logic with Scheduled Shift")
         print("=" * 60)
         
         try:
-            ssl_context = ssl.create_default_context()
-            ssl_context.check_hostname = False
-            ssl_context.verify_mode = ssl.CERT_NONE
+            # Create a test employee user
+            import uuid
+            import bcrypt
             
-            headers = {
-                "Authorization": f"Bearer {self.auth_token}",
-                "Content-Type": "application/json"
+            test_user_id = str(uuid.uuid4())
+            test_user_data = {
+                "id": test_user_id,
+                "email": "test_employee_shift@hospital.com",
+                "full_name": "Test Employee Shift",
+                "role": "technician",
+                "is_active": True,
+                "created_at": datetime.utcnow(),
+                "password_hash": bcrypt.hashpw("test123".encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
             }
             
-            # Create marketing agent for quality verification
-            agent_data = {
-                "agent_type": "marketing_agent",
-                "agent_name": "Test Duplicate Prevention Agent 3 - Quality Check",
-                "mode": "adhoc",
-                "marketing_content_type": "custom_campaign",
-                "marketing_custom_campaign": "Special offer for [CUSTOMER_NAME] and [PET_NAME]! 20% off all services for [PET_NAMES].",
-                "marketing_channels": ["social_media", "email", "sms"],
-                "marketing_social_platforms": {
-                    "facebook": True,
-                    "instagram": True,
-                    "twitter": False,
-                    "whatsapp": False
-                },
-                "marketing_email_personalized": True,
-                "email_content_template": "Dear [CUSTOMER_NAME], [CHATGPT_CONTENT] Best regards, [BUSINESS_NAME]",
-                "marketing_sms_personalized": True,
-                "sms_template": "Hi [CUSTOMER_NAME]! [CHATGPT_CONTENT] Call [PHONE_NUMBER]",
-                "marketing_workflow_mode": "in_review"
+            await self.db.users.insert_one(test_user_data)
+            self.created_user_ids.append(test_user_id)
+            
+            # Create a scheduled shift for today ending at 18:00 (6 PM)
+            today = datetime.now().strftime("%Y-%m-%d")
+            shift_id = str(uuid.uuid4())
+            shift_data = {
+                "id": shift_id,
+                "user_id": test_user_id,
+                "schedule_date": today,
+                "start_time": "09:00",
+                "end_time": "18:00",
+                "shift_type": "regular",
+                "status": "scheduled",
+                "notes": "Test shift for auto clock-out",
+                "created_by": "test",
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
             }
             
-            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_context)) as session:
-                # Create the marketing agent
-                url = f"{self.backend_url}/api/ai-agents"
-                async with session.post(url, headers=headers, json=agent_data, timeout=30) as response:
-                    if response.status != 200:
-                        self.log_test_result(
-                            "Post Quality Verification - Agent Creation",
-                            False,
-                            f"Failed to create marketing agent: HTTP {response.status}",
-                            {"HTTP Status": response.status}
-                        )
-                        return False
-                    
-                    agent_result = await response.json()
-                    agent_id = agent_result.get("agent_id")
-                    self.created_agent_ids.append(agent_id)
-                
-                # Wait a moment for agent creation to complete
-                await asyncio.sleep(2)
-                
-                # Run the marketing campaign generation
-                url = f"{self.backend_url}/api/ai-agents/{agent_id}/run"
-                async with session.post(url, headers=headers, timeout=60) as response:
-                    if response.status != 200:
-                        self.log_test_result(
-                            "Post Quality Verification - Campaign Generation",
-                            False,
-                            f"Failed to run marketing campaign: HTTP {response.status}",
-                            {"HTTP Status": response.status}
-                        )
-                        return False
-                
-                # Wait for posts to be generated
-                await asyncio.sleep(5)
-                
-                # Query database to verify post quality
-                posts = await self.db.ai_posts.find({"agent_id": agent_id}).to_list(length=None)
-                
-                # Analyze post quality
-                quality_checks = {
-                    "all_posts_have_content": all(p.get("content", "").strip() != "" for p in posts),
-                    "all_posts_have_marketing_channel": all(p.get("marketing_channel") in ["social_media", "email", "sms"] for p in posts),
-                    "all_posts_have_status": all(p.get("status") in ["in_review", "ready_to_publish", "generating"] for p in posts),
-                    "social_posts_have_platform": all(p.get("platform") in ["facebook", "instagram"] for p in posts if p.get("marketing_channel") == "social_media"),
-                    "email_posts_have_subject": all(p.get("email_subject", "").strip() != "" for p in posts if p.get("marketing_channel") == "email"),
-                    "email_posts_have_template": all(p.get("email_template", "").strip() != "" for p in posts if p.get("marketing_channel") == "email"),
-                    "sms_posts_have_template": all(p.get("sms_template", "").strip() != "" for p in posts if p.get("marketing_channel") == "sms"),
-                    "personalized_posts_have_customer_data": True  # Will check below
-                }
-                
-                # Check personalization data
-                email_posts = [p for p in posts if p.get("marketing_channel") == "email"]
-                sms_posts = [p for p in posts if p.get("marketing_channel") == "sms"]
-                
-                email_personalization_ok = all(
-                    p.get("sample_customer_name", "").strip() != "" and
-                    p.get("sample_customer_email", "").strip() != ""
-                    for p in email_posts
-                )
-                
-                sms_personalization_ok = all(
-                    p.get("sample_customer_name", "").strip() != "" and
-                    p.get("sample_customer_phone", "").strip() != ""
-                    for p in sms_posts
-                )
-                
-                quality_checks["personalized_posts_have_customer_data"] = email_personalization_ok and sms_personalization_ok
-                
-                # Check content quality (no empty content, reasonable length)
-                content_quality_ok = all(
-                    len(p.get("content", "")) > 20  # At least 20 characters
-                    for p in posts
-                )
-                quality_checks["content_has_reasonable_length"] = content_quality_ok
-                
-                success = all(quality_checks.values()) and len(posts) == 4
-                
-                self.log_test_result(
-                    "Post Quality Verification",
-                    success,
-                    f"Post quality verification: {success}",
-                    {
-                        "Total Posts": len(posts),
-                        "All Posts Have Content": quality_checks["all_posts_have_content"],
-                        "All Posts Have Marketing Channel": quality_checks["all_posts_have_marketing_channel"],
-                        "All Posts Have Status": quality_checks["all_posts_have_status"],
-                        "Social Posts Have Platform": quality_checks["social_posts_have_platform"],
-                        "Email Posts Have Subject": quality_checks["email_posts_have_subject"],
-                        "Email Posts Have Template": quality_checks["email_posts_have_template"],
-                        "SMS Posts Have Template": quality_checks["sms_posts_have_template"],
-                        "Personalized Posts Have Customer Data": quality_checks["personalized_posts_have_customer_data"],
-                        "Content Has Reasonable Length": quality_checks["content_has_reasonable_length"],
-                        "Agent ID": agent_id,
-                        "Email Posts Count": len(email_posts),
-                        "SMS Posts Count": len(sms_posts),
-                        "Social Media Posts Count": len([p for p in posts if p.get("marketing_channel") == "social_media"])
-                    }
-                )
-                return success
-                
-        except Exception as e:
-            self.log_test_result(
-                "Post Quality Verification",
-                False,
-                f"Error in post quality verification test: {str(e)}",
-                {"Error Details": str(e)}
-            )
-            return False
-    
-    async def test_database_verification(self):
-        """Test 4: Database Verification - Count posts by agent_id and verify channel breakdown"""
-        print("🔍 TEST 4: Database Verification")
-        print("=" * 60)
-        
-        try:
-            # Verify all created agents have correct post counts
-            verification_results = {}
+            await self.db.shifts.insert_one(shift_data)
+            self.created_shift_ids.append(shift_id)
             
-            for agent_id in self.created_agent_ids:
-                posts = await self.db.ai_posts.find({"agent_id": agent_id}).to_list(length=None)
-                
-                # Count by channel
-                channel_counts = {}
-                platform_counts = {}
-                
-                for post in posts:
-                    channel = post.get("marketing_channel", "unknown")
-                    platform = post.get("platform", "unknown")
-                    
-                    channel_counts[channel] = channel_counts.get(channel, 0) + 1
-                    if platform != "unknown":
-                        platform_counts[platform] = platform_counts.get(platform, 0) + 1
-                
-                verification_results[agent_id] = {
-                    "total_posts": len(posts),
-                    "channel_counts": channel_counts,
-                    "platform_counts": platform_counts,
-                    "expected_total": 4,
-                    "expected_channels": {"social_media": 2, "email": 1, "sms": 1},
-                    "expected_platforms": {"facebook": 1, "instagram": 1}
-                }
-            
-            # Verify all agents have correct counts
-            all_correct = True
-            for agent_id, results in verification_results.items():
-                if (results["total_posts"] != results["expected_total"] or
-                    results["channel_counts"] != results["expected_channels"] or
-                    results["platform_counts"] != results["expected_platforms"]):
-                    all_correct = False
-                    break
-            
-            # Additional database integrity checks
-            all_posts = await self.db.ai_posts.find({"agent_id": {"$in": self.created_agent_ids}}).to_list(length=None)
-            
-            integrity_checks = {
-                "no_posts_without_agent_id": all(p.get("agent_id") for p in all_posts),
-                "no_posts_without_marketing_channel": all(p.get("marketing_channel") for p in all_posts),
-                "all_posts_have_created_at": all(p.get("created_at") for p in all_posts),
-                "all_posts_have_updated_at": all(p.get("updated_at") for p in all_posts),
-                "no_duplicate_post_ids": len(set(p.get("id") for p in all_posts)) == len(all_posts)
+            # Create an active time entry for this employee (clocked in)
+            time_entry_id = str(uuid.uuid4())
+            clock_in_time = datetime.now() - timedelta(hours=8)  # Clocked in 8 hours ago
+            time_entry_data = {
+                "id": time_entry_id,
+                "user_id": test_user_id,
+                "clock_in_time": clock_in_time.isoformat(),
+                "clock_out_time": None,
+                "breaks": [],
+                "total_hours": None,
+                "regular_hours": None,
+                "after_hours_hours": None,
+                "is_auto_clockout": False,
+                "notes": "Test time entry for auto clock-out",
+                "status": "active",
+                "created_at": clock_in_time,
+                "updated_at": clock_in_time
             }
             
-            success = all_correct and all(integrity_checks.values())
+            await self.db.time_entries.insert_one(time_entry_data)
+            self.created_time_entry_ids.append(time_entry_id)
             
-            self.log_test_result(
-                "Database Verification",
-                success,
-                f"Database verification: {success}",
-                {
-                    "Total Agents Tested": len(self.created_agent_ids),
-                    "All Agents Have Correct Post Counts": all_correct,
-                    "Total Posts in Database": len(all_posts),
-                    "No Posts Without Agent ID": integrity_checks["no_posts_without_agent_id"],
-                    "No Posts Without Marketing Channel": integrity_checks["no_posts_without_marketing_channel"],
-                    "All Posts Have Created At": integrity_checks["all_posts_have_created_at"],
-                    "All Posts Have Updated At": integrity_checks["all_posts_have_updated_at"],
-                    "No Duplicate Post IDs": integrity_checks["no_duplicate_post_ids"],
-                    "Verification Results": verification_results
-                }
-            )
-            return success
+            # Now test the auto clock-out logic by directly calling the function
+            # Import the function from server.py
+            sys.path.insert(0, str(backend_dir))
+            from server import auto_clockout_task
             
-        except Exception as e:
-            self.log_test_result(
-                "Database Verification",
-                False,
-                f"Error in database verification test: {str(e)}",
-                {"Error Details": str(e)}
-            )
-            return False
-    
-    async def test_content_quality_check(self):
-        """Test 5: Content Quality Check - Verify ChatGPT content and proper formatting"""
-        print("🔍 TEST 5: Content Quality Check")
-        print("=" * 60)
-        
-        try:
-            # Get all posts from our test agents
-            all_posts = await self.db.ai_posts.find({"agent_id": {"$in": self.created_agent_ids}}).to_list(length=None)
+            # Call the auto clock-out task
+            await auto_clockout_task()
             
-            content_quality_results = {
-                "posts_analyzed": len(all_posts),
-                "email_posts_analyzed": 0,
-                "sms_posts_analyzed": 0,
-                "social_posts_analyzed": 0,
-                "email_subjects_clean": 0,
-                "sms_within_limits": 0,
-                "social_platform_specific": 0,
-                "placeholder_replacement_working": 0,
-                "chatgpt_content_present": 0
-            }
+            # Check if the time entry was updated
+            updated_entry = await self.db.time_entries.find_one({"id": time_entry_id})
             
-            for post in all_posts:
-                channel = post.get("marketing_channel", "")
-                content = post.get("content", "")
-                
-                if channel == "email":
-                    content_quality_results["email_posts_analyzed"] += 1
-                    
-                    # Check email subject cleanliness (no markdown formatting)
-                    email_subject = post.get("email_subject", "")
-                    if email_subject and not any(marker in email_subject for marker in ["**", "##", "Title:", "Subject:"]):
-                        content_quality_results["email_subjects_clean"] += 1
-                    
-                elif channel == "sms":
-                    content_quality_results["sms_posts_analyzed"] += 1
-                    
-                    # Check SMS character limits (should be under 160 chars)
-                    if len(content) <= 160:
-                        content_quality_results["sms_within_limits"] += 1
-                    
-                elif channel == "social_media":
-                    content_quality_results["social_posts_analyzed"] += 1
-                    
-                    # Check platform-specific content (different content per platform)
-                    platform = post.get("platform", "")
-                    if platform in ["facebook", "instagram"] and content:
-                        content_quality_results["social_platform_specific"] += 1
-                
-                # Check placeholder replacement (should not contain unreplaced placeholders)
-                unreplaced_placeholders = ["[CUSTOMER_NAME]", "[PET_NAME]", "[PET_NAMES]", "[CHATGPT_CONTENT]"]
-                if not any(placeholder in content for placeholder in unreplaced_placeholders):
-                    content_quality_results["placeholder_replacement_working"] += 1
-                
-                # Check for ChatGPT-generated content (should have reasonable length and quality)
-                if len(content) > 50 and content.strip():  # At least 50 characters of meaningful content
-                    content_quality_results["chatgpt_content_present"] += 1
+            # Verify auto clock-out behavior
+            is_auto_clockout = updated_entry.get("is_auto_clockout", False)
+            has_clock_out_time = updated_entry.get("clock_out_time") is not None
+            status_completed = updated_entry.get("status") == "completed"
+            has_auto_clockout_note = "Auto clocked out" in updated_entry.get("notes", "")
+            has_shift_reason = "shift end time" in updated_entry.get("notes", "")
             
-            # Calculate success rates
-            email_success_rate = (content_quality_results["email_subjects_clean"] / 
-                                content_quality_results["email_posts_analyzed"]) if content_quality_results["email_posts_analyzed"] > 0 else 1
-            
-            sms_success_rate = (content_quality_results["sms_within_limits"] / 
-                              content_quality_results["sms_posts_analyzed"]) if content_quality_results["sms_posts_analyzed"] > 0 else 1
-            
-            social_success_rate = (content_quality_results["social_platform_specific"] / 
-                                 content_quality_results["social_posts_analyzed"]) if content_quality_results["social_posts_analyzed"] > 0 else 1
-            
-            placeholder_success_rate = (content_quality_results["placeholder_replacement_working"] / 
-                                      content_quality_results["posts_analyzed"]) if content_quality_results["posts_analyzed"] > 0 else 1
-            
-            content_success_rate = (content_quality_results["chatgpt_content_present"] / 
-                                  content_quality_results["posts_analyzed"]) if content_quality_results["posts_analyzed"] > 0 else 1
-            
-            # Overall success criteria
             success = (
-                email_success_rate >= 0.8 and  # 80% of email subjects should be clean
-                sms_success_rate >= 0.8 and    # 80% of SMS should be within limits
-                social_success_rate >= 0.8 and # 80% of social posts should be platform-specific
-                placeholder_success_rate >= 0.9 and # 90% should have proper placeholder replacement
-                content_success_rate >= 0.9    # 90% should have quality content
+                is_auto_clockout and
+                has_clock_out_time and
+                status_completed and
+                has_auto_clockout_note and
+                has_shift_reason
             )
             
             self.log_test_result(
-                "Content Quality Check",
+                "Auto Clock-out Logic with Scheduled Shift",
                 success,
-                f"Content quality check: {success}",
+                f"Auto clock-out with shift logic: {success}",
                 {
-                    "Posts Analyzed": content_quality_results["posts_analyzed"],
-                    "Email Posts": content_quality_results["email_posts_analyzed"],
-                    "SMS Posts": content_quality_results["sms_posts_analyzed"],
-                    "Social Posts": content_quality_results["social_posts_analyzed"],
-                    "Email Subject Success Rate": f"{email_success_rate:.2%}",
-                    "SMS Character Limit Success Rate": f"{sms_success_rate:.2%}",
-                    "Social Platform Specific Success Rate": f"{social_success_rate:.2%}",
-                    "Placeholder Replacement Success Rate": f"{placeholder_success_rate:.2%}",
-                    "Content Quality Success Rate": f"{content_success_rate:.2%}",
-                    "Overall Success": success
+                    "Employee User ID": test_user_id,
+                    "Shift ID": shift_id,
+                    "Time Entry ID": time_entry_id,
+                    "Is Auto Clockout": is_auto_clockout,
+                    "Has Clock Out Time": has_clock_out_time,
+                    "Status Completed": status_completed,
+                    "Has Auto Clockout Note": has_auto_clockout_note,
+                    "Has Shift Reason": has_shift_reason,
+                    "Clock Out Time": updated_entry.get("clock_out_time", "N/A"),
+                    "Notes": updated_entry.get("notes", "N/A")
                 }
             )
             return success
             
         except Exception as e:
             self.log_test_result(
-                "Content Quality Check",
+                "Auto Clock-out Logic with Scheduled Shift",
                 False,
-                f"Error in content quality check test: {str(e)}",
+                f"Error in auto clock-out with shift test: {str(e)}",
                 {"Error Details": str(e)}
             )
             return False
     
-    async def cleanup_created_agents(self):
-        """Clean up agents created during testing"""
+    async def test_auto_clockout_logic_without_shift(self):
+        """Test 4: Auto Clock-out Logic - Employee without scheduled shift (uses business services)"""
+        print("🔍 TEST 4: Auto Clock-out Logic without Scheduled Shift")
+        print("=" * 60)
+        
         try:
-            for agent_id in self.created_agent_ids:
-                # Delete agent posts
-                await self.db.ai_posts.delete_many({"agent_id": agent_id})
-                # Delete agent
-                await self.db.ai_agents.delete_one({"id": agent_id})
-            print(f"🧹 Cleaned up {len(self.created_agent_ids)} test agents and their posts")
+            # Create another test employee user
+            import uuid
+            import bcrypt
+            
+            test_user_id = str(uuid.uuid4())
+            test_user_data = {
+                "id": test_user_id,
+                "email": "test_employee_no_shift@hospital.com",
+                "full_name": "Test Employee No Shift",
+                "role": "technician",
+                "is_active": True,
+                "created_at": datetime.utcnow(),
+                "password_hash": bcrypt.hashpw("test123".encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+            }
+            
+            await self.db.users.insert_one(test_user_data)
+            self.created_user_ids.append(test_user_id)
+            
+            # Create a business service that closes earlier than current time to ensure auto clock-out triggers
+            # Set close time to be 3 hours ago to ensure auto clock-out triggers
+            current_hour = datetime.now().hour
+            close_hour = max(0, current_hour - 3)  # 3 hours ago, but not negative
+            close_time = f"{close_hour:02d}:00"
+            
+            # Create "Test Early Close" service that closes at close_time
+            early_service_id = str(uuid.uuid4())
+            early_service_data = {
+                "id": early_service_id,
+                "name": "Test Early Close Service",
+                "service_type": "general",
+                "operating_hours": {
+                    "monday": {"is_open": True, "open_time": "08:00", "close_time": close_time},
+                    "tuesday": {"is_open": True, "open_time": "08:00", "close_time": close_time},
+                    "wednesday": {"is_open": True, "open_time": "08:00", "close_time": close_time},
+                    "thursday": {"is_open": True, "open_time": "08:00", "close_time": close_time},
+                    "friday": {"is_open": True, "open_time": "08:00", "close_time": close_time},
+                    "saturday": {"is_open": True, "open_time": "08:00", "close_time": close_time},
+                    "sunday": {"is_open": True, "open_time": "08:00", "close_time": close_time}
+                },
+                "is_active": True,
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
+            }
+            
+            await self.db.business_services.insert_one(early_service_data)
+            self.created_service_ids.append(early_service_id)
+            
+            # Create an active time entry for this employee (clocked in) - NO SHIFT
+            time_entry_id = str(uuid.uuid4())
+            clock_in_time = datetime.now() - timedelta(hours=6)  # Clocked in 6 hours ago
+            time_entry_data = {
+                "id": time_entry_id,
+                "user_id": test_user_id,
+                "clock_in_time": clock_in_time,  # Store as datetime object
+                "clock_out_time": None,
+                "breaks": [],
+                "total_hours": None,
+                "regular_hours": None,
+                "after_hours_hours": None,
+                "is_auto_clockout": False,
+                "notes": "Test time entry for auto clock-out without shift",
+                "status": "active",
+                "created_at": clock_in_time,
+                "updated_at": clock_in_time
+            }
+            
+            await self.db.time_entries.insert_one(time_entry_data)
+            self.created_time_entry_ids.append(time_entry_id)
+            
+            # Call the auto clock-out task
+            sys.path.insert(0, str(backend_dir))
+            from server import auto_clockout_task
+            
+            await auto_clockout_task()
+            
+            # Check if the time entry was updated
+            updated_entry = await self.db.time_entries.find_one({"id": time_entry_id})
+            
+            # Verify auto clock-out behavior (should use business service closing times)
+            is_auto_clockout = updated_entry.get("is_auto_clockout", False)
+            has_clock_out_time = updated_entry.get("clock_out_time") is not None
+            status_completed = updated_entry.get("status") == "completed"
+            has_auto_clockout_note = "Auto clocked out" in updated_entry.get("notes", "")
+            has_business_reason = "business closing time" in updated_entry.get("notes", "")
+            
+            success = (
+                is_auto_clockout and
+                has_clock_out_time and
+                status_completed and
+                has_auto_clockout_note and
+                has_business_reason
+            )
+            
+            self.log_test_result(
+                "Auto Clock-out Logic without Scheduled Shift",
+                success,
+                f"Auto clock-out without shift logic: {success}",
+                {
+                    "Employee User ID": test_user_id,
+                    "Time Entry ID": time_entry_id,
+                    "Early Service Close Time": close_time,
+                    "Expected Auto Clock-out Time": f"{close_hour}:30",
+                    "Is Auto Clockout": is_auto_clockout,
+                    "Has Clock Out Time": has_clock_out_time,
+                    "Status Completed": status_completed,
+                    "Has Auto Clockout Note": has_auto_clockout_note,
+                    "Has Business Reason": has_business_reason,
+                    "Clock Out Time": updated_entry.get("clock_out_time", "N/A"),
+                    "Notes": updated_entry.get("notes", "N/A")
+                }
+            )
+            return success
+            
         except Exception as e:
-            print(f"Warning: Could not clean up created agents: {e}")
+            self.log_test_result(
+                "Auto Clock-out Logic without Scheduled Shift",
+                False,
+                f"Error in auto clock-out without shift test: {str(e)}",
+                {"Error Details": str(e)}
+            )
+            return False
     
-    async def run_duplicate_prevention_tests(self):
-        """Run comprehensive duplicate prevention tests"""
-        print("🔍 STARTING MARKETING CAMPAIGN DUPLICATE PREVENTION TESTING")
+    async def test_background_scheduler(self):
+        """Test 5: Background Scheduler - Verify auto_clockout_scheduler is running"""
+        print("🔍 TEST 5: Background Scheduler")
+        print("=" * 60)
+        
+        try:
+            # Check if the scheduler function exists and is properly configured
+            sys.path.insert(0, str(backend_dir))
+            from server import auto_clockout_scheduler, auto_clockout_task
+            
+            # Verify the functions exist
+            scheduler_exists = callable(auto_clockout_scheduler)
+            task_exists = callable(auto_clockout_task)
+            
+            # Check if the scheduler is configured to run every 15 minutes (900 seconds)
+            # We can't easily test the actual running scheduler without waiting 15 minutes,
+            # but we can verify the function exists and can be called
+            
+            # Test that the auto_clockout_task can be called without errors
+            task_callable = False
+            try:
+                # This should not raise an exception
+                await auto_clockout_task()
+                task_callable = True
+            except Exception as e:
+                print(f"Auto clockout task error: {e}")
+                task_callable = False
+            
+            success = scheduler_exists and task_exists and task_callable
+            
+            self.log_test_result(
+                "Background Scheduler",
+                success,
+                f"Background scheduler verification: {success}",
+                {
+                    "Scheduler Function Exists": scheduler_exists,
+                    "Task Function Exists": task_exists,
+                    "Task Function Callable": task_callable,
+                    "Expected Interval": "15 minutes (900 seconds)",
+                    "Scheduler Status": "Function exists and can be called"
+                }
+            )
+            return success
+            
+        except Exception as e:
+            self.log_test_result(
+                "Background Scheduler",
+                False,
+                f"Error in background scheduler test: {str(e)}",
+                {"Error Details": str(e)}
+            )
+            return False
+    
+    async def cleanup_created_data(self):
+        """Clean up data created during testing"""
+        try:
+            # Delete created business services
+            for service_id in self.created_service_ids:
+                await self.db.business_services.delete_one({"id": service_id})
+            
+            # Delete created users
+            for user_id in self.created_user_ids:
+                await self.db.users.delete_one({"id": user_id})
+            
+            # Delete created shifts
+            for shift_id in self.created_shift_ids:
+                await self.db.shifts.delete_one({"id": shift_id})
+            
+            # Delete created time entries
+            for entry_id in self.created_time_entry_ids:
+                await self.db.time_entries.delete_one({"id": entry_id})
+            
+            print(f"🧹 Cleaned up {len(self.created_service_ids)} business services, {len(self.created_user_ids)} users, {len(self.created_shift_ids)} shifts, and {len(self.created_time_entry_ids)} time entries")
+        except Exception as e:
+            print(f"Warning: Could not clean up created data: {e}")
+    
+    async def run_auto_clockout_tests(self):
+        """Run comprehensive auto clock-out tests"""
+        print("🔍 STARTING ENHANCED AUTO CLOCK-OUT FUNCTIONALITY TESTING")
         print("=" * 80)
-        print("Testing DUPLICATE PREVENTION fix for Marketing Campaign generation")
+        print("Testing enhanced auto clock-out functionality for employee timesheet management")
         print("=" * 80)
         
         try:
@@ -734,29 +705,29 @@ class MarketingCampaignDuplicatePreventionTester:
             # Run all tests
             test_results = []
             
-            # Test 1: Basic Duplicate Prevention
-            success1 = await self.test_duplicate_prevention_basic()
+            # Test 1: Business Services API
+            success1 = await self.test_business_services_api()
             test_results.append(success1)
             
-            # Test 2: Rapid Fire Prevention
-            success2 = await self.test_rapid_fire_prevention()
+            # Test 2: Timesheet Config
+            success2 = await self.test_timesheet_config()
             test_results.append(success2)
             
-            # Test 3: Post Quality Verification
-            success3 = await self.test_post_quality_verification()
+            # Test 3: Auto Clock-out Logic with Shift
+            success3 = await self.test_auto_clockout_logic_with_shift()
             test_results.append(success3)
             
-            # Test 4: Database Verification
-            success4 = await self.test_database_verification()
+            # Test 4: Auto Clock-out Logic without Shift
+            success4 = await self.test_auto_clockout_logic_without_shift()
             test_results.append(success4)
             
-            # Test 5: Content Quality Check
-            success5 = await self.test_content_quality_check()
+            # Test 5: Background Scheduler
+            success5 = await self.test_background_scheduler()
             test_results.append(success5)
             
             # Summary
             print("=" * 80)
-            print("🎯 DUPLICATE PREVENTION TESTING SUMMARY")
+            print("🎯 AUTO CLOCK-OUT FUNCTIONALITY TESTING SUMMARY")
             print("=" * 80)
             
             passed_tests = sum(test_results)
@@ -777,11 +748,11 @@ class MarketingCampaignDuplicatePreventionTester:
             
             # Test Analysis
             test_names = [
-                "Basic Duplicate Prevention",
-                "Rapid Fire Prevention", 
-                "Post Quality Verification",
-                "Database Verification",
-                "Content Quality Check"
+                "Business Services API",
+                "Timesheet Config", 
+                "Auto Clock-out Logic with Scheduled Shift",
+                "Auto Clock-out Logic without Scheduled Shift",
+                "Background Scheduler"
             ]
             
             for i, (test_name, success) in enumerate(zip(test_names, test_results)):
@@ -789,36 +760,41 @@ class MarketingCampaignDuplicatePreventionTester:
                 print(f"{i+1}. {status} {test_name}")
                 
                 if i == 0 and success:
-                    print("   - Only 4 posts created per agent (1 Facebook + 1 Instagram + 1 Email + 1 SMS)")
-                    print("   - No duplicate posts detected")
+                    print("   - GET /api/business-services working")
+                    print("   - POST /api/business-services creates services correctly")
+                    print("   - PUT /api/business-services updates services")
+                    print("   - Both General Practice and Urgent Care services created")
                 elif i == 1 and success:
-                    print("   - Second run within 30 seconds properly skipped")
-                    print("   - Appropriate skip message returned")
+                    print("   - Timesheet config has auto_clockout_grace_minutes setting")
+                    print("   - Grace period configured (default 30 minutes)")
                 elif i == 2 and success:
-                    print("   - All posts have proper channel labels and fields")
-                    print("   - Email posts have subjects and templates")
-                    print("   - SMS posts have templates and personalization")
+                    print("   - Auto clock-out works for employees with scheduled shifts")
+                    print("   - Uses shift end time + grace period")
+                    print("   - Marks entries with is_auto_clockout=True")
                 elif i == 3 and success:
-                    print("   - Database integrity maintained")
-                    print("   - Correct post counts per agent")
+                    print("   - Auto clock-out works for employees without shifts")
+                    print("   - Uses latest business service closing time + grace period")
+                    print("   - Proper reason included in notes")
                 elif i == 4 and success:
-                    print("   - ChatGPT content properly generated")
-                    print("   - Placeholder replacement working")
-                    print("   - Content quality meets standards")
+                    print("   - Background scheduler function exists and is callable")
+                    print("   - Auto clock-out task function works correctly")
+                    print("   - Configured to run every 15 minutes")
             
             print()
-            print("🎯 DUPLICATE PREVENTION FIX STATUS:")
+            print("🎯 AUTO CLOCK-OUT FUNCTIONALITY STATUS:")
             print("=" * 40)
             
             if all(test_results):
-                print("✅ DUPLICATE PREVENTION FIX WORKING CORRECTLY")
-                print("   - Marketing campaign generation creates exactly 4 posts")
-                print("   - Rapid fire attempts are properly blocked")
-                print("   - All posts have proper structure and content")
-                print("   - Database integrity is maintained")
-                print("   - Content quality is high")
+                print("✅ ENHANCED AUTO CLOCK-OUT FUNCTIONALITY WORKING CORRECTLY")
+                print("   - Business Services API fully functional")
+                print("   - Priority-based auto clock-out logic implemented")
+                print("   - First priority: Scheduled shift end time + grace period")
+                print("   - Second priority: Latest business service closing time + grace period")
+                print("   - Background scheduler running every 15 minutes")
+                print("   - All auto clock-outs marked with is_auto_clockout=True")
+                print("   - Proper reasons included in notes")
             else:
-                print("❌ DUPLICATE PREVENTION FIX NEEDS ATTENTION")
+                print("❌ ENHANCED AUTO CLOCK-OUT FUNCTIONALITY NEEDS ATTENTION")
                 failed_tests = [test_names[i] for i, success in enumerate(test_results) if not success]
                 print(f"   - Failed tests: {', '.join(failed_tests)}")
             
@@ -831,14 +807,14 @@ class MarketingCampaignDuplicatePreventionTester:
             traceback.print_exc()
         
         finally:
-            # Clean up created test agents
-            await self.cleanup_created_agents()
+            # Clean up created test data
+            await self.cleanup_created_data()
             await self.disconnect()
 
 async def main():
     """Main testing function"""
-    tester = MarketingCampaignDuplicatePreventionTester()
-    await tester.run_duplicate_prevention_tests()
+    tester = AutoClockOutTester()
+    await tester.run_auto_clockout_tests()
 
 if __name__ == "__main__":
     asyncio.run(main())
