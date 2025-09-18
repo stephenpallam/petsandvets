@@ -312,20 +312,31 @@ const Header = () => {
       if (user.role === 'admin') {
         roleDropdown.push(
           { name: 'Urgent Care Appointments', href: '/urgent-care-appointments' },
-          { name: 'Configure Hours', href: '/configure-hours' },
-          { name: 'Timesheet Management', href: '/timesheet-management' },
-          { name: 'Timesheet Configuration', href: '/timesheet-configuration' },
-          { name: 'Employee Management', href: '/employee-management' },
-          { name: 'Customer Management', href: '/customer-management' },
-          { name: 'Holiday Management', href: '/holiday-management' },
           { name: 'CMS Settings', href: '/cms-settings' },
           { name: 'Scheduling Calendar', href: '/scheduling-calendar' },
-          { name: 'Reviews', href: '/reviews' },
-          { name: 'Business Info', href: '/business-info' },
-          { name: 'Email Configuration', href: '/email-configuration' },
-          { name: 'SMS Configuration', href: '/sms-configuration' },
-          { name: 'Photo Management', href: '/photo-management' },
-          { name: 'User Management', href: '/user-management' }
+          { 
+            name: 'Business Settings',
+            submenu: [
+              { name: 'Business Details', href: '/business-info' },
+              { name: 'Configure Business Hours', href: '/configure-hours' },
+              { name: 'Reviews', href: '/reviews' },
+              { name: 'Photos', href: '/photo-management' },
+              { name: 'Users', href: '/user-management' }
+            ]
+          },
+          { 
+            name: 'System Settings',
+            submenu: [
+              { name: 'Manage Customers', href: '/customer-management' },
+              { name: 'Manage Timesheets', href: '/timesheet-management' },
+              { name: 'Timesheet Settings', href: '/timesheet-configuration' },
+              { name: 'Manage Employees', href: '/employee-management' },
+              { name: 'Configure Holidays', href: '/holiday-management' },
+              { name: 'Email Settings', href: '/email-configuration' },
+              { name: 'SMS Settings', href: '/sms-configuration' },
+              { name: 'Paystub Settings', href: '/paystub-settings' }
+            ]
+          }
         );
       }
       
@@ -335,19 +346,30 @@ const Header = () => {
           roleDropdown.push(
             { name: 'Clock In/Out', href: '/timesheet-clock' },
             { name: 'Urgent Care Appointments', href: '/urgent-care-appointments' },
-            { name: 'Configure Hours', href: '/configure-hours' },
-            { name: 'Timesheet Management', href: '/timesheet-management' },
-            { name: 'Timesheet Configuration', href: '/timesheet-configuration' },
-            { name: 'Employee Management', href: '/employee-management' },
-            { name: 'Customer Management', href: '/customer-management' },
-            { name: 'Holiday Management', href: '/holiday-management' },
             { name: 'Scheduling Calendar', href: '/scheduling-calendar' },
-            { name: 'Reviews', href: '/reviews' },
-            { name: 'Business Info', href: '/business-info' },
-            { name: 'Email Configuration', href: '/email-configuration' },
-            { name: 'SMS Configuration', href: '/sms-configuration' },
-            { name: 'Photo Management', href: '/photo-management' },
-            { name: 'User Management', href: '/user-management' }
+            { 
+              name: 'Business Settings',
+              submenu: [
+                { name: 'Business Details', href: '/business-info' },
+                { name: 'Configure Business Hours', href: '/configure-hours' },
+                { name: 'Reviews', href: '/reviews' },
+                { name: 'Photos', href: '/photo-management' },
+                { name: 'Users', href: '/user-management' }
+              ]
+            },
+            { 
+              name: 'System Settings',
+              submenu: [
+                { name: 'Manage Customers', href: '/customer-management' },
+                { name: 'Manage Timesheets', href: '/timesheet-management' },
+                { name: 'Timesheet Settings', href: '/timesheet-configuration' },
+                { name: 'Manage Employees', href: '/employee-management' },
+                { name: 'Configure Holidays', href: '/holiday-management' },
+                { name: 'Email Settings', href: '/email-configuration' },
+                { name: 'SMS Settings', href: '/sms-configuration' },
+                { name: 'Paystub Settings', href: '/paystub-settings' }
+              ]
+            }
           );
         }
         roleDropdown.push({ name: 'Register User', href: '/register' });
@@ -416,9 +438,9 @@ const Header = () => {
         name: 'AI',
         dropdown: [
           { name: 'AI Agents Dashboard', href: '/ai-agents-dashboard' },
+          { name: 'In Review', href: '/ai-in-review' },
           { name: 'Ready to Publish', href: '/ai-ready-to-publish' },
           { name: 'Published', href: '/ai-published-posts' },
-          { name: 'In Review', href: '/ai-in-review' },
           { name: 'AI Settings', href: '/ai-settings' },
           { name: 'AI Costs', href: '/ai-costs' }
         ]
